@@ -1,22 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.4.11
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 20. Nov 2014 um 16:16
--- Server Version: 5.5.40-36.1
--- PHP-Version: 5.3.10-1ubuntu3.15
+-- Generation Time: Jul 10, 2015 at 08:22 PM
+-- Server version: 5.6.25-73.1-log
+-- PHP Version: 5.6.10-1+deb.sury.org~trusty+1
 
 SET time_zone = "+00:00";
 
 --
--- Datenbank: `studip_31`
+-- Database: `studip_32`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `abschluss`
+-- Table structure for table `abschluss`
 --
 
 DROP TABLE IF EXISTS `abschluss`;
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `abschluss` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `admissionfactor`
+-- Table structure for table `admissionfactor`
 --
 
 DROP TABLE IF EXISTS `admissionfactor`;
@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS `admissionfactor` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `admissionrules`
+-- Table structure for table `admissionrules`
 --
 
 DROP TABLE IF EXISTS `admissionrules`;
 CREATE TABLE IF NOT EXISTS `admissionrules` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `ruletype` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0'
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `admissionrules` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `admissionrule_inst`
+-- Table structure for table `admissionrule_inst`
 --
 
 DROP TABLE IF EXISTS `admissionrule_inst`;
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `admissionrule_inst` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `admission_condition`
+-- Table structure for table `admission_condition`
 --
 
 DROP TABLE IF EXISTS `admission_condition`;
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `admission_condition` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `admission_seminar_user`
+-- Table structure for table `admission_seminar_user`
 --
 
 DROP TABLE IF EXISTS `admission_seminar_user`;
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `admission_seminar_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `api_consumers`
+-- Table structure for table `api_consumers`
 --
 
 DROP TABLE IF EXISTS `api_consumers`;
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `api_consumers` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `api_consumer_permissions`
+-- Table structure for table `api_consumer_permissions`
 --
 
 DROP TABLE IF EXISTS `api_consumer_permissions`;
@@ -146,12 +146,12 @@ CREATE TABLE IF NOT EXISTS `api_consumer_permissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `api_oauth_user_mapping`
+-- Table structure for table `api_oauth_user_mapping`
 --
 
 DROP TABLE IF EXISTS `api_oauth_user_mapping`;
 CREATE TABLE IF NOT EXISTS `api_oauth_user_mapping` (
-`oauth_id` int(11) unsigned NOT NULL,
+  `oauth_id` int(11) unsigned NOT NULL,
   `user_id` char(32) NOT NULL DEFAULT '',
   `mkdate` int(11) unsigned NOT NULL
 ) ENGINE=MyISAM;
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `api_oauth_user_mapping` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `api_user_permissions`
+-- Table structure for table `api_user_permissions`
 --
 
 DROP TABLE IF EXISTS `api_user_permissions`;
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `api_user_permissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `archiv`
+-- Table structure for table `archiv`
 --
 
 DROP TABLE IF EXISTS `archiv`;
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `archiv` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `archiv_user`
+-- Table structure for table `archiv_user`
 --
 
 DROP TABLE IF EXISTS `archiv_user`;
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `archiv_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `auth_extern`
+-- Table structure for table `auth_extern`
 --
 
 DROP TABLE IF EXISTS `auth_extern`;
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `auth_extern` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `auth_user_md5`
+-- Table structure for table `auth_user_md5`
 --
 
 DROP TABLE IF EXISTS `auth_user_md5`;
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `auth_user_md5` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `auto_insert_sem`
+-- Table structure for table `auto_insert_sem`
 --
 
 DROP TABLE IF EXISTS `auto_insert_sem`;
@@ -268,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `auto_insert_sem` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `auto_insert_user`
+-- Table structure for table `auto_insert_user`
 --
 
 DROP TABLE IF EXISTS `auto_insert_user`;
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `auto_insert_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `aux_lock_rules`
+-- Table structure for table `aux_lock_rules`
 --
 
 DROP TABLE IF EXISTS `aux_lock_rules`;
@@ -296,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `aux_lock_rules` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `banner_ads`
+-- Table structure for table `banner_ads`
 --
 
 DROP TABLE IF EXISTS `banner_ads`;
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `banner_ads` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber`
+-- Table structure for table `blubber`
 --
 
 DROP TABLE IF EXISTS `blubber`;
@@ -341,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `blubber` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_events_queue`
+-- Table structure for table `blubber_events_queue`
 --
 
 DROP TABLE IF EXISTS `blubber_events_queue`;
@@ -354,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `blubber_events_queue` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_external_contact`
+-- Table structure for table `blubber_external_contact`
 --
 
 DROP TABLE IF EXISTS `blubber_external_contact`;
@@ -371,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `blubber_external_contact` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_follower`
+-- Table structure for table `blubber_follower`
 --
 
 DROP TABLE IF EXISTS `blubber_follower`;
@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `blubber_follower` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_mentions`
+-- Table structure for table `blubber_mentions`
 --
 
 DROP TABLE IF EXISTS `blubber_mentions`;
@@ -398,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `blubber_mentions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_reshares`
+-- Table structure for table `blubber_reshares`
 --
 
 DROP TABLE IF EXISTS `blubber_reshares`;
@@ -412,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `blubber_reshares` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_streams`
+-- Table structure for table `blubber_streams`
 --
 
 DROP TABLE IF EXISTS `blubber_streams`;
@@ -438,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `blubber_streams` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `blubber_tags`
+-- Table structure for table `blubber_tags`
 --
 
 DROP TABLE IF EXISTS `blubber_tags`;
@@ -450,45 +450,37 @@ CREATE TABLE IF NOT EXISTS `blubber_tags` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `calendar_events`
+-- Table structure for table `calendar_event`
 --
 
-DROP TABLE IF EXISTS `calendar_events`;
-CREATE TABLE IF NOT EXISTS `calendar_events` (
-  `event_id` varchar(32) NOT NULL DEFAULT '',
-  `range_id` varchar(32) NOT NULL DEFAULT '',
-  `autor_id` varchar(32) NOT NULL DEFAULT '',
-  `editor_id` varchar(32) NOT NULL,
-  `uid` varchar(255) NOT NULL DEFAULT '',
-  `start` int(10) unsigned NOT NULL DEFAULT '0',
-  `end` int(10) unsigned NOT NULL DEFAULT '0',
-  `summary` varchar(255) NOT NULL DEFAULT '',
-  `description` text,
-  `class` enum('PUBLIC','PRIVATE','CONFIDENTIAL') NOT NULL DEFAULT 'PRIVATE',
-  `categories` tinytext,
-  `category_intern` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `location` tinytext,
-  `ts` int(10) unsigned NOT NULL DEFAULT '0',
-  `linterval` smallint(5) unsigned DEFAULT NULL,
-  `sinterval` smallint(5) unsigned DEFAULT NULL,
-  `wdays` varchar(7) DEFAULT NULL,
-  `month` tinyint(3) unsigned DEFAULT NULL,
-  `day` tinyint(3) unsigned DEFAULT NULL,
-  `rtype` enum('SINGLE','DAILY','WEEKLY','MONTHLY','YEARLY') NOT NULL DEFAULT 'SINGLE',
-  `duration` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `count` smallint(5) DEFAULT '0',
-  `expire` int(10) unsigned NOT NULL DEFAULT '0',
-  `exceptions` text,
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `importdate` int(11) NOT NULL DEFAULT '0'
+DROP TABLE IF EXISTS `calendar_event`;
+CREATE TABLE IF NOT EXISTS `calendar_event` (
+  `range_id` varchar(32) NOT NULL,
+  `event_id` varchar(32) NOT NULL,
+  `group_status` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `mkdate` int(11) NOT NULL,
+  `chdate` int(10) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `comments`
+-- Table structure for table `calendar_user`
+--
+
+DROP TABLE IF EXISTS `calendar_user`;
+CREATE TABLE IF NOT EXISTS `calendar_user` (
+  `owner_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  `permission` int(2) NOT NULL,
+  `mkdate` int(11) NOT NULL,
+  `chdate` int(11) NOT NULL
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
 --
 
 DROP TABLE IF EXISTS `comments`;
@@ -504,7 +496,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `conditionaladmissions`
+-- Table structure for table `conditionaladmissions`
 --
 
 DROP TABLE IF EXISTS `conditionaladmissions`;
@@ -521,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `conditionaladmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `config`
+-- Table structure for table `config`
 --
 
 DROP TABLE IF EXISTS `config`;
@@ -545,37 +537,37 @@ CREATE TABLE IF NOT EXISTS `config` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `contact`
+-- Table structure for table `contact`
 --
 
 DROP TABLE IF EXISTS `contact`;
 CREATE TABLE IF NOT EXISTS `contact` (
-  `contact_id` varchar(32) NOT NULL DEFAULT '',
   `owner_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `buddy` tinyint(4) NOT NULL DEFAULT '1',
-  `calpermission` tinyint(2) unsigned NOT NULL DEFAULT '1'
+  `user_id` varchar(32) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `contact_userinfo`
+-- Table structure for table `coursememberadmissions`
 --
 
-DROP TABLE IF EXISTS `contact_userinfo`;
-CREATE TABLE IF NOT EXISTS `contact_userinfo` (
-  `userinfo_id` varchar(32) NOT NULL DEFAULT '',
-  `contact_id` varchar(32) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `priority` int(11) NOT NULL DEFAULT '0'
+DROP TABLE IF EXISTS `coursememberadmissions`;
+CREATE TABLE IF NOT EXISTS `coursememberadmissions` (
+  `rule_id` varchar(32) NOT NULL DEFAULT '',
+  `message` text NOT NULL,
+  `start_time` int(11) NOT NULL DEFAULT '0',
+  `end_time` int(11) NOT NULL DEFAULT '0',
+  `course_id` varchar(32) NOT NULL DEFAULT '',
+  `modus` tinyint(1) NOT NULL DEFAULT '0',
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `coursesets`
+-- Table structure for table `coursesets`
 --
 
 DROP TABLE IF EXISTS `coursesets`;
@@ -594,7 +586,7 @@ CREATE TABLE IF NOT EXISTS `coursesets` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `courseset_factorlist`
+-- Table structure for table `courseset_factorlist`
 --
 
 DROP TABLE IF EXISTS `courseset_factorlist`;
@@ -607,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `courseset_factorlist` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `courseset_institute`
+-- Table structure for table `courseset_institute`
 --
 
 DROP TABLE IF EXISTS `courseset_institute`;
@@ -621,7 +613,7 @@ CREATE TABLE IF NOT EXISTS `courseset_institute` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `courseset_rule`
+-- Table structure for table `courseset_rule`
 --
 
 DROP TABLE IF EXISTS `courseset_rule`;
@@ -635,7 +627,7 @@ CREATE TABLE IF NOT EXISTS `courseset_rule` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `cronjobs_logs`
+-- Table structure for table `cronjobs_logs`
 --
 
 DROP TABLE IF EXISTS `cronjobs_logs`;
@@ -652,7 +644,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_logs` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `cronjobs_schedules`
+-- Table structure for table `cronjobs_schedules`
 --
 
 DROP TABLE IF EXISTS `cronjobs_schedules`;
@@ -681,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_schedules` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `cronjobs_tasks`
+-- Table structure for table `cronjobs_tasks`
 --
 
 DROP TABLE IF EXISTS `cronjobs_tasks`;
@@ -697,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_tasks` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `datafields`
+-- Table structure for table `datafields`
 --
 
 DROP TABLE IF EXISTS `datafields`;
@@ -711,16 +703,17 @@ CREATE TABLE IF NOT EXISTS `datafields` (
   `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `mkdate` int(20) unsigned DEFAULT NULL,
   `chdate` int(20) unsigned DEFAULT NULL,
-  `type` enum('bool','textline','textarea','selectbox','date','time','email','phone','radio','combo','link') NOT NULL DEFAULT 'textline',
+  `type` enum('bool','textline','textarea','selectbox','date','time','email','phone','radio','combo','link','selectboxmultiple') NOT NULL DEFAULT 'textline',
   `typeparam` text NOT NULL,
   `is_required` tinyint(4) NOT NULL DEFAULT '0',
+  `is_userfilter` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `description` text NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `datafields_entries`
+-- Table structure for table `datafields_entries`
 --
 
 DROP TABLE IF EXISTS `datafields_entries`;
@@ -736,7 +729,7 @@ CREATE TABLE IF NOT EXISTS `datafields_entries` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `deputies`
+-- Table structure for table `deputies`
 --
 
 DROP TABLE IF EXISTS `deputies`;
@@ -751,12 +744,12 @@ CREATE TABLE IF NOT EXISTS `deputies` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `doc_filetype`
+-- Table structure for table `doc_filetype`
 --
 
 DROP TABLE IF EXISTS `doc_filetype`;
 CREATE TABLE IF NOT EXISTS `doc_filetype` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `type` varchar(45) NOT NULL,
   `description` text
 ) ENGINE=MyISAM;
@@ -764,12 +757,12 @@ CREATE TABLE IF NOT EXISTS `doc_filetype` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `doc_filetype_forbidden`
+-- Table structure for table `doc_filetype_forbidden`
 --
 
 DROP TABLE IF EXISTS `doc_filetype_forbidden`;
 CREATE TABLE IF NOT EXISTS `doc_filetype_forbidden` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `usergroup` varchar(45) NOT NULL,
   `dateityp_id` int(11) NOT NULL
 ) ENGINE=MyISAM;
@@ -777,12 +770,12 @@ CREATE TABLE IF NOT EXISTS `doc_filetype_forbidden` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `doc_usergroup_config`
+-- Table structure for table `doc_usergroup_config`
 --
 
 DROP TABLE IF EXISTS `doc_usergroup_config`;
 CREATE TABLE IF NOT EXISTS `doc_usergroup_config` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `usergroup` varchar(45) NOT NULL,
   `upload_quota` text NOT NULL,
   `upload_unit` varchar(45) DEFAULT NULL,
@@ -797,7 +790,7 @@ CREATE TABLE IF NOT EXISTS `doc_usergroup_config` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `dokumente`
+-- Table structure for table `dokumente`
 --
 
 DROP TABLE IF EXISTS `dokumente`;
@@ -823,7 +816,7 @@ CREATE TABLE IF NOT EXISTS `dokumente` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval`
+-- Table structure for table `eval`
 --
 
 DROP TABLE IF EXISTS `eval`;
@@ -845,7 +838,7 @@ CREATE TABLE IF NOT EXISTS `eval` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `evalanswer`
+-- Table structure for table `evalanswer`
 --
 
 DROP TABLE IF EXISTS `evalanswer`;
@@ -863,7 +856,7 @@ CREATE TABLE IF NOT EXISTS `evalanswer` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `evalanswer_user`
+-- Table structure for table `evalanswer_user`
 --
 
 DROP TABLE IF EXISTS `evalanswer_user`;
@@ -875,7 +868,7 @@ CREATE TABLE IF NOT EXISTS `evalanswer_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `evalgroup`
+-- Table structure for table `evalgroup`
 --
 
 DROP TABLE IF EXISTS `evalgroup`;
@@ -893,7 +886,7 @@ CREATE TABLE IF NOT EXISTS `evalgroup` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `evalquestion`
+-- Table structure for table `evalquestion`
 --
 
 DROP TABLE IF EXISTS `evalquestion`;
@@ -909,7 +902,7 @@ CREATE TABLE IF NOT EXISTS `evalquestion` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_group_template`
+-- Table structure for table `eval_group_template`
 --
 
 DROP TABLE IF EXISTS `eval_group_template`;
@@ -922,7 +915,7 @@ CREATE TABLE IF NOT EXISTS `eval_group_template` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_range`
+-- Table structure for table `eval_range`
 --
 
 DROP TABLE IF EXISTS `eval_range`;
@@ -934,7 +927,7 @@ CREATE TABLE IF NOT EXISTS `eval_range` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_templates`
+-- Table structure for table `eval_templates`
 --
 
 DROP TABLE IF EXISTS `eval_templates`;
@@ -957,7 +950,7 @@ CREATE TABLE IF NOT EXISTS `eval_templates` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_templates_eval`
+-- Table structure for table `eval_templates_eval`
 --
 
 DROP TABLE IF EXISTS `eval_templates_eval`;
@@ -969,7 +962,7 @@ CREATE TABLE IF NOT EXISTS `eval_templates_eval` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_templates_user`
+-- Table structure for table `eval_templates_user`
 --
 
 DROP TABLE IF EXISTS `eval_templates_user`;
@@ -982,7 +975,7 @@ CREATE TABLE IF NOT EXISTS `eval_templates_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `eval_user`
+-- Table structure for table `eval_user`
 --
 
 DROP TABLE IF EXISTS `eval_user`;
@@ -994,7 +987,44 @@ CREATE TABLE IF NOT EXISTS `eval_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `extern_config`
+-- Table structure for table `event_data`
+--
+
+DROP TABLE IF EXISTS `event_data`;
+CREATE TABLE IF NOT EXISTS `event_data` (
+  `event_id` varchar(32) NOT NULL,
+  `author_id` varchar(32) NOT NULL,
+  `editor_id` varchar(32) DEFAULT NULL,
+  `uid` varchar(255) NOT NULL,
+  `start` int(10) unsigned NOT NULL DEFAULT '0',
+  `end` int(10) unsigned NOT NULL DEFAULT '0',
+  `summary` varchar(255) NOT NULL DEFAULT '',
+  `description` text,
+  `class` enum('PUBLIC','PRIVATE','CONFIDENTIAL') NOT NULL DEFAULT 'PRIVATE',
+  `categories` tinytext,
+  `category_intern` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `location` tinytext,
+  `ts` int(10) unsigned NOT NULL DEFAULT '0',
+  `linterval` smallint(5) unsigned DEFAULT NULL,
+  `sinterval` smallint(5) unsigned DEFAULT NULL,
+  `wdays` varchar(7) DEFAULT NULL,
+  `month` tinyint(3) unsigned DEFAULT NULL,
+  `day` tinyint(3) unsigned DEFAULT NULL,
+  `rtype` enum('SINGLE','DAILY','WEEKLY','MONTHLY','YEARLY') NOT NULL DEFAULT 'SINGLE',
+  `duration` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `count` smallint(5) DEFAULT '0',
+  `expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `exceptions` text,
+  `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `chdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `importdate` int(11) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `extern_config`
 --
 
 DROP TABLE IF EXISTS `extern_config`;
@@ -1012,7 +1042,7 @@ CREATE TABLE IF NOT EXISTS `extern_config` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `ex_termine`
+-- Table structure for table `ex_termine`
 --
 
 DROP TABLE IF EXISTS `ex_termine`;
@@ -1036,7 +1066,7 @@ CREATE TABLE IF NOT EXISTS `ex_termine` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `files`
+-- Table structure for table `files`
 --
 
 DROP TABLE IF EXISTS `files`;
@@ -1056,7 +1086,7 @@ CREATE TABLE IF NOT EXISTS `files` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `files_backend_studip`
+-- Table structure for table `files_backend_studip`
 --
 
 DROP TABLE IF EXISTS `files_backend_studip`;
@@ -1069,7 +1099,7 @@ CREATE TABLE IF NOT EXISTS `files_backend_studip` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `files_backend_url`
+-- Table structure for table `files_backend_url`
 --
 
 DROP TABLE IF EXISTS `files_backend_url`;
@@ -1082,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `files_backend_url` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `files_share`
+-- Table structure for table `files_share`
 --
 
 DROP TABLE IF EXISTS `files_share`;
@@ -1099,7 +1129,7 @@ CREATE TABLE IF NOT EXISTS `files_share` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `file_refs`
+-- Table structure for table `file_refs`
 --
 
 DROP TABLE IF EXISTS `file_refs`;
@@ -1115,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `file_refs` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `folder`
+-- Table structure for table `folder`
 --
 
 DROP TABLE IF EXISTS `folder`;
@@ -1135,7 +1165,7 @@ CREATE TABLE IF NOT EXISTS `folder` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_abo_users`
+-- Table structure for table `forum_abo_users`
 --
 
 DROP TABLE IF EXISTS `forum_abo_users`;
@@ -1147,7 +1177,7 @@ CREATE TABLE IF NOT EXISTS `forum_abo_users` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_categories`
+-- Table structure for table `forum_categories`
 --
 
 DROP TABLE IF EXISTS `forum_categories`;
@@ -1161,7 +1191,7 @@ CREATE TABLE IF NOT EXISTS `forum_categories` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_categories_entries`
+-- Table structure for table `forum_categories_entries`
 --
 
 DROP TABLE IF EXISTS `forum_categories_entries`;
@@ -1174,7 +1204,7 @@ CREATE TABLE IF NOT EXISTS `forum_categories_entries` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_entries`
+-- Table structure for table `forum_entries`
 --
 
 DROP TABLE IF EXISTS `forum_entries`;
@@ -1201,7 +1231,7 @@ CREATE TABLE IF NOT EXISTS `forum_entries` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_entries_issues`
+-- Table structure for table `forum_entries_issues`
 --
 
 DROP TABLE IF EXISTS `forum_entries_issues`;
@@ -1213,7 +1243,7 @@ CREATE TABLE IF NOT EXISTS `forum_entries_issues` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_favorites`
+-- Table structure for table `forum_favorites`
 --
 
 DROP TABLE IF EXISTS `forum_favorites`;
@@ -1225,7 +1255,7 @@ CREATE TABLE IF NOT EXISTS `forum_favorites` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_likes`
+-- Table structure for table `forum_likes`
 --
 
 DROP TABLE IF EXISTS `forum_likes`;
@@ -1237,7 +1267,7 @@ CREATE TABLE IF NOT EXISTS `forum_likes` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `forum_visits`
+-- Table structure for table `forum_visits`
 --
 
 DROP TABLE IF EXISTS `forum_visits`;
@@ -1251,34 +1281,35 @@ CREATE TABLE IF NOT EXISTS `forum_visits` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_content`
+-- Table structure for table `help_content`
 --
 
 DROP TABLE IF EXISTS `help_content`;
 CREATE TABLE IF NOT EXISTS `help_content` (
+  `global_content_id` varchar(32) NOT NULL,
   `content_id` char(32) NOT NULL,
   `language` char(2) NOT NULL DEFAULT 'de',
-  `label` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `route` varchar(255) NOT NULL,
   `studip_version` varchar(32) NOT NULL,
   `position` tinyint(4) NOT NULL DEFAULT '1',
   `custom` tinyint(4) NOT NULL DEFAULT '0',
   `visible` tinyint(4) NOT NULL DEFAULT '1',
-  `author_id` char(32) NOT NULL DEFAULT '',
+  `author_email` varchar(255) NOT NULL,
   `installation_id` varchar(255) NOT NULL,
-  `mkdate` int(11) unsigned NOT NULL
+  `mkdate` int(11) unsigned NOT NULL,
+  `chdate` int(11) NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_tours`
+-- Table structure for table `help_tours`
 --
 
 DROP TABLE IF EXISTS `help_tours`;
 CREATE TABLE IF NOT EXISTS `help_tours` (
+  `global_tour_id` varchar(32) NOT NULL,
   `tour_id` char(32) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -1288,13 +1319,15 @@ CREATE TABLE IF NOT EXISTS `help_tours` (
   `language` char(2) NOT NULL DEFAULT 'de',
   `studip_version` varchar(32) NOT NULL DEFAULT '',
   `installation_id` varchar(255) NOT NULL DEFAULT 'demo-installation',
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0'
+  `author_email` varchar(255) NOT NULL,
+  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_tour_audiences`
+-- Table structure for table `help_tour_audiences`
 --
 
 DROP TABLE IF EXISTS `help_tour_audiences`;
@@ -1307,7 +1340,7 @@ CREATE TABLE IF NOT EXISTS `help_tour_audiences` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_tour_settings`
+-- Table structure for table `help_tour_settings`
 --
 
 DROP TABLE IF EXISTS `help_tour_settings`;
@@ -1320,7 +1353,7 @@ CREATE TABLE IF NOT EXISTS `help_tour_settings` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_tour_steps`
+-- Table structure for table `help_tour_steps`
 --
 
 DROP TABLE IF EXISTS `help_tour_steps`;
@@ -1333,14 +1366,17 @@ CREATE TABLE IF NOT EXISTS `help_tour_steps` (
   `interactive` tinyint(4) NOT NULL,
   `css_selector` varchar(255) NOT NULL,
   `route` varchar(255) NOT NULL DEFAULT '',
-  `author_id` char(32) NOT NULL DEFAULT '',
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0'
+  `action_prev` varchar(255) NOT NULL,
+  `action_next` varchar(255) NOT NULL,
+  `author_email` varchar(255) NOT NULL,
+  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `help_tour_user`
+-- Table structure for table `help_tour_user`
 --
 
 DROP TABLE IF EXISTS `help_tour_user`;
@@ -1354,7 +1390,7 @@ CREATE TABLE IF NOT EXISTS `help_tour_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Institute`
+-- Table structure for table `Institute`
 --
 
 DROP TABLE IF EXISTS `Institute`;
@@ -1380,7 +1416,7 @@ CREATE TABLE IF NOT EXISTS `Institute` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `kategorien`
+-- Table structure for table `kategorien`
 --
 
 DROP TABLE IF EXISTS `kategorien`;
@@ -1397,7 +1433,7 @@ CREATE TABLE IF NOT EXISTS `kategorien` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `limitedadmissions`
+-- Table structure for table `limitedadmissions`
 --
 
 DROP TABLE IF EXISTS `limitedadmissions`;
@@ -1414,7 +1450,7 @@ CREATE TABLE IF NOT EXISTS `limitedadmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lit_catalog`
+-- Table structure for table `lit_catalog`
 --
 
 DROP TABLE IF EXISTS `lit_catalog`;
@@ -1445,7 +1481,7 @@ CREATE TABLE IF NOT EXISTS `lit_catalog` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lit_list`
+-- Table structure for table `lit_list`
 --
 
 DROP TABLE IF EXISTS `lit_list`;
@@ -1464,7 +1500,7 @@ CREATE TABLE IF NOT EXISTS `lit_list` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lit_list_content`
+-- Table structure for table `lit_list_content`
 --
 
 DROP TABLE IF EXISTS `lit_list_content`;
@@ -1482,7 +1518,7 @@ CREATE TABLE IF NOT EXISTS `lit_list_content` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lockedadmissions`
+-- Table structure for table `lockedadmissions`
 --
 
 DROP TABLE IF EXISTS `lockedadmissions`;
@@ -1496,7 +1532,7 @@ CREATE TABLE IF NOT EXISTS `lockedadmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `lock_rules`
+-- Table structure for table `lock_rules`
 --
 
 DROP TABLE IF EXISTS `lock_rules`;
@@ -1513,7 +1549,7 @@ CREATE TABLE IF NOT EXISTS `lock_rules` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `log_actions`
+-- Table structure for table `log_actions`
 --
 
 DROP TABLE IF EXISTS `log_actions`;
@@ -1532,7 +1568,7 @@ CREATE TABLE IF NOT EXISTS `log_actions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `log_events`
+-- Table structure for table `log_events`
 --
 
 DROP TABLE IF EXISTS `log_events`;
@@ -1550,7 +1586,7 @@ CREATE TABLE IF NOT EXISTS `log_events` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `mail_queue_entries`
+-- Table structure for table `mail_queue_entries`
 --
 
 DROP TABLE IF EXISTS `mail_queue_entries`;
@@ -1568,7 +1604,7 @@ CREATE TABLE IF NOT EXISTS `mail_queue_entries` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `media_cache`
+-- Table structure for table `media_cache`
 --
 
 DROP TABLE IF EXISTS `media_cache`;
@@ -1582,25 +1618,23 @@ CREATE TABLE IF NOT EXISTS `media_cache` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `message`
+-- Table structure for table `message`
 --
 
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE IF NOT EXISTS `message` (
   `message_id` varchar(32) NOT NULL DEFAULT '',
-  `chat_id` varchar(32) DEFAULT NULL,
   `autor_id` varchar(32) NOT NULL DEFAULT '',
   `subject` varchar(255) NOT NULL DEFAULT '',
   `message` text NOT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `readed` tinyint(1) NOT NULL DEFAULT '0',
   `priority` enum('normal','high') NOT NULL DEFAULT 'normal'
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `message_tags`
+-- Table structure for table `message_tags`
 --
 
 DROP TABLE IF EXISTS `message_tags`;
@@ -1615,7 +1649,7 @@ CREATE TABLE IF NOT EXISTS `message_tags` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `message_user`
+-- Table structure for table `message_user`
 --
 
 DROP TABLE IF EXISTS `message_user`;
@@ -1625,7 +1659,6 @@ CREATE TABLE IF NOT EXISTS `message_user` (
   `readed` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `snd_rec` enum('rec','snd') NOT NULL DEFAULT 'rec',
-  `confirmed_read` tinyint(1) NOT NULL DEFAULT '0',
   `answered` tinyint(1) NOT NULL DEFAULT '0',
   `mkdate` int(10) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM;
@@ -1633,7 +1666,7 @@ CREATE TABLE IF NOT EXISTS `message_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `news`
+-- Table structure for table `news`
 --
 
 DROP TABLE IF EXISTS `news`;
@@ -1654,7 +1687,7 @@ CREATE TABLE IF NOT EXISTS `news` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `news_range`
+-- Table structure for table `news_range`
 --
 
 DROP TABLE IF EXISTS `news_range`;
@@ -1666,7 +1699,7 @@ CREATE TABLE IF NOT EXISTS `news_range` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `news_rss_range`
+-- Table structure for table `news_rss_range`
 --
 
 DROP TABLE IF EXISTS `news_rss_range`;
@@ -1679,12 +1712,12 @@ CREATE TABLE IF NOT EXISTS `news_rss_range` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_consumer_registry`
+-- Table structure for table `oauth_consumer_registry`
 --
 
 DROP TABLE IF EXISTS `oauth_consumer_registry`;
 CREATE TABLE IF NOT EXISTS `oauth_consumer_registry` (
-`ocr_id` int(11) NOT NULL,
+  `ocr_id` int(11) NOT NULL,
   `ocr_usa_id_ref` int(11) DEFAULT NULL,
   `ocr_consumer_key` varchar(128) binary NOT NULL,
   `ocr_consumer_secret` varchar(128) binary NOT NULL,
@@ -1701,12 +1734,12 @@ CREATE TABLE IF NOT EXISTS `oauth_consumer_registry` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_consumer_token`
+-- Table structure for table `oauth_consumer_token`
 --
 
 DROP TABLE IF EXISTS `oauth_consumer_token`;
 CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
-`oct_id` int(11) NOT NULL,
+  `oct_id` int(11) NOT NULL,
   `oct_ocr_id_ref` int(11) NOT NULL,
   `oct_usa_id_ref` int(11) NOT NULL,
   `oct_name` varchar(64) binary NOT NULL DEFAULT '',
@@ -1720,12 +1753,12 @@ CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_log`
+-- Table structure for table `oauth_log`
 --
 
 DROP TABLE IF EXISTS `oauth_log`;
 CREATE TABLE IF NOT EXISTS `oauth_log` (
-`olg_id` int(11) NOT NULL,
+  `olg_id` int(11) NOT NULL,
   `olg_osr_consumer_key` varchar(64) binary DEFAULT NULL,
   `olg_ost_token` varchar(64) binary DEFAULT NULL,
   `olg_ocr_consumer_key` varchar(64) binary DEFAULT NULL,
@@ -1742,12 +1775,12 @@ CREATE TABLE IF NOT EXISTS `oauth_log` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_server_nonce`
+-- Table structure for table `oauth_server_nonce`
 --
 
 DROP TABLE IF EXISTS `oauth_server_nonce`;
 CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
-`osn_id` int(11) NOT NULL,
+  `osn_id` int(11) NOT NULL,
   `osn_consumer_key` varchar(64) binary NOT NULL,
   `osn_token` varchar(64) binary NOT NULL,
   `osn_timestamp` bigint(20) NOT NULL,
@@ -1757,12 +1790,12 @@ CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_server_registry`
+-- Table structure for table `oauth_server_registry`
 --
 
 DROP TABLE IF EXISTS `oauth_server_registry`;
 CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
-`osr_id` int(11) NOT NULL,
+  `osr_id` int(11) NOT NULL,
   `osr_usa_id_ref` int(11) DEFAULT NULL,
   `osr_consumer_key` varchar(64) binary NOT NULL,
   `osr_consumer_secret` varchar(64) binary NOT NULL,
@@ -1784,12 +1817,12 @@ CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `oauth_server_token`
+-- Table structure for table `oauth_server_token`
 --
 
 DROP TABLE IF EXISTS `oauth_server_token`;
 CREATE TABLE IF NOT EXISTS `oauth_server_token` (
-`ost_id` int(11) NOT NULL,
+  `ost_id` int(11) NOT NULL,
   `ost_osr_id_ref` int(11) NOT NULL,
   `ost_usa_id_ref` int(11) NOT NULL,
   `ost_token` varchar(64) binary NOT NULL,
@@ -1806,7 +1839,7 @@ CREATE TABLE IF NOT EXISTS `oauth_server_token` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `object_contentmodules`
+-- Table structure for table `object_contentmodules`
 --
 
 DROP TABLE IF EXISTS `object_contentmodules`;
@@ -1822,34 +1855,7 @@ CREATE TABLE IF NOT EXISTS `object_contentmodules` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `object_rate`
---
-
-DROP TABLE IF EXISTS `object_rate`;
-CREATE TABLE IF NOT EXISTS `object_rate` (
-  `object_id` varchar(32) NOT NULL DEFAULT '',
-  `rate` int(10) NOT NULL DEFAULT '0',
-  `mkdate` int(20) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `object_user`
---
-
-DROP TABLE IF EXISTS `object_user`;
-CREATE TABLE IF NOT EXISTS `object_user` (
-  `object_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `flag` varchar(32) NOT NULL DEFAULT '',
-  `mkdate` int(20) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `object_user_visits`
+-- Table structure for table `object_user_visits`
 --
 
 DROP TABLE IF EXISTS `object_user_visits`;
@@ -1864,7 +1870,7 @@ CREATE TABLE IF NOT EXISTS `object_user_visits` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `object_views`
+-- Table structure for table `object_views`
 --
 
 DROP TABLE IF EXISTS `object_views`;
@@ -1877,7 +1883,7 @@ CREATE TABLE IF NOT EXISTS `object_views` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `opengraphdata`
+-- Table structure for table `opengraphdata`
 --
 
 DROP TABLE IF EXISTS `opengraphdata`;
@@ -1897,7 +1903,7 @@ CREATE TABLE IF NOT EXISTS `opengraphdata` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `participantrestrictedadmissions`
+-- Table structure for table `participantrestrictedadmissions`
 --
 
 DROP TABLE IF EXISTS `participantrestrictedadmissions`;
@@ -1912,7 +1918,7 @@ CREATE TABLE IF NOT EXISTS `participantrestrictedadmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `passwordadmissions`
+-- Table structure for table `passwordadmissions`
 --
 
 DROP TABLE IF EXISTS `passwordadmissions`;
@@ -1929,12 +1935,12 @@ CREATE TABLE IF NOT EXISTS `passwordadmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `personal_notifications`
+-- Table structure for table `personal_notifications`
 --
 
 DROP TABLE IF EXISTS `personal_notifications`;
 CREATE TABLE IF NOT EXISTS `personal_notifications` (
-`personal_notification_id` int(11) NOT NULL,
+  `personal_notification_id` int(11) NOT NULL,
   `url` varchar(512) NOT NULL DEFAULT '',
   `text` text NOT NULL,
   `avatar` varchar(256) NOT NULL DEFAULT '',
@@ -1945,7 +1951,7 @@ CREATE TABLE IF NOT EXISTS `personal_notifications` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `personal_notifications_user`
+-- Table structure for table `personal_notifications_user`
 --
 
 DROP TABLE IF EXISTS `personal_notifications_user`;
@@ -1958,25 +1964,27 @@ CREATE TABLE IF NOT EXISTS `personal_notifications_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `plugins`
+-- Table structure for table `plugins`
 --
 
 DROP TABLE IF EXISTS `plugins`;
 CREATE TABLE IF NOT EXISTS `plugins` (
-`pluginid` int(10) unsigned NOT NULL,
+  `pluginid` int(10) unsigned NOT NULL,
   `pluginclassname` varchar(255) NOT NULL DEFAULT '',
   `pluginpath` varchar(255) NOT NULL DEFAULT '',
   `pluginname` varchar(45) NOT NULL DEFAULT '',
   `plugintype` text NOT NULL,
   `enabled` enum('yes','no') NOT NULL DEFAULT 'no',
   `navigationpos` int(10) unsigned NOT NULL DEFAULT '0',
-  `dependentonid` int(10) unsigned DEFAULT NULL
+  `dependentonid` int(10) unsigned DEFAULT NULL,
+  `automatic_update_url` varchar(256) DEFAULT NULL,
+  `automatic_update_secret` varchar(32) DEFAULT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `plugins_activated`
+-- Table structure for table `plugins_activated`
 --
 
 DROP TABLE IF EXISTS `plugins_activated`;
@@ -1989,7 +1997,7 @@ CREATE TABLE IF NOT EXISTS `plugins_activated` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `plugins_default_activations`
+-- Table structure for table `plugins_default_activations`
 --
 
 DROP TABLE IF EXISTS `plugins_default_activations`;
@@ -2001,7 +2009,7 @@ CREATE TABLE IF NOT EXISTS `plugins_default_activations` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `priorities`
+-- Table structure for table `priorities`
 --
 
 DROP TABLE IF EXISTS `priorities`;
@@ -2017,29 +2025,7 @@ CREATE TABLE IF NOT EXISTS `priorities` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `px_topics`
---
-
-DROP TABLE IF EXISTS `px_topics`;
-CREATE TABLE IF NOT EXISTS `px_topics` (
-  `topic_id` varchar(32) NOT NULL DEFAULT '',
-  `parent_id` varchar(32) NOT NULL DEFAULT '',
-  `root_id` varchar(32) NOT NULL DEFAULT '',
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0',
-  `author` varchar(255) DEFAULT NULL,
-  `author_host` varchar(255) DEFAULT NULL,
-  `Seminar_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `anonymous` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `range_tree`
+-- Table structure for table `range_tree`
 --
 
 DROP TABLE IF EXISTS `range_tree`;
@@ -2056,7 +2042,7 @@ CREATE TABLE IF NOT EXISTS `range_tree` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_assign`
+-- Table structure for table `resources_assign`
 --
 
 DROP TABLE IF EXISTS `resources_assign`;
@@ -2082,7 +2068,7 @@ CREATE TABLE IF NOT EXISTS `resources_assign` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_categories`
+-- Table structure for table `resources_categories`
 --
 
 DROP TABLE IF EXISTS `resources_categories`;
@@ -2098,7 +2084,7 @@ CREATE TABLE IF NOT EXISTS `resources_categories` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_categories_properties`
+-- Table structure for table `resources_categories_properties`
 --
 
 DROP TABLE IF EXISTS `resources_categories_properties`;
@@ -2112,7 +2098,7 @@ CREATE TABLE IF NOT EXISTS `resources_categories_properties` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_locks`
+-- Table structure for table `resources_locks`
 --
 
 DROP TABLE IF EXISTS `resources_locks`;
@@ -2126,7 +2112,7 @@ CREATE TABLE IF NOT EXISTS `resources_locks` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_objects`
+-- Table structure for table `resources_objects`
 --
 
 DROP TABLE IF EXISTS `resources_objects`;
@@ -2149,7 +2135,7 @@ CREATE TABLE IF NOT EXISTS `resources_objects` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_objects_properties`
+-- Table structure for table `resources_objects_properties`
 --
 
 DROP TABLE IF EXISTS `resources_objects_properties`;
@@ -2162,7 +2148,7 @@ CREATE TABLE IF NOT EXISTS `resources_objects_properties` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_properties`
+-- Table structure for table `resources_properties`
 --
 
 DROP TABLE IF EXISTS `resources_properties`;
@@ -2178,7 +2164,7 @@ CREATE TABLE IF NOT EXISTS `resources_properties` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_requests`
+-- Table structure for table `resources_requests`
 --
 
 DROP TABLE IF EXISTS `resources_requests`;
@@ -2202,7 +2188,7 @@ CREATE TABLE IF NOT EXISTS `resources_requests` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_requests_properties`
+-- Table structure for table `resources_requests_properties`
 --
 
 DROP TABLE IF EXISTS `resources_requests_properties`;
@@ -2217,7 +2203,7 @@ CREATE TABLE IF NOT EXISTS `resources_requests_properties` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_requests_user_status`
+-- Table structure for table `resources_requests_user_status`
 --
 
 DROP TABLE IF EXISTS `resources_requests_user_status`;
@@ -2230,7 +2216,7 @@ CREATE TABLE IF NOT EXISTS `resources_requests_user_status` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_temporary_events`
+-- Table structure for table `resources_temporary_events`
 --
 
 DROP TABLE IF EXISTS `resources_temporary_events`;
@@ -2246,7 +2232,7 @@ CREATE TABLE IF NOT EXISTS `resources_temporary_events` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `resources_user_resources`
+-- Table structure for table `resources_user_resources`
 --
 
 DROP TABLE IF EXISTS `resources_user_resources`;
@@ -2259,12 +2245,12 @@ CREATE TABLE IF NOT EXISTS `resources_user_resources` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `roles`
+-- Table structure for table `roles`
 --
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
-`roleid` int(10) unsigned NOT NULL,
+  `roleid` int(10) unsigned NOT NULL,
   `rolename` varchar(80) NOT NULL DEFAULT '',
   `system` enum('y','n') NOT NULL DEFAULT 'n'
 ) ENGINE=MyISAM;
@@ -2272,7 +2258,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `roles_plugins`
+-- Table structure for table `roles_plugins`
 --
 
 DROP TABLE IF EXISTS `roles_plugins`;
@@ -2284,7 +2270,7 @@ CREATE TABLE IF NOT EXISTS `roles_plugins` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `roles_studipperms`
+-- Table structure for table `roles_studipperms`
 --
 
 DROP TABLE IF EXISTS `roles_studipperms`;
@@ -2296,7 +2282,7 @@ CREATE TABLE IF NOT EXISTS `roles_studipperms` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `roles_user`
+-- Table structure for table `roles_user`
 --
 
 DROP TABLE IF EXISTS `roles_user`;
@@ -2309,31 +2295,12 @@ CREATE TABLE IF NOT EXISTS `roles_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rss_feeds`
---
-
-DROP TABLE IF EXISTS `rss_feeds`;
-CREATE TABLE IF NOT EXISTS `rss_feeds` (
-  `feed_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `url` text NOT NULL,
-  `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0',
-  `priority` int(11) NOT NULL DEFAULT '0',
-  `hidden` tinyint(4) NOT NULL DEFAULT '0',
-  `fetch_title` tinyint(3) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `schedule`
+-- Table structure for table `schedule`
 --
 
 DROP TABLE IF EXISTS `schedule`;
 CREATE TABLE IF NOT EXISTS `schedule` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `start` smallint(6) NOT NULL COMMENT 'start hour and minutes',
   `end` smallint(6) NOT NULL COMMENT 'end hour and minutes',
   `day` tinyint(4) NOT NULL COMMENT 'day of week, 0-6',
@@ -2346,7 +2313,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `schedule_seminare`
+-- Table structure for table `schedule_seminare`
 --
 
 DROP TABLE IF EXISTS `schedule_seminare`;
@@ -2361,7 +2328,7 @@ CREATE TABLE IF NOT EXISTS `schedule_seminare` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `schema_version`
+-- Table structure for table `schema_version`
 --
 
 DROP TABLE IF EXISTS `schema_version`;
@@ -2373,7 +2340,7 @@ CREATE TABLE IF NOT EXISTS `schema_version` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `scm`
+-- Table structure for table `scm`
 --
 
 DROP TABLE IF EXISTS `scm`;
@@ -2391,7 +2358,7 @@ CREATE TABLE IF NOT EXISTS `scm` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `semester_data`
+-- Table structure for table `semester_data`
 --
 
 DROP TABLE IF EXISTS `semester_data`;
@@ -2409,7 +2376,7 @@ CREATE TABLE IF NOT EXISTS `semester_data` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `semester_holiday`
+-- Table structure for table `semester_holiday`
 --
 
 DROP TABLE IF EXISTS `semester_holiday`;
@@ -2425,7 +2392,7 @@ CREATE TABLE IF NOT EXISTS `semester_holiday` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminare`
+-- Table structure for table `seminare`
 --
 
 DROP TABLE IF EXISTS `seminare`;
@@ -2469,7 +2436,7 @@ CREATE TABLE IF NOT EXISTS `seminare` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_courseset`
+-- Table structure for table `seminar_courseset`
 --
 
 DROP TABLE IF EXISTS `seminar_courseset`;
@@ -2482,7 +2449,7 @@ CREATE TABLE IF NOT EXISTS `seminar_courseset` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_cycle_dates`
+-- Table structure for table `seminar_cycle_dates`
 --
 
 DROP TABLE IF EXISTS `seminar_cycle_dates`;
@@ -2504,7 +2471,7 @@ CREATE TABLE IF NOT EXISTS `seminar_cycle_dates` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_inst`
+-- Table structure for table `seminar_inst`
 --
 
 DROP TABLE IF EXISTS `seminar_inst`;
@@ -2516,7 +2483,7 @@ CREATE TABLE IF NOT EXISTS `seminar_inst` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_sem_tree`
+-- Table structure for table `seminar_sem_tree`
 --
 
 DROP TABLE IF EXISTS `seminar_sem_tree`;
@@ -2528,7 +2495,7 @@ CREATE TABLE IF NOT EXISTS `seminar_sem_tree` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_user`
+-- Table structure for table `seminar_user`
 --
 
 DROP TABLE IF EXISTS `seminar_user`;
@@ -2549,7 +2516,7 @@ CREATE TABLE IF NOT EXISTS `seminar_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `seminar_userdomains`
+-- Table structure for table `seminar_userdomains`
 --
 
 DROP TABLE IF EXISTS `seminar_userdomains`;
@@ -2561,12 +2528,12 @@ CREATE TABLE IF NOT EXISTS `seminar_userdomains` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `sem_classes`
+-- Table structure for table `sem_classes`
 --
 
 DROP TABLE IF EXISTS `sem_classes`;
 CREATE TABLE IF NOT EXISTS `sem_classes` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `compact_mode` tinyint(4) NOT NULL,
   `workgroup_mode` tinyint(4) NOT NULL,
@@ -2606,12 +2573,12 @@ CREATE TABLE IF NOT EXISTS `sem_classes` (
   `title_autor_plural` varchar(64) DEFAULT NULL,
   `mkdate` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL
-) ENGINE=MyISAM;
+) ENGINE=MyISAM 00;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `sem_tree`
+-- Table structure for table `sem_tree`
 --
 
 DROP TABLE IF EXISTS `sem_tree`;
@@ -2628,22 +2595,22 @@ CREATE TABLE IF NOT EXISTS `sem_tree` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `sem_types`
+-- Table structure for table `sem_types`
 --
 
 DROP TABLE IF EXISTS `sem_types`;
 CREATE TABLE IF NOT EXISTS `sem_types` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `class` int(11) NOT NULL,
   `mkdate` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL
-) ENGINE=MyISAM;
+) ENGINE=MyISAM 00;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `session_data`
+-- Table structure for table `session_data`
 --
 
 DROP TABLE IF EXISTS `session_data`;
@@ -2656,12 +2623,12 @@ CREATE TABLE IF NOT EXISTS `session_data` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `siteinfo_details`
+-- Table structure for table `siteinfo_details`
 --
 
 DROP TABLE IF EXISTS `siteinfo_details`;
 CREATE TABLE IF NOT EXISTS `siteinfo_details` (
-`detail_id` smallint(5) unsigned NOT NULL,
+  `detail_id` smallint(5) unsigned NOT NULL,
   `rubric_id` smallint(5) unsigned NOT NULL,
   `position` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) NOT NULL,
@@ -2671,12 +2638,12 @@ CREATE TABLE IF NOT EXISTS `siteinfo_details` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `siteinfo_rubrics`
+-- Table structure for table `siteinfo_rubrics`
 --
 
 DROP TABLE IF EXISTS `siteinfo_rubrics`;
 CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
-`rubric_id` smallint(5) unsigned NOT NULL,
+  `rubric_id` smallint(5) unsigned NOT NULL,
   `position` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=MyISAM;
@@ -2684,12 +2651,12 @@ CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `smiley`
+-- Table structure for table `smiley`
 --
 
 DROP TABLE IF EXISTS `smiley`;
 CREATE TABLE IF NOT EXISTS `smiley` (
-`smiley_id` int(11) unsigned NOT NULL,
+  `smiley_id` int(11) unsigned NOT NULL,
   `smiley_name` varchar(50) NOT NULL DEFAULT '',
   `smiley_width` int(11) NOT NULL DEFAULT '0',
   `smiley_height` int(11) NOT NULL DEFAULT '0',
@@ -2704,7 +2671,7 @@ CREATE TABLE IF NOT EXISTS `smiley` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `statusgruppen`
+-- Table structure for table `statusgruppen`
 --
 
 DROP TABLE IF EXISTS `statusgruppen`;
@@ -2725,7 +2692,7 @@ CREATE TABLE IF NOT EXISTS `statusgruppen` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `statusgruppe_user`
+-- Table structure for table `statusgruppe_user`
 --
 
 DROP TABLE IF EXISTS `statusgruppe_user`;
@@ -2740,7 +2707,7 @@ CREATE TABLE IF NOT EXISTS `statusgruppe_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `studiengaenge`
+-- Table structure for table `studiengaenge`
 --
 
 DROP TABLE IF EXISTS `studiengaenge`;
@@ -2755,7 +2722,7 @@ CREATE TABLE IF NOT EXISTS `studiengaenge` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `studygroup_invitations`
+-- Table structure for table `studygroup_invitations`
 --
 
 DROP TABLE IF EXISTS `studygroup_invitations`;
@@ -2768,7 +2735,7 @@ CREATE TABLE IF NOT EXISTS `studygroup_invitations` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `termine`
+-- Table structure for table `termine`
 --
 
 DROP TABLE IF EXISTS `termine`;
@@ -2791,7 +2758,7 @@ CREATE TABLE IF NOT EXISTS `termine` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `termin_related_groups`
+-- Table structure for table `termin_related_groups`
 --
 
 DROP TABLE IF EXISTS `termin_related_groups`;
@@ -2803,7 +2770,7 @@ CREATE TABLE IF NOT EXISTS `termin_related_groups` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `termin_related_persons`
+-- Table structure for table `termin_related_persons`
 --
 
 DROP TABLE IF EXISTS `termin_related_persons`;
@@ -2815,7 +2782,7 @@ CREATE TABLE IF NOT EXISTS `termin_related_persons` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `themen`
+-- Table structure for table `themen`
 --
 
 DROP TABLE IF EXISTS `themen`;
@@ -2833,7 +2800,7 @@ CREATE TABLE IF NOT EXISTS `themen` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `themen_termine`
+-- Table structure for table `themen_termine`
 --
 
 DROP TABLE IF EXISTS `themen_termine`;
@@ -2845,7 +2812,7 @@ CREATE TABLE IF NOT EXISTS `themen_termine` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `timedadmissions`
+-- Table structure for table `timedadmissions`
 --
 
 DROP TABLE IF EXISTS `timedadmissions`;
@@ -2861,7 +2828,7 @@ CREATE TABLE IF NOT EXISTS `timedadmissions` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userdomains`
+-- Table structure for table `userdomains`
 --
 
 DROP TABLE IF EXISTS `userdomains`;
@@ -2873,7 +2840,7 @@ CREATE TABLE IF NOT EXISTS `userdomains` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userfilter`
+-- Table structure for table `userfilter`
 --
 
 DROP TABLE IF EXISTS `userfilter`;
@@ -2886,7 +2853,7 @@ CREATE TABLE IF NOT EXISTS `userfilter` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userfilter_fields`
+-- Table structure for table `userfilter_fields`
 --
 
 DROP TABLE IF EXISTS `userfilter_fields`;
@@ -2903,7 +2870,7 @@ CREATE TABLE IF NOT EXISTS `userfilter_fields` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `userlimits`
+-- Table structure for table `userlimits`
 --
 
 DROP TABLE IF EXISTS `userlimits`;
@@ -2918,7 +2885,7 @@ CREATE TABLE IF NOT EXISTS `userlimits` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_config`
+-- Table structure for table `user_config`
 --
 
 DROP TABLE IF EXISTS `user_config`;
@@ -2936,7 +2903,7 @@ CREATE TABLE IF NOT EXISTS `user_config` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_factorlist`
+-- Table structure for table `user_factorlist`
 --
 
 DROP TABLE IF EXISTS `user_factorlist`;
@@ -2949,7 +2916,7 @@ CREATE TABLE IF NOT EXISTS `user_factorlist` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_info`
+-- Table structure for table `user_info`
 --
 
 DROP TABLE IF EXISTS `user_info`;
@@ -2972,7 +2939,6 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   `preferred_language` varchar(20) DEFAULT NULL,
   `smsforward_copy` tinyint(1) NOT NULL DEFAULT '1',
   `smsforward_rec` varchar(32) NOT NULL DEFAULT '',
-  `guestbook` tinyint(4) NOT NULL DEFAULT '0',
   `email_forward` tinyint(4) NOT NULL DEFAULT '0',
   `smiley_favorite` varchar(255) NOT NULL DEFAULT '',
   `motto` varchar(255) NOT NULL DEFAULT '',
@@ -2982,7 +2948,7 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_inst`
+-- Table structure for table `user_inst`
 --
 
 DROP TABLE IF EXISTS `user_inst`;
@@ -3002,7 +2968,7 @@ CREATE TABLE IF NOT EXISTS `user_inst` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_online`
+-- Table structure for table `user_online`
 --
 
 DROP TABLE IF EXISTS `user_online`;
@@ -3014,7 +2980,7 @@ CREATE TABLE IF NOT EXISTS `user_online` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_studiengang`
+-- Table structure for table `user_studiengang`
 --
 
 DROP TABLE IF EXISTS `user_studiengang`;
@@ -3028,7 +2994,7 @@ CREATE TABLE IF NOT EXISTS `user_studiengang` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_token`
+-- Table structure for table `user_token`
 --
 
 DROP TABLE IF EXISTS `user_token`;
@@ -3041,7 +3007,7 @@ CREATE TABLE IF NOT EXISTS `user_token` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_userdomains`
+-- Table structure for table `user_userdomains`
 --
 
 DROP TABLE IF EXISTS `user_userdomains`;
@@ -3053,7 +3019,7 @@ CREATE TABLE IF NOT EXISTS `user_userdomains` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_visibility`
+-- Table structure for table `user_visibility`
 --
 
 DROP TABLE IF EXISTS `user_visibility`;
@@ -3070,13 +3036,13 @@ CREATE TABLE IF NOT EXISTS `user_visibility` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_visibility_settings`
+-- Table structure for table `user_visibility_settings`
 --
 
 DROP TABLE IF EXISTS `user_visibility_settings`;
 CREATE TABLE IF NOT EXISTS `user_visibility_settings` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
-`visibilityid` int(32) NOT NULL,
+  `visibilityid` int(32) NOT NULL,
   `parent_id` int(32) NOT NULL,
   `category` varchar(128) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -3088,7 +3054,7 @@ CREATE TABLE IF NOT EXISTS `user_visibility_settings` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `vote`
+-- Table structure for table `vote`
 --
 
 DROP TABLE IF EXISTS `vote`;
@@ -3116,7 +3082,7 @@ CREATE TABLE IF NOT EXISTS `vote` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `voteanswers`
+-- Table structure for table `voteanswers`
 --
 
 DROP TABLE IF EXISTS `voteanswers`;
@@ -3132,7 +3098,7 @@ CREATE TABLE IF NOT EXISTS `voteanswers` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `voteanswers_user`
+-- Table structure for table `voteanswers_user`
 --
 
 DROP TABLE IF EXISTS `voteanswers_user`;
@@ -3145,7 +3111,7 @@ CREATE TABLE IF NOT EXISTS `voteanswers_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `vote_user`
+-- Table structure for table `vote_user`
 --
 
 DROP TABLE IF EXISTS `vote_user`;
@@ -3158,7 +3124,7 @@ CREATE TABLE IF NOT EXISTS `vote_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `webservice_access_rules`
+-- Table structure for table `webservice_access_rules`
 --
 
 DROP TABLE IF EXISTS `webservice_access_rules`;
@@ -3167,13 +3133,13 @@ CREATE TABLE IF NOT EXISTS `webservice_access_rules` (
   `method` varchar(100) NOT NULL DEFAULT '',
   `ip_range` varchar(200) NOT NULL DEFAULT '',
   `type` enum('allow','deny') NOT NULL DEFAULT 'allow',
-`id` int(11) NOT NULL
+  `id` int(11) NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `widget_default`
+-- Table structure for table `widget_default`
 --
 
 DROP TABLE IF EXISTS `widget_default`;
@@ -3187,12 +3153,12 @@ CREATE TABLE IF NOT EXISTS `widget_default` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `widget_user`
+-- Table structure for table `widget_user`
 --
 
 DROP TABLE IF EXISTS `widget_user`;
 CREATE TABLE IF NOT EXISTS `widget_user` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `pluginid` int(11) NOT NULL,
   `position` int(11) NOT NULL DEFAULT '0',
   `range_id` varchar(32) NOT NULL,
@@ -3202,7 +3168,7 @@ CREATE TABLE IF NOT EXISTS `widget_user` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `wiki`
+-- Table structure for table `wiki`
 --
 
 DROP TABLE IF EXISTS `wiki`;
@@ -3218,7 +3184,7 @@ CREATE TABLE IF NOT EXISTS `wiki` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `wiki_links`
+-- Table structure for table `wiki_links`
 --
 
 DROP TABLE IF EXISTS `wiki_links`;
@@ -3231,7 +3197,7 @@ CREATE TABLE IF NOT EXISTS `wiki_links` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `wiki_locks`
+-- Table structure for table `wiki_locks`
 --
 
 DROP TABLE IF EXISTS `wiki_locks`;
@@ -3250,1141 +3216,1311 @@ CREATE TABLE IF NOT EXISTS `wiki_locks` (
 -- Indexes for table `abschluss`
 --
 ALTER TABLE `abschluss`
- ADD PRIMARY KEY (`abschluss_id`);
+  ADD PRIMARY KEY (`abschluss_id`);
 
 --
 -- Indexes for table `admissionfactor`
 --
 ALTER TABLE `admissionfactor`
- ADD PRIMARY KEY (`list_id`);
+  ADD PRIMARY KEY (`list_id`);
 
 --
 -- Indexes for table `admissionrules`
 --
 ALTER TABLE `admissionrules`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `ruletype` (`ruletype`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ruletype` (`ruletype`);
 
 --
 -- Indexes for table `admissionrule_inst`
 --
 ALTER TABLE `admissionrule_inst`
- ADD PRIMARY KEY (`rule_id`,`institute_id`);
+  ADD PRIMARY KEY (`rule_id`,`institute_id`);
 
 --
 -- Indexes for table `admission_condition`
 --
 ALTER TABLE `admission_condition`
- ADD PRIMARY KEY (`rule_id`,`filter_id`);
+  ADD PRIMARY KEY (`rule_id`,`filter_id`);
 
 --
 -- Indexes for table `admission_seminar_user`
 --
 ALTER TABLE `admission_seminar_user`
- ADD PRIMARY KEY (`user_id`,`seminar_id`), ADD KEY `seminar_id` (`seminar_id`,`status`);
+  ADD PRIMARY KEY (`user_id`,`seminar_id`),
+  ADD KEY `seminar_id` (`seminar_id`,`status`);
 
 --
 -- Indexes for table `api_consumers`
 --
 ALTER TABLE `api_consumers`
- ADD PRIMARY KEY (`consumer_id`);
+  ADD PRIMARY KEY (`consumer_id`);
 
 --
 -- Indexes for table `api_consumer_permissions`
 --
 ALTER TABLE `api_consumer_permissions`
- ADD UNIQUE KEY `route_id` (`route_id`,`consumer_id`,`method`);
+  ADD UNIQUE KEY `route_id` (`route_id`,`consumer_id`,`method`);
 
 --
 -- Indexes for table `api_oauth_user_mapping`
 --
 ALTER TABLE `api_oauth_user_mapping`
- ADD PRIMARY KEY (`oauth_id`);
+  ADD PRIMARY KEY (`oauth_id`);
 
 --
 -- Indexes for table `api_user_permissions`
 --
 ALTER TABLE `api_user_permissions`
- ADD PRIMARY KEY (`user_id`,`consumer_id`);
+  ADD PRIMARY KEY (`user_id`,`consumer_id`);
 
 --
 -- Indexes for table `archiv`
 --
 ALTER TABLE `archiv`
- ADD PRIMARY KEY (`seminar_id`), ADD KEY `heimat_inst_id` (`heimat_inst_id`);
+  ADD PRIMARY KEY (`seminar_id`),
+  ADD KEY `heimat_inst_id` (`heimat_inst_id`);
 
 --
 -- Indexes for table `archiv_user`
 --
 ALTER TABLE `archiv_user`
- ADD PRIMARY KEY (`seminar_id`,`user_id`), ADD KEY `user_id` (`user_id`,`status`);
+  ADD PRIMARY KEY (`seminar_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`,`status`);
 
 --
 -- Indexes for table `auth_extern`
 --
 ALTER TABLE `auth_extern`
- ADD PRIMARY KEY (`studip_user_id`,`external_user_system_type`);
+  ADD PRIMARY KEY (`studip_user_id`,`external_user_system_type`);
 
 --
 -- Indexes for table `auth_user_md5`
 --
 ALTER TABLE `auth_user_md5`
- ADD PRIMARY KEY (`user_id`), ADD UNIQUE KEY `k_username` (`username`), ADD KEY `perms` (`perms`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `k_username` (`username`),
+  ADD KEY `perms` (`perms`);
 
 --
 -- Indexes for table `auto_insert_sem`
 --
 ALTER TABLE `auto_insert_sem`
- ADD PRIMARY KEY (`seminar_id`,`status`,`domain_id`);
+  ADD PRIMARY KEY (`seminar_id`,`status`,`domain_id`);
 
 --
 -- Indexes for table `auto_insert_user`
 --
 ALTER TABLE `auto_insert_user`
- ADD PRIMARY KEY (`seminar_id`,`user_id`);
+  ADD PRIMARY KEY (`seminar_id`,`user_id`);
 
 --
 -- Indexes for table `aux_lock_rules`
 --
 ALTER TABLE `aux_lock_rules`
- ADD PRIMARY KEY (`lock_id`);
+  ADD PRIMARY KEY (`lock_id`);
 
 --
 -- Indexes for table `banner_ads`
 --
 ALTER TABLE `banner_ads`
- ADD PRIMARY KEY (`ad_id`);
+  ADD PRIMARY KEY (`ad_id`);
 
 --
 -- Indexes for table `blubber`
 --
 ALTER TABLE `blubber`
- ADD PRIMARY KEY (`topic_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `chdate` (`chdate`), ADD KEY `mkdate` (`mkdate`), ADD KEY `user_id` (`user_id`,`Seminar_id`), ADD KEY `root_id` (`root_id`,`mkdate`), ADD KEY `Seminar_id` (`Seminar_id`,`context_type`);
+  ADD PRIMARY KEY (`topic_id`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `chdate` (`chdate`),
+  ADD KEY `mkdate` (`mkdate`),
+  ADD KEY `user_id` (`user_id`,`Seminar_id`),
+  ADD KEY `root_id` (`root_id`,`mkdate`),
+  ADD KEY `Seminar_id` (`Seminar_id`,`context_type`);
 
 --
 -- Indexes for table `blubber_events_queue`
 --
 ALTER TABLE `blubber_events_queue`
- ADD PRIMARY KEY (`event_type`,`item_id`,`mkdate`), ADD KEY `item_id` (`item_id`);
+  ADD PRIMARY KEY (`event_type`,`item_id`,`mkdate`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `blubber_external_contact`
 --
 ALTER TABLE `blubber_external_contact`
- ADD PRIMARY KEY (`external_contact_id`), ADD KEY `mail_identifier` (`mail_identifier`), ADD KEY `contact_type` (`contact_type`);
+  ADD PRIMARY KEY (`external_contact_id`),
+  ADD KEY `mail_identifier` (`mail_identifier`),
+  ADD KEY `contact_type` (`contact_type`);
 
 --
 -- Indexes for table `blubber_follower`
 --
 ALTER TABLE `blubber_follower`
- ADD KEY `studip_user_id` (`studip_user_id`), ADD KEY `external_contact_id` (`external_contact_id`);
+  ADD KEY `studip_user_id` (`studip_user_id`),
+  ADD KEY `external_contact_id` (`external_contact_id`);
 
 --
 -- Indexes for table `blubber_mentions`
 --
 ALTER TABLE `blubber_mentions`
- ADD UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`), ADD KEY `topic_id` (`topic_id`), ADD KEY `user_id` (`user_id`);
+  ADD UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`),
+  ADD KEY `topic_id` (`topic_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `blubber_reshares`
 --
 ALTER TABLE `blubber_reshares`
- ADD UNIQUE KEY `unique_reshares` (`topic_id`,`user_id`,`external_contact`), ADD KEY `topic_id` (`topic_id`), ADD KEY `user_id` (`user_id`);
+  ADD UNIQUE KEY `unique_reshares` (`topic_id`,`user_id`,`external_contact`),
+  ADD KEY `topic_id` (`topic_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `blubber_streams`
 --
 ALTER TABLE `blubber_streams`
- ADD PRIMARY KEY (`stream_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`stream_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `blubber_tags`
 --
 ALTER TABLE `blubber_tags`
- ADD PRIMARY KEY (`topic_id`,`tag`), ADD KEY `tag` (`tag`);
+  ADD PRIMARY KEY (`topic_id`,`tag`),
+  ADD KEY `tag` (`tag`);
 
 --
--- Indexes for table `calendar_events`
+-- Indexes for table `calendar_event`
 --
-ALTER TABLE `calendar_events`
- ADD PRIMARY KEY (`event_id`), ADD UNIQUE KEY `uid_range` (`uid`,`range_id`), ADD KEY `autor_id` (`autor_id`), ADD KEY `range_id` (`range_id`,`class`);
+ALTER TABLE `calendar_event`
+  ADD PRIMARY KEY (`range_id`,`event_id`);
+
+--
+-- Indexes for table `calendar_user`
+--
+ALTER TABLE `calendar_user`
+  ADD PRIMARY KEY (`owner_id`,`user_id`);
 
 --
 -- Indexes for table `comments`
 --
 ALTER TABLE `comments`
- ADD PRIMARY KEY (`comment_id`), ADD KEY `object_id` (`object_id`);
+  ADD PRIMARY KEY (`comment_id`),
+  ADD KEY `object_id` (`object_id`);
 
 --
 -- Indexes for table `conditionaladmissions`
 --
 ALTER TABLE `conditionaladmissions`
- ADD PRIMARY KEY (`rule_id`);
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `config`
 --
 ALTER TABLE `config`
- ADD PRIMARY KEY (`config_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `field` (`field`,`range`);
+  ADD PRIMARY KEY (`config_id`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `field` (`field`,`range`);
 
 --
 -- Indexes for table `contact`
 --
 ALTER TABLE `contact`
- ADD PRIMARY KEY (`contact_id`), ADD KEY `owner_id` (`owner_id`,`buddy`,`user_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`owner_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `contact_userinfo`
+-- Indexes for table `coursememberadmissions`
 --
-ALTER TABLE `contact_userinfo`
- ADD PRIMARY KEY (`userinfo_id`), ADD KEY `contact_id` (`contact_id`), ADD KEY `priority` (`priority`);
+ALTER TABLE `coursememberadmissions`
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `coursesets`
 --
 ALTER TABLE `coursesets`
- ADD PRIMARY KEY (`set_id`), ADD KEY `set_user` (`user_id`,`set_id`);
+  ADD PRIMARY KEY (`set_id`),
+  ADD KEY `set_user` (`user_id`,`set_id`);
 
 --
 -- Indexes for table `courseset_factorlist`
 --
 ALTER TABLE `courseset_factorlist`
- ADD PRIMARY KEY (`set_id`,`factorlist_id`);
+  ADD PRIMARY KEY (`set_id`,`factorlist_id`);
 
 --
 -- Indexes for table `courseset_institute`
 --
 ALTER TABLE `courseset_institute`
- ADD PRIMARY KEY (`set_id`,`institute_id`), ADD KEY `institute_id` (`institute_id`,`set_id`);
+  ADD PRIMARY KEY (`set_id`,`institute_id`),
+  ADD KEY `institute_id` (`institute_id`,`set_id`);
 
 --
 -- Indexes for table `courseset_rule`
 --
 ALTER TABLE `courseset_rule`
- ADD PRIMARY KEY (`set_id`,`rule_id`), ADD KEY `type` (`set_id`,`type`);
+  ADD PRIMARY KEY (`set_id`,`rule_id`),
+  ADD KEY `type` (`set_id`,`type`);
 
 --
 -- Indexes for table `cronjobs_logs`
 --
 ALTER TABLE `cronjobs_logs`
- ADD PRIMARY KEY (`log_id`), ADD KEY `schedule_id` (`schedule_id`);
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `schedule_id` (`schedule_id`);
 
 --
 -- Indexes for table `cronjobs_schedules`
 --
 ALTER TABLE `cronjobs_schedules`
- ADD PRIMARY KEY (`schedule_id`), ADD KEY `task_id` (`task_id`);
+  ADD PRIMARY KEY (`schedule_id`),
+  ADD KEY `task_id` (`task_id`);
 
 --
 -- Indexes for table `cronjobs_tasks`
 --
 ALTER TABLE `cronjobs_tasks`
- ADD PRIMARY KEY (`task_id`);
+  ADD PRIMARY KEY (`task_id`);
 
 --
 -- Indexes for table `datafields`
 --
 ALTER TABLE `datafields`
- ADD PRIMARY KEY (`datafield_id`), ADD KEY `object_type` (`object_type`);
+  ADD PRIMARY KEY (`datafield_id`),
+  ADD KEY `object_type` (`object_type`);
 
 --
 -- Indexes for table `datafields_entries`
 --
 ALTER TABLE `datafields_entries`
- ADD PRIMARY KEY (`datafield_id`,`range_id`,`sec_range_id`), ADD KEY `range_id` (`range_id`,`datafield_id`), ADD KEY `datafield_id_2` (`datafield_id`,`sec_range_id`), ADD KEY `datafields_contents` (`datafield_id`,`content`(32));
+  ADD PRIMARY KEY (`datafield_id`,`range_id`,`sec_range_id`),
+  ADD KEY `range_id` (`range_id`,`datafield_id`),
+  ADD KEY `datafield_id_2` (`datafield_id`,`sec_range_id`),
+  ADD KEY `datafields_contents` (`datafield_id`,`content`(32));
 
 --
 -- Indexes for table `deputies`
 --
 ALTER TABLE `deputies`
- ADD PRIMARY KEY (`range_id`,`user_id`), ADD KEY `user_id` (`user_id`,`range_id`,`edit_about`);
+  ADD PRIMARY KEY (`range_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`,`range_id`,`edit_about`);
 
 --
 -- Indexes for table `doc_filetype`
 --
 ALTER TABLE `doc_filetype`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `doc_filetype_forbidden`
 --
 ALTER TABLE `doc_filetype_forbidden`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id`), ADD KEY `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id`),
+  ADD KEY `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup`);
 
 --
 -- Indexes for table `doc_usergroup_config`
 --
 ALTER TABLE `doc_usergroup_config`
- ADD PRIMARY KEY (`id`,`usergroup`);
+  ADD PRIMARY KEY (`id`,`usergroup`);
 
 --
 -- Indexes for table `dokumente`
 --
 ALTER TABLE `dokumente`
- ADD PRIMARY KEY (`dokument_id`), ADD KEY `range_id` (`range_id`), ADD KEY `seminar_id` (`seminar_id`), ADD KEY `user_id` (`user_id`), ADD KEY `chdate` (`chdate`), ADD KEY `mkdate` (`mkdate`);
+  ADD PRIMARY KEY (`dokument_id`),
+  ADD KEY `range_id` (`range_id`),
+  ADD KEY `seminar_id` (`seminar_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `chdate` (`chdate`),
+  ADD KEY `mkdate` (`mkdate`);
 
 --
 -- Indexes for table `eval`
 --
 ALTER TABLE `eval`
- ADD PRIMARY KEY (`eval_id`);
+  ADD PRIMARY KEY (`eval_id`);
 
 --
 -- Indexes for table `evalanswer`
 --
 ALTER TABLE `evalanswer`
- ADD PRIMARY KEY (`evalanswer_id`), ADD KEY `parent_id` (`parent_id`);
+  ADD PRIMARY KEY (`evalanswer_id`),
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Indexes for table `evalanswer_user`
 --
 ALTER TABLE `evalanswer_user`
- ADD PRIMARY KEY (`evalanswer_id`,`user_id`);
+  ADD PRIMARY KEY (`evalanswer_id`,`user_id`);
 
 --
 -- Indexes for table `evalgroup`
 --
 ALTER TABLE `evalgroup`
- ADD PRIMARY KEY (`evalgroup_id`), ADD KEY `parent_id` (`parent_id`);
+  ADD PRIMARY KEY (`evalgroup_id`),
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Indexes for table `evalquestion`
 --
 ALTER TABLE `evalquestion`
- ADD PRIMARY KEY (`evalquestion_id`), ADD KEY `parent_id` (`parent_id`);
+  ADD PRIMARY KEY (`evalquestion_id`),
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Indexes for table `eval_group_template`
 --
 ALTER TABLE `eval_group_template`
- ADD PRIMARY KEY (`evalgroup_id`,`user_id`);
+  ADD PRIMARY KEY (`evalgroup_id`,`user_id`);
 
 --
 -- Indexes for table `eval_range`
 --
 ALTER TABLE `eval_range`
- ADD PRIMARY KEY (`eval_id`,`range_id`);
+  ADD PRIMARY KEY (`eval_id`,`range_id`);
 
 --
 -- Indexes for table `eval_templates`
 --
 ALTER TABLE `eval_templates`
- ADD PRIMARY KEY (`template_id`), ADD KEY `user_id` (`user_id`,`institution_id`,`name`);
+  ADD PRIMARY KEY (`template_id`),
+  ADD KEY `user_id` (`user_id`,`institution_id`,`name`);
 
 --
 -- Indexes for table `eval_templates_eval`
 --
 ALTER TABLE `eval_templates_eval`
- ADD PRIMARY KEY (`eval_id`), ADD KEY `eval_id` (`eval_id`);
+  ADD PRIMARY KEY (`eval_id`),
+  ADD KEY `eval_id` (`eval_id`);
 
 --
 -- Indexes for table `eval_templates_user`
 --
 ALTER TABLE `eval_templates_user`
- ADD KEY `eval_id` (`eval_id`);
+  ADD KEY `eval_id` (`eval_id`);
 
 --
 -- Indexes for table `eval_user`
 --
 ALTER TABLE `eval_user`
- ADD PRIMARY KEY (`eval_id`,`user_id`);
+  ADD PRIMARY KEY (`eval_id`,`user_id`);
+
+--
+-- Indexes for table `event_data`
+--
+ALTER TABLE `event_data`
+  ADD PRIMARY KEY (`event_id`),
+  ADD UNIQUE KEY `uid` (`uid`),
+  ADD KEY `autor_id` (`author_id`);
 
 --
 -- Indexes for table `extern_config`
 --
 ALTER TABLE `extern_config`
- ADD PRIMARY KEY (`config_id`,`range_id`);
+  ADD PRIMARY KEY (`config_id`,`range_id`);
 
 --
 -- Indexes for table `ex_termine`
 --
 ALTER TABLE `ex_termine`
- ADD PRIMARY KEY (`termin_id`), ADD KEY `range_id` (`range_id`,`date`), ADD KEY `metadate_id` (`metadate_id`,`date`), ADD KEY `autor_id` (`autor_id`);
+  ADD PRIMARY KEY (`termin_id`),
+  ADD KEY `range_id` (`range_id`,`date`),
+  ADD KEY `metadate_id` (`metadate_id`,`date`),
+  ADD KEY `autor_id` (`autor_id`);
 
 --
 -- Indexes for table `files`
 --
 ALTER TABLE `files`
- ADD PRIMARY KEY (`file_id`);
+  ADD PRIMARY KEY (`file_id`);
 
 --
 -- Indexes for table `files_backend_studip`
 --
 ALTER TABLE `files_backend_studip`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `files_backend_url`
 --
 ALTER TABLE `files_backend_url`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `files_share`
 --
 ALTER TABLE `files_share`
- ADD PRIMARY KEY (`files_id`,`entity_id`);
+  ADD PRIMARY KEY (`files_id`,`entity_id`);
 
 --
 -- Indexes for table `file_refs`
 --
 ALTER TABLE `file_refs`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `folder`
 --
 ALTER TABLE `folder`
- ADD PRIMARY KEY (`folder_id`), ADD KEY `user_id` (`user_id`), ADD KEY `range_id` (`range_id`), ADD KEY `chdate` (`chdate`);
+  ADD PRIMARY KEY (`folder_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `range_id` (`range_id`),
+  ADD KEY `chdate` (`chdate`);
 
 --
 -- Indexes for table `forum_abo_users`
 --
 ALTER TABLE `forum_abo_users`
- ADD PRIMARY KEY (`topic_id`,`user_id`);
+  ADD PRIMARY KEY (`topic_id`,`user_id`);
 
 --
 -- Indexes for table `forum_categories`
 --
 ALTER TABLE `forum_categories`
- ADD PRIMARY KEY (`category_id`), ADD KEY `seminar_id` (`seminar_id`);
+  ADD PRIMARY KEY (`category_id`),
+  ADD KEY `seminar_id` (`seminar_id`);
 
 --
 -- Indexes for table `forum_categories_entries`
 --
 ALTER TABLE `forum_categories_entries`
- ADD PRIMARY KEY (`category_id`,`topic_id`);
+  ADD PRIMARY KEY (`category_id`,`topic_id`);
 
 --
 -- Indexes for table `forum_entries`
 --
 ALTER TABLE `forum_entries`
- ADD PRIMARY KEY (`topic_id`), ADD KEY `seminar_id` (`seminar_id`,`lft`), ADD KEY `seminar_id_2` (`seminar_id`,`rgt`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`topic_id`),
+  ADD KEY `seminar_id` (`seminar_id`,`lft`),
+  ADD KEY `seminar_id_2` (`seminar_id`,`rgt`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `forum_entries_issues`
 --
 ALTER TABLE `forum_entries_issues`
- ADD PRIMARY KEY (`topic_id`,`issue_id`);
+  ADD PRIMARY KEY (`topic_id`,`issue_id`);
 
 --
 -- Indexes for table `forum_favorites`
 --
 ALTER TABLE `forum_favorites`
- ADD PRIMARY KEY (`user_id`,`topic_id`);
+  ADD PRIMARY KEY (`user_id`,`topic_id`);
 
 --
 -- Indexes for table `forum_likes`
 --
 ALTER TABLE `forum_likes`
- ADD PRIMARY KEY (`topic_id`,`user_id`);
+  ADD PRIMARY KEY (`topic_id`,`user_id`);
 
 --
 -- Indexes for table `forum_visits`
 --
 ALTER TABLE `forum_visits`
- ADD PRIMARY KEY (`user_id`,`seminar_id`);
+  ADD PRIMARY KEY (`user_id`,`seminar_id`);
 
 --
 -- Indexes for table `help_content`
 --
 ALTER TABLE `help_content`
- ADD PRIMARY KEY (`route`,`studip_version`,`language`,`position`,`custom`);
+  ADD PRIMARY KEY (`content_id`);
 
 --
 -- Indexes for table `help_tours`
 --
 ALTER TABLE `help_tours`
- ADD PRIMARY KEY (`tour_id`);
+  ADD PRIMARY KEY (`tour_id`);
 
 --
 -- Indexes for table `help_tour_audiences`
 --
 ALTER TABLE `help_tour_audiences`
- ADD PRIMARY KEY (`tour_id`,`range_id`,`type`);
+  ADD PRIMARY KEY (`tour_id`,`range_id`,`type`);
 
 --
 -- Indexes for table `help_tour_settings`
 --
 ALTER TABLE `help_tour_settings`
- ADD PRIMARY KEY (`tour_id`);
+  ADD PRIMARY KEY (`tour_id`);
 
 --
 -- Indexes for table `help_tour_steps`
 --
 ALTER TABLE `help_tour_steps`
- ADD PRIMARY KEY (`tour_id`,`step`);
+  ADD PRIMARY KEY (`tour_id`,`step`);
 
 --
 -- Indexes for table `help_tour_user`
 --
 ALTER TABLE `help_tour_user`
- ADD PRIMARY KEY (`tour_id`,`user_id`);
+  ADD PRIMARY KEY (`tour_id`,`user_id`);
 
 --
 -- Indexes for table `Institute`
 --
 ALTER TABLE `Institute`
- ADD PRIMARY KEY (`Institut_id`), ADD KEY `fakultaets_id` (`fakultaets_id`);
+  ADD PRIMARY KEY (`Institut_id`),
+  ADD KEY `fakultaets_id` (`fakultaets_id`);
 
 --
 -- Indexes for table `kategorien`
 --
 ALTER TABLE `kategorien`
- ADD PRIMARY KEY (`kategorie_id`), ADD KEY `priority` (`priority`), ADD KEY `range_id` (`range_id`);
+  ADD PRIMARY KEY (`kategorie_id`),
+  ADD KEY `priority` (`priority`),
+  ADD KEY `range_id` (`range_id`);
 
 --
 -- Indexes for table `limitedadmissions`
 --
 ALTER TABLE `limitedadmissions`
- ADD PRIMARY KEY (`rule_id`);
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `lit_catalog`
 --
 ALTER TABLE `lit_catalog`
- ADD PRIMARY KEY (`catalog_id`);
+  ADD PRIMARY KEY (`catalog_id`);
 
 --
 -- Indexes for table `lit_list`
 --
 ALTER TABLE `lit_list`
- ADD PRIMARY KEY (`list_id`), ADD KEY `range_id` (`range_id`), ADD KEY `priority` (`priority`), ADD KEY `visibility` (`visibility`);
+  ADD PRIMARY KEY (`list_id`),
+  ADD KEY `range_id` (`range_id`),
+  ADD KEY `priority` (`priority`),
+  ADD KEY `visibility` (`visibility`);
 
 --
 -- Indexes for table `lit_list_content`
 --
 ALTER TABLE `lit_list_content`
- ADD PRIMARY KEY (`list_element_id`), ADD KEY `list_id` (`list_id`), ADD KEY `catalog_id` (`catalog_id`), ADD KEY `priority` (`priority`);
+  ADD PRIMARY KEY (`list_element_id`),
+  ADD KEY `list_id` (`list_id`),
+  ADD KEY `catalog_id` (`catalog_id`),
+  ADD KEY `priority` (`priority`);
 
 --
 -- Indexes for table `lockedadmissions`
 --
 ALTER TABLE `lockedadmissions`
- ADD PRIMARY KEY (`rule_id`);
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `lock_rules`
 --
 ALTER TABLE `lock_rules`
- ADD PRIMARY KEY (`lock_id`);
+  ADD PRIMARY KEY (`lock_id`);
 
 --
 -- Indexes for table `log_actions`
 --
 ALTER TABLE `log_actions`
- ADD PRIMARY KEY (`action_id`);
+  ADD PRIMARY KEY (`action_id`);
 
 --
 -- Indexes for table `log_events`
 --
 ALTER TABLE `log_events`
- ADD PRIMARY KEY (`event_id`), ADD KEY `action_id` (`action_id`);
+  ADD PRIMARY KEY (`event_id`),
+  ADD KEY `action_id` (`action_id`);
 
 --
 -- Indexes for table `mail_queue_entries`
 --
 ALTER TABLE `mail_queue_entries`
- ADD PRIMARY KEY (`mail_queue_id`), ADD KEY `message_id` (`message_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`mail_queue_id`),
+  ADD KEY `message_id` (`message_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `media_cache`
 --
 ALTER TABLE `media_cache`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `message`
 --
 ALTER TABLE `message`
- ADD PRIMARY KEY (`message_id`), ADD KEY `chat_id` (`chat_id`);
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `autor_id` (`autor_id`);
 
 --
 -- Indexes for table `message_tags`
 --
 ALTER TABLE `message_tags`
- ADD PRIMARY KEY (`message_id`,`user_id`,`tag`);
+  ADD PRIMARY KEY (`message_id`,`user_id`,`tag`);
 
 --
 -- Indexes for table `message_user`
 --
 ALTER TABLE `message_user`
- ADD PRIMARY KEY (`message_id`,`snd_rec`,`user_id`), ADD KEY `user_id` (`user_id`,`snd_rec`,`deleted`,`readed`,`mkdate`), ADD KEY `user_id_2` (`user_id`,`snd_rec`,`deleted`,`mkdate`);
+  ADD PRIMARY KEY (`message_id`,`snd_rec`,`user_id`),
+  ADD KEY `user_id` (`user_id`,`snd_rec`,`deleted`,`readed`,`mkdate`),
+  ADD KEY `user_id_2` (`user_id`,`snd_rec`,`deleted`,`mkdate`);
 
 --
 -- Indexes for table `news`
 --
 ALTER TABLE `news`
- ADD PRIMARY KEY (`news_id`), ADD KEY `date` (`date`), ADD KEY `chdate` (`chdate`);
+  ADD PRIMARY KEY (`news_id`),
+  ADD KEY `date` (`date`),
+  ADD KEY `chdate` (`chdate`);
 
 --
 -- Indexes for table `news_range`
 --
 ALTER TABLE `news_range`
- ADD PRIMARY KEY (`news_id`,`range_id`), ADD KEY `range_id` (`range_id`);
+  ADD PRIMARY KEY (`news_id`,`range_id`),
+  ADD KEY `range_id` (`range_id`);
 
 --
 -- Indexes for table `news_rss_range`
 --
 ALTER TABLE `news_rss_range`
- ADD PRIMARY KEY (`range_id`), ADD KEY `rss_id` (`rss_id`);
+  ADD PRIMARY KEY (`range_id`),
+  ADD KEY `rss_id` (`rss_id`);
 
 --
 -- Indexes for table `oauth_consumer_registry`
 --
 ALTER TABLE `oauth_consumer_registry`
- ADD PRIMARY KEY (`ocr_id`), ADD UNIQUE KEY `ocr_consumer_key` (`ocr_consumer_key`,`ocr_usa_id_ref`,`ocr_server_uri`), ADD KEY `ocr_server_uri` (`ocr_server_uri`), ADD KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`), ADD KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`);
+  ADD PRIMARY KEY (`ocr_id`),
+  ADD UNIQUE KEY `ocr_consumer_key` (`ocr_consumer_key`,`ocr_usa_id_ref`,`ocr_server_uri`),
+  ADD KEY `ocr_server_uri` (`ocr_server_uri`),
+  ADD KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`),
+  ADD KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`);
 
 --
 -- Indexes for table `oauth_consumer_token`
 --
 ALTER TABLE `oauth_consumer_token`
- ADD PRIMARY KEY (`oct_id`), ADD UNIQUE KEY `oct_ocr_id_ref` (`oct_ocr_id_ref`,`oct_token`), ADD UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`), ADD KEY `oct_token_ttl` (`oct_token_ttl`);
+  ADD PRIMARY KEY (`oct_id`),
+  ADD UNIQUE KEY `oct_ocr_id_ref` (`oct_ocr_id_ref`,`oct_token`),
+  ADD UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`),
+  ADD KEY `oct_token_ttl` (`oct_token_ttl`);
 
 --
 -- Indexes for table `oauth_log`
 --
 ALTER TABLE `oauth_log`
- ADD PRIMARY KEY (`olg_id`), ADD KEY `olg_osr_consumer_key` (`olg_osr_consumer_key`,`olg_id`), ADD KEY `olg_ost_token` (`olg_ost_token`,`olg_id`), ADD KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`), ADD KEY `olg_oct_token` (`olg_oct_token`,`olg_id`), ADD KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`);
+  ADD PRIMARY KEY (`olg_id`),
+  ADD KEY `olg_osr_consumer_key` (`olg_osr_consumer_key`,`olg_id`),
+  ADD KEY `olg_ost_token` (`olg_ost_token`,`olg_id`),
+  ADD KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`),
+  ADD KEY `olg_oct_token` (`olg_oct_token`,`olg_id`),
+  ADD KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`);
 
 --
 -- Indexes for table `oauth_server_nonce`
 --
 ALTER TABLE `oauth_server_nonce`
- ADD PRIMARY KEY (`osn_id`), ADD UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`);
+  ADD PRIMARY KEY (`osn_id`),
+  ADD UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`);
 
 --
 -- Indexes for table `oauth_server_registry`
 --
 ALTER TABLE `oauth_server_registry`
- ADD PRIMARY KEY (`osr_id`), ADD UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`), ADD KEY `osr_usa_id_ref` (`osr_usa_id_ref`);
+  ADD PRIMARY KEY (`osr_id`),
+  ADD UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`),
+  ADD KEY `osr_usa_id_ref` (`osr_usa_id_ref`);
 
 --
 -- Indexes for table `oauth_server_token`
 --
 ALTER TABLE `oauth_server_token`
- ADD PRIMARY KEY (`ost_id`), ADD UNIQUE KEY `ost_token` (`ost_token`), ADD KEY `ost_osr_id_ref` (`ost_osr_id_ref`), ADD KEY `ost_token_ttl` (`ost_token_ttl`);
+  ADD PRIMARY KEY (`ost_id`),
+  ADD UNIQUE KEY `ost_token` (`ost_token`),
+  ADD KEY `ost_osr_id_ref` (`ost_osr_id_ref`),
+  ADD KEY `ost_token_ttl` (`ost_token_ttl`);
 
 --
 -- Indexes for table `object_contentmodules`
 --
 ALTER TABLE `object_contentmodules`
- ADD PRIMARY KEY (`object_id`,`module_id`,`system_type`);
-
---
--- Indexes for table `object_rate`
---
-ALTER TABLE `object_rate`
- ADD KEY `object_id` (`object_id`), ADD KEY `rate` (`rate`);
-
---
--- Indexes for table `object_user`
---
-ALTER TABLE `object_user`
- ADD PRIMARY KEY (`object_id`,`user_id`,`flag`);
+  ADD PRIMARY KEY (`object_id`,`module_id`,`system_type`);
 
 --
 -- Indexes for table `object_user_visits`
 --
 ALTER TABLE `object_user_visits`
- ADD PRIMARY KEY (`object_id`,`user_id`,`type`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`object_id`,`user_id`,`type`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `object_views`
 --
 ALTER TABLE `object_views`
- ADD PRIMARY KEY (`object_id`), ADD KEY `views` (`views`);
+  ADD PRIMARY KEY (`object_id`),
+  ADD KEY `views` (`views`);
 
 --
 -- Indexes for table `opengraphdata`
 --
 ALTER TABLE `opengraphdata`
- ADD PRIMARY KEY (`url`);
+  ADD PRIMARY KEY (`url`);
 
 --
 -- Indexes for table `participantrestrictedadmissions`
 --
 ALTER TABLE `participantrestrictedadmissions`
- ADD PRIMARY KEY (`rule_id`);
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `passwordadmissions`
 --
 ALTER TABLE `passwordadmissions`
- ADD PRIMARY KEY (`rule_id`);
+  ADD PRIMARY KEY (`rule_id`);
 
 --
 -- Indexes for table `personal_notifications`
 --
 ALTER TABLE `personal_notifications`
- ADD PRIMARY KEY (`personal_notification_id`);
+  ADD PRIMARY KEY (`personal_notification_id`);
 
 --
 -- Indexes for table `personal_notifications_user`
 --
 ALTER TABLE `personal_notifications_user`
- ADD PRIMARY KEY (`personal_notification_id`,`user_id`), ADD KEY `user_id` (`user_id`,`seen`);
+  ADD PRIMARY KEY (`personal_notification_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`,`seen`);
 
 --
 -- Indexes for table `plugins`
 --
 ALTER TABLE `plugins`
- ADD PRIMARY KEY (`pluginid`);
+  ADD PRIMARY KEY (`pluginid`);
 
 --
 -- Indexes for table `plugins_activated`
 --
 ALTER TABLE `plugins_activated`
- ADD PRIMARY KEY (`pluginid`,`poiid`), ADD UNIQUE KEY `poiid` (`poiid`,`pluginid`,`state`);
+  ADD PRIMARY KEY (`pluginid`,`poiid`),
+  ADD UNIQUE KEY `poiid` (`poiid`,`pluginid`,`state`);
 
 --
 -- Indexes for table `plugins_default_activations`
 --
 ALTER TABLE `plugins_default_activations`
- ADD PRIMARY KEY (`pluginid`,`institutid`);
+  ADD PRIMARY KEY (`pluginid`,`institutid`);
 
 --
 -- Indexes for table `priorities`
 --
 ALTER TABLE `priorities`
- ADD PRIMARY KEY (`user_id`,`set_id`,`seminar_id`), ADD KEY `user_rule_priority` (`user_id`,`priority`,`set_id`);
-
---
--- Indexes for table `px_topics`
---
-ALTER TABLE `px_topics`
- ADD PRIMARY KEY (`topic_id`), ADD KEY `root_id` (`root_id`), ADD KEY `Seminar_id` (`Seminar_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `chdate` (`chdate`), ADD KEY `mkdate` (`mkdate`), ADD KEY `user_id` (`user_id`,`Seminar_id`);
+  ADD PRIMARY KEY (`user_id`,`set_id`,`seminar_id`),
+  ADD KEY `user_rule_priority` (`user_id`,`priority`,`set_id`);
 
 --
 -- Indexes for table `range_tree`
 --
 ALTER TABLE `range_tree`
- ADD PRIMARY KEY (`item_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `priority` (`priority`), ADD KEY `studip_object_id` (`studip_object_id`);
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `priority` (`priority`),
+  ADD KEY `studip_object_id` (`studip_object_id`);
 
 --
 -- Indexes for table `resources_assign`
 --
 ALTER TABLE `resources_assign`
- ADD PRIMARY KEY (`assign_id`), ADD KEY `resource_id` (`resource_id`), ADD KEY `assign_user_id` (`assign_user_id`);
+  ADD PRIMARY KEY (`assign_id`),
+  ADD KEY `resource_id` (`resource_id`),
+  ADD KEY `assign_user_id` (`assign_user_id`);
 
 --
 -- Indexes for table `resources_categories`
 --
 ALTER TABLE `resources_categories`
- ADD PRIMARY KEY (`category_id`), ADD KEY `is_room` (`is_room`);
+  ADD PRIMARY KEY (`category_id`),
+  ADD KEY `is_room` (`is_room`);
 
 --
 -- Indexes for table `resources_categories_properties`
 --
 ALTER TABLE `resources_categories_properties`
- ADD PRIMARY KEY (`category_id`,`property_id`);
+  ADD PRIMARY KEY (`category_id`,`property_id`);
 
 --
 -- Indexes for table `resources_locks`
 --
 ALTER TABLE `resources_locks`
- ADD PRIMARY KEY (`lock_id`);
+  ADD PRIMARY KEY (`lock_id`);
 
 --
 -- Indexes for table `resources_objects`
 --
 ALTER TABLE `resources_objects`
- ADD PRIMARY KEY (`resource_id`), ADD KEY `institut_id` (`institut_id`), ADD KEY `root_id` (`root_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `category_id` (`category_id`), ADD KEY `owner_id` (`owner_id`);
+  ADD PRIMARY KEY (`resource_id`),
+  ADD KEY `institut_id` (`institut_id`),
+  ADD KEY `root_id` (`root_id`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `owner_id` (`owner_id`);
 
 --
 -- Indexes for table `resources_objects_properties`
 --
 ALTER TABLE `resources_objects_properties`
- ADD PRIMARY KEY (`resource_id`,`property_id`), ADD KEY `property_id` (`property_id`);
+  ADD PRIMARY KEY (`resource_id`,`property_id`),
+  ADD KEY `property_id` (`property_id`);
 
 --
 -- Indexes for table `resources_properties`
 --
 ALTER TABLE `resources_properties`
- ADD PRIMARY KEY (`property_id`);
+  ADD PRIMARY KEY (`property_id`);
 
 --
 -- Indexes for table `resources_requests`
 --
 ALTER TABLE `resources_requests`
- ADD PRIMARY KEY (`request_id`), ADD KEY `termin_id` (`termin_id`), ADD KEY `seminar_id` (`seminar_id`), ADD KEY `user_id` (`user_id`), ADD KEY `resource_id` (`resource_id`), ADD KEY `category_id` (`category_id`), ADD KEY `closed` (`closed`,`request_id`,`resource_id`), ADD KEY `metadate_id` (`metadate_id`);
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `termin_id` (`termin_id`),
+  ADD KEY `seminar_id` (`seminar_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `resource_id` (`resource_id`),
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `closed` (`closed`,`request_id`,`resource_id`),
+  ADD KEY `metadate_id` (`metadate_id`);
 
 --
 -- Indexes for table `resources_requests_properties`
 --
 ALTER TABLE `resources_requests_properties`
- ADD PRIMARY KEY (`request_id`,`property_id`);
+  ADD PRIMARY KEY (`request_id`,`property_id`);
 
 --
 -- Indexes for table `resources_requests_user_status`
 --
 ALTER TABLE `resources_requests_user_status`
- ADD PRIMARY KEY (`request_id`,`user_id`);
+  ADD PRIMARY KEY (`request_id`,`user_id`);
 
 --
 -- Indexes for table `resources_temporary_events`
 --
 ALTER TABLE `resources_temporary_events`
- ADD PRIMARY KEY (`event_id`), ADD KEY `resource_id` (`resource_id`,`begin`), ADD KEY `assign_object_id` (`assign_id`,`resource_id`);
+  ADD PRIMARY KEY (`event_id`),
+  ADD KEY `resource_id` (`resource_id`,`begin`),
+  ADD KEY `assign_object_id` (`assign_id`,`resource_id`);
 
 --
 -- Indexes for table `resources_user_resources`
 --
 ALTER TABLE `resources_user_resources`
- ADD PRIMARY KEY (`user_id`,`resource_id`);
+  ADD PRIMARY KEY (`user_id`,`resource_id`);
 
 --
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
- ADD PRIMARY KEY (`roleid`);
+  ADD PRIMARY KEY (`roleid`);
 
 --
 -- Indexes for table `roles_plugins`
 --
 ALTER TABLE `roles_plugins`
- ADD PRIMARY KEY (`roleid`,`pluginid`);
+  ADD PRIMARY KEY (`roleid`,`pluginid`);
 
 --
 -- Indexes for table `roles_studipperms`
 --
 ALTER TABLE `roles_studipperms`
- ADD PRIMARY KEY (`roleid`,`permname`);
+  ADD PRIMARY KEY (`roleid`,`permname`);
 
 --
 -- Indexes for table `roles_user`
 --
 ALTER TABLE `roles_user`
- ADD PRIMARY KEY (`roleid`,`userid`,`institut_id`);
-
---
--- Indexes for table `rss_feeds`
---
-ALTER TABLE `rss_feeds`
- ADD PRIMARY KEY (`feed_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`roleid`,`userid`,`institut_id`);
 
 --
 -- Indexes for table `schedule`
 --
 ALTER TABLE `schedule`
- ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `schedule_seminare`
 --
 ALTER TABLE `schedule_seminare`
- ADD PRIMARY KEY (`user_id`,`seminar_id`,`metadate_id`);
+  ADD PRIMARY KEY (`user_id`,`seminar_id`,`metadate_id`);
 
 --
 -- Indexes for table `schema_version`
 --
 ALTER TABLE `schema_version`
- ADD PRIMARY KEY (`domain`);
+  ADD PRIMARY KEY (`domain`);
 
 --
 -- Indexes for table `scm`
 --
 ALTER TABLE `scm`
- ADD PRIMARY KEY (`scm_id`), ADD KEY `chdate` (`chdate`), ADD KEY `range_id` (`range_id`);
+  ADD PRIMARY KEY (`scm_id`),
+  ADD KEY `chdate` (`chdate`),
+  ADD KEY `range_id` (`range_id`);
 
 --
 -- Indexes for table `semester_data`
 --
 ALTER TABLE `semester_data`
- ADD PRIMARY KEY (`semester_id`);
+  ADD PRIMARY KEY (`semester_id`);
 
 --
 -- Indexes for table `semester_holiday`
 --
 ALTER TABLE `semester_holiday`
- ADD PRIMARY KEY (`holiday_id`);
+  ADD PRIMARY KEY (`holiday_id`);
 
 --
 -- Indexes for table `seminare`
 --
 ALTER TABLE `seminare`
- ADD PRIMARY KEY (`Seminar_id`), ADD KEY `Institut_id` (`Institut_id`), ADD KEY `visible` (`visible`), ADD KEY `status` (`status`,`Seminar_id`);
+  ADD PRIMARY KEY (`Seminar_id`),
+  ADD KEY `Institut_id` (`Institut_id`),
+  ADD KEY `visible` (`visible`),
+  ADD KEY `status` (`status`,`Seminar_id`);
 
 --
 -- Indexes for table `seminar_courseset`
 --
 ALTER TABLE `seminar_courseset`
- ADD PRIMARY KEY (`set_id`,`seminar_id`), ADD KEY `seminar_id` (`seminar_id`,`set_id`);
+  ADD PRIMARY KEY (`set_id`,`seminar_id`),
+  ADD KEY `seminar_id` (`seminar_id`,`set_id`);
 
 --
 -- Indexes for table `seminar_cycle_dates`
 --
 ALTER TABLE `seminar_cycle_dates`
- ADD PRIMARY KEY (`metadate_id`), ADD KEY `seminar_id` (`seminar_id`);
+  ADD PRIMARY KEY (`metadate_id`),
+  ADD KEY `seminar_id` (`seminar_id`);
 
 --
 -- Indexes for table `seminar_inst`
 --
 ALTER TABLE `seminar_inst`
- ADD PRIMARY KEY (`seminar_id`,`institut_id`), ADD KEY `institut_id` (`institut_id`);
+  ADD PRIMARY KEY (`seminar_id`,`institut_id`),
+  ADD KEY `institut_id` (`institut_id`);
 
 --
 -- Indexes for table `seminar_sem_tree`
 --
 ALTER TABLE `seminar_sem_tree`
- ADD PRIMARY KEY (`seminar_id`,`sem_tree_id`), ADD KEY `sem_tree_id` (`sem_tree_id`);
+  ADD PRIMARY KEY (`seminar_id`,`sem_tree_id`),
+  ADD KEY `sem_tree_id` (`sem_tree_id`);
 
 --
 -- Indexes for table `seminar_user`
 --
 ALTER TABLE `seminar_user`
- ADD PRIMARY KEY (`Seminar_id`,`user_id`), ADD KEY `status` (`status`,`Seminar_id`), ADD KEY `user_id` (`user_id`,`Seminar_id`,`status`);
+  ADD PRIMARY KEY (`Seminar_id`,`user_id`),
+  ADD KEY `status` (`status`,`Seminar_id`),
+  ADD KEY `user_id` (`user_id`,`Seminar_id`,`status`);
 
 --
 -- Indexes for table `seminar_userdomains`
 --
 ALTER TABLE `seminar_userdomains`
- ADD PRIMARY KEY (`seminar_id`,`userdomain_id`);
+  ADD PRIMARY KEY (`seminar_id`,`userdomain_id`);
 
 --
 -- Indexes for table `sem_classes`
 --
 ALTER TABLE `sem_classes`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `name` (`name`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `sem_tree`
 --
 ALTER TABLE `sem_tree`
- ADD PRIMARY KEY (`sem_tree_id`), ADD KEY `parent_id` (`parent_id`), ADD KEY `priority` (`priority`), ADD KEY `studip_object_id` (`studip_object_id`);
+  ADD PRIMARY KEY (`sem_tree_id`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `priority` (`priority`),
+  ADD KEY `studip_object_id` (`studip_object_id`);
 
 --
 -- Indexes for table `sem_types`
 --
 ALTER TABLE `sem_types`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `session_data`
 --
 ALTER TABLE `session_data`
- ADD PRIMARY KEY (`sid`), ADD KEY `changed` (`changed`);
+  ADD PRIMARY KEY (`sid`),
+  ADD KEY `changed` (`changed`);
 
 --
 -- Indexes for table `siteinfo_details`
 --
 ALTER TABLE `siteinfo_details`
- ADD PRIMARY KEY (`detail_id`);
+  ADD PRIMARY KEY (`detail_id`);
 
 --
 -- Indexes for table `siteinfo_rubrics`
 --
 ALTER TABLE `siteinfo_rubrics`
- ADD PRIMARY KEY (`rubric_id`);
+  ADD PRIMARY KEY (`rubric_id`);
 
 --
 -- Indexes for table `smiley`
 --
 ALTER TABLE `smiley`
- ADD PRIMARY KEY (`smiley_id`), ADD UNIQUE KEY `name` (`smiley_name`), ADD KEY `short` (`short_name`);
+  ADD PRIMARY KEY (`smiley_id`),
+  ADD UNIQUE KEY `name` (`smiley_name`),
+  ADD KEY `short` (`short_name`);
 
 --
 -- Indexes for table `statusgruppen`
 --
 ALTER TABLE `statusgruppen`
- ADD PRIMARY KEY (`statusgruppe_id`), ADD KEY `range_id` (`range_id`), ADD KEY `position` (`position`);
+  ADD PRIMARY KEY (`statusgruppe_id`),
+  ADD KEY `range_id` (`range_id`),
+  ADD KEY `position` (`position`);
 
 --
 -- Indexes for table `statusgruppe_user`
 --
 ALTER TABLE `statusgruppe_user`
- ADD PRIMARY KEY (`statusgruppe_id`,`user_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`statusgruppe_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `studiengaenge`
 --
 ALTER TABLE `studiengaenge`
- ADD PRIMARY KEY (`studiengang_id`);
+  ADD PRIMARY KEY (`studiengang_id`);
 
 --
 -- Indexes for table `studygroup_invitations`
 --
 ALTER TABLE `studygroup_invitations`
- ADD PRIMARY KEY (`sem_id`,`user_id`);
+  ADD PRIMARY KEY (`sem_id`,`user_id`);
 
 --
 -- Indexes for table `termine`
 --
 ALTER TABLE `termine`
- ADD PRIMARY KEY (`termin_id`), ADD KEY `metadate_id` (`metadate_id`,`date`), ADD KEY `range_id` (`range_id`,`date`);
+  ADD PRIMARY KEY (`termin_id`),
+  ADD KEY `metadate_id` (`metadate_id`,`date`),
+  ADD KEY `range_id` (`range_id`,`date`);
 
 --
 -- Indexes for table `termin_related_groups`
 --
 ALTER TABLE `termin_related_groups`
- ADD UNIQUE KEY `unique` (`termin_id`,`statusgruppe_id`), ADD KEY `termin_id` (`termin_id`), ADD KEY `statusgruppe_id` (`statusgruppe_id`);
+  ADD UNIQUE KEY `unique` (`termin_id`,`statusgruppe_id`),
+  ADD KEY `termin_id` (`termin_id`),
+  ADD KEY `statusgruppe_id` (`statusgruppe_id`);
 
 --
 -- Indexes for table `termin_related_persons`
 --
 ALTER TABLE `termin_related_persons`
- ADD PRIMARY KEY (`range_id`,`user_id`);
+  ADD PRIMARY KEY (`range_id`,`user_id`);
 
 --
 -- Indexes for table `themen`
 --
 ALTER TABLE `themen`
- ADD PRIMARY KEY (`issue_id`), ADD KEY `seminar_id` (`seminar_id`,`priority`);
+  ADD PRIMARY KEY (`issue_id`),
+  ADD KEY `seminar_id` (`seminar_id`,`priority`);
 
 --
 -- Indexes for table `themen_termine`
 --
 ALTER TABLE `themen_termine`
- ADD PRIMARY KEY (`issue_id`,`termin_id`), ADD KEY `termin_id` (`termin_id`,`issue_id`);
+  ADD PRIMARY KEY (`issue_id`,`termin_id`),
+  ADD KEY `termin_id` (`termin_id`,`issue_id`);
 
 --
 -- Indexes for table `timedadmissions`
 --
 ALTER TABLE `timedadmissions`
- ADD PRIMARY KEY (`rule_id`), ADD KEY `start_time` (`start_time`), ADD KEY `end_time` (`end_time`), ADD KEY `start_end` (`start_time`,`end_time`);
+  ADD PRIMARY KEY (`rule_id`),
+  ADD KEY `start_time` (`start_time`),
+  ADD KEY `end_time` (`end_time`),
+  ADD KEY `start_end` (`start_time`,`end_time`);
 
 --
 -- Indexes for table `userdomains`
 --
 ALTER TABLE `userdomains`
- ADD PRIMARY KEY (`userdomain_id`);
+  ADD PRIMARY KEY (`userdomain_id`);
 
 --
 -- Indexes for table `userfilter`
 --
 ALTER TABLE `userfilter`
- ADD PRIMARY KEY (`filter_id`);
+  ADD PRIMARY KEY (`filter_id`);
 
 --
 -- Indexes for table `userfilter_fields`
 --
 ALTER TABLE `userfilter_fields`
- ADD PRIMARY KEY (`field_id`);
+  ADD PRIMARY KEY (`field_id`);
 
 --
 -- Indexes for table `userlimits`
 --
 ALTER TABLE `userlimits`
- ADD PRIMARY KEY (`rule_id`,`user_id`);
+  ADD PRIMARY KEY (`rule_id`,`user_id`);
 
 --
 -- Indexes for table `user_config`
 --
 ALTER TABLE `user_config`
- ADD PRIMARY KEY (`userconfig_id`), ADD KEY `user_id` (`user_id`,`field`,`value`(5));
+  ADD PRIMARY KEY (`userconfig_id`),
+  ADD KEY `user_id` (`user_id`,`field`,`value`(5));
 
 --
 -- Indexes for table `user_factorlist`
 --
 ALTER TABLE `user_factorlist`
- ADD PRIMARY KEY (`list_id`,`user_id`);
+  ADD PRIMARY KEY (`list_id`,`user_id`);
 
 --
 -- Indexes for table `user_info`
 --
 ALTER TABLE `user_info`
- ADD PRIMARY KEY (`user_id`), ADD KEY `score` (`score`,`guestbook`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `score` (`score`);
 
 --
 -- Indexes for table `user_inst`
 --
 ALTER TABLE `user_inst`
- ADD PRIMARY KEY (`Institut_id`,`user_id`), ADD KEY `inst_perms` (`inst_perms`,`Institut_id`), ADD KEY `user_id` (`user_id`,`inst_perms`);
+  ADD PRIMARY KEY (`Institut_id`,`user_id`),
+  ADD KEY `inst_perms` (`inst_perms`,`Institut_id`),
+  ADD KEY `user_id` (`user_id`,`inst_perms`);
 
 --
 -- Indexes for table `user_online`
 --
 ALTER TABLE `user_online`
- ADD PRIMARY KEY (`user_id`), ADD KEY `last_lifesign` (`last_lifesign`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `last_lifesign` (`last_lifesign`);
 
 --
 -- Indexes for table `user_studiengang`
 --
 ALTER TABLE `user_studiengang`
- ADD PRIMARY KEY (`user_id`,`studiengang_id`,`abschluss_id`), ADD KEY `studiengang_id` (`studiengang_id`);
+  ADD PRIMARY KEY (`user_id`,`studiengang_id`,`abschluss_id`),
+  ADD KEY `studiengang_id` (`studiengang_id`);
 
 --
 -- Indexes for table `user_token`
 --
 ALTER TABLE `user_token`
- ADD PRIMARY KEY (`user_id`,`token`,`expiration`), ADD KEY `index_expiration` (`expiration`), ADD KEY `index_token` (`token`), ADD KEY `index_user_id` (`user_id`);
+  ADD PRIMARY KEY (`user_id`,`token`,`expiration`),
+  ADD KEY `index_expiration` (`expiration`),
+  ADD KEY `index_token` (`token`),
+  ADD KEY `index_user_id` (`user_id`);
 
 --
 -- Indexes for table `user_userdomains`
 --
 ALTER TABLE `user_userdomains`
- ADD PRIMARY KEY (`user_id`,`userdomain_id`);
+  ADD PRIMARY KEY (`user_id`,`userdomain_id`);
 
 --
 -- Indexes for table `user_visibility`
 --
 ALTER TABLE `user_visibility`
- ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Indexes for table `user_visibility_settings`
 --
 ALTER TABLE `user_visibility_settings`
- ADD PRIMARY KEY (`visibilityid`), ADD KEY `parent_id` (`parent_id`), ADD KEY `identifier` (`identifier`), ADD KEY `userid` (`user_id`);
+  ADD PRIMARY KEY (`visibilityid`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `identifier` (`identifier`),
+  ADD KEY `userid` (`user_id`);
 
 --
 -- Indexes for table `vote`
 --
 ALTER TABLE `vote`
- ADD PRIMARY KEY (`vote_id`), ADD KEY `range_id` (`range_id`), ADD KEY `state` (`state`), ADD KEY `startdate` (`startdate`), ADD KEY `stopdate` (`stopdate`), ADD KEY `resultvisibility` (`resultvisibility`), ADD KEY `chdate` (`chdate`), ADD KEY `author_id` (`author_id`);
+  ADD PRIMARY KEY (`vote_id`),
+  ADD KEY `range_id` (`range_id`),
+  ADD KEY `state` (`state`),
+  ADD KEY `startdate` (`startdate`),
+  ADD KEY `stopdate` (`stopdate`),
+  ADD KEY `resultvisibility` (`resultvisibility`),
+  ADD KEY `chdate` (`chdate`),
+  ADD KEY `author_id` (`author_id`);
 
 --
 -- Indexes for table `voteanswers`
 --
 ALTER TABLE `voteanswers`
- ADD PRIMARY KEY (`answer_id`), ADD KEY `vote_id` (`vote_id`), ADD KEY `position` (`position`);
+  ADD PRIMARY KEY (`answer_id`),
+  ADD KEY `vote_id` (`vote_id`),
+  ADD KEY `position` (`position`);
 
 --
 -- Indexes for table `voteanswers_user`
 --
 ALTER TABLE `voteanswers_user`
- ADD PRIMARY KEY (`answer_id`,`user_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`answer_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `vote_user`
 --
 ALTER TABLE `vote_user`
- ADD PRIMARY KEY (`vote_id`,`user_id`), ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`vote_id`,`user_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `webservice_access_rules`
 --
 ALTER TABLE `webservice_access_rules`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `widget_default`
 --
 ALTER TABLE `widget_default`
- ADD PRIMARY KEY (`perm`,`pluginid`);
+  ADD PRIMARY KEY (`perm`,`pluginid`);
 
 --
 -- Indexes for table `widget_user`
 --
 ALTER TABLE `widget_user`
- ADD PRIMARY KEY (`id`), ADD KEY `range_id` (`range_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `range_id` (`range_id`);
 
 --
 -- Indexes for table `wiki`
 --
 ALTER TABLE `wiki`
- ADD PRIMARY KEY (`range_id`,`keyword`,`version`), ADD KEY `user_id` (`user_id`), ADD KEY `chdate` (`chdate`);
+  ADD PRIMARY KEY (`range_id`,`keyword`,`version`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `chdate` (`chdate`);
 
 --
 -- Indexes for table `wiki_links`
 --
 ALTER TABLE `wiki_links`
- ADD PRIMARY KEY (`range_id`,`to_keyword`,`from_keyword`);
+  ADD PRIMARY KEY (`range_id`,`to_keyword`,`from_keyword`);
 
 --
 -- Indexes for table `wiki_locks`
 --
 ALTER TABLE `wiki_locks`
- ADD PRIMARY KEY (`range_id`,`user_id`,`keyword`), ADD KEY `user_id` (`user_id`), ADD KEY `chdate` (`chdate`);
+  ADD PRIMARY KEY (`range_id`,`user_id`,`keyword`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `chdate` (`chdate`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -4394,114 +4530,114 @@ ALTER TABLE `wiki_locks`
 -- AUTO_INCREMENT for table `admissionrules`
 --
 ALTER TABLE `admissionrules`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `api_oauth_user_mapping`
 --
 ALTER TABLE `api_oauth_user_mapping`
-MODIFY `oauth_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `oauth_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `doc_filetype`
 --
 ALTER TABLE `doc_filetype`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `doc_filetype_forbidden`
 --
 ALTER TABLE `doc_filetype_forbidden`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `doc_usergroup_config`
 --
 ALTER TABLE `doc_usergroup_config`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_consumer_registry`
 --
 ALTER TABLE `oauth_consumer_registry`
-MODIFY `ocr_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ocr_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_consumer_token`
 --
 ALTER TABLE `oauth_consumer_token`
-MODIFY `oct_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `oct_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_log`
 --
 ALTER TABLE `oauth_log`
-MODIFY `olg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `olg_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_server_nonce`
 --
 ALTER TABLE `oauth_server_nonce`
-MODIFY `osn_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `osn_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_server_registry`
 --
 ALTER TABLE `oauth_server_registry`
-MODIFY `osr_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `osr_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_server_token`
 --
 ALTER TABLE `oauth_server_token`
-MODIFY `ost_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ost_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `personal_notifications`
 --
 ALTER TABLE `personal_notifications`
-MODIFY `personal_notification_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `personal_notification_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `plugins`
 --
 ALTER TABLE `plugins`
-MODIFY `pluginid` int(10) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `pluginid` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-MODIFY `roleid` int(10) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `roleid` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `schedule`
 --
 ALTER TABLE `schedule`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sem_classes`
 --
 ALTER TABLE `sem_classes`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sem_types`
 --
 ALTER TABLE `sem_types`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `siteinfo_details`
 --
 ALTER TABLE `siteinfo_details`
-MODIFY `detail_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `detail_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `siteinfo_rubrics`
 --
 ALTER TABLE `siteinfo_rubrics`
-MODIFY `rubric_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `rubric_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `smiley`
 --
 ALTER TABLE `smiley`
-MODIFY `smiley_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
+  MODIFY `smiley_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `user_visibility_settings`
 --
 ALTER TABLE `user_visibility_settings`
-MODIFY `visibilityid` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `visibilityid` int(32) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `webservice_access_rules`
 --
 ALTER TABLE `webservice_access_rules`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `widget_user`
 --
 ALTER TABLE `widget_user`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

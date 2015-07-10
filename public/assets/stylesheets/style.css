@@ -1186,23 +1186,12 @@ label.required:after {
   display: block;
   padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
   color: #333;
   margin-top: 1ex;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
-}
-.studip_form input[type=date]:hover,
-.studip_form input[type=email]:hover,
-.studip_form input[type=number]:hover,
-.studip_form input[type=password]:hover,
-.studip_form input[type=text]:hover,
-.studip_form input[type=url]:hover,
-.studip_form textarea:hover,
-.studip_form select:hover {
-  border-radius: 4px;
 }
 .studip_form input[type=date]:focus,
 .studip_form input[type=email]:focus,
@@ -1213,7 +1202,6 @@ label.required:after {
 .studip_form textarea:focus,
 .studip_form select:focus {
   outline: none;
-  border-radius: 4px;
   border-color: #24437c;
 }
 .studip_form select {
@@ -1265,6 +1253,382 @@ label.required:after {
   background-size: 16px 16px;
   vertical-align: text-top;
   width: 16px;
+}
+.studip-form {
+  /* Default settings for ossible input fields */
+  /* Quicksearch needs some extra treatment */
+}
+.studip-form section {
+  margin-bottom: 15px;
+  margin-top: 10px;
+  /* Required values are marked at section level */
+}
+.studip-form section label:not(.svg-input) {
+  /* display vertically: label over input */
+  /* display horizontally: label over input */
+  font-weight: bold;
+}
+.studip-form section label:not(.svg-input),
+.studip-form section label:not(.svg-input).vertical {
+  display: block;
+}
+.studip-form section label:not(.svg-input).horizontal {
+  display: inline;
+}
+.studip-form section label:not(.svg-input) input:not([type="image"]) {
+  display: block;
+}
+.studip-form section.required label:not(.svg-input):after {
+  content: '*';
+  color: #ff0000;
+}
+.studip-form section div {
+  margin-bottom: 5px;
+}
+.studip-form section div span.description {
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 5px;
+  margin-bottom: -5px;
+}
+.studip-form input[type="text"],
+.studip-form input[type="number"],
+.studip-form input[type="password"],
+.studip-form input[type="date"],
+.studip-form input[type="datetime"],
+.studip-form input[type="email"],
+.studip-form input[type="range"],
+.studip-form input[type="search"],
+.studip-form input[type="time"],
+.studip-form input[type="tel"],
+.studip-form input[type="url"],
+.studip-form select,
+.studip-form textarea,
+.studip-form div.quicksearch_frame input[type="text"] {
+  border: 1px solid #a9b6cb;
+  height: 24px;
+  /* Darken border on focus */
+  /* Extra small */
+  /* Small */
+  /* Medium size and default if not set for normal display */
+  /* Large */
+  /* X-Large and default for display in dialog */
+}
+.studip-form input[type="text"]:focus,
+.studip-form input[type="number"]:focus,
+.studip-form input[type="password"]:focus,
+.studip-form input[type="date"]:focus,
+.studip-form input[type="datetime"]:focus,
+.studip-form input[type="email"]:focus,
+.studip-form input[type="range"]:focus,
+.studip-form input[type="search"]:focus,
+.studip-form input[type="time"]:focus,
+.studip-form input[type="tel"]:focus,
+.studip-form input[type="url"]:focus,
+.studip-form select:focus,
+.studip-form textarea:focus,
+.studip-form div.quicksearch_frame input[type="text"]:focus {
+  border: 1px solid #28497c;
+  transition: border-color 0.5s;
+}
+.studip-form input[type="text"].size-xs,
+.studip-form input[type="number"].size-xs,
+.studip-form input[type="password"].size-xs,
+.studip-form input[type="date"].size-xs,
+.studip-form input[type="datetime"].size-xs,
+.studip-form input[type="email"].size-xs,
+.studip-form input[type="range"].size-xs,
+.studip-form input[type="search"].size-xs,
+.studip-form input[type="time"].size-xs,
+.studip-form input[type="tel"].size-xs,
+.studip-form input[type="url"].size-xs,
+.studip-form select.size-xs,
+.studip-form textarea.size-xs,
+.studip-form div.quicksearch_frame input[type="text"].size-xs {
+  width: 10%;
+}
+.studip-form input[type="text"].size-s,
+.studip-form input[type="number"].size-s,
+.studip-form input[type="password"].size-s,
+.studip-form input[type="date"].size-s,
+.studip-form input[type="datetime"].size-s,
+.studip-form input[type="email"].size-s,
+.studip-form input[type="range"].size-s,
+.studip-form input[type="search"].size-s,
+.studip-form input[type="time"].size-s,
+.studip-form input[type="tel"].size-s,
+.studip-form input[type="url"].size-s,
+.studip-form select.size-s,
+.studip-form textarea.size-s,
+.studip-form div.quicksearch_frame input[type="text"].size-s {
+  width: 25%;
+}
+.studip-form input[type="text"],
+.studip-form input[type="number"],
+.studip-form input[type="password"],
+.studip-form input[type="date"],
+.studip-form input[type="datetime"],
+.studip-form input[type="email"],
+.studip-form input[type="range"],
+.studip-form input[type="search"],
+.studip-form input[type="time"],
+.studip-form input[type="tel"],
+.studip-form input[type="url"],
+.studip-form select,
+.studip-form textarea,
+.studip-form div.quicksearch_frame input[type="text"],
+.studip-form input[type="text"].size-m,
+.studip-form input[type="number"].size-m,
+.studip-form input[type="password"].size-m,
+.studip-form input[type="date"].size-m,
+.studip-form input[type="datetime"].size-m,
+.studip-form input[type="email"].size-m,
+.studip-form input[type="range"].size-m,
+.studip-form input[type="search"].size-m,
+.studip-form input[type="time"].size-m,
+.studip-form input[type="tel"].size-m,
+.studip-form input[type="url"].size-m,
+.studip-form select.size-m,
+.studip-form textarea.size-m,
+.studip-form div.quicksearch_frame input[type="text"].size-m {
+  width: 50%;
+}
+.studip-form input[type="text"].size-l,
+.studip-form input[type="number"].size-l,
+.studip-form input[type="password"].size-l,
+.studip-form input[type="date"].size-l,
+.studip-form input[type="datetime"].size-l,
+.studip-form input[type="email"].size-l,
+.studip-form input[type="range"].size-l,
+.studip-form input[type="search"].size-l,
+.studip-form input[type="time"].size-l,
+.studip-form input[type="tel"].size-l,
+.studip-form input[type="url"].size-l,
+.studip-form select.size-l,
+.studip-form textarea.size-l,
+.studip-form div.quicksearch_frame input[type="text"].size-l {
+  width: 75%;
+}
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="text"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="number"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="password"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="date"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="datetime"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="email"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="range"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="search"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="time"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="tel"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form select.size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form input[type="url"] .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form select .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form select .studip-form select.size-xl,
+.ui-dialog .studip-form select .studip-form textarea.size-xl,
+.ui-dialog .studip-form select .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form textarea .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form textarea .studip-form select.size-xl,
+.ui-dialog .studip-form textarea .studip-form textarea.size-xl,
+.ui-dialog .studip-form textarea .studip-form div.quicksearch_frame input[type="text"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="text"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="number"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="password"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="date"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="datetime"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="email"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="range"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="search"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="time"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="tel"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form input[type="url"].size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form select.size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form textarea.size-xl,
+.ui-dialog .studip-form div.quicksearch_frame input[type="text"] .studip-form div.quicksearch_frame input[type="text"].size-xl {
+  width: 100%;
+}
+.studip-form div.quicksearch_frame input[type="text"],
+.studip-form div.quicksearch_frame input[type="text"]:focus {
+  border-width: 1px 30px 1px 1px;
+}
+/* Responsive display: 100% default width for input elements */
+@media screen and (max-width: 800px) {
+  .studip-form input[type="text"],
+  .studip-form input[type="number"],
+  .studip-form input[type="password"],
+  .studip-form input[type="date"],
+  .studip-form input[type="datetime"],
+  .studip-form input[type="email"],
+  .studip-form input[type="range"],
+  .studip-form input[type="search"],
+  .studip-form input[type="time"],
+  .studip-form input[type="tel"],
+  .studip-form input[type="url"],
+  .studip-form select,
+  .studip-form textarea,
+  .studip-form div.quicksearch_frame input[type="text"] {
+    width: 100%;
+  }
 }
 .content_title {
   background-color: #e3eaf6;
@@ -1334,6 +1698,9 @@ label.required:after {
   overflow: hidden;
   padding-left: 10px;
   position: relative;
+}
+.css-tree li.css-tree-hidden {
+  display: none;
 }
 .css-tree ul li:before {
   content: '';
@@ -1428,7 +1795,7 @@ label.required:after {
   transform: rotate(90deg);
 }
 .css-tree.collapsable input[type=checkbox]:checked ~ ul {
-  max-height: 5000px;
+  max-height: 10000px;
   opacity: 1;
 }
 .css-tree.selectable input[type=checkbox] + label {
@@ -1457,9 +1824,6 @@ label.required:after {
 }
 .css-tree.selectable input[type=radio][disabled] + label {
   color: #888;
-}
-.css-tree li.css-tree-hidden {
-    display: none;
 }
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
@@ -6320,7 +6684,7 @@ option.sub_institute {
   padding-left: 15px;
 }
 div#assigned {
-  float:left;
+  float: left;
   padding-right: 10px;
   width: 45%;
 }

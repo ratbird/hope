@@ -1,0 +1,109 @@
+.studip-form {
+    section {
+        margin-bottom: 15px;
+        margin-top: 10px;
+        label:not(.svg-input) {
+            /* display vertically: label over input */
+            &, &.vertical {
+                display: block;
+            }
+            /* display horizontally: label over input */
+            &.horizontal {
+                display: inline;
+            }
+            font-weight: bold;
+            input:not([type="image"]) {
+                display: block;
+            }
+        }
+        /* Required values are marked at section level */
+        &.required {
+            label:not(.svg-input):after {
+                content: '*';
+                color: #ff0000;
+            }
+        }
+        div {
+            margin-bottom: 5px;
+            span.description {
+                font-weight: bold;
+                font-style: italic;
+                margin-top: 5px;
+                margin-bottom: -5px;
+            }
+        }
+    }
+    /* Default settings for ossible input fields */
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="date"],
+    input[type="datetime"],
+    input[type="email"],
+    input[type="range"],
+    input[type="search"],
+    input[type="time"],
+    input[type="tel"],
+    input[type="url"],
+    select,
+    textarea,
+    div.quicksearch_frame input[type="text"] {
+        border: 1px solid @base-color-40;
+        height: 24px;
+        /* Darken border on focus */
+        &:focus {
+            border: 1px solid @base-color;
+            transition: border-color 0.5s;
+        }
+        /* Extra small */
+        &.size-xs {
+            width: 10%;
+        }
+        /* Small */
+        &.size-s {
+            width: 25%;
+        }
+        /* Medium size and default if not set for normal display */
+        &, &.size-m {
+            width: 50%;
+        }
+        /* Large */
+        &.size-l {
+            width: 75%;
+        }
+        /* X-Large and default for display in dialog */
+        .ui-dialog & &.size-xl {
+            width: 100%;
+        }
+    }
+
+    /* Quicksearch needs some extra treatment */
+    div.quicksearch_frame input[type="text"] {
+        &, &:focus {
+            border-width: 1px 30px 1px 1px;
+        }
+    }
+
+}
+
+/* Responsive display: 100% default width for input elements */
+@media screen and (max-width: @small-screen-width) {
+    .studip-form {
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        input[type="date"],
+        input[type="datetime"],
+        input[type="email"],
+        input[type="range"],
+        input[type="search"],
+        input[type="time"],
+        input[type="tel"],
+        input[type="url"],
+        select,
+        textarea,
+        div.quicksearch_frame input[type="text"] {
+            width: 100%;
+        }
+    }
+}

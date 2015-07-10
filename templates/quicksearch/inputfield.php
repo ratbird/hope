@@ -2,8 +2,7 @@
 # Lifter010: TODO
 ?>
 <? if ($withButton): ?>
-<div class="quicksearch_frame <?= ($extendedLayout === true) ? 'extendedLayout' : ''; ?>" id="<?= $id ?>_frame" style="width: <?= $box_width ?>px;">
-<? $withAttributes['style'] = "width: ".($box_width-23)."px;"; ?>
+<div class="quicksearch_frame <?= ($extendedLayout === true) ? 'extendedLayout' : ''; ?>" id="<?= $id ?>_frame">
     <? if ($box_align === 'left'): ?>
         <?= Assets::input('icons/16/blue/search.png', array('class' => 'text-bottom')) ?>
     <? endif; ?>
@@ -22,7 +21,7 @@
 </div>
 <? endif; ?>
 <script type="text/javascript" language="javascript">
-    //Die Autovervollständigen-Funktion aktivieren:
+    //Die Autovervollstï¿½ndigen-Funktion aktivieren:
     jQuery(function () {
         STUDIP.QuickSearch.autocomplete("<?= $id ?>",
             "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",

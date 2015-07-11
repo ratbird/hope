@@ -331,7 +331,7 @@ class ProfileModulesController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::info(_("Das Plugin/Modul enthält keine Funktion zum Löschen der Inhalte.")));
             }
         } else {
-            PageLayout::postMessage(MessageBox::info(_("Sie beabsichtigen die Inhalte von " . $displayname . " zu löschen.")
+            PageLayout::postMessage(MessageBox::info(sprintf(_("Sie beabsichtigen die Inhalte von %s zu löschen."), $displayname)
                 . "<br>" . _("Wollen Sie die Inhalte wirklich löschen?") . "<br>"
                 . LinkButton::createAccept(_('Ja'), URLHelper::getURL("?deleteContent=true&check=true&name=" . $name))
                 . LinkButton::createCancel(_('Nein'))));

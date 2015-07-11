@@ -108,15 +108,9 @@ class Course_EnrolmentController extends AuthenticatedController {
                                 $enrol_user = true;
                             } else {
                                 if ($course->isWaitlistAvailable()) {
-                                    $maxpos = $course->admission_applicants->findBy('status', 'awaiting')->orderBy('position desc')->val('position');
-                                    $new_admission_member = new AdmissionApplication();
-                                    $new_admission_member->user_id = $user_id;
-                                    $new_admission_member->position = ++$maxpos;
-                                    $new_admission_member->status = 'awaiting';
-                                    $course->admission_applicants[] = $new_admission_member;
-                                    if ($new_admission_member->store()) {
+                                    $seminar = new Seminar($course);
+                                    if ($seminar->addToWaitlist($user_id, 'last')) {
                                         $msg_details[] = sprintf(_("Alle Plätze sind belegt, Sie wurden daher auf Platz %s der Warteliste gesetzt."), $maxpos);
-                                        StudipLog::log('SEM_USER_ADD', $course->id, $user_id, 'awaiting', 'Hat sich auf Warteliste eingetragen, Position: ' . $maxpos);
                                     }
                                 } else {
                                     $this->admission_error = MessageBox::error(_("Die Anmeldung war nicht erfolgreich. Alle Plätze sind belegt und es steht keine Warteliste zur Verfügung."));

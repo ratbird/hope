@@ -261,37 +261,18 @@ class MembersModel
      */
     public function addToWaitlist($user_id)
     {
-        $messaging = new messaging;
-        if (!CourseMember::find(array($this->course_id, $user_id)) && !AdmissionApplication::find($user_id, $this->course_id)) {
-            // Find waitlist length -> user will be added last.
-            $maxpos = DBManager::get()->fetchColumn("SELECT MAX(`position`) AS maxpos
-                FROM `admission_seminar_user`
-                WHERE `seminar_id`=?
-                    AND `status`='awaiting'",
-                array($this->course_id));
+        $course = Seminar::getInstance($this->course_id);
+        // Insert user in waitlist at current position.
+        if ($course->addToWaitlist($user_id, 'last')) {
+            setTempLanguage($user_id);
+            $message = sprintf(_('Sie wurden von einem/einer Veranstaltungsleiter/-in (%s) ' .
+                'oder einem/einer Administrator/-in auf die Warteliste der Veranstaltung **%s** gesetzt.'),
+                get_title_for_status('dozent', 1), $this->course_title);
+            restoreLanguage();
+            messaging::sendSystemMessage($user_id, sprintf('%s %s', _('Systemnachricht:'),
+                    _('Auf Warteliste gesetzt')), $message);
 
-            // Fetch the object for the given user ID...
-            $temp_user = UserModel::getUser($user_id);
-
-            // .. and create a new waitlist entry.
-            $a = new AdmissionApplication();
-            $a->user_id = $user_id;
-            $a->seminar_id = $this->course_id;
-            $a->position = $maxpos + 1;
-            $a->status = 'awaiting';
-
-            // Insert user in waitlist at current position.
-            if ($a->store()) {
-                setTempLanguage($user_id);
-                $message = sprintf(_('Sie wurden von einem/einer Veranstaltungsleiter/-in (%s) ' .
-                    'oder einem/einer Administrator/-in auf die Warteliste der Veranstaltung **%s** gesetzt.'),
-                    get_title_for_status('dozent', 1), $this->course_title);
-                restoreLanguage();
-                $messaging->insert_message($message, $temp_user['username'],
-                    '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                        _('Auf Warteliste gesetzt')), TRUE);
-                return true;
-            }
+            return true;
         }
         return false;
     }
@@ -303,18 +284,16 @@ class MembersModel
      * @param bool $move move users (=delete in source course) or just add to target course?
      * @return array success and failure statuses
      */
-    public function sendToCourse($users, $target_course, $move = false)
+    public function sendToCourse($users, $target_course_id, $move = false)
     {
         $msg = array();
         foreach ($users as $user) {
-            if (!CourseMember::exists($target_course, $user)) {
-                $m = new CourseMember();
-                $m->seminar_id = $target_course;
-                $m->user_id = $user;
-                $m->status = 'autor';
-                if ($m->store()) {
+            if (!CourseMember::exists(array($target_course_id, $user))) {
+                $target_course = new Seminar($target_course_id);
+                if ($target_course->addMember($user)) {
                     if ($move) {
-                        CourseMember::find(array($this->course_id, $user))->delete();
+                        $remove_from = Seminar::getInstance($this->course_id);
+                        $remove_from->deleteMember($user);
                     }
                     $msg['success'][] = $user;
                 } else {
@@ -476,67 +455,36 @@ class MembersModel
      * @param String $which_end 'last' or 'first': which list end to append to
      * @return mixed Array of messages (stating success and/or errors)
      */
-    public function moveToWaitlist($users, $which_end)
-    {
-        $messaging = new messaging;
-        // Calculate target waitlist index according to desired appending spot.
-        switch ($which_end) {
-            // Append users to waitlist end.
-            case 'last':
-                $maxpos = DBManager::get()->fetchColumn("SELECT MAX(`position`)
-                    FROM `admission_seminar_user`
-                    WHERE `seminar_id`=?
-                        AND `status`='awaiting'", array($this->course_id));
-                $waitpos = $maxpos+1;
-                break;
-            // Prepend users to waitlist start.
-            case 'first':
-            default:
-                // Move all others on the waitlist up by the number of people to add.
-                DBManager::get()->execute("UPDATE `admission_seminar_user`
-                        SET `position`=`position`+?
-                        WHERE `seminar_id`=?
-                            AND `status`='awaiting'", array(count($users), $this->course_id));
-                $waitpos = 1;
-        }
-
-        $curpos = $waitpos;
-        foreach ($users as $user_id) {
-            $temp_user = UserModel::getUser($user_id);
-            // Create new waitlist entry.
-            $a = new AdmissionApplication();
-            $a->user_id = $user_id;
-            $a->seminar_id = $this->course_id;
-            $a->position = $curpos;
-            $a->status = 'awaiting';
-            // Insert user in waitlist at current position.
-            if ($a->store()) {
-                // Delete member from seminar
-                if (CourseMember::find(array($this->course_id, $user_id))->delete()) {
-                    setTempLanguage($user_id);
-                    $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde von '.
-                        'einem/einer Veranstaltungsleiter/-in (%s) oder Administrator/-in aufgehoben, '.
-                        'Sie wurden auf die Warteliste dieser Veranstaltung gesetzt.'),
-                        $this->course_title, get_title_for_status('dozent', 1));
-                    restoreLanguage();
-                    $messaging->insert_message($message, $temp_user['username'],
-                        '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
-                            _('Abonnement aufgehoben, auf Warteliste gesetzt')), TRUE);
-                    $msgs['success'][] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
-                    $curpos++;
-                // Something went wrong on removing the user from course.
-                } else {
-                    $a->delete();
-                    $msgs['error'][] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
-                }
-            // Something went wrong on inserting the user in waitlist.
-            } else {
-                $msgs['error'][] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
-            }
-        }
-
-        return $msgs;
-    }
+     public function moveToWaitlist($users, $which_end)
+     {
+         $course = Seminar::getInstance($this->course_id);
+         foreach ($users as $user_id) {
+             // Delete member from seminar
+             if ($course->deleteMember($user_id)) {
+                 setTempLanguage($user_id);
+                 $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde von '.
+                     'einem/einer Veranstaltungsleiter/-in (%s) oder Administrator/-in aufgehoben, '.
+                     'Sie wurden auf die Warteliste dieser Veranstaltung gesetzt.'),
+                     $this->course_title, get_title_for_status('dozent', 1));
+                 restoreLanguage();
+                 messaging::sendSystemMessage($user_id, sprintf('%s %s', _('Systemnachricht:'),
+                     _('Abonnement aufgehoben, auf Warteliste gesetzt')), $message);
+                 // Insert user in waitlist at current position.
+                 if ($course->addToWaitlist($user_id, $which_end)) {
+                     $temp_user = User::find($user_id);
+                     $msgs['success'][] = $temp_user->getFullname('no_title');
+                     $curpos++;
+                     // Something went wrong on removing the user from course.
+                 } else {
+                     $msgs['error'][] = $temp_user->getFullname('no_title');
+                 }
+                 // Something went wrong on inserting the user in waitlist.
+             } else {
+                 $msgs['error'][] = $temp_user->getFullname('no_title');
+             }
+         }
+         return $msgs;
+     }
 
     /**
      * Get the positon out of the database

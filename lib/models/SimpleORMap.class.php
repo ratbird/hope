@@ -267,7 +267,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = false;
         $class = get_called_class();
         $record = new $class();
-        $record->setId(func_get_args());
+        call_user_func_array(array($record, 'setId'), func_get_args());
         $where_query = $record->getWhereQuery();
         if ($where_query) {
             $query = "SELECT 1 FROM `{$record->db_table}` WHERE "

@@ -2643,4 +2643,48 @@ class Seminar
             }
         }
     }
+    
+    /**
+     * adds user with given id on waitinglist
+     *
+     * @param string $user_id
+     * @param string $which_end 'last' or 'first'
+     * @return integer 1 if successfull
+     */
+    function addToWaitlist($user_id, $which_end = 'last')
+    {
+        if (AdmissionApplication::exists(array($user_id, $this->id)) || CourseMember::find(array($this->id, $user_id))) {
+            return false;
+        }
+        switch ($which_end) {
+            // Append users to waitlist end.
+            case 'last':
+                $maxpos = DBManager::get()->fetchColumn("SELECT MAX(`position`)
+                    FROM `admission_seminar_user`
+                    WHERE `seminar_id`=?
+                        AND `status`='awaiting'", array($this->id));
+                $waitpos = $maxpos+1;
+                break;
+            // Prepend users to waitlist start.
+            case 'first':
+            default:
+                // Move all others on the waitlist up by the number of people to add.
+                DBManager::get()->execute("UPDATE `admission_seminar_user`
+                        SET `position`=`position`+1
+                        WHERE `seminar_id`=?
+                            AND `status`='awaiting'", array($this->id));
+                $waitpos = 1;
+        }
+        $new_admission_member = new AdmissionApplication();
+        $new_admission_member->user_id = $user_id;
+        $new_admission_member->position = $waitpos;
+        $new_admission_member->status = 'awaiting';
+        $new_admission_member->seminar_id = $this->id;
+        if ($new_admission_member->store()) {
+            StudipLog::log('SEM_USER_ADD', $this->id, $user_id, 'awaiting', 'Auf Warteliste gesetzt, Position: ' . $waitpos);
+            $this->course->resetRelation('admission_applicants');
+            return 1;
+        }
+        return false;
+    }
 }

@@ -384,12 +384,12 @@ class Course_MembersController extends AuthenticatedController
 
         if ($countAdded) {
             $text = sprintf(ngettext('Es wurde %u neue Person auf der Warteliste hinzugefügt.',
-                'Es wurden %u neue Personen auf der Warteliste hinzugefügt.', 1), $countAdded);
+                'Es wurden %u neue Personen auf der Warteliste hinzugefügt.', $countAdded), $countAdded);
             PageLayout::postMessage(MessageBox::success($text));
         }
         if ($countFailed) {
             $text = sprintf(ngettext('%u Person konnte nicht auf die Warteliste eingetragen werden.',
-                '%u neue Personen konnten nicht auf die Warteliste eingetragen werden.', 1),
+                '%u neue Personen konnten nicht auf die Warteliste eingetragen werden.', $countFailed),
                 $countFailed);
             PageLayout::postMessage(MessageBox::error($text));
         }

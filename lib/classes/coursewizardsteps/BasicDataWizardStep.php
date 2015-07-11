@@ -311,6 +311,7 @@ class BasicDataWizardStep implements CourseWizardStep
                 'notification' => 0,
                 'comment' => '',
                 'visible' => 'yes',
+                'label' => '',
                 'bind_calendar' => 1
             ));
         }, array_keys($values['lecturers']));

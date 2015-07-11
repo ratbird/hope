@@ -1260,8 +1260,9 @@ label.required:after {
   width: 16px;
 }
 .studip-form {
-  /* Default settings for ossible input fields */
+  /* Default settings for possible input fields */
   /* Quicksearch needs some extra treatment */
+  /* Footer is always as bottom, clearing floats */
 }
 .studip-form section {
   margin-bottom: 15px;
@@ -1615,6 +1616,9 @@ label.required:after {
 .studip-form div.quicksearch_frame input[type="text"],
 .studip-form div.quicksearch_frame input[type="text"]:focus {
   border-width: 1px 30px 1px 1px;
+}
+.studip-form footer {
+  clear: both;
 }
 /* Responsive display: 100% default width for input elements */
 @media screen and (max-width: 800px) {

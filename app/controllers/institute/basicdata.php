@@ -116,7 +116,7 @@ class Institute_BasicdataController extends AuthenticatedController
                 $this->faculties = Institute::findBySQL('Institut_id = fakultaets_id ORDER BY Name ASC', array($i_view));
             } else {
                 $temp = User::find($GLOBALS['user']->id)
-                            ->institute_memberships->findBy('status', 'admin')
+                            ->institute_memberships->findBy('inst_perms', 'admin')
                             ->pluck('institute');
                 $institutes = SimpleORMapCollection::createFromArray($temp);
                 $faculties  = $institutes->filter(function ($institute) {

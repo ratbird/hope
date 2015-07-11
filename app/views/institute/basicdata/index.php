@@ -12,7 +12,7 @@
                 <label for="Name"><?= _('Name') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'name') ? 'readonly disabled' : '' ?> name="Name" id="Name"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'name') ? 'readonly disabled' : '' ?> name="Name" id="Name"
                        required value="<?= htmlReady(Request::get('Name', $institute->Name)) ?>">
             </td>
         </tr>
@@ -71,7 +71,7 @@
                 <label for="strasse"><?= _('Straße') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'strasse') ? 'readonly disabled' : '' ?> id="strasse" name="strasse"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'strasse') ? 'readonly disabled' : '' ?> id="strasse" name="strasse"
                        value="<?= htmlReady(Request::get('strasse', $institute->strasse)) ?>">
             </td>
         </tr>
@@ -80,7 +80,7 @@
                 <label for="plz"><?= _('Ort') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'plz') ? 'readonly disabled' : '' ?> id="plz" name="plz"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'plz') ? 'readonly disabled' : '' ?> id="plz" name="plz"
                        value="<?= htmlReady(Request::get('plz', $institute->plz)) ?>">
             </td>
         </tr>
@@ -89,7 +89,7 @@
                 <label for="telefon"><?= _('Telefonnummer') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'telefon') ? 'readonly disabled' : '' ?> id="telefon" name="telefon" maxlength="32"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'telefon') ? 'readonly disabled' : '' ?> id="telefon" name="telefon" maxlength="32"
                        value="<?= htmlReady(Request::get('telefon', $institute->telefon)) ?>">
             </td>
         </tr>
@@ -98,7 +98,7 @@
                 <label for="fax"><?= _('Faxnummer') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'fax') ? 'readonly disabled' : '' ?> id="fax" name="fax" maxlength="32"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'fax') ? 'readonly disabled' : '' ?> id="fax" name="fax" maxlength="32"
                        value="<?= htmlReady(Request::get('fax', $institute->fax)) ?>">
             </td>
         </tr>
@@ -107,7 +107,7 @@
                 <label for="email"><?= _('E-Mail-Adresse') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'email') ? 'readonly disabled' : '' ?> id="email" name="email"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'email') ? 'readonly disabled' : '' ?> id="email" name="email"
                        value="<?= htmlReady(Request::get('email', $institute->email)) ?>">
             </td>
         </tr>
@@ -116,7 +116,7 @@
                 <label for="home"><?= _('Homepage') ?></label>
             </td>
             <td>
-                <input type="text" <?= LockRules::Check($institute->id, 'url') ? 'readonly disabled' : '' ?> id="home" name="home"
+                <input type="text" size="80" <?= LockRules::Check($institute->id, 'url') ? 'readonly disabled' : '' ?> id="home" name="home"
                        value="<?= htmlReady(Request::get('home', $institute->url)) ?>">
             </td>
         </tr>

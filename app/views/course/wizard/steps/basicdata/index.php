@@ -80,7 +80,7 @@
     <div id="wizard-participating">
         <div class="description<?= count($values['participating']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
-        </span>
+        </div>
         <?php foreach ($values['participating'] as $id => $assigned) : ?>
             <?php if ($inst = Institute::find($id)) : ?>
                 <?= $this->render_partial('basicdata/_institute',
@@ -103,7 +103,7 @@
     <div id="wizard-lecturers">
         <div class="description<?= count($values['lecturers']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
-        </span>
+        </div>
         <?php foreach ($values['lecturers'] as $id => $assigned) : ?>
             <?php if ($user = User::find($id)) : ?>
                 <?= $this->render_partial('basicdata/_user',
@@ -127,7 +127,7 @@
     <div id="wizard-deputies">
         <div class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
-        </span>
+        </div>
         <?php foreach ($values['deputies'] as $id => $assigned) : ?>
             <?php if ($user = User::find($id)) : ?>
                 <?php if (!in_array($id, array_keys($values['lecturers']))) : ?>

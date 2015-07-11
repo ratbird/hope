@@ -94,7 +94,9 @@ class Course_WizardController extends AuthenticatedController
             $values[$iterator->key()] = $iterator->current();
             $iterator->next();
         }
-        $this->setStepValues($this->steps[$step_number]['classname'], $values);
+        if ($this->steps[$step_number]['classname']) {
+            $this->setStepValues($this->steps[$step_number]['classname'], $values);
+        }
         // Back or forward button clicked -> set next step accordingly.
         if (Request::submitted('back')) {
             $next_step = $this->getNextRequiredStep($step_number, 'down');
@@ -111,33 +113,38 @@ class Course_WizardController extends AuthenticatedController
             }
         // The "create" button was clicked -> create course.
         } else if (Request::submitted('create')) {
-            if ($this->course = $this->createCourse()) {
-                // A studygroup has been created.
-                if (in_array($this->course->status, studygroup_sem_types() ?: array())) {
-                    $message = MessageBox::success(
-                        sprintf(_('Die Studien-/Arbeitsgruppe "%s" wurde angelegt. '.
-                            'Sie können Sie direkt hier weiter verwalten.'),
-                            $this->course->name));
-                    $target = $this->url_for('course/studygroup/edit/'.$this->course->id.'?cid='.$this->course->id);
-                // "Normal" course.
-                } else {
-                    if (Request::int('dialog')) {
+            if ($this->getValues()) {
+                if ($this->course = $this->createCourse()) {
+                    // A studygroup has been created.
+                    if (in_array($this->course->status, studygroup_sem_types() ?: array())) {
                         $message = MessageBox::success(
-                            sprintf(_('Die Veranstaltung "%s" wurde angelegt.'), $this->course->getFullname()));
-                        $target = $this->url_for('admin/courses');
+                            sprintf(_('Die Studien-/Arbeitsgruppe "%s" wurde angelegt. ' .
+                                'Sie können Sie direkt hier weiter verwalten.'),
+                                $this->course->name));
+                        $target = $this->url_for('course/studygroup/edit/' . $this->course->id . '?cid=' . $this->course->id);
+                        // "Normal" course.
                     } else {
-                        $message = MessageBox::success(
-                            sprintf(_('Die Veranstaltung "%s" wurde angelegt. Sie können Sie direkt hier weiter verwalten.'),
-                                $this->course->getFullname()));
-                        $target = $this->url_for('course/management?cid=' . $this->course->id);
+                        if (Request::int('dialog')) {
+                            $message = MessageBox::success(
+                                sprintf(_('Die Veranstaltung "%s" wurde angelegt.'), $this->course->getFullname()));
+                            $target = $this->url_for('admin/courses');
+                        } else {
+                            $message = MessageBox::success(
+                                sprintf(_('Die Veranstaltung "%s" wurde angelegt. Sie können Sie direkt hier weiter verwalten.'),
+                                    $this->course->getFullname()));
+                            $target = $this->url_for('course/management?cid=' . $this->course->id);
+                        }
                     }
+                    PageLayout::postMessage($message);
+                    $this->redirect($target);
+                } else {
+                    PageLayout::postMessage(MessageBox::error(
+                        sprintf(_('Die Veranstaltung "%s" konnte nicht angelegt werden.'),
+                            $this->course->getFullname())));
                 }
-                PageLayout::postMessage($message);
-                $this->redirect($target);
             } else {
-                PageLayout::postMessage(MessageBox::error(
-                    sprintf(_('Die Veranstaltung "%s" konnte nicht angelegt werden.'),
-                        $this->course->getFullname())));
+                PageLayout::postMessage(MessageBox::error(_('Die angegebene Veranstaltung wurde bereits angelegt.')));
+                $this->redirect('course/wizard');
             }
             $stop = true;
         /*

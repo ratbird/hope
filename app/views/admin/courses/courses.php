@@ -9,7 +9,7 @@
     <table class="default course-admin">
     <colgroup>
         <col width="2%">
-        <? if (in_array(_('Nr.'), $view_filter)) : ?>
+        <? if (in_array('Nr.', $view_filter)) : ?>
             <? $colspan++ ?>
             <col width="8%">
         <? endif ?>
@@ -37,7 +37,7 @@
             <? $colspan++ ?>
             <col width="5%">
         <? endif ?>
-        <? if (in_array(_('Vorläufige Anmeldungen'), $view_filter)) : ?>
+        <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
             <? $colspan++ ?>
             <col width="5%">
         <? endif ?>
@@ -49,7 +49,7 @@
     </colgroup>
     <caption>
         <? if (!$GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE || ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE === "all")) : ?>
-            <?= htmlReady('Veranstaltungen') ?>
+            <?= _('Veranstaltungen') ?>
         <? else : ?>
             <?= htmlReady(sprintf(_('Veranstaltungen im %s'), $semester->name)) ?>
         <? endif ?>
@@ -62,7 +62,7 @@
         <th width="2%">
             &nbsp;
         </th>
-        <? if (in_array(_('Nr.'), $view_filter)) : ?>
+        <? if (in_array('Nr.', $view_filter)) : ?>
             <th <?= ($sortby == 'VeranstaltungsNummer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'VeranstaltungsNummer',
@@ -103,7 +103,7 @@
                                              'sortFlag' => strtolower($sortFlag))) ?>"><?= _('Warteliste') ?></a>
             </th>
         <? endif ?>
-        <? if (in_array(_('Vorläufige Anmeldungen'), $view_filter)) : ?>
+        <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
             <th <?= ($sortby == 'prelim') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'prelim',
@@ -112,7 +112,7 @@
         <? endif ?>
         <? if (in_array('Inhalt', $view_filter)) : ?>
             <th style="width: <?= $nav_elements * 27 ?>px">
-                <?= 'Inhalt' ?>
+                <?= _('Inhalt') ?>
             </th>
         <? endif ?>
         <th style="text-align: center" class="actions">

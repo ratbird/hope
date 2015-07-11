@@ -300,9 +300,10 @@ class AdminCourseFilter
             FROM seminare
                 ".$join_query."
             ".($where_query ? "WHERE ".$where_query : "")."
-            GROUP BY seminare.Seminar_id
-            ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "")."
-        ";
+            GROUP BY seminare.Seminar_id";
+        if (!$only_count) {
+            $query .= " ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "");
+        }
         return $query;
     }
 

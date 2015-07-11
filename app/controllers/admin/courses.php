@@ -488,52 +488,52 @@ class Admin_CoursesController extends AuthenticatedController
         // array for the avaiable modules
         $actions = array(
             1  => array('name'       => 'Grunddaten',
-                        'title'      => 'Grunddaten',
+                        'title'      => _('Grunddaten'),
                         'url'        => 'dispatch.php/course/basicdata/view?cid=%s',
                         'attributes' => array(
                             'data-dialog' => 'size=50%'
                         )),
             2  => array('name'       => 'Studienbereiche',
-                        'title'      => 'Studienbereiche',
+                        'title'      => _('Studienbereiche'),
                         'url'        => 'dispatch.php/course/study_areas/show/?cid=%s&from=admin/courses',
                         'attributes' => array(
                             'data-dialog' => 'size=50%'
                         )),
             3  => array('name'  => 'Zeiten / Räume',
-                        'title' => 'Zeiten / Räume',
+                        'title' => _('Zeiten / Räume'),
                         'url'   => 'raumzeit.php?cid=%s'),
             8  => array('name'      => 'Sperrebene',
-                        'title'     => 'Sperrebenen',
+                        'title'     => _('Sperrebenen'),
                         'url'       => 'dispatch.php/admin/courses/set_lockrule',
                         'multimode' => true),
             9  => array('name'      => 'Sichtbarkeit',
-                        'title'     => 'Sichtbarkeit',
+                        'title'     => _('Sichtbarkeit'),
                         'url'       => 'dispatch.php/admin/courses/set_visibility',
                         'multimode' => true),
             10 => array('name'      => 'Zusatzangaben',
-                        'title'     => 'Zusatzangaben',
+                        'title'     => _('Zusatzangaben'),
                         'url'       => 'dispatch.php/admin/courses/set_aux_lockrule',
                         'multimode' => true),
             11 => array('name'  => 'Veranstaltung kopieren',
-                        'title' => 'Kopieren',
+                        'title' => _('Kopieren'),
                         'url'   => 'dispatch.php/course/wizard/copy/%s',
                         'attributes' => array(
                             'data-dialog' => 'size=50%'
                         )),
             14 => array('name'       => 'Zugangsberechtigungen',
-                        'title'      => 'Zugangsberechtigungen',
+                        'title'      => _('Zugangsberechtigungen'),
                         'url'        => 'dispatch.php/course/admission?cid=%s',
                         'attributes' => array(
                             'data-dialog' => 'size=50%'
                         )),
             16 => array('name'      => 'Archivieren',
-                        'title'     => 'Archivieren',
+                        'title'     => _('Archivieren'),
                         'url'       => 'archiv_assi.php',
                         'multimode' => true)
         );
         if (get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
             $actions[4] = array('name'  => 'Raumanfragen',
-                                'title' => 'Raumanfragen',
+                                'title' => _('Raumanfragen'),
                                 'url'   => 'dispatch.php/course/room_requests/index?cid=%s');
         }
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
@@ -559,7 +559,8 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function getViewFilters()
     {
-        return array(_('Nr.'),
+        return array(
+            _('Nr.'),
             _('Name'),
             _('Veranstaltungstyp'),
             _('Raum/Zeit'),
@@ -567,7 +568,8 @@ class Admin_CoursesController extends AuthenticatedController
             _('TeilnehmerInnen'),
             _('TeilnehmerInnen auf Warteliste'),
             _('Vorläufige Anmeldungen'),
-            _('Inhalt'));
+            _('Inhalt')
+        );
     }
 
     private function getCourses($params = array())
@@ -779,7 +781,7 @@ class Admin_CoursesController extends AuthenticatedController
         $list = new SelectWidget(_('Aktionsbereich-Auswahl'), $this->url_for('admin/courses/set_action_type'), 'action_area');
 
         foreach ($actions as $index => $action) {
-            $list->addElement(new SelectElement($index, $action['name'], $selected_action == $index), 'action-aria-' . $index);
+            $list->addElement(new SelectElement($index, $action['title'], $selected_action == $index), 'action-aria-' . $index);
         }
         $sidebar->addWidget($list, 'editmode');
     }

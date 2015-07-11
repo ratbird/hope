@@ -23,6 +23,11 @@
           box-shadow: @shadow1, @shadow2;
 }
 
+// Double transition
+.transition(@transition1, @transition2) {
+    .transition(~"@{transition1}, @{transition2}");
+}
+
 // Gradients
 #gradient {
     .horizontal-with-stop(@startColor: #555, @endColor: #333, @colorStop: 50%) {

@@ -31,15 +31,15 @@ div.clear
 
     li {
         background-color: @content-color;
-        border-right: 1px solid #1e3e70;
-        border-bottom: 1px solid #1e3e70;
+        border-right: 1px solid @brand-color-darker;
+        border-bottom: 1px solid @brand-color-darker;
 
         &:last-child { border-right: none; }
-        &:hover { background: #7890bc; }
+        &:hover { background: @content-color-80; }
 
         &.current {
             border-bottom: 1px solid #fff;
-            &, &:hover { #gradient > .vertical(#eee, #fff); }
+            &, &:hover { background-color: #fff; }
             a, span.quiet { color: #000; }
         }
     }

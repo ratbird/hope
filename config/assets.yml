@@ -129,8 +129,7 @@ javascripts:
 css:
   base:
     # filename : media
-    jquery-ui-1.9.1.custom.css: screen, print
-    jquery-ui-studip.css: screen, print
+    studip-jquery-ui.css: screen, print
     jquery-ui-timepicker-addon.css: screen, print
     multi-select.css: screen, print
     jshighlight_tomorrow.css: screen, print

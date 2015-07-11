@@ -192,7 +192,6 @@ a:link,
 a:visited {
   color: #28497c;
   text-decoration: none;
-  transition: color 0.3s;
 }
 a.index,
 a:link.index,
@@ -214,6 +213,12 @@ a:link.toolbar,
 a:visited.toolbar {
   color: #91a2b6;
   font-size: 9px;
+}
+a[href] {
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  transition: color 0.3s;
 }
 a:hover,
 a:active,
@@ -4154,21 +4159,14 @@ div.clear {
   border-right: none;
 }
 #tabs li:hover {
-  background: #7890bc;
+  background: #a1aec7;
 }
 #tabs li.current {
   border-bottom: 1px solid #fff;
 }
 #tabs li.current,
 #tabs li.current:hover {
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eeeeee), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: -o-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: linear-gradient(to bottom, #eeeeee, #ffffff);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffeeeeee', endColorstr='#ffffffff', GradientType=0);
+  background-color: #fff;
 }
 #tabs li.current a,
 #tabs li.current span.quiet {
@@ -7163,12 +7161,12 @@ table.index_box {
   width: 100%;
 }
 td.index_box_cell {
-  background-color: #f3f5f8;
+  background-color: #e7ebf1;
   padding: 4px;
 }
 /* overdiv */
 div.overdiv {
-  background-color: #f3f5f8;
+  background-color: #e7ebf1;
   margin: 0;
   padding: 0;
   position: absolute;
@@ -7196,7 +7194,7 @@ div.overdiv h4.title {
   width: 90%;
 }
 div.overdiv div.content {
-  background-color: #f3f5f8;
+  background-color: #e7ebf1;
   clear: both;
   margin: 0;
   overflow: hidden;
@@ -7234,10 +7232,8 @@ div.overdiv div.content {
   float: right;
 }
 .editor_toolbar .buttons .ui-button {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  line-height: 1em;
+  display: inline-block;
+  height: 2.3em;
 }
 /* --- Plugin Administration ------------------------------------------------ */
 .plugin_image {
@@ -7260,7 +7256,7 @@ img.plugin_preview {
 }
 /* --- Veranstaltungsverwaltung --------------------------------------------- */
 .click_me div {
-  background-color: #f3f5f8;
+  background-color: #e7ebf1;
   border: 1px solid #D0D0D0;
   float: left;
   height: 10em;
@@ -7306,24 +7302,44 @@ img.plugin_preview {
 }
 /* --- general style classes ------------------------------------------------ */
 .arrow_down {
-  background: transparent url("../images/icons/16/blue/arr_1down.png") top left no-repeat !important;
-  background-position: 0 0 !important;
+  background: transparent top left no-repeat !important;
+  background-image: url("../images/icons/16/blue/arr_1down.png") !important;
+  background-image: none, url("../images/icons/blue/arr_1down.svg") !important;
+  -webkit-background-size: 16px 16px !important;
+  -moz-background-size: 16px 16px !important;
+  -o-background-size: 16px 16px !important;
+  background-size: 16px 16px !important;
 }
 .arrow_right {
-  background: transparent url("../images/icons/16/blue/arr_1right.png") top left no-repeat !important;
-  background-position: 0 0 !important;
+  background: transparent top left no-repeat !important;
+  background-image: url("../images/icons/16/blue/arr_1right.png") !important;
+  background-image: none, url("../images/icons/blue/arr_1right.svg") !important;
+  -webkit-background-size: 16px 16px !important;
+  -moz-background-size: 16px 16px !important;
+  -o-background-size: 16px 16px !important;
+  background-size: 16px 16px !important;
 }
 h1:hover .arrow_down,
 h2:hover .arrow_down,
 h3:hover .arrow_down,
 h4:hover .arrow_down {
   background-image: url("../images/icons/16/red/arr_1down.png");
+  background-image: none, url("../images/icons/red/arr_1down.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
 }
 h1:hover .arrow_right,
 h2:hover .arrow_right,
 h3:hover .arrow_right,
 h4:hover .arrow_right {
   background-image: url("../images/icons/16/red/arr_1right.png");
+  background-image: none, url("../images/icons/red/arr_1right.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
 }
 .invalid {
   border: 2px dotted red;

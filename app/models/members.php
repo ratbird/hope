@@ -168,7 +168,7 @@ class MembersModel
                                         get_title_for_status('dozent', 1), $this->course_title);
                             } else {
                                 $message = sprintf(_('Sie wurden von einem/einer %s oder AdministratorIn
-                                    vom Status **vorlï¿½ufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s**
+                                    vom Status **vorläufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s**
                                     hochgestuft und sind damit zugelassen.'), get_title_for_status('dozent', 1), $this->course_title);
                             }
                         }
@@ -216,7 +216,7 @@ class MembersModel
                             get_title_for_status('dozent', 1), $this->course_title);
                 } else {
                     $message = sprintf(_('Sie wurden von einem/einer %s oder AdministratorIn vom Status
-                        **vorlï¿½ufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s**
+                        **vorläufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s**
                         hochgestuft und sind damit zugelassen.'), get_title_for_status('dozent', 1), $this->course_title);
                 }
             }
@@ -239,11 +239,11 @@ class MembersModel
                         mit dem Status <b>%s</b> in die Veranstaltung eingetragen.'), $fullname, $status));
                 } else {
                     $msg = MessageBox::success(sprintf(_('NutzerIn %s wurde mit dem Status <b>%s</b>
-                        endgï¿½ltig akzeptiert und damit in die Veranstaltung aufgenommen.'), $fullname, $status));
+                        endg?ltig akzeptiert und damit in die Veranstaltung aufgenommen.'), $fullname, $status));
                 }
             }
         } else if ($consider_contingent) {
-            $msg = MessageBox::error(_('Es stehen keine weiteren Plï¿½tze mehr im Teilnehmerkontingent zur Verfï¿½gung.'));
+            $msg = MessageBox::error(_('Es stehen keine weiteren Plätze mehr im Teilnehmerkontingent zur Verfügung.'));
         } else {
             $msg = MessageBox::error(_('Beim Eintragen ist ein Fehler aufgetreten.
                 Bitte versuchen Sie es erneut oder wenden Sie sich an einen Systemadministrator'));

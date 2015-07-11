@@ -30,10 +30,6 @@ if (Course::findCurrent()) {
 }
 ?>
 
-<h1>
-    <?= _('Verwaltungsfunktionen') ?>
-</h1>
-
 <div>
     <div style="margin-left: 1.5em;">
 

@@ -16,7 +16,7 @@ STUDIP.CourseWizard = {
         // Check if already set.
         if ($('input[name="participating[' + id + ']"]').length == 0) {
             var wrapper = $('<div>').attr('class', 'institute');
-            $('#wizard-participating').children('span.description').removeClass('hidden-js');
+            $('#wizard-participating').children('div.description').removeClass('hidden-js');
             var input = $('<input>').
                 attr('type', 'hidden').
                 attr('name', 'participating[' + id + ']').
@@ -48,7 +48,7 @@ STUDIP.CourseWizard = {
         var grandparent = parent.parent();
         parent.remove();
         if (grandparent.children('div').length == 0) {
-            grandparent.children('span.description').addClass('hidden-js');
+            grandparent.children('div.description').addClass('hidden-js');
         }
         STUDIP.CourseWizard.getLecturerSearch();
         return false;
@@ -103,7 +103,7 @@ STUDIP.CourseWizard = {
         // Check if already set.
         if ($('input[name="' + inputName + '[' + id + ']"]').length == 0) {
             var wrapper = $('<div>').attr('class', elClass);
-            $('#' + elId).children('span.description').removeClass('hidden-js');
+            $('#' + elId).children('div.description').removeClass('hidden-js');
             var input = $('<input>').
                 attr('type', 'hidden').
                 attr('name', inputName + '[' + id + ']').
@@ -156,7 +156,7 @@ STUDIP.CourseWizard = {
         var grandparent = parent.parent();
         parent.remove();
         if (grandparent.children('div').length == 0) {
-            grandparent.children('span.description').addClass('hidden-js');
+            grandparent.children('div.description').addClass('hidden-js');
         }
         return false;
     },

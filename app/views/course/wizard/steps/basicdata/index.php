@@ -38,10 +38,10 @@
     <input type="text" name="name" id="wizard-name" size="75" maxlength="254" value="<?= $values['name'] ?>"/>
 </section>
 <section>
-    <label>
+    <label for="wizard-number">
         <?= _('Veranstaltungsnummer') ?>
-        <input type="text" name="number" id="wizard-number" size="20" maxlength="99" value="<?= $values['number'] ?>"/>
     </label>
+    <input type="text" name="number" id="wizard-number" size="20" maxlength="99" value="<?= $values['number'] ?>"/>
 </section>
 <section class="required">
     <label for="wizard-home-institute">
@@ -78,7 +78,7 @@
             array('name' => 'add_part_inst', 'value' => '1')) ?>
     <?php endif ?>
     <div id="wizard-participating">
-        <span class="description<?= count($values['participating']) ? '' : ' hidden-js' ?>">
+        <div class="description<?= count($values['participating']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
         </span>
         <?php foreach ($values['participating'] as $id => $assigned) : ?>
@@ -101,7 +101,7 @@
             array('name' => 'add_lecturer', 'value' => '1')) ?>
     <?php endif ?>
     <div id="wizard-lecturers">
-        <span class="description<?= count($values['lecturers']) ? '' : ' hidden-js' ?>">
+        <div class="description<?= count($values['lecturers']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
         </span>
         <?php foreach ($values['lecturers'] as $id => $assigned) : ?>
@@ -125,7 +125,7 @@
             array('name' => 'add_deputy', 'value' => '1')) ?>
     <?php endif ?>
     <div id="wizard-deputies">
-        <span class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
+        <div class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
         </span>
         <?php foreach ($values['deputies'] as $id => $assigned) : ?>

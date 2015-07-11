@@ -30,10 +30,16 @@ class Course_WizardController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
         global $perm;
-        Navigation::activateItem('/browse/my_courses');
         if (Request::isXhr()) {
             $this->dialog = true;
         }
+        PageLayout::setTitle(_('Neue Veranstaltung anlegen'));
+        $navigation = new Navigation(_('Neue Veranstaltung anlegen'), 'dispatch.php/course/wizard');
+        Navigation::addItem('/browse/my_courses/new_course', $navigation);
+        Navigation::activateItem('/browse/my_courses/new_course');
+        $this->sidebar = Sidebar::get();
+        $this->sidebar->setImage('sidebar/seminar-sidebar.png');
+        $this->sidebar->setTitle(_('Neue Veranstaltung anlegen'));
         $this->steps = CourseWizardStepRegistry::findBySQL("`enabled`=1 ORDER BY `number`");
         StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'].'/lib/classes/coursewizardsteps');
         PageLayout::addSqueezePackage('coursewizard');

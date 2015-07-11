@@ -226,6 +226,7 @@ class SiteinfoMarkupEngine {
         $this->siteinfoMarkup("/\(:toplist ([a-z]*):\)/ei",'$this->toplist(\'$1\')');
         $this->siteinfoMarkup("/\(:indicator ([a-z_\-]*):\)/ei",'$this->indicator(\'$1\')');
         $this->siteinfoMarkup("/\(:history:\)/e",'$this->history()');
+        $this->siteinfoMarkup("/\(:terms:\)/e",'$this->termsOfUse()');
         $this->siteinfoMarkup("'\[style=(&quot;)?(.*?)(&quot;)?\]\s*(.*?)\s*\[/style\]'es",'$this->style(\'$2\', \'$4\')');
     }
 
@@ -545,8 +546,13 @@ class SiteinfoMarkupEngine {
     }
 
     function history() {
-        return formatReady(file_get_contents($ABSOLUTE_PATH_STUDIP.'history.txt'));
+        return formatReady(file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'history.txt'));
     }
+    
+    function termsOfUse() {
+        return @file_get_contents($GLOBALS['STUDIP_BASE_PATH'] . '/locale/' . ($GLOBALS['_language_path'] ?: 'de') . '/LC_HELP/pages/nutzung.html');
+    }
+    
     function style($style, $styled) {
         $style = str_replace('\"', '"', $style);
         $styled = str_replace('\"', '"', $styled);

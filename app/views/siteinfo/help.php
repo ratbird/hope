@@ -67,5 +67,7 @@
         </dd>
         <dt>(:history:)</dt>
         <dd><?= _('Ausgabe der history.txt')?></dd>
+        <dt>(:terms:)</dt>
+        <dd><?= _('Ausgabe der Nutzungsbedingungen')?></dd>
     </dl>
 </div>

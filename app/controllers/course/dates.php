@@ -105,6 +105,7 @@ class Course_DatesController extends AuthenticatedController
 
         $template = $factory->open($this->get_default_template("_topic_li"));
         $template->set_attribute("topic", $topic);
+        $template->set_attribute("date", $date);
         $output['li'] = $template->render();
 
         $this->render_json($output);

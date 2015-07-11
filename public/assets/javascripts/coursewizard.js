@@ -370,6 +370,7 @@ STUDIP.CourseWizard = {
                 attr('onclick', "return STUDIP.CourseWizard.assignNode('" + values.id + "')");
             if (values.assignable) {
                 item.append(assign);
+                item.append(document.createTextNode(' '));
             }
             if (values.has_children) {
                 var input = $('<input>').

@@ -20,7 +20,7 @@
         <? //TODO?>
         <strong><?= _('Teilnahmebeschränkte Veranstaltung') ?></strong> -
         <?= _('max. Teilnehmeranzahl') ?> <?= $course->admission_turnout ?>,
-        <?= _('davon belegt') ?>: <?= (count($autoren) + count($users) + count($accepted)) ?>,
+        <?= _('davon belegt') ?>: <?= (count($autoren) + count($users) + count($accepted)) ?>
     </p>
     <div class="clear"></div>
 <? endif ?>

@@ -164,7 +164,8 @@ class BasicDataWizardStep implements CourseWizardStep
 
         // Quicksearch for lecturers.
         $tpl->set_attribute('lsearch', $this->getSearch($values['coursetype'],
-            $values['institute'], array_keys($values['lecturers'])));
+            array_merge(array($values['institute']), array_keys($values['participating'])),
+            array_keys($values['lecturers'])));
 
         // Quicksearch for deputies if applicable.
         if ($deputies) {
@@ -205,6 +206,11 @@ class BasicDataWizardStep implements CourseWizardStep
             $values['participating'][Request::option('part_inst_id')] = true;
             unset($values['part_inst_id']);
             unset($values['part_inst_id_parameter']);
+        }
+        // Remove a participating institute.
+        if ($remove = array_keys(Request::getArray('remove_participating'))) {
+            $remove = $remove[0];
+            unset($values['participating'][$remove]);
         }
         // Add a lecturer.
         if (Request::submitted('add_lecturer') && Request::option('lecturer_id')) {
@@ -379,7 +385,7 @@ class BasicDataWizardStep implements CourseWizardStep
         return $values;
     }
 
-    public function getSearch($course_type, $institute_id, $exclude_users = array())
+    public function getSearch($course_type, $institute_ids, $exclude_users = array())
     {
         if (SeminarCategories::getByTypeId($course_type)->only_inst_user){
             $search = 'user_inst';
@@ -391,7 +397,7 @@ class BasicDataWizardStep implements CourseWizardStep
             'user_id',
             array('permission' => 'dozent',
                 'exclude_user' => $exclude_users ?: array(),
-                'institute' => $institute_id
+                'institute' => $institute_ids
             )
         );
         $qsearch = QuickSearch::get('lecturer_id', $psearch)

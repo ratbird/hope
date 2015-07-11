@@ -34,6 +34,7 @@ STUDIP.CourseWizard = {
             wrapper.append(trash);
             $('#wizard-participating').append(wrapper);
         }
+        STUDIP.CourseWizard.getLecturerSearch();
     },
 
     /**
@@ -49,6 +50,7 @@ STUDIP.CourseWizard = {
         if (grandparent.children('div').length == 0) {
             grandparent.children('span.description').addClass('hidden-js');
         }
+        STUDIP.CourseWizard.getLecturerSearch();
         return false;
     },
 
@@ -61,10 +63,13 @@ STUDIP.CourseWizard = {
     {
         var params = 'step=' + $('input[name="step"]').val() +
             '&method=getSearch' +
-            '&parameter[]=' + $('select#wizard-coursetype option:selected').val() +
-            '&parameter[]=' + $('select#wizard-home-institute option:selected').val();
+            '&parameter[coursetype]=' + $('select#wizard-coursetype option:selected').val();
+        params += '&parameter[inst][]=' + $('select#wizard-home-institute option:selected').val();
+        $('input[name^="participating["]').each(function () {
+            params += '&parameter[inst][]=' + $(this).attr('id');
+        });
         $('input[name^="lecturers["]').each(function () {
-            params += '&parameter[][]=' + $(this).attr('id');
+            params += '&parameter[lecturers][]=' + $(this).attr('id');
         });
         var target = $('div#wizard-lecturersearch');
         var oldSearch = target.html();

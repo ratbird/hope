@@ -47,9 +47,9 @@
     input[type="time"],
     input[type="tel"],
     input[type="url"],
+    div.quicksearch_frame input[type="text"],
     select,
-    textarea,
-    div.quicksearch_frame input[type="text"] {
+    textarea {
         border: 1px solid @base-color-40;
         height: 26px;
         padding-left: 10px;
@@ -58,6 +58,44 @@
             border: 1px solid @base-color;
             transition: border-color 0.5s;
         }
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="date"],
+    input[type="datetime"],
+    input[type="email"],
+    input[type="range"],
+    input[type="search"],
+    input[type="time"],
+    input[type="tel"],
+    input[type="url"] {
+        /* Extra small */
+        &.size-xs {
+            width: calc(10% - 1px);
+        }
+        /* Small */
+        &.size-s {
+            width: calc(25% - 1px);
+        }
+        /* Medium size and default if not set for normal display */
+        &, &.size-m {
+            width: calc(50% - 1px);
+        }
+        /* Large */
+        &.size-l {
+            width: calc(75% - 1px);
+        }
+        /* X-Large and default for display in dialog */
+        &.size-xl {
+            width: calc(100% - 1px);
+        }
+    }
+
+    select,
+    textarea,
+    div.quicksearch_frame input[type="text"] {
         /* Extra small */
         &.size-xs {
             width: 10%;
@@ -76,7 +114,7 @@
         }
         /* X-Large and default for display in dialog */
         &.size-xl {
-            width: 100% - 5px;
+            width: 100%;
         }
     }
 
@@ -128,11 +166,15 @@
         input[type="search"],
         input[type="time"],
         input[type="tel"],
-        input[type="url"],
+        input[type="url"] {
+            width: 96%;
+        }
+
         select,
         textarea,
         div.quicksearch_frame input[type="text"] {
             width: 100%;
         }
+
     }
 }

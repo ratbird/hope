@@ -6,45 +6,45 @@
     <form action="<?= URLHelper::getLink($actions[$selected_action]['url']) ?>" method="post">
 <? endif ?>
 <?= CSRFProtection::tokenTag() ?>
-    <table class="default course-admin">
+<table class="default course-admin">
     <colgroup>
         <col width="2%">
-        <? if (in_array('Nr.', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="8%">
-        <? endif ?>
-        <? if (in_array('Name', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col>
-        <? endif ?>
-        <? if (in_array('Veranstaltungstyp', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="10%">
-        <? endif ?>
-        <? if (in_array('Raum/Zeit', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="30%">
-        <? endif ?>
-        <? if (in_array('DozentIn', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="15%">
-        <? endif ?>
-        <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="5%">
-        <? endif ?>
-        <? if (in_array('TeilnehmerInnen auf Warteliste', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="5%">
-        <? endif ?>
-        <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="5%">
-        <? endif ?>
-        <? if (in_array('Inhalt', $view_filter)) : ?>
-            <? $colspan++ ?>
-            <col width="8%">
-        <? endif ?>
+    <? if (in_array('number', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="8%">
+    <? endif ?>
+    <? if (in_array('name', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col>
+    <? endif ?>
+    <? if (in_array('type', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="10%">
+    <? endif ?>
+    <? if (in_array('room_time', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="30%">
+    <? endif ?>
+    <? if (in_array('teachers', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="15%">
+    <? endif ?>
+    <? if (in_array('members', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="5%">
+    <? endif ?>
+    <? if (in_array('waiting', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="5%">
+    <? endif ?>
+    <? if (in_array('preliminary', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="5%">
+    <? endif ?>
+    <? if (in_array('contents', $view_filter)) : ?>
+        <? $colspan++ ?>
+        <col width="8%">
+    <? endif ?>
         <col width="15%">
     </colgroup>
     <caption>
@@ -62,55 +62,66 @@
         <th width="2%">
             &nbsp;
         </th>
-        <? if (in_array('Nr.', $view_filter)) : ?>
+        <? if (in_array('number', $view_filter)) : ?>
             <th <?= ($sortby == 'VeranstaltungsNummer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'VeranstaltungsNummer',
-                                             'sortFlag' => strtolower($sortFlag))) ?>"><?= _("Nr.") ?></a>
+                                             'sortFlag' => strtolower($sortFlag))) ?>">
+                    <?= _('Nr.') ?>
+                </a>
             </th>
         <? endif ?>
-        <? if (in_array('Name', $view_filter)) : ?>
+        <? if (in_array('name', $view_filter)) : ?>
             <th <?= ($sortby == 'Name') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'Name',
-                                             'sortFlag' => strtolower($sortFlag))) ?>"><?= _("Name") ?></a>
+                                             'sortFlag' => strtolower($sortFlag))) ?>">
+                    <?= _('Name') ?>
+                </a>
             </th>
         <? endif ?>
-        <? if (in_array('Veranstaltungstyp', $view_filter)) : ?>
+        <? if (in_array('type', $view_filter)) : ?>
             <th <?= ($sortby == 'status') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'status',
-                                             'sortFlag' => strtolower($sortFlag))) ?>"><?= _("VA-Typ") ?></a>
+                                             'sortFlag' => strtolower($sortFlag))) ?>">
+                    <?= _("VA-Typ") ?>
+                </a>
             </th>
         <? endif ?>
-        <? if (in_array('Raum/Zeit', $view_filter)) : ?>
-            <th><?= _("Raum/Zeit") ?></th>
+        <? if (in_array('room_time', $view_filter)) : ?>
+            <th><?= _('Raum/Zeit') ?></th>
         <? endif ?>
-        <? if (in_array('DozentIn', $view_filter)) : ?>
-            <th><?= _("DozentIn") ?></th>
+        <? if (in_array('teachers', $view_filter)) : ?>
+            <th><?= _('DozentIn') ?></th>
         <? endif ?>
-        <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
+        <? if (in_array('members', $view_filter)) : ?>
             <th <?= ($sortby == 'teilnehmer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'teilnehmer',
-                                             'sortFlag' => strtolower($sortFlag))) ?>"><?= _("TN") ?></a>
+                                             'sortFlag' => strtolower($sortFlag))) ?>">
+                    <abbr title="<?= _('Teilnehmer/-innen') ?>">
+                        <?= _('TN') ?>
+                    </abbr>
+                </a>
             </th>
         <? endif ?>
-        <? if (in_array('TeilnehmerInnen auf Warteliste', $view_filter)) : ?>
-            <th <?= ($sortby == 'waiting') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
-                <a href="<?=
-                URLHelper::getLink('', array('sortby'   => 'waiting',
-                                             'sortFlag' => strtolower($sortFlag))) ?>"><?= _('Warteliste') ?></a>
+        <? if (in_array('waiting', $view_filter)) : ?>
+            <th <? if ($sortby == 'waiting') printf('class="sort%s"', strtolower($sortFlag)); ?>>
+                <a href="<?= URLHelper::getLink('', array('sortby'   => 'waiting',
+                                                    'sortFlag' => strtolower($sortFlag))) ?>">
+                    <?= _('Warteliste') ?>
+                </a>
             </th>
         <? endif ?>
-        <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
+        <? if (in_array('preliminary', $view_filter)) : ?>
             <th <?= ($sortby == 'prelim') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'prelim',
                                              'sortFlag' => strtolower($sortFlag))) ?>"><?= _('Vorläufig') ?></a>
             </th>
         <? endif ?>
-        <? if (in_array('Inhalt', $view_filter)) : ?>
+        <? if (in_array('contents', $view_filter)) : ?>
             <th style="width: <?= $nav_elements * 27 ?>px">
                 <?= _('Inhalt') ?>
             </th>
@@ -141,17 +152,17 @@
                     ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
                     : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($values["Name"]))) ?>
             </td>
-            <? if (in_array('Nr.', $view_filter)) : ?>
+            <? if (in_array('number', $view_filter)) : ?>
                 <td>
                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
                         <?= htmlReady($values["VeranstaltungsNummer"]) ?>
                     </a>
                 </td>
             <? endif ?>
-            <? if (in_array('Name', $view_filter)) : ?>
+            <? if (in_array('name', $view_filter)) : ?>
                 <td>
                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
-                        <?= htmlReady(trim($values["Name"])) ?>
+                        <?= htmlReady(trim($values['Name'])) ?>
                     </a>
                     <a data-dialog="buttons=false;size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $semid)) ?>">
                         <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
@@ -163,12 +174,12 @@
                     <? endif ?>
                 </td>
             <? endif ?>
-            <? if (in_array('Veranstaltungstyp', $view_filter)) : ?>
+            <? if (in_array('type', $view_filter)) : ?>
                 <td>
                     <strong><?= $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$values["status"]]["class"]]['name'] ?></strong>: <?= $GLOBALS['SEM_TYPE'][$values["status"]]["name"] ?>
                 </td>
             <? endif ?>
-            <? if (in_array('Raum/Zeit', $view_filter)) : ?>
+            <? if (in_array('room_time', $view_filter)) : ?>
                 <td>
                     <? $sem = new Seminar($semid);
                     $_room  = $sem->getDatesHTML(array(
@@ -179,54 +190,56 @@
                     <?= $_room ?>
                 </td>
             <? endif ?>
-            <? if (in_array('DozentIn', $view_filter)) : ?>
+            <? if (in_array('teachers', $view_filter)) : ?>
                 <td>
                     <?= $this->render_partial_collection('my_courses/_dozent', $values['dozenten']) ?>
-                    <br />
-                    <?=$values['teacher_search']->render()?>
+                <? if ($values['teacher_search']): ?>
+                    <br>
+                    <?= $values['teacher_search']->render() ?>
+                <? endif; ?>
                 </td>
             <? endif ?>
-            <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
+            <? if (in_array('members', $view_filter)) : ?>
                 <td style="text-align: center;">
-                    <a title=<?=_('TeilnehmerInnen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                    <a title="<?=_('TeilnehmerInnen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
                         <?= $values["teilnehmer"] ?>
                     </a>
                 </td>
             <? endif ?>
-            <? if (in_array('TeilnehmerInnen auf Warteliste', $view_filter)) : ?>
+            <? if (in_array('waiting', $view_filter)) : ?>
                 <td style="text-align: center;">
-                    <a title=<?=_('TeilnehmerInnen auf der Warteliste')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                    <a title="<?=_('TeilnehmerInnen auf der Warteliste')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
                         <?= $values["waiting"] ?>
                     </a>
                 </td>
             <? endif ?>
-            <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
+            <? if (in_array('preliminary', $view_filter)) : ?>
                 <td style="text-align: center;">
-                    <a title=<?=_('Vorläufige Anmeldungen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
-                        <?= $values["prelim"] ?>
+                    <a title="<?=_('Vorläufige Anmeldungen') ?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                        <?= $values['prelim'] ?>
                     </a>
                 </td>
             <? endif ?>
-            <? if (in_array('Inhalt', $view_filter)) : ?>
+            <? if (in_array('contents', $view_filter)) : ?>
                 <td style="text-align: left; white-space: nowrap;">
-                    <? if (!empty($values['navigation'])) : ?>
-                        <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
-                            <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                                <? $image = $nav->getImage(); ?>
-                                <a href="<?=
-                                UrlHelper::getLink('seminar_main.php',
-                                    array('auswahl'     => $semid,
-                                          'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                                    <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>
-                                </a>
-                            <? elseif (is_string($key)) : ?>
-                                <?=
-                                Assets::img('blank.gif', array('width'  => 20,
-                                                               'height' => 20)); ?>
-                            <? endif ?>
-                            <? echo ' ' ?>
-                        <? endforeach ?>
-                    <? endif ?>
+                <? if (!empty($values['navigation'])) : ?>
+                    <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
+                        <? if (isset($nav) && $nav->isVisible(true)) : ?>
+                            <? $image = $nav->getImage(); ?>
+                            <a href="<?=
+                            UrlHelper::getLink('seminar_main.php',
+                                array('auswahl'     => $semid,
+                                      'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
+                                <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>
+                            </a>
+                        <? elseif (is_string($key)) : ?>
+                            <?=
+                            Assets::img('blank.gif', array('width'  => 20,
+                                                           'height' => 20)); ?>
+                        <? endif ?>
+                        <? echo ' ' ?>
+                    <? endforeach ?>
+                <? endif ?>
                 </td>
             <? endif ?>
             <td style="text-align: right;" class="actions">
@@ -263,8 +276,8 @@
         </tr>
     <? } ?>
     </tbody>
-    <? if ($actions[$selected_action]['multimode']) : ?>
-        <tfoot>
+<? if ($actions[$selected_action]['multimode']) : ?>
+    <tfoot>
         <tr>
             <td colspan="<?= $colspan ?>" style="text-align: right">
                 <?= Studip\Button::createAccept(
@@ -274,9 +287,9 @@
                     $actions[$selected_action]['name']) ?>
             </td>
         </tr>
-        </tfoot>
+    </tfoot>
     <? endif ?>
-    </table>
+</table>
 <? if ($actions[$selected_action]['multimode']) : ?>
-    </form>
+</form>
 <? endif ?>

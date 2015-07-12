@@ -95,12 +95,7 @@ class Admin_CoursesController extends AuthenticatedController
         $config_my_course_type_filter = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
 
         // Get the view filter
-        $config_view_filter = $GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS;
-        $this->view_filter = isset($config_view_filter) ? unserialize($config_view_filter) : array();
-        if (!$this->view_filter) {
-            $this->view_filter = $this->getViewFilters();
-            $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->view_filter));
-        }
+        $this->view_filter = $this->getFilterConfig();
 
         $sortFlag = (Request::get('sortFlag') == 'asc') ? 'DESC' : 'ASC';
 
@@ -191,79 +186,79 @@ class Admin_CoursesController extends AuthenticatedController
      */
     public function export_csv_action()
     {
-        $config_view_filter = $GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS;
-        $view_filter = isset($config_view_filter) ? unserialize($config_view_filter) : array();
-        if (!$view_filter) {
-            $view_filter = $this->getViewFilters();
-            $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($view_filter));
-        }
+        $filter_config = $this->getFilterConfig();
+        unset($filter_config['contents']);
 
-        if ($pos = array_search('Inhalt', $view_filter)) {
-            unset($view_filter[$pos]);
-        }
-        $sortby = $GLOBALS['user']->cfg->getValue('MEINE_SEMINARE_SORT');
-        $config_my_course_type_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_TYPE_FILTER');
-
-        $courses = $this->getCourses(
-            array('sortby'      => $sortby,
-                  'sortFlag'    => 'asc',
-                  'typeFilter'  => $config_my_course_type_filter,
-                  'view_filter' => $view_filter)
-        );
-
-
-        if (empty($view_filter)) {
+        if (empty($filter_config)) {
             return;
         }
 
-        $captions = array_values($view_filter);
+        $sortby = $GLOBALS['user']->cfg->getValue('MEINE_SEMINARE_SORT');
+        $config_my_course_type_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_TYPE_FILTER');
 
+        $courses = $this->getCourses(array(
+            'sortby'      => $sortby,
+            'sortFlag'    => 'asc',
+            'typeFilter'  => $config_my_course_type_filter,
+            'view_filter' => $filter_config,
+        ));
 
+        $view_filters = $this->getViewFilters();
+
+        $data = array();
         foreach ($courses as $course_id => $course) {
             $sem = new Seminar($course_id);
+            $row = array();
 
-            if (in_array('Nr.', $captions)) {
-                $data[$course_id][array_search('Nr.', $captions)] = $course['VeranstaltungsNummer'];
+            if (in_array('number', $filter_config)) {
+                $row['number'] = $course['VeranstaltungsNummer'];
             }
 
-            if (in_array('Name', $captions)) {
-                $data[$course_id][array_search('Name', $captions)] = $course['Name'];
+            if (in_array('name', $filter_config)) {
+                $row['name'] = $course['Name'];
             }
 
-            if (in_array('Veranstaltungstyp', $captions)) {
-                $data[$course_id][array_search('Veranstaltungstyp', $captions)]
-                    = $course['sem_class_name'] . ': ' . $GLOBALS['SEM_TYPE'][$course['status']]['name'];
+            if (in_array('type', $filter_config)) {
+                $row['type'] = sprintf('%s: %s',
+                                       $course['sem_class_name'],
+                                       $GLOBALS['SEM_TYPE'][$course['status']]['name']);
             }
 
-            if (in_array('Raum/Zeit', $captions)) {
+            if (in_array('room_time', $filter_config)) {
                 $_room = $sem->getDatesExport(array(
                     'semester_id' => $this->semester->id,
                     'show_room'   => true
                 ));
-                $_room = $_room ?: _('nicht angegeben');
-                $data[$course_id][array_search('Raum/Zeit', $captions)] = $_room;
+                $row['room_time'] = $_room ?: _('nicht angegeben');
             }
 
-            if (in_array('DozentIn', $captions)) {
+            if (in_array('teachers', $filter_config)) {
                 $dozenten = array();
                 array_walk($course['dozenten'], function ($a) use (&$dozenten) {
                     $user = User::findByUsername($a['username']);
                     $dozenten[] = $user->getFullName();
                 });
-                $data[$course_id][array_search('DozentIn', $captions)] = !empty($dozenten) ? implode(', ', $dozenten) : '';
+                $row['teachers'] = implode(', ', $dozenten);
             }
 
-            if (in_array('TeilnehmerInnen', $captions)) {
-                $data[$course_id][array_search('TeilnehmerInnen', $captions)] = $course['teilnehmer'];
+            if (in_array('members', $filter_config)) {
+                $row['members'] = $course['teilnehmer'];
             }
 
-            if (in_array('TeilnehmerInnen auf Warteliste', $captions)) {
-                $data[$course_id][array_search('TeilnehmerInnen auf Warteliste', $captions)] = $course['waiting'];
+            if (in_array('waiting', $filter_config)) {
+                $row['waiting'] = $course['waiting'];
             }
 
-            if (in_array('Vorläufige Anmeldungen', $captions)) {
-                $data[$course_id][array_search('Vorläufige Anmeldungen', $captions)] = $course['prelim'];
+            if (in_array('preliminary', $filter_config)) {
+                $row['preliminary'] = $course['prelim'];
             }
+
+            $data[$course_id] = $row;
+        }
+
+        $captions = array();
+        foreach ($filter_config as $index) {
+            $captions[$index] = $view_filters[$index];
         }
 
         $tmpname = md5(uniqid('Veranstaltungsexport'));
@@ -428,24 +423,15 @@ class Admin_CoursesController extends AuthenticatedController
     {
         // store view filter in configuration
         if (!is_null($filter)) {
-            $db_filter = unserialize($GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS);
-            $or_filter = $filters = $this->getViewFilters();
-            $selected = $or_filter[$filter];
+            $filters = $this->getFilterConfig();
 
             if ($state) {
-                $db_filter = array_filter($db_filter, function ($a) use ($selected) {
-                    return $a != $selected;
-                });
-
+                $filters = array_diff($filters, array($filter));
             } else {
-                array_push($db_filter, $selected);
+                $filters[] = $filter;
             }
 
-            if (empty($db_filter)) {
-                $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize(array()));
-            } else {
-                $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($db_filter));
-            }
+            $this->setFilterConfig($filters);
         }
 
         $this->redirect('admin/courses/index');
@@ -560,15 +546,15 @@ class Admin_CoursesController extends AuthenticatedController
     private function getViewFilters()
     {
         return array(
-            _('Nr.'),
-            _('Name'),
-            _('Veranstaltungstyp'),
-            _('Raum/Zeit'),
-            _('DozentIn'),
-            _('TeilnehmerInnen'),
-            _('TeilnehmerInnen auf Warteliste'),
-            _('Vorläufige Anmeldungen'),
-            _('Inhalt')
+            'number'      => _('Nr.'),
+            'name'        => _('Name'),
+            'type'        => _('Veranstaltungstyp'),
+            'room_time'   => _('Raum/Zeit'),
+            'teachers'    => _('DozentIn'),
+            'members'     => _('TeilnehmerInnen'),
+            'waiting'     => _('TeilnehmerInnen auf Warteliste'),
+            'preliminary' => _('Vorläufige Anmeldungen'),
+            'contents'    => _('Inhalt')
         );
     }
 
@@ -623,7 +609,7 @@ class Admin_CoursesController extends AuthenticatedController
             return array();
         }
 
-        if (in_array('Inhalt', $params['view_filter'])) {
+        if (in_array('contents', $params['view_filter'])) {
             $sem_types = SemType::getTypes();
             $modules = new Modules();
         }
@@ -634,7 +620,7 @@ class Admin_CoursesController extends AuthenticatedController
                 $dozenten = $this->getTeacher($seminar_id);
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
-                if (in_array('DozentIn',  $params['view_filter'])) {
+                if (in_array('teachers',  $params['view_filter'])) {
 
                     if (SeminarCategories::getByTypeId($seminar['status'])->only_inst_user) {
                         $search_template = "user_inst_not_already_in_sem";
@@ -661,7 +647,7 @@ class Admin_CoursesController extends AuthenticatedController
                         ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $seminar_id, array('from' => 'admin/courses')));
                 }
 
-                if (in_array('Inhalt', $params['view_filter'])) {
+                if (in_array('contents', $params['view_filter'])) {
                     $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
                     $seminars[$seminar_id]['modules'] = $modules->getLocalModules($seminar_id, 'sem', $seminar['modules'], $seminar['status']);
                     $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations($seminar_id, $seminars[$seminar_id], $seminars[$seminar_id]['sem_class'], $GLOBALS['user']->id);
@@ -702,18 +688,15 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function setViewWidget($configs = array())
     {
-        $configs = $configs ?: array();
-        $sidebar = Sidebar::Get();
-        $filters = $this->getViewFilters();
+        $configs         = $configs ?: array();
         $checkbox_widget = new OptionsWidget();
         $checkbox_widget->setTitle(_('Darstellungs-Filter'));
-        $size = count($filters);
 
-        for ($i = 0; $i < $size; $i++) {
-            $state = in_array($filters[$i], $configs);
-            $checkbox_widget->addCheckbox($filters[$i], $state, $this->url_for('admin/courses/set_view_filter/' . $i . '/' . $state));
+        foreach ($this->getViewFilters() as $index => $label) {
+            $state = in_array($index, $configs);
+            $checkbox_widget->addCheckbox($label, $state, $this->url_for('admin/courses/set_view_filter/' . $index . '/' . $state));
         }
-        $sidebar->addWidget($checkbox_widget, "views");
+        Sidebar::get()->addWidget($checkbox_widget, 'views');
     }
 
     /**
@@ -857,5 +840,32 @@ class Admin_CoursesController extends AuthenticatedController
         $search = new SearchWidget(URLHelper::getLink('dispatch.php/admin/courses'));
         $search->addNeedle(_('Freie Suche'), 'search', true, null, null, $GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT);
         $sidebar->addWidget($search, 'filter_search');
+    }
+    
+    private function getFilterConfig()
+    {
+        $available_filters = array_keys($this->getViewFilters());
+        
+        $temp = $GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS;
+        if ($temp) {
+            $config = unserialize($temp);
+            $config = array_intersect($config, $available_filters);
+        } else {
+            $config = array();
+        }
+
+        if (!$config) {
+            $config = $this->setFilterConfig($available_filters);
+        }
+
+        return $config;
+    }
+    
+    private function setFilterConfig($config)
+    {
+        $config = $config ?: array_keys($this->getViewFilters());
+        $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($config));
+        
+        return $config;
     }
 }

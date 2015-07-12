@@ -208,13 +208,14 @@ class AdminCourseFilter
      * @return $this
      * @throws Exception if $flag does not exist
      */
-    public function orderBy($attribute, $flag = "ASC")
+    public function orderBy($attribute, $flag = 'ASC')
     {
-        if (!in_array($flag, words("ASC DESC"))) {
+        $flag = strtoupper($flag);
+        if (!in_array($flag, words('ASC DESC'))) {
             throw new Exception("Sortierreihenfolge undefiniert.");
         }
-        if (in_array($attribute, words('VeranstaltungsNummer Name status teilnehmer waiting prelim')) && in_array($flag, words("ASC, DESC"))) {
-            $this->settings['query']['orderby'] = $attribute." ".$flag;
+        if (in_array($attribute, words('VeranstaltungsNummer Name status teilnehmer waiting prelim'))) {
+            $this->settings['query']['orderby'] = $attribute . ' ' . $flag;
         }
         return $this;
     }

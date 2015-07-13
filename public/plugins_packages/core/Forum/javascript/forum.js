@@ -432,7 +432,7 @@ STUDIP.Forum = {
                         + writtenBy.replace('%s', name)
                         + '</div>';
                 }
-                return '<blockquote>' + author + text + '</blockquote>';
+                return '<p>&nbsp;</p><blockquote>' + author + text + '</blockquote><p>&nbsp;</p>';
             }
 
             // quote with Stud.IP markup

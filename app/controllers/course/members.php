@@ -1364,6 +1364,7 @@ class Course_MembersController extends AuthenticatedController
     private function createSidebar($filtered_members)
     {
         $sidebar = Sidebar::get();
+        $sem = Seminar::GetInstance($this->course_id);
 
         if ($this->is_tutor) {
             $widget = new ActionsWidget();
@@ -1378,7 +1379,6 @@ class Course_MembersController extends AuthenticatedController
 
             if ($this->is_dozent) {
                 if (!$this->dozent_is_locked) {
-                    $sem = Seminar::GetInstance($this->course_id);
                     $sem_institutes = $sem->getInstitutes();
 
                     if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
@@ -1417,7 +1417,6 @@ class Course_MembersController extends AuthenticatedController
                     $widget->addElement($element);
                 }
                 if (!$this->tutor_is_locked) {
-                    $sem = Seminar::GetInstance($this->course_id);
                     $sem_institutes = $sem->getInstitutes();
 
                     if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {

@@ -32,9 +32,9 @@
 
         // TODO generate HTML tags with JS/jQuery functions
         editor.insertHtml(
-            '<blockquote><div class="author">'
+            '<p>&nbsp;</p><blockquote><div class="author">'
             + writtenBy.replace('%s', '"Name"')
-            + '</div><p>&nbsp</p></blockquote>'
+            + '</div><p>&nbsp</p></blockquote><p>&nbsp;</p>'
         );
     }
 })(CKEDITOR);

@@ -281,12 +281,12 @@ function quotes_encode($text, $author = '')
         // quote with HTML markup
         if ($author) {
             return sprintf(
-                '<blockquote><div class="author">%s</div>%s</blockquote>',
+                '<p>&nbsp;</p><blockquote><div class="author">%s</div>%s</blockquote><p>&nbsp;</p>',
                 sprintf(_('%s hat geschrieben:'), $author),
                 $text
             );
         }
-        return sprintf('<blockquote>%s</blockquote>', $text);
+        return sprintf('<p>&nbsp;</p><blockquote>%s</blockquote><p>&nbsp;</p>', $text);
     }
 
     // quote with Stud.IP markup

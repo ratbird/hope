@@ -290,6 +290,8 @@ class Icon
         if (isset($this->attributes['size'])) {
             list($size, $temp) = explode('@', $this->attributes['size'], 2);
             unset($this->attributes['size']);
+
+            $this->size = $size;
         }
         return (int)$size;
     }

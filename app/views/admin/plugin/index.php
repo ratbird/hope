@@ -122,7 +122,7 @@ use Studip\Button, Studip\LinkButton;
         </tbody>
         <tfoot>
             <tr>
-                <td style="text-align: center;" colspan=10>
+                <td style="text-align: center;" colspan="11">
                     <?= Button::createAccept(_('Speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
                 </td>
             </tr>

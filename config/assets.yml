@@ -130,8 +130,6 @@ css:
   base:
     # filename : media
     studip-jquery-ui.css: screen, print
-    jquery-ui-timepicker-addon.css: screen, print
-    multi-select.css: screen, print
     jshighlight_tomorrow.css: screen, print
     style.css:  screen
     smiley.css: screen, print

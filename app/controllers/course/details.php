@@ -109,7 +109,7 @@ class Course_DetailsController extends AuthenticatedController
             }
             $sidebar->setTitle(_('Details'));
             $links = new ActionsWidget();
-            $links->addLink(_("Druckansicht"),
+            $links->addLink(_("Drucken"),
                 URLHelper::getScriptLink("dispatch.php/course/details/index/" . $this->course->id),
                 'icons/16/blue/print.png',
                 array('class' => 'print_action', 'target' => '_blank'));

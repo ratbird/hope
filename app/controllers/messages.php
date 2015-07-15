@@ -301,13 +301,13 @@ class MessagesController extends AuthenticatedController {
                 if (!Studip\Markup::isHtml($this->default_message['message'])) {
                     $this->default_message['message'] = '<div>' . nl2br($this->default_message['message']) . '</div>';
                 }
-                $this->default_message['message'] .= '<br><br>--<br>';
+                $this->default_message['message'] .= '<br><br>--<p>';
                 if (Studip\Markup::isHtml($settings['sms_sig'])) {
                     $this->default_message['message'] .= $settings['sms_sig'];
                 } else {
                     $this->default_message['message'] .= formatReady($settings['sms_sig']);
                 }
-
+                $this->default_message['message'] .= '</p>';
             } else {
                 $this->default_message['message'] .= "\n\n--\n" . $settings['sms_sig'];
             }

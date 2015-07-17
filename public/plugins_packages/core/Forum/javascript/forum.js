@@ -299,6 +299,16 @@ STUDIP.Forum = {
 
         var textarea = $(spanSelector + ' textarea[name=content]');
 
+        // make sure HTML stays HTML
+        // usually the wysiwyg editor does this automatically,
+        // but since there is no submit event the editor does not
+        // get notified
+        var w = STUDIP.wysiwyg;
+        if (w && !w.disabled) {
+            // wysiwyg is active, ensure HTML markers are set
+            textarea.val(w.markAsHtml(textarea.val()));
+        }
+
         // remember current textarea value
         textarea.attr('data-reset', textarea.val());
 
@@ -400,53 +410,29 @@ STUDIP.Forum = {
             var name = jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
         }
 
-        // quote cited posting's content
-        var contentSelector = 'span[data-edit-topic=' + topic_id + '] textarea[name=content]';
+        // add content from cited posting in [quote]-tags
+        var originalContent = jQuery(
+            'span[data-edit-topic=' + topic_id +'] textarea[name=content]'
+        ).val();
 
-        var content = quote(jQuery(contentSelector).val(), name);
+        var content = '[quote=' + name + ']\n' + originalContent + '\n[/quote]\n';
+        var w = STUDIP.wysiwyg;
+        if (w && w.isHtml(originalContent)) {
+            content = w.markAsHtml(content);
+        }
+
         jQuery('#new_entry_box textarea').val(content);
         jQuery('#new_entry_box').insertAfter('form[data-topicid=' + topic_id + ']');
         jQuery('#new_entry_box').addClass('cite_box');
 
         jQuery('input[type=hidden][name=parent]').val(topic_id);
         STUDIP.Forum.newEntry();
-
-        ///// local helper functions
-
-        function quote(text, name) {
-            // If quoting is changed update these functions:
-            // - StudipFormat::markupQuote
-            //   lib/classes/StudipFormat.php
-            // - quotes_encode lib/visual.inc.php
-            // - STUDIP.Forum.citeEntry > quote
-            //   public/plugins_packages/core/Forum/javascript/forum.js
-            // - studipQuotePlugin > insertStudipQuote
-            //   public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
-
-            if (STUDIP.wysiwyg) {
-                // quote with HTML markup
-                var author = '';
-                if (name) {
-                    var writtenBy = '%s hat geschrieben:'.toLocaleString();
-                    author = '<div class="author">'
-                        + writtenBy.replace('%s', name)
-                        + '</div>';
-                }
-                return '<p>&nbsp;</p><blockquote>' + author + text + '</blockquote><p>&nbsp;</p>';
-            }
-
-            // quote with Stud.IP markup
-            if (name) {
-                return '[quote=' + name + ']\n' + text + '\n[/quote]\n';
-            }
-            return '[quote]\n' + text + '\n[/quote]\n';
-        }
     },
 
     forwardEntry: function(topic_id) {
         var title   = 'WG: ' + jQuery('span[data-edit-topic=' + topic_id +'] [name=name]').attr('value');
         var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val().trim();
-        var is_html = !!STUDIP.wysiwyg;
+        var is_html = STUDIP.wysiwyg.isHtml(content);
         var nl      = is_html ? '<br>' : "\n";
         var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '.toLocaleString()
                     + nl + nl
@@ -457,7 +443,9 @@ STUDIP.Forum = {
                     + nl + nl
                     + content
                     + nl + nl;
-
+        if (is_html) {
+            text = STUDIP.wysiwyg.markAsHtml(text);
+        }
         STUDIP.Dialog.fromURL(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
             data: {
                 default_body: text,

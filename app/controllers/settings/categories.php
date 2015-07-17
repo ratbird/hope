@@ -16,8 +16,6 @@
 
 require_once 'settings.php';
 
-use Studip\Markup;
-
 class Settings_CategoriesController extends Settings_SettingsController
 {
     /**
@@ -142,7 +140,6 @@ class Settings_CategoriesController extends Settings_SettingsController
     {
         $request = Request::getInstance();
         $categories = $request['categories'];
-        
         foreach ($categories as $id => $data) {
             if (empty($data['name'])) {
                 $this->reportError(_('Kategorien ohne Namen können nicht gespeichert werden!'));
@@ -151,9 +148,6 @@ class Settings_CategoriesController extends Settings_SettingsController
             $category = Kategorie::find($id);
             $category->name    = $data['name'];
             $category->content = $data['content'];
-            if ($category->content !== '' && Config::get()->WYSIWYG) {
-                $category->content = Markup::markAsHtml(Markup::purify($category->content));
-            }
             if ($category->store()) {
                 $this->reportSuccess(_('Kategorien geändert!'));
                 Visibility::renamePrivacySetting('kat_' . $category->id, $category->name);

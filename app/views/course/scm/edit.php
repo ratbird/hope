@@ -36,7 +36,7 @@ use Studip\Button,
             <?= _('Inhalt') ?>
         </legend>
         <div>
-        <textarea style="width: 100%;" class="add_toolbar wysiwyg" name="content" data-secure="true"><?= wysiwygReady($scm->content) ?></textarea>
+        <textarea style="width: 100%;" class="add_toolbar" name="content" data-secure="true"><?= htmlReady($scm->content) ?></textarea>
         </div>
     </fieldset>
     <? if (!$scm->isNew()): ?>

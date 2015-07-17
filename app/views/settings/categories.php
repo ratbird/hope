@@ -63,9 +63,9 @@
                 </td>
                 <td colspan="2">
                     <textarea id="content<?= $index ?>" name="categories[<?= $category->id ?>][content]"
-                              class="resizable add_toolbar wysiwyg" style="width: 100%; height: 200px;"
+                              class="resizable add_toolbar" style="width: 100%; height: 200px;"
                               aria-label="<?= _('Inhalt der Kategorie:') ?>"
-                    ><?= wysiwygReady($category->content) ?></textarea>
+                    ><?= htmlReady($category->content) ?></textarea>
                 </td>
             </tr>
         </tbody>

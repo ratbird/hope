@@ -142,7 +142,7 @@
                     <label for="signature"><?= _('Signatur') ?></label>
                 </td>
                 <td>
-                    <textarea class="add_toolbar wysiwyg" name="sms_sig" id="signature" aria-label="<?= _('Signatur') ?>" style="width: 100%;" rows="3"><?= wysiwygReady($settings['sms_sig']) ?></textarea>
+                    <textarea class="add_toolbar" name="sms_sig" id="signature" aria-label="<?= _('Signatur') ?>" style="width: 100%;" rows="3"><?= htmlready($settings['sms_sig']) ?></textarea>
                 </td>
             </tr>
         </tbody>

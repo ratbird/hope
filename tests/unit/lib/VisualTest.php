@@ -37,7 +37,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 
     public function testFormatReady()
     {
-        $expected = '<strong>some code</strong>';
+        $expected = '<b>some code</b>';
         $this->assertEquals($expected, formatReady('*some*code*'));
     }
 
@@ -75,14 +75,14 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testHeading()
     {
         $input = '!!%%Überschrift%%';
-        $expected = '<h3 class="content"><em>Überschrift</em></h3>';
+        $expected = '<h3 class="content"><i>Überschrift</i></h3>';
         $this->assertEquals($expected, formatReady($input));
     }
 
     public function testBoldItalics()
     {
         $input = '**some %%code%%**';
-        $expected = '<strong>some <em>code</em></strong>';
+        $expected = '<b>some <i>code</i></b>';
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -96,7 +96,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testSimpleBoldItalics()
     {
         $input = '*bold*text* %some%italics%';
-        $expected = '<strong>bold text</strong> <em>some italics</em>';
+        $expected = '<b>bold text</b> <i>some italics</i>';
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -117,7 +117,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
-        $expected = '** test <em> test ** test </em>';
+        $expected = '** test <i> test ** test </i>';
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -184,7 +184,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testPre()
     {
         $input = '[pre]**A**{-C-}[/pre]';
-        $expected = '<pre><strong>A</strong><s>C</s></pre>';
+        $expected = '<pre><b>A</b><strike>C</strike></pre>';
         $this->assertEquals($expected, formatReady($input));
     }
 

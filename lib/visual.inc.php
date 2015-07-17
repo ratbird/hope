@@ -218,20 +218,6 @@ function htmlReady($what, $trim=TRUE, $br=FALSE, $double_encode=true) {
     return Markup::htmlReady($what, $trim, $br, $double_encode);
 }
 
-/**
- * Prepare text for wysiwyg (if enabled), otherwise convert special
- * characters using htmlReady.
- *
- * @param  string  $text  The text.
- * @param  boolean $trim  Trim text before applying markup rules, if TRUE.
- * @param  boolean $br    Replace newlines by <br>, if TRUE and wysiwyg editor disabled.
- * @param  boolean $double_encode  Encode existing HTML entities, if TRUE and wysiwyg editor disabled.
- * @return string         The converted string.
- */
-function wysiwygReady($what, $trim=TRUE, $br=FALSE, $double_encode=true) {
-    return Markup::wysiwygReady($what, $trim, $br, $double_encode);
-}
-
 function jsReady ($what, $target) {
     switch ($target) {
 
@@ -256,44 +242,20 @@ function jsReady ($what, $target) {
 }
 
 /**
- * Quote a piece of text, optionally include the author's name.
+ * Funktion um Quotings zu encoden
  *
- * Applies Stud.IP-Markup if WYSIWYG/HTML is disabled and HTML
- * if it is enabled.
- *
- * @param string $text Text that is to be quoted.
- * @param string $author Name of the text's author (optional).
- *
- * @return string The quoted text.
+ * @param string $description der Text der gequotet werden soll, wird zurueckgegeben
+ * @param string $author Name des urspruenglichen Autors
+ * @return string
  */
-function quotes_encode($text, $author = '')
+function quotes_encode($description,$author)
 {
-    // If quoting is changed update these functions:
-    // - StudipFormat::markupQuote
-    //   lib/classes/StudipFormat.php
-    // - quotes_encode lib/visual.inc.php
-    // - STUDIP.Forum.citeEntry > quote
-    //   public/plugins_packages/core/Forum/javascript/forum.js
-    // - studipQuotePlugin > insertStudipQuote
-    //   public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
-
-    if (\Config::get()->WYSIWYG) {
-        // quote with HTML markup
-        if ($author) {
-            return sprintf(
-                '<p>&nbsp;</p><blockquote><div class="author">%s</div>%s</blockquote><p>&nbsp;</p>',
-                sprintf(_('%s hat geschrieben:'), $author),
-                $text
-            );
-        }
-        return sprintf('<p>&nbsp;</p><blockquote>%s</blockquote><p>&nbsp;</p>', $text);
+    if (preg_match("/%%\[editiert von/",$description)) { // wurde schon mal editiert
+        $postmp = strpos($description,"%%[editiert von");
+        $description = substr_replace($description," ",$postmp);
     }
-
-    // quote with Stud.IP markup
-    if ($author) {
-        return "[quote=" . $author . "]\n" . $text . "\n[/quote]\n";
-    }
-    return "[quote]\n" . $text . "\n[/quote]\n";
+    $description = "[quote=".$author."]\n".$description."\n[/quote]";
+    return $description;
 }
 
 /**
@@ -395,16 +357,8 @@ function preg_call_format_signature($username, $timestamp) {
 */
 function kill_format ($text) {
     if (Markup::isHtml($text)) {
-        $is_fallback = Markup::isHtmlFallback($text);
         $text = Markup::removeHTML($text);
-
-        if (!$is_fallback) {
-            // pure HTML - no Stud.IP markup to remove
-            return $text;
-        }
     }
-
-    // remove Stud.IP markup
     $text = preg_replace("'\n?\r\n?'", "\n", $text);
     // wir wandeln [code] einfach in [pre][nop] um und sind ein Problem los ... :-)
     $text = preg_replace_callback ( "|(\[/?code\])|isU", create_function('$a', 'return ($a[0] == "[code]")? "[pre][nop]":"[/nop][/pre]";'), $text);
@@ -479,8 +433,7 @@ function isLinkIntern($url) {
     if (!isset($pum['port'])) {
         $pum['port'] = '';
     }
-    return ($pum['scheme'] === NULL && $pum['host'] === NULL) ||
-           ($pum['scheme'] === 'http' || $pum['scheme'] === 'https')
+    return ($pum['scheme'] === 'http' || $pum['scheme'] === 'https')
         && ( $pum['host'] == $_SERVER['HTTP_HOST']
             || $pum['host'] . ':' . $pum['port'] == $_SERVER['HTTP_HOST'] )
         && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0;

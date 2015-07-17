@@ -25,9 +25,9 @@
             </div>
 
             <div class="postbody">
-                <textarea class="add_toolbar wysiwyg" data-textarea="new_entry" name="content" required tabindex="3"
+                <textarea class="add_toolbar" data-textarea="new_entry" name="content" required tabindex="3"
                     placeholder="<?= _('Schreiben Sie hier Ihren Beitrag. Hilfe zu Formatierungen'
-                        . ' finden Sie rechts neben diesem Textfeld.') ?>"><?= wysiwygReady($this->flash['new_entry_content']) ?></textarea>
+                        . ' finden Sie rechts neben diesem Textfeld.') ?>"><?= htmlReady($this->flash['new_entry_content']) ?></textarea>
             </div>
 
             <dl class="postprofile">
@@ -43,10 +43,8 @@
                     <?= Studip\LinkButton::createCancel(_('Abbrechen'), '', array(
                         'onClick' => "return STUDIP.Forum.cancelNewEntry();",
                         'tabindex' => '4')) ?>
-                    
-                    <? if ($previewActivated) : ?>
-                        <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
-                    <? endif; ?>
+
+                    <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
                     <? if (Config::get()->FORUM_ANONYMOUS_POSTINGS): ?>
                         <div style="float: left; margin-top: 14px; margin-left: 14px;">    
                             <label><?= _('Anonym') ?>
@@ -57,11 +55,9 @@
                 </div>
             </div>
         </div>
-        
-        <? if ($previewActivated) : ?> 
-            <?= $this->render_partial('index/_preview', array('preview_id' => 'new_entry_preview')) ?>
-        <? endif; ?>
-        
+
+        <?= $this->render_partial('index/_preview', array('preview_id' => 'new_entry_preview')) ?>
+
         <input type="hidden" name="parent" value="<?= $topic_id ?>">
         <input type="text" name="nixda" style="display: none;">
     </form>

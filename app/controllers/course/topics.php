@@ -29,7 +29,7 @@ class Course_TopicsController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success(_("Thema gelöscht.")));
             } else {
                 $topic['title'] = Request::get("title");
-                $topic['description'] = Request::html("description");
+                $topic['description'] = Request::get("description");
                 if ($topic->isNew()) {
                     $topic['seminar_id'] = $_SESSION['SessionSeminar'];
                 }

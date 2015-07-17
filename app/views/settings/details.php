@@ -100,9 +100,9 @@
                 </td>
                 <td colspan="2">
                     <textarea name="hobby" id="hobbies" style="width:100%;height:100px;"
-                              class="add_toolbar wysiwyg"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.hobby')) echo 'disabled'; ?>
-                    ><?= wysiwygReady($user->hobby) ?></textarea>
+                    ><?= htmlReady($user->hobby) ?></textarea>
                 </td>
             </tr>
             <tr>
@@ -112,9 +112,9 @@
                 </td>
                 <td colspan="2">
                     <textarea id="lebenslauf" name="lebenslauf" style="width:100%;height:100px;"
-                              class="add_toolbar wysiwyg"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.lebenslauf')) echo 'disabled'; ?>
-                    ><?= wysiwygReady($user->lebenslauf) ?></textarea>
+                    ><?= htmlReady($user->lebenslauf) ?></textarea>
                 </td>
             </tr>
         <? if ($is_dozent): ?>
@@ -125,9 +125,9 @@
                 </td>
                 <td colspan="2">
                     <textarea id="schwerp" name="schwerp" style="width:100%;height:100px;"
-                              class="add_toolbar wysiwyg"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.schwerp')) echo 'disabled'; ?>
-                    ><?= wysiwygReady($user->schwerp) ?></textarea>
+                    ><?= htmlReady($user->schwerp) ?></textarea>
                 </td>
             </tr>
             <tr>
@@ -137,9 +137,9 @@
                 </td>
                 <td colspan="2">
                     <textarea id="publi" name="publi" style="width:100%;height:100px;"
-                              class="add_toolbar wysiwyg"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.publi')) echo 'disabled'; ?>
-                    ><?= wysiwygReady($user->publi) ?></textarea>
+                    ><?= htmlReady($user->publi) ?></textarea>
                 </td>
             </tr>
         <? endif; ?>

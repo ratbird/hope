@@ -28,6 +28,47 @@
 
             button_set = button_set || STUDIP.Toolbar.buttonSet;
 
+            // if WYSIWYG is globally enabled then add a button so
+            // the user can activate it
+            if (STUDIP.wysiwyg) {
+                button_set.right.wysiwyg = {
+                    label: 'WYSIWYG',
+                    evaluate: function () {
+                        var activate = confirm(
+                            'Soll der WYSIWYG Editor aktiviert werden?'
+                            + '\n'
+                            + '\nDie Seite muss danach neu geladen werden,'
+                            + '\num den WYSIWYG Editor zu laden.'
+                        );
+                        if (!activate) {
+                            return;
+                        }
+
+                        // activate the WYSIWYG editor
+                        var settingsUrl = STUDIP.URLHelper.resolveURL(
+                            'dispatch.php/wysiwyg/settings/users/current'
+                        );
+
+                        $.ajax({
+                            url: settingsUrl,
+                            type: 'PUT',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ disabled: false })
+                        })
+                        .fail(function (xhr) {
+                            alert(
+                                'Das Aktivieren des WYSIWYG Editors ist fehlgeschlagen.'
+                                + '\n'
+                                + '\nURL: ' + settingsUrl
+                                + '\nStatus: ' + xhr.status
+                                + ' ' + xhr.statusText
+                                + '\nAntwort: ' + xhr.responseText
+                            );
+                        });
+                    } // evaluate
+                } // wysiwyg
+            }
+
             // Add flag so one element will never have more than one toolbar
             $element.data('toolbar-added', true);
 
@@ -70,12 +111,11 @@
     $.fn.extend({
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
+            if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
+                return this;
+            }
             return this.each(function () {
-                var wysiwygDisabled = !STUDIP.wysiwyg;
-                var wysiwygTextarea = $(this).hasClass('wysiwyg');
-                if (wysiwygDisabled || !wysiwygTextarea) {
-                    STUDIP.Toolbar.initialize(this, button_set);
-                }
+                STUDIP.Toolbar.initialize(this, button_set);
             });
         }
     });

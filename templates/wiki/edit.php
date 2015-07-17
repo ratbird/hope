@@ -5,7 +5,7 @@
     <input type="hidden" name="submit" value="true">
     <input type="hidden" name="cmd" value="show">
 
-    <textarea name="body" class="wiki-editor add_toolbar wysiwyg resizable" data-secure="true"><?= wysiwygReady($body) ?></textarea>
+    <textarea name="body" class="wiki-editor add_toolbar resizable" data-secure="true"><?= htmlready($body) ?></textarea>
     <br><br>
     <div class="button-group">
         <?= Studip\Button::createAccept(_('Speichern')) ?>

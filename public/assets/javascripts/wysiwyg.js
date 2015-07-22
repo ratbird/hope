@@ -314,8 +314,7 @@ jQuery(function ($) {
                     "&#x2297", // ⊗ CIRCLED TIMES
                     "&#x2299", // ⊙ CIRCLED DOT OPERATOR
                 ]
-            ),
-            on: { pluginsLoaded: onPluginsLoaded }
+            )
         }); // CKEDITOR.replace(textarea[0], {
 
         CKEDITOR.on('instanceReady', function (event) {
@@ -432,14 +431,6 @@ jQuery(function ($) {
             advancedTab.get('advCSSClasses')['default'] = 'content';
         }
     });
-
-    // editor events
-    function onPluginsLoaded(event) {
-        // tell editor to always remove html comments
-        event.editor.dataProcessor.htmlFilter.addRules({
-            comment: function () { return false; }
-        });
-    }
 
     // convert plain text entries to html
     function getHtml(text) {

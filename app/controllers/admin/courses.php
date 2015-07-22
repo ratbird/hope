@@ -585,7 +585,7 @@ class Admin_CoursesController extends AuthenticatedController
         }
         if ($params['typeFilter'] && $params['typeFilter'] !== "all") {
             list($class_filter,$type_filter) = explode('_', $params['typeFilter']);
-            if (!$type_filter) {
+            if (!$type_filter && !empty($GLOBALS['SEM_CLASS'][$class_filter])) {
                 $type_filter = array_keys($GLOBALS['SEM_CLASS'][$class_filter]->getSemTypes());
             }
             $filter->filterByType($type_filter);

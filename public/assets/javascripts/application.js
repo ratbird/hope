@@ -283,13 +283,16 @@ jQuery(function ($) {
         // of the content). Trigger a recalculation of the sticky kit when
         // a mutation occurs so the sidebar will
         var target = $('#layout_content')[0],
-            stickyObserver = new MutationObserver(function (mutations) {
-                $(document.body).trigger('sticky_kit:recalc');
+            stickyObserver = new MutationObserver(function () {
+                window.requestAnimationFrame(function () {
+                    $(document.body).trigger('sticky_kit:recalc');
+                }); 
             });
         stickyObserver.observe(target, {
             attributes: true,
             attributeFilter: ['style', 'class'],
             characterData: true,
+            childList: true,
             subtree: true
         });
     } else {

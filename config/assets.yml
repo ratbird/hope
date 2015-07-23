@@ -79,6 +79,7 @@ javascripts:
     - javascripts/start.js
     - javascripts/responsive.js
     - javascripts/wiki.js
+    - javascripts/coursewizard.js
     - *header
     - *toolbar
     - *dialog
@@ -122,9 +123,6 @@ javascripts:
 
   lightbox:
     - javascripts/jquery/lightbox/lightbox.min.js
-
-  coursewizard:
-    - javascripts/coursewizard.js
 
 css:
   base:

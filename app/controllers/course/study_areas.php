@@ -52,7 +52,6 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->values['StudyAreasWizardStep']['studyareas'] = $this->get_area_ids($this->course->id);
         $this->values['StudyAreasWizardStep']['ajax_url'] = $this->url_for('course/study_areas/ajax');
         $this->values['StudyAreasWizardStep']['no_js_url'] = $this->url_for('course/study_areas/show');
-        PageLayout::addSqueezePackage('coursewizard');
         PageLayout::setTitle(sprintf(_("%s - Studienbereiche"), $this->course->getFullname()));
     }
 

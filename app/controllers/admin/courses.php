@@ -158,7 +158,6 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setActionsWidget($this->selected_action);
 
         if ($this->sem_create_perm) {
-            PageLayout::addSqueezePackage('coursewizard');
             $actions = new ActionsWidget();
             $actions->addLink(_('Neue Veranstaltung anlegen'),
                 URLHelper::getLink('dispatch.php/course/wizard'),

@@ -42,7 +42,6 @@ class Course_WizardController extends AuthenticatedController
         $this->sidebar->setTitle(_('Neue Veranstaltung anlegen'));
         $this->steps = CourseWizardStepRegistry::findBySQL("`enabled`=1 ORDER BY `number`");
         StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'].'/lib/classes/coursewizardsteps');
-        PageLayout::addSqueezePackage('coursewizard');
         // Special handling for studygroups.
         if (Request::int('studygroup')) {
             $this->flash['studygroup'] = true;

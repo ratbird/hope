@@ -202,7 +202,7 @@ function selectSem ($sem_id)
         URLHelper::addLinkParam('cid', $SessionSeminar);
 
                 // if the aux data is forced for this seminar forward all user that havent made an input to this site
-        if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
+        if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && !in_array($_SERVER['PATH_INFO'], array('/course/members/additional_input', '/course/change_view'))) {
             $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
             $statement->execute(array($GLOBALS['user']->id, $course["Seminar_id"]));
             if (!$statement->rowCount()) {
@@ -1471,13 +1471,13 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
                          CONCAT(IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name), ' [{$_deputy}]') AS Name %s
                   FROM seminare AS s
                   JOIN deputies AS d ON (s.Seminar_id = d.range_id) %s
-                  WHERE s.Name LIKE CONCAT('%%', ?, '%%') AND d.user_id = ?
+                  WHERE d.user_id = ?
                   ORDER BY s.start_time DESC, Name";
         $query = $show_sem
                ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
                : sprintf($query, '', '');
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($search_str, $user->id));
+        $statement->execute(array($user->id));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $search_result[$row['Seminar_id']] = array(
                 'type'      => 'sem',

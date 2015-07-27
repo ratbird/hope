@@ -60,14 +60,6 @@ class SemGroupScheduleDayOfWeek extends ScheduleView {
         } else {
             $this->base_date = $this->start_date;
         }
-        //the categories configuration (color's and bg-image)
-        $this->categories = array(
-            "0"=>array("bg-picture"=>Assets::image_path('calendar/category5.jpg'), "border-color"=>"#505064"),
-            "1"=>array("bg-picture"=>Assets::image_path('calendar/category3.jpg'), "border-color"=>"#5C2D64"),
-            "2"=>array("bg-picture"=>Assets::image_path('calendar/category9.jpg'), "border-color"=>"#957C29"),
-            "3"=>array("bg-picture"=>Assets::image_path('calendar/category11.jpg'), "border-color"=>"#66954F"),
-            "4"=>array("bg-picture"=>Assets::image_path('calendar/category13.jpg'), "border-color"=>"#951408"),
-            );
     }
 
 

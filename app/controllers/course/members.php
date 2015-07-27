@@ -1297,8 +1297,7 @@ class Course_MembersController extends AuthenticatedController
         // Fetch datafields for the user
         $course = new Course($_SESSION['SessionSeminar']);
         $member = $course->members->findOneBy('user_id', $GLOBALS['user']->id);
-        $this->datafields = $course->aux->getMemberData($member);
-
+        $this->datafields = $member ? $course->aux->getMemberData($member) : array();
         // We need aux data in the view
         $this->aux = $course->aux;
 

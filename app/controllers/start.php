@@ -101,6 +101,11 @@ class StartController extends AuthenticatedController
 
             $sidebar->addWidget($settings);
         }
+        if ($GLOBALS['perm']->get_perm() == 'user') {
+            PageLayout::postMessage(MessageBox::info(_('Sie haben noch nicht auf Ihre Bestätigungsmail geantwortet.'),
+                array(_('Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.'),
+                sprintf(_('Bei Problemen wenden Sie sich an: %s'), '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>'))));
+        }
     }
 
     /**

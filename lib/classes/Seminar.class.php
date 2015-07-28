@@ -2476,6 +2476,12 @@ class Seminar
             $info['description'] = _("Sie stehen auf der Warteliste für diese Veranstaltung.");
             return $info;
         }
+        if ($GLOBALS['perm']->get_perm($user_id) == 'user') {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'user';
+            $info['description'] = _("Sie haben nicht die erforderliche Berechtigung sich für eine Veranstaltung anzumelden.");
+            return $info;
+        }
         //falsche Nutzerdomäne
         $same_domain = true;
         $user_domains = UserDomain::getUserDomainsForUser($user_id);
@@ -2643,7 +2649,7 @@ class Seminar
             }
         }
     }
-    
+
     /**
      * adds user with given id on waitinglist
      *

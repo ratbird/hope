@@ -24,7 +24,7 @@
             ->fireJSFunctionOnSelect("STUDIP.Messages.add_adressee")
             ->withButton()
             ->render();
-        
+
         $search_obj = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
             . "FROM auth_user_md5 "
             . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
@@ -110,13 +110,15 @@
                     <span class="icon"></span>
                     <span class="name"></span>
                     <span class="size"></span>
+                    <a class="remove_attachment"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
                 </li>
                 <? if ($default_attachments) : ?>
                     <? foreach ($default_attachments as $a) : ?>
-                    <li class="file">
+                    <li class="file" data-document_id="<?=$a['document_id']?>">
                     <span class="icon"><?=$a['icon']?></span>
                     <span class="name"><?=$a['name']?></span>
                     <span class="size"><?=$a['size']?></span>
+                    <a class="remove_attachment"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
                     </li>
                     <? endforeach ?>
                 <? endif ?>

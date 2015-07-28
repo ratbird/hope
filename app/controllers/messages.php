@@ -280,9 +280,10 @@ class MessagesController extends AuthenticatedController {
                         $attachment->user_id = $GLOBALS['user']->id;
                         $attachment->description = Request::option('message_id');
                         $new_attachment = $attachment->toArray(array('range_id', 'user_id', 'seminar_id', 'name', 'description', 'filename', 'filesize'));
-                        StudipDocument::createWithFile(get_upload_file_path($attachment->getId()), $new_attachment);
+                        $new_attachment = StudipDocument::createWithFile(get_upload_file_path($attachment->getId()), $new_attachment);
                         $this->default_attachments[] = array('icon' => Assets::img(GetFileIcon(getFileExtension($new_attachment['filename'])), array('class' => "text-bottom")),
                                                              'name' => $new_attachment['filename'],
+                                                             'document_id' => $new_attachment->id,
                                                              'size' => relsize($new_attachment['filesize'],false));
 
                     }
@@ -575,9 +576,20 @@ class MessagesController extends AuthenticatedController {
         }
 
         $output['document_id'] = $document->getId();
-        $output['icon'] = Assets::img(GetFileIcon(substr($output['name'], strrpos($output['name'], ".") + 1)), array('class' => "text-bottom"));
+        $output['icon'] = (string)Assets::img(GetFileIcon(getFileExtension($output['name'])), array('class' => "text-bottom"));
 
         $this->render_json($output);
+    }
+
+    public function delete_attachment_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        $doc = StudipDocument::find(Request::option('document_id'));
+        if ($doc && $doc->range_id == 'provisional' && $doc->description == Request::option('message_id')) {
+            @unlink(get_upload_file_path($doc->id));
+            $doc->delete();
+        }
+        $this->render_nothing();
     }
 
     public function preview_action()

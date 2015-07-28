@@ -68,7 +68,7 @@ http://docs.cksource.com/CKEditor_4.x/Skin_SDK/Reset
 
 	/* These are rule inherited by all children elements. */
 	border-collapse: collapse;
-	font: normal normal normal 12px Arial,Helvetica,Tahoma,Verdana,Sans-Serif;
+	font: normal normal normal 12px Lato;
 	color: #000;
 	text-align: left;
 	white-space: nowrap;

@@ -60,12 +60,17 @@ Comments in this file will give more details about each of the above blocks.
 	/* Mandatory: Because the dialog.css file is loaded on demand, we avoid
 		showing an unstyled dialog by hidding it. Here, we restore its visibility. */
 	visibility: visible;
+	border: 1px solid white;
+	padding: 0;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+	background: #ffffff url("../../images/vendor/jquery-ui/ui-bg_inset-hard_100_fcfdfd_1x100.png") 50% bottom repeat-x;
+	font-family: Lato;
+}
 
-    border: 1px solid #A6C9E2;
-    background-color: #FCFDFD;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+.cke_dialog_background_cover {
+    background: rgba(40, 73, 124, 0.5) !important;
 }
 
 /* The inner boundary container. */
@@ -91,15 +96,12 @@ Comments in this file will give more details about each of the above blocks.
 .cke_dialog_title {
 	position: relative;
 	cursor: move;
-
 	color: #FFF;
-    background-color: #8899B8;
-    border: 1px solid #4297D7;
+	background-color: #1e3e70;
+	border: 1px solid #1e3e70;
 	padding: 0.4em 1em;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    font-weight: bold;
+	font-size: 1.69em;
+	font-weight: normal;
 }
 
 /* The outer part of the dialog contants, which contains the contents body
@@ -126,9 +128,9 @@ Comments in this file will give more details about each of the above blocks.
 	position: relative;
 
 	border: none;
-    border-top: 1px solid #D1D1D1;
+	border-top: 1px solid #D1D1D1;
 	background: #fffefe;
-	text-align: left;
+	text-align: center;
 }
 
 .cke_rtl .cke_dialog_footer
@@ -284,21 +286,21 @@ a.cke_dialog_tab_disabled
 /* The close button at the top of the dialog. */
 
 .cke_dialog_close_button {
-	background-image: url(images/close.png);
+	background-image: url("../../images/icons/16/white/decline.png");
+	-webkit-background-size: 16px 16px;
+	-moz-background-size: 16px 16px;
+	-o-background-size: 16px 16px;
+	background-size: 16px 16px;
 	background-repeat: no-repeat;
 	background-position: center center;
-    background-size: 13px 13px;
 	position: absolute;
 	cursor: pointer;
 	text-align: center;
-	height: 20px;
-	width: 20px;
-	top: 5px;
+	height: 32px;
+	width: 32px;
+	top: 8px;
 	z-index: 5;
-    color: #FFF;
-
-    /* CKEditor's close button is dark, but Stud.IP/jQuery's is light */
-    -webkit-filter: invert(50%) brightness(190%);
+	color: #FFF;
 }
 
 .cke_hidpi .cke_dialog_close_button {
@@ -329,7 +331,7 @@ a.cke_dialog_tab_disabled
 .cke_dialog_close_button:hover,
 .cke_dialog_close_button:focus,
 .cke_dialog_close_button:active {
-    -webkit-filter: none;
+	-webkit-filter: none;
 }
 
 /*
@@ -473,6 +475,19 @@ textarea.cke_dialog_ui_input_textarea {
 	overflow: auto;
 	resize: none;
 }
+
+
+.cke_dialog_ui_labeled_label {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #444444;
+}
+
+
 input.cke_dialog_ui_input_text,
 input.cke_dialog_ui_input_password,
 textarea.cke_dialog_ui_input_textarea {
@@ -513,34 +528,40 @@ The buttons used in the dialog footer or inside the contents.
 
 /* The outer part of the button. */
 a.cke_dialog_ui_button {
-	display: inline-block;
-	*display: inline;
-	*zoom: 1;
-	cursor: pointer;
+  background: white;
+  border: 1px solid #28497c;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #28497c;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  line-height: 130%;
+  font-weight: bold;
+  margin: 0.8em 0.6em 0.8em 0;
+  min-width: 100px;
+  overflow: visible;
+  padding: 5px 15px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+}
 
-	padding: 5px 0;
-	margin: 3px;
 
-	text-align: center;
-	vertical-align: middle;
-	color: #1E3E70;
-
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 12px;
-
-	border: 1px solid #899AB9;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	border-radius: 2px;
-
-	background: #ccd4e1;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ccd4e1));
-	background-image: -moz-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
-	background-image: -webkit-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
-	background-image: -o-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
-	background-image: -ms-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
-	background-image: linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
-	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#ccd4e1');
+a.cke_dialog_ui_button:hover,
+a.cke_dialog_ui_button:active {
+  background: #28497c;
+  color: white;
+  outline: 0;
 }
 
 a.cke_dialog_ui_button.cke_disabled {
@@ -595,6 +616,7 @@ a.cke_dialog_ui_button[style*="width"]
 .cke_dialog_footer_buttons a.cke_dialog_ui_button span {
 	color: inherit;
 	line-height: 20px;
+	font-weight: bold;
 }
 
 /* Special class appended to the Ok button. */
@@ -609,7 +631,6 @@ a.cke_dialog_ui_button span {
 
 /* Text shadow used for inner part of OK dialog button in footer. */
 a.cke_dialog_ui_button_ok span {
-    float: left;
 }
 
 span.cke_dialog_ui_button {
@@ -617,13 +638,13 @@ span.cke_dialog_ui_button {
 }
 
 /* 	:focus/:active styles for dialog footer buttons (ok & cancel) */
-a.cke_dialog_ui_button_ok:focus,
+/*a.cke_dialog_ui_button_ok:focus,
 a.cke_dialog_ui_button_ok:active,
 a.cke_dialog_ui_button_cancel:focus,
 a.cke_dialog_ui_button_cancel:active {
 	border-width: 2px;
 	padding: 2px 0;
-}
+}*/
 
 /* 	:focus/:active styles for dialog footer buttons (ok & cancel) spans */
 a.cke_dialog_ui_button_ok:focus span,

@@ -468,14 +468,17 @@ jQuery(document).ready(function ($) {
             //    contentElement: content_element
             //});
 
-            var width = $layout_content.innerWidth() + 400;
+            // Only tables
+            var width = $layout_content.children('table').width() + 400;
             var view_port = $(window).width();
 
-            $layout_content.css('overflow', 'visible');
-            $('#layout_wrapper').css('min-width', width);
-            $('#barBottomright').css('right', width - view_port);
-            $('#barTopStudip').css('right', width - view_port);
-            $('#layout_footer ul').css('margin-right', width - view_port);
+            if(width > view_port) {
+                $layout_content.css('overflow', 'visible');
+                $('#layout_wrapper').css('min-width', width);
+                $('#barBottomright').css('right', width - view_port);
+                $('#barTopStudip').css('right', width - view_port);
+                $('#layout_footer ul').css('margin-right', width - view_port);
+            }
         }
     }
 });

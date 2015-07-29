@@ -468,9 +468,9 @@ jQuery(document).ready(function ($) {
             //    contentElement: content_element
             //});
 
-            var width = $layout_content.children('table').width() + 400;
+            var width = $layout_content.innerWidth() + 400;
             var view_port = $(window).width();
-            
+
             $layout_content.css('overflow', 'visible');
             $('#layout_wrapper').css('min-width', width);
             $('#barBottomright').css('right', width - view_port);

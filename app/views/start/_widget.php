@@ -1,7 +1,4 @@
 <div class="ui-widget_head widget-header" id="widget-<?= $widget->widget_id ?>">
-    <span id="widgetName<?= $widget->widget_id ?>">
-        <?= htmlReady(isset($title) ? $title : $widget->getPluginName()) ?>
-    </span>
     <span class="header-options">
         <? if (isset($icons)): ?>
             <? foreach ($icons as $nav): ?>
@@ -28,6 +25,9 @@
         <a href="<?= $controller->url_for('start/delete/' . $widget->widget_id) ?>">
             <?= Assets::img('icons/16/blue/decline.png', tooltip2(_('Entfernen'))) ?>
         </a>
+    </span>
+    <span id="widgetName<?= $widget->widget_id ?>" class="widget-title">
+        <?= htmlReady(isset($title) ? $title : $widget->getPluginName()) ?>
     </span>
 </div>
 <div id="wid<?=$widget->widget_id?>">

@@ -17,24 +17,28 @@
 }
 
 .studip-widget {
+    border: 1px solid @base-color-20;
+
     .widget-header {
-        width:100%;
+        .box-sizing(border-box);
+
         background-color: @content-color-20;
         color: @brand-color-dark;
-        font-size: 12pt;
+
+        font-size: 1.1em;
         font-weight: bold;
-        text-align: left;
-        text-indent: 1ex;
         line-height: 2em;
+        padding: 0 1ex;
+        text-align: left;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .header-options {
-        float:right;
-        padding:0px 1ex 0px 0;
+        float: right;
+        white-space: nowrap;
     }
-    border-color: #d3d9e5;
-    border-style: solid;
-    border-width: 1px;
 
     section.contentbox {
         border: none;
@@ -80,7 +84,7 @@
     text-align: center;
     color: white;
     font-size: 1.3em;
-    background-color: #8899b8;
+    background-color: @content-color;
 }
 
 .ui-widget_head:hover {

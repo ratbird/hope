@@ -434,7 +434,7 @@ jQuery(document).ready(function ($) {
     //   are visible (otherwise we can except the user to scroll a little bit
     //   vertically)
     if ($('html').is('.no-touch')) {
-
+        var $layout_page  = $('#layout_page');
         var $layout_content = $('#layout_content'),
             $body           = $('body'),
             content_element,
@@ -460,25 +460,13 @@ jQuery(document).ready(function ($) {
         });
 
         if (horizontal_scroll && vertical_scroll && vertical_oversized) {
-
             // #layout_content's children need to be wrapped in a div since
             // the flexi layout will interfere with inserted element by
             // the double scroll library
-            //$layout_content.children().wrapAll('<div>').parent().doubleScroll({
-            //    contentElement: content_element
-            //});
+            $layout_content.children().wrapAll('<div>').parent().doubleScroll({
+                contentElement: content_element
+            });
 
-            // Only tables
-            var width = $layout_content.children('table').width() + 400;
-            var view_port = $(window).width();
-
-            if(width > view_port) {
-                $layout_content.css('overflow', 'visible');
-                $('#layout_wrapper').css('min-width', width);
-                $('#barBottomright').css('right', width - view_port);
-                $('#barTopStudip').css('right', width - view_port);
-                $('#layout_footer ul').css('margin-right', width - view_port);
-            }
         }
     }
 });

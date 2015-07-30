@@ -1743,6 +1743,9 @@ label.required:after {
   vertical-align: top;
   min-width: 400px;
 }
+.js #layout_content {
+  overflow: visible;
+}
 #layout_sidebar {
   background: inherit;
   border-left: 1px dashed #1e3e70;
@@ -2002,6 +2005,11 @@ label.required:after {
 }
 #barBottomContainer.fixed {
   border-bottom: 1px solid #000;
+  -webkit-transform: translate(0, 0) !important;
+  -moz-transform: translate(0, 0) !important;
+  -ms-transform: translate(0, 0) !important;
+  -o-transform: translate(0, 0) !important;
+  transform: translate(0, 0) !important;
   position: fixed;
   top: 0px;
   z-index: 10000;

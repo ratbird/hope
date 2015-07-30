@@ -444,7 +444,7 @@ jQuery(document).ready(function ($) {
         // library needs this, otherwise the scrollbar on top is kinda
         // messed up
         $layout_content.children().each(function () {
-            var width = $(this).get(0).scrollWidth;
+            var width = $(this).get(0).scrollWidth + ($(this).outerWidth(true) - $(this).innerWidth());
             if (width > max_width) {
                 max_width = width;
             }
@@ -452,7 +452,7 @@ jQuery(document).ready(function ($) {
 
         if (horizontal_scroll) {
             $layout_page.addClass('oversized').css({
-                minWidth: max_width + margin + $layout_sidebar.outerWidth(true),
+                minWidth: max_width + margin + $layout_sidebar.outerWidth(true) + 2,
                 paddingRight: ($layout_page.outerWidth(true) - $layout_page.width()) / 2
             });
 

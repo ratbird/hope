@@ -451,18 +451,22 @@ jQuery(document).ready(function ($) {
         });
 
         if (horizontal_scroll) {
-            $layout_page.addClass('oversized');
-            
-            STUDIP.Scroll.addHandler('horizontal-scroll', function (top, left) {
-                $('#flex-header,#layout_footer,#barBottomContainer').css({
-                    transform: 'translate(' + left + 'px,0)'
-                });
-            });
-
-            $layout_page.css({
+            $layout_page.addClass('oversized').css({
                 minWidth: max_width + margin + $layout_sidebar.outerWidth(true),
                 paddingRight: ($layout_page.outerWidth(true) - $layout_page.width()) / 2
             });
+
+            STUDIP.Scroll.addHandler('horizontal-scroll', (function () {
+                var last_left = null;
+                return function (top, left) {
+                    if (last_left !== left) {
+                        $('#flex-header,#layout_footer,#barBottomContainer').css({
+                            transform: 'translate3d(' + left + 'px,0,0)'
+                        });
+                    }
+                    last_left = left;
+                };
+            }()));
         }
     }
 });

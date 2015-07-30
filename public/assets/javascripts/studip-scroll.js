@@ -1,6 +1,11 @@
+/*jslint browser: true, unparam: true */
+/*global jQuery, STUDIP */
+
 // (request/cancel)AnimationFrame polyfill,
 // see https://gist.github.com/paulirish/1579671
 (function () {
+    'use strict';
+
     var lastTime = 0,
         vendors = ['ms', 'moz', 'webkit', 'o'],
         x;
@@ -37,19 +42,21 @@
  * the animation frame method (which will fallback to a timer based solution).
  */
 (function ($, STUDIP) {
+    'use strict';
+
     STUDIP = STUDIP || {};
-    
+
     var handlers  = {},
         animId    = false;
-        
-    function scrollHandler (event) {
+
+    function scrollHandler() {
         var scrollTop  = $(document).scrollTop(),
             scrollLeft = $(document).scrollLeft();
         $.each(handlers, function (index, handler) {
             handler(scrollTop, scrollLeft);
         });
         animId = window.requestAnimationFrame(scrollHandler);
-    };
+    }
 
     function refresh() {
         var hasHandlers = !$.isEmptyObject(handlers);
@@ -62,7 +69,7 @@
     }
 
     STUDIP.Scroll = {};
-    
+
     STUDIP.Scroll.addHandler = function (index, handler) {
         handlers[index] = handler;
         refresh();

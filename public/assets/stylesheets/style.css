@@ -1878,7 +1878,7 @@ label.required:after {
   -moz-box-flex: 0;
   flex: 0 1 auto;
   min-width: 730px;
-  z-index: 2;
+  z-index: 10;
 }
 #layout_wrapper #layout_page {
   display: -ms-flexbox;

@@ -435,6 +435,8 @@ jQuery(document).ready(function ($) {
     //   vertically)
     if ($('html').is('.no-touch')) {
         var $layout_page  = $('#layout_page');
+        var $layout_wrapper  = $('#layout_wrapper');
+        var $layout_sidebar = $('#layout-sidebar');
         var $layout_content = $('#layout_content'),
             $body           = $('body'),
             content_element,
@@ -463,10 +465,19 @@ jQuery(document).ready(function ($) {
             // #layout_content's children need to be wrapped in a div since
             // the flexi layout will interfere with inserted element by
             // the double scroll library
-            $layout_content.children().wrapAll('<div>').parent().doubleScroll({
-                contentElement: content_element
-            });
-
+            //$layout_content.children().wrapAll('<div>').parent().doubleScroll({
+            //    contentElement: content_element
+            //});
+            var window_overflow = $(window).width();
+            var window_offset = 80;
+            var window_offset_margin = window_offset + 20;
+            var _max_width = max_width + $layout_sidebar.outerWidth(true);
+            $layout_content.css('overflow', 'visible');
+            $layout_page.css('min-width', _max_width);
+            $layout_wrapper.css('min-width', _max_width + window_offset);
+            $('#barTopStudip').css('right', _max_width - window_overflow + window_offset_margin);
+            $('#barBottomright').css('right', _max_width - window_overflow + window_offset_margin);
+            $('#layout_footer ul').css('margin-right', _max_width - window_overflow + window_offset_margin);
         }
     }
 });

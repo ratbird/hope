@@ -282,19 +282,21 @@ jQuery(function ($) {
         // changes to class and style attributes (which affect the height
         // of the content). Trigger a recalculation of the sticky kit when
         // a mutation occurs so the sidebar will
-        var target = $('#layout_content')[0],
-            stickyObserver = new MutationObserver(function () {
-                window.requestAnimationFrame(function () {
-                    $(document.body).trigger('sticky_kit:recalc');
-                }); 
+        if ($('#layout_content').length) {
+            var target = $('#layout_content')[0],
+                stickyObserver = new MutationObserver(function () {
+                    window.requestAnimationFrame(function () {
+                        $(document.body).trigger('sticky_kit:recalc');
+                    });
+                });
+            stickyObserver.observe(target, {
+                attributes: true,
+                attributeFilter: ['style', 'class'],
+                characterData: true,
+                childList: true,
+                subtree: true
             });
-        stickyObserver.observe(target, {
-            attributes: true,
-            attributeFilter: ['style', 'class'],
-            characterData: true,
-            childList: true,
-            subtree: true
-        });
+        }
     } else {
         // Recalculcate positions on ajax and img load events.
         // Inside the handlers the current document height is compared
@@ -433,7 +435,7 @@ jQuery(document).ready(function ($) {
     // - Content takes up more than 3/4 of the screen and vertical scrollbars
     //   are visible (otherwise we can except the user to scroll a little bit
     //   vertically)
-    if ($('html').is('.no-touch')) {
+    if ($('html').is('.no-touch') && $('#layout_content').length) {
         var $layout_page  = $('#layout_page');
         var $layout_wrapper  = $('#layout_wrapper');
         var $layout_sidebar = $('#layout-sidebar');

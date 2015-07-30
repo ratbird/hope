@@ -37,13 +37,18 @@
     margin: 0;
 }
 
+#layout_page.oversized {
+    overflow: visible;
+}
+
+
 #layout_content {
     .scrollbox-horizontal();
     margin: 0 @content-margin @content-margin 20px;
     vertical-align: top;
     min-width: @content-width;
     
-    .js & {
+    &.oversized {
         overflow: visible;
     }
 }
@@ -123,6 +128,7 @@
         .flex-item(0, 1);
 
         min-width: @site-width;
+        z-index: 2;
     }
 
     #layout_page {              // third row of flex-main

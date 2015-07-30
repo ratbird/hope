@@ -62,6 +62,8 @@
         media_query.removeListener(responsify);
         STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
+        $('html').addClass('responsified');
+
         addMenu();
 
         if ($('#layout-sidebar > section > :not(#sidebar-navigation,.sidebar-image)').length > 0) {
@@ -90,7 +92,7 @@
             // not show it without a forced redraw)
             $(this).siblings('ul').hide(0, function () {
                 $(this).show();
-            })
+            });
         }).trigger('change');
     }
 

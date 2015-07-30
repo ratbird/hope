@@ -1731,6 +1731,9 @@ label.required:after {
   border-radius: 0 0 2px 2px;
   margin: 0;
 }
+#layout_page.oversized {
+  overflow: visible;
+}
 #layout_content {
   overflow: auto;
   background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
@@ -1743,7 +1746,7 @@ label.required:after {
   vertical-align: top;
   min-width: 400px;
 }
-.js #layout_content {
+#layout_content.oversized {
   overflow: visible;
 }
 #layout_sidebar {
@@ -1875,6 +1878,7 @@ label.required:after {
   -moz-box-flex: 0;
   flex: 0 1 auto;
   min-width: 730px;
+  z-index: 2;
 }
 #layout_wrapper #layout_page {
   display: -ms-flexbox;

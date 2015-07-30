@@ -436,6 +436,7 @@ jQuery(document).ready(function ($) {
             $layout_sidebar = $('#layout-sidebar'),
             $layout_content = $('#layout_content'),
             max_width       = 0,
+            margin          = $layout_content.outerWidth(true) - $layout_content.innerWidth(),
             // Determine whether there actually are horizontal scrollbars
             horizontal_scroll  = $layout_content.get(0).scrollWidth > $layout_content.outerWidth(true);
 
@@ -450,6 +451,8 @@ jQuery(document).ready(function ($) {
         });
 
         if (horizontal_scroll) {
+            $layout_page.addClass('oversized');
+            
             STUDIP.Scroll.addHandler('horizontal-scroll', function (top, left) {
                 $('#flex-header,#layout_footer,#barBottomContainer').css({
                     transform: 'translate(' + left + 'px,0)'
@@ -457,7 +460,7 @@ jQuery(document).ready(function ($) {
             });
 
             $layout_page.css({
-                minWidth: max_width + $layout_sidebar.outerWidth(true),
+                minWidth: max_width + margin + $layout_sidebar.outerWidth(true),
                 paddingRight: ($layout_page.outerWidth(true) - $layout_page.width()) / 2
             });
         }

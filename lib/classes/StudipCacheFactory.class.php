@@ -153,9 +153,6 @@ class StudipCacheFactory
                     $args = self::retrieveConstructorArguments();
                     self::$cache = self::instantiateCache($class, $args);
                 } catch (Exception $e) {
-                    // Proxy the cache operations when the configured cache failed to instantiate.
-                    $proxied = true;
-
                     error_log(__METHOD__ . ': ' . $e->getMessage());
                     PageLayout::addBodyElements(MessageBox::error(__METHOD__ . ': ' . $e->getMessage()));
                     $class = self::DEFAULT_CACHE_CLASS;

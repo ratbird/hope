@@ -452,7 +452,7 @@ jQuery(document).ready(function ($) {
 
         if (horizontal_scroll) {
             $layout_page.addClass('oversized').css({
-                minWidth: max_width + margin + $layout_sidebar.outerWidth(true) + 2,
+                minWidth: max_width + margin + $layout_sidebar.outerWidth(true),
                 paddingRight: ($layout_page.outerWidth(true) - $layout_page.width()) / 2
             });
 

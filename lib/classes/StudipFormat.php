@@ -69,12 +69,14 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupText'
         ),
         'big' => array(
-            'start'    => '(\+\+)([^\n]*)\+\+',
-            'callback' => 'StudipFormat::markupGreedyText'
+            'start'    => '(\+\+)+',
+            'end'      => '(\+\+)+',
+            'callback' => 'StudipFormat::markupTextSize'
         ),
         'small' => array(
-            'start'    => '(--)([^\n]*)--',
-            'callback' => 'StudipFormat::markupGreedyText'
+            'start'    => '(--)+',
+            'end'      => '(--)+',
+            'callback' => 'StudipFormat::markupTextSize'
         ),
         'super' => array(
             'start'    => '&gt;&gt;',
@@ -319,15 +321,13 @@ class StudipFormat extends TextFormat
     }
 
     /**
-     * Basic text formatting: bold, italics, underline, big, small etc.
+     * Basic text formatting: bold, italics, underline, sup, sub etc.
      */
     protected static function markupText($markup, $matches, $contents)
     {
         static $tag = array(
             '**' => 'b',
             '%%' => 'i',
-            '++' => 'big',
-            '--' => 'small',
             '__' => 'u',
             '##' => 'tt',
             '&gt;&gt;' => 'sup',
@@ -342,18 +342,21 @@ class StudipFormat extends TextFormat
     }
 
     /**
-     * Basic text formatting: bold, italics, underline, big, small etc.
+     * Text size formatting: small and small
      */
-    protected static function markupGreedyText($markup, $matches)
+    protected static function markupTextSize($markup, $matches, $contents)
     {
-        static $greedytag = array(
+        static $tag = array(
             '++' => 'big',
-            '--' => 'small'
+            '--' => 'small',
         );
 
         $key = $matches[1];
+        $level = strlen($matches[0]) / 2;
+        $open = str_repeat('<' . $tag[$key] . '>', $level);
+        $close = str_repeat('</' . $tag[$key] . '>', $level);
 
-        return sprintf('<%s>%s</%s>', $greedytag[$key], $markup->format($matches[2]), $greedytag[$key]);
+        return $open . $contents . $close;
     }
 
     /**

@@ -428,32 +428,37 @@ jQuery(document).on('change', 'select[data-copy-to]', function () {
 
 jQuery(document).ready(function ($) {
     $('#checkAll').attr('checked', $('.sem_checkbox:checked').length !== 0);
+});
 
-    // Fix horizontal scroll issue for now.
-    // This makes the header and footer sticky regarding horizontal scrolling.
-    if ($('.no-touch #layout_content').length) {
-        var $layout_page    = $('#layout_page'),
-            $layout_sidebar = $('#layout-sidebar'),
-            $layout_content = $('#layout_content'),
-            max_width       = 0,
-            margin          = $layout_content.outerWidth(true) - $layout_content.innerWidth(),
-            // Determine whether there actually are horizontal scrollbars
-            horizontal_scroll  = $layout_content.get(0).scrollWidth > $layout_content.outerWidth(true);
+// Fix horizontal scroll issue on domready, window load and window resize.
+// This also makes the header and footer sticky regarding horizontal scrolling.
+jQuery(document).on('ready', function () {
+    var page_margin    = ($('#layout_page').outerWidth(true) - $('#layout_page').width()) / 2,
+        content_margin = $('#layout_content').outerWidth(true) - $('#layout_content').innerWidth(),
+        sidebar_width  = $('#layout_sidebar').outerWidth(true);
 
-        // Determine the widest element in the content. The double scroll
-        // library needs this, otherwise the scrollbar on top is kinda
-        // messed up
-        $layout_content.children().each(function () {
-            var width = $(this).get(0).scrollWidth + ($(this).outerWidth(true) - $(this).innerWidth());
-            if (width > max_width) {
-                max_width = width;
-            }
+    function fixScrolling () {
+        $('#layout_page').removeClass('oversized').css({
+            minWidth: '',
+            marginRight: '',
+            paddingRight: ''
         });
 
-        if (horizontal_scroll) {
-            $layout_page.addClass('oversized').css({
-                minWidth: max_width + margin + $layout_sidebar.outerWidth(true),
-                paddingRight: ($layout_page.outerWidth(true) - $layout_page.width()) / 2
+        var max_width    = 0,
+            fix_required = $('html').is(':not(.responsified)') && $('#layout_content').get(0).scrollWidth > $('#layout_content').width();
+
+        if (fix_required) {
+            $('#layout_content').children().each(function () {
+                var width = $(this).get(0).scrollWidth + ($(this).outerWidth(true) - $(this).innerWidth());
+                if (width > max_width) {
+                    max_width = width;
+                }
+            });
+
+            $('#layout_page').addClass('oversized').css({
+                minWidth: max_width + content_margin + sidebar_width,
+                marginRight: 0,
+                paddingRight: page_margin
             });
 
             STUDIP.Scroll.addHandler('horizontal-scroll', (function () {
@@ -467,7 +472,17 @@ jQuery(document).ready(function ($) {
                     last_left = left;
                 };
             }()));
+        } else {
+            STUDIP.Scroll.removeHandler('horizontal-scroll');
         }
+    };
+
+    if ($('.no-touch #layout_content').length > 0) {
+        // Try to fix now
+        fixScrolling();
+
+        // and fix again on window load and resize
+        $(window).on('resize load', _.debounce(fixScrolling, 100));
     }
 });
 

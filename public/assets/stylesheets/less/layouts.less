@@ -16,6 +16,7 @@
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
     .border-radius(0 0 2px 2px);
+    .box-sizing(border-box);
     clear: both;
     margin: @page-margin;
 }
@@ -43,12 +44,13 @@
 
 
 #layout_content {
+    .box-sizing(border-box);
     .scrollbox-horizontal();
     margin: 0 @content-margin @content-margin 20px;
     vertical-align: top;
     min-width: @content-width;
     
-    &.oversized {
+    .oversized & {
         overflow: visible;
     }
 }

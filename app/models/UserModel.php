@@ -425,7 +425,7 @@ class UserModel
         $query = "UPDATE IGNORE calendar_user SET owner_id = ? WHERE owner_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
-        
+
         $query = "UPDATE IGNORE calendar_user SET user_id = ? WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
@@ -433,11 +433,11 @@ class UserModel
         $query = "UPDATE IGNORE event_data SET author_id = ? WHERE author_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
-        
+
         $query = "UPDATE IGNORE event_data SET editor_id = ? WHERE editor_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
-        
+
         //Archiv
         self::removeDoubles('archiv_user', 'seminar_id', $new_id, $old_id);
         $query = "UPDATE IGNORE archiv_user SET user_id = ? WHERE user_id = ?";
@@ -488,12 +488,6 @@ class UserModel
         $statement->execute(array($new_id, $old_id));
 
         $query = "UPDATE IGNORE news_range SET range_id = ? WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($new_id, $old_id));
-
-        // Referenztabelle: Abstimmungen, etc.
-        self::removeDoubles('object_user', 'object_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE object_user SET user_id = ? WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 

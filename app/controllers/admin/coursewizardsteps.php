@@ -106,12 +106,12 @@ class Admin_CourseWizardStepsController extends AuthenticatedController
                 // Check if given class name can be found in system.
                 if (!class_exists($classname)) {
                     PageLayout::postMessage(MessageBox::error(
-                        sprintf(_('Die angegebene PHP-Klasse "%s" wurde nicht gefunden.'), $classname)));
+                        sprintf(_('Die angegebene PHP-Klasse "%s" wurde nicht gefunden.'), htmlReady($classname))));
                 // Class found, now check if it implements the interface definition for wizard steps.
                 } else if (!in_array('CourseWizardStep', class_implements($classname) ?: array())) {
                     PageLayout::postMessage(MessageBox::error(
                         sprintf(_('Die angegebene PHP-Klasse "%s" implementiert nicht das Interface CourseWizardStep.'),
-                            $classname)));
+                            htmlReady($classname))));
                 // All ok, create new database entry.
                 } else {
                     $step = new CourseWizardStepRegistry();

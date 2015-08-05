@@ -167,10 +167,6 @@ while ($tmp_first_date < $end_date) {
 }
 $dozenten = $sem->getMembers('dozent');
 
-if ($perm->have_studip_perm("admin",$sem->getId())) {
-    $adminList = AdminList::getInstance()->getSelectTemplate($sem->getId());
-}
-
 // template-like output
 ?>
 <table width="99%" border="0" cellpadding="2" cellspacing="0">

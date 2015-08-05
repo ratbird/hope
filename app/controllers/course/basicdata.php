@@ -340,7 +340,7 @@ class Course_BasicdataController extends AuthenticatedController
             $list = new SelectorWidget();
             $list->setUrl("?#admin_top_links");
             $list->setSelectParameterName("cid");
-            foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
+            foreach (AdminCourseFilter::get()->getCoursesForAdminWidget() as $seminar) {
                 $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
             }
             $list->setSelection($this->course_id);

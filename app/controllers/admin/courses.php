@@ -37,8 +37,6 @@ class Admin_CoursesController extends AuthenticatedController
             throw new AccessDeniedException(_('Sie haben nicht die nötigen Rechte, um diese Seite zu betreten.'));
         }
 
-        $this->max_show_courses = 200;
-
         Navigation::activateItem('/browse/my_courses/list');
 
         // we are defintely not in an lecture or institute
@@ -601,9 +599,9 @@ class Admin_CoursesController extends AuthenticatedController
         } elseif($params['sortby']) {
             $filter->orderBy($params['sortby'], $params['sortFlag']);
         }
-
+        $filter->storeSettings();
         $this->count_courses = $filter->countCourses();
-        if ($this->count_courses && $this->count_courses <= $this->max_show_courses) {
+        if ($this->count_courses && $this->count_courses <= $filter->max_show_courses) {
             $courses = $filter->getCourses();
         } else {
             return array();
@@ -627,7 +625,7 @@ class Admin_CoursesController extends AuthenticatedController
                     } else {
                         $search_template = "user_not_already_in_sem";
                     }
-
+                    $sem_helper = new Seminar(Course::buildExisting($seminar));
                     $dozentUserSearch = new PermissionSearch(
                         $search_template,
                         sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $seminar['status'])),
@@ -635,7 +633,7 @@ class Admin_CoursesController extends AuthenticatedController
                         array('permission' => 'dozent',
                               'seminar_id' => $this->course_id,
                               'sem_perm' => 'dozent',
-                              'institute' => Seminar::GetInstance($seminar_id)->getInstitutes()
+                              'institute' => $sem_helper->getInstitutes()
                         )
                     );
 
@@ -802,7 +800,7 @@ class Admin_CoursesController extends AuthenticatedController
         if (!$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT || $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === "all") {
             return;
         }
-        $statement = DBManager::get()->prepare("
+        $teachers = DBManager::get()->fetchAll("
             SELECT auth_user_md5.*, user_info.*
             FROM auth_user_md5
                 LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)
@@ -811,12 +809,17 @@ class Admin_CoursesController extends AuthenticatedController
             WHERE (Institute.Institut_id = :institut_id OR Institute.fakultaets_id = :institut_id)
                 AND auth_user_md5.perms = 'dozent'
             ORDER BY auth_user_md5.Nachname ASC, auth_user_md5.Vorname ASC
-        ");
-        $statement->execute(array(
+        ", array(
             'institut_id' => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT
-        ));
-        $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $teachers = array_map(function ($data) { return User::buildExisting($data); }, $teachers);
+        ),
+        function ($data) {
+            $ret['user_id'] = $data['user_id'];
+            unset($data['user_id']);
+            $ret['fullname'] = User::build($data)->getFullName("full_rev");
+            return $ret;
+        }
+        );
+
 
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Dozenten-Filter'), $this->url_for('admin/courses/index'), 'teacher_filter');
@@ -824,10 +827,10 @@ class Admin_CoursesController extends AuthenticatedController
 
         foreach ($teachers as $teacher) {
             $list->addElement(new SelectElement(
-                $teacher->getId(),
-                $teacher->getFullName("full_rev"),
-                $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER === $teacher->getId()
-            ), 'teacher_filter-' . $teacher->getId());
+                $teacher['user_id'],
+                $teacher['fullname'],
+                $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER === $teacher['user_id']
+            ), 'teacher_filter-' . $teacher['user_id']);
         }
 
         $sidebar->addWidget($list, 'filter_teacher');
@@ -841,11 +844,11 @@ class Admin_CoursesController extends AuthenticatedController
         $search->addNeedle(_('Freie Suche'), 'search', true, null, null, $GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT);
         $sidebar->addWidget($search, 'filter_search');
     }
-    
+
     private function getFilterConfig()
     {
         $available_filters = array_keys($this->getViewFilters());
-        
+
         $temp = $GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS;
         if ($temp) {
             $config = unserialize($temp);
@@ -860,12 +863,12 @@ class Admin_CoursesController extends AuthenticatedController
 
         return $config;
     }
-    
+
     private function setFilterConfig($config)
     {
         $config = $config ?: array_keys($this->getViewFilters());
         $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($config));
-        
+
         return $config;
     }
 }

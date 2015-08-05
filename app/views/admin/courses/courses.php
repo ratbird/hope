@@ -148,8 +148,8 @@
         <tr>
             <td>
                 <?=
-                CourseAvatar::getAvatar($course['seminar_id'])->is_customized()
-                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
+                CourseAvatar::getAvatar($semid)->is_customized()
+                    ? CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
                     : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($values["Name"]))) ?>
             </td>
             <? if (in_array('number', $view_filter)) : ?>
@@ -181,8 +181,8 @@
             <? endif ?>
             <? if (in_array('room_time', $view_filter)) : ?>
                 <td>
-                    <? $sem = new Seminar($semid);
-                    $_room  = $sem->getDatesHTML(array(
+                    <? $sem_helper = new Seminar(Course::buildExisting(array('seminar_id' => $semid)));
+                    $_room  = $sem_helper->getDatesHTML(array(
                         'semester_id' => $semester->id,
                         'show_room'   => true
                     ));

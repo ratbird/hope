@@ -51,6 +51,7 @@
 class AdminCourseFilter
 {
     static protected $instance = null;
+    public $max_show_courses = 500;
     public $settings = array();
 
     /**
@@ -72,6 +73,47 @@ class AdminCourseFilter
      * @param bool $reset_settings : should the session settings of the singleton be reset?
      */
     public function __construct($reset_settings = false)
+    {
+        $this->initSettings();
+
+        if ($reset_settings) {
+            $this->resetSettings();
+        } else {
+            $this->restoreSettings();
+        }
+    }
+
+    /**
+     * store settings in session
+     */
+    public function storeSettings()
+    {
+        $_SESSION['AdminCourseFilter_settings'] = $this->settings;
+    }
+
+    /**
+     * restore settings from session
+     */
+    public function restoreSettings()
+    {
+        if ($_SESSION['AdminCourseFilter_settings']) {
+            $this->settings = $_SESSION['AdminCourseFilter_settings'];
+        }
+    }
+
+    /**
+     * reset settings
+     */
+    public function resetSettings()
+    {
+        $this->initSettings();
+        unset($_SESSION['AdminCourseFilter_settings']);
+    }
+
+    /**
+     * initialize settings
+     */
+    public function initSettings()
     {
         $this->settings = array();
 
@@ -105,10 +147,6 @@ class AdminCourseFilter
         );
         $this->settings['query']['where'] = array();
         $this->settings['query']['orderby'] = "seminare.name";
-
-        if ($_SESSION['AdminCourseFilter_settings'] && !$reset_settings) {
-            $this->settings = $_SESSION['AdminCourseFilter_settings'];
-        }
     }
 
     /**
@@ -261,11 +299,28 @@ class AdminCourseFilter
     public function countCourses()
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
-        $query = "SELECT COUNT(*) FROM (".$this->createQuery(true).") AS filterted_courses";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute($this->settings['parameter']);
-        $number =  $statement->fetch(PDO::FETCH_COLUMN, 0);
-        return $number;
+        return DBManager::get()->fetchColumn($this->createQuery(true), $this->settings['parameter']);
+    }
+
+    /**
+     * Returns the data of the resultset of the AdminCourseFilter.
+     *
+     * Note that a notification AdminCourseFilterWillQuery will be posted, before the result is computed.
+     * Plugins may register at this event to fully alter this AdminCourseFilter-object and so the resultset.
+     * @return array : associative array with seminar_ids as keys and seminar-data-arrays as values.
+     */
+    public function getCoursesForAdminWidget()
+    {
+        $count_courses = $this->countCourses();
+        if ($count_courses && $count_courses <= $this->max_show_courses) {
+            $settings = $this->settings;
+            $this->settings['query']['select'] = array();
+            $this->settings['query']['orderby'] = "seminare.name";
+            $ret = $this->getCourses(false);
+            $this->settings = $settings;
+            return $ret;
+        }
+        return array();
     }
 
     /**
@@ -276,7 +331,7 @@ class AdminCourseFilter
     public function createQuery($only_count = false)
     {
         if ($only_count) {
-            $select_query = "1";
+            $select_query = "COUNT(DISTINCT seminare.Seminar_id) ";
         } else {
             $select_query = "seminare.* ";
             foreach ((array) $this->settings['query']['select'] as $alias => $select) {
@@ -300,10 +355,9 @@ class AdminCourseFilter
             SELECT ".$select_query."
             FROM seminare
                 ".$join_query."
-            ".($where_query ? "WHERE ".$where_query : "")."
-            GROUP BY seminare.Seminar_id";
+            ".($where_query ? "WHERE ".$where_query : "");
         if (!$only_count) {
-            $query .= " ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "");
+            $query .= " GROUP BY seminare.Seminar_id ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "");
         }
         return $query;
     }

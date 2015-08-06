@@ -172,6 +172,13 @@
         this.toggle(false);
     };
 
+    /**
+     * Removes the tooltip
+     */
+    Tooltip.prototype.remove = function () {
+        this.element.remove();
+    };
+
     // Expose tooltip to global STUDIP object
     STUDIP.Tooltip = Tooltip;
 
@@ -185,14 +192,15 @@
 (function ($, STUDIP) {
 
     STUDIP.Tooltip.threshold = 6;
-    
+
     jQuery(document).on('hover', '[data-tooltip]', function (event) {
         var data    = $(this).data(),
             visible = event.type === 'mouseenter',
             content,
             offset  = $(this).offset(),
             x       = offset.left + $(this).outerWidth(true) / 2,
-            y       = offset.top;
+            y       = offset.top,
+            tooltip;
 
         if (!data.tooltipObject) {
             // If tooltip has not yet been created (first hover), obtain it's
@@ -200,7 +208,13 @@
             content = data.tooltip || $(this).attr('title') || $(this).find('.tooltip-content').remove().html();
             $(this).attr('title', '');
 
-            data.tooltipObject = new STUDIP.Tooltip(x, y, content);
+            tooltip = new STUDIP.Tooltip(x, y, content);
+
+            data.tooltipObject = tooltip;
+
+            $(this).on('remove', function () {
+                tooltip.remove();
+            });
         } else if (visible) {
             // If tooltip has already been created, update it's position.
             // This is neccessary if the surrounding content is scrollable AND has

@@ -82,7 +82,7 @@
                     <? endif ?>
                     <? if ($news['allow_comments']): ?>
                         <input type="hidden" name="news_allow_comments" value="1">
-                        <?= Assets::input('icons/16/blue/checkbox-checkbox.png', tooltip2(_('Kommentare sperren')) + array(
+                        <?= Assets::input('icons/16/blue/checkbox-checked.png', tooltip2(_('Kommentare sperren')) + array(
                                 'name' => 'comments_status_deny',
                         )) ?>
                         <?= _('Kommentare zulassen') ?>

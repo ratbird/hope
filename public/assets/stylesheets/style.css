@@ -3930,7 +3930,7 @@ input.quicksearchbox {
   line-height: 1em;
 }
 .quicksearch_frame {
-  display: inline;
+  display: inline-block;
 }
 .quicksearch_frame input[type="text"] {
   box-sizing: border-box;

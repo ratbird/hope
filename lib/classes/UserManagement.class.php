@@ -1019,7 +1019,7 @@ class UserManagement
                 $this->msg .= "info§" . sprintf(_("%s Einträge aus den Terminen gelöscht."), $appkills) ."§";
             }
             // delete membership in group calendars
-            if (get_config('GROUP_CALENDAR_ENABLE')) {
+            if (get_config('CALENDAR_GROUP_ENABLE')) {
                 $membershipkills = CalendarUser::deleteBySQL('owner_id = :user_id OR user_id = :user_id',
                         array(':user_id' => $this->user_data['auth_user_md5.user_id']));
                 if ($membershipkills) {

@@ -9,7 +9,7 @@
 <? endforeach; ?>
     <ul class="needles">
     <? foreach ($needles as $needle): ?>
-        <li>
+        <li <? if ($needle['quick_search'] && $needle['quick_search']->hasExtendedLayout()) echo 'class="extendedLayout" id="' . $needle['quick_search']->getId() . '_frame"'; ?>>
             <label for="needle-<?= $hash = md5($url . '|' . $needle['name']) ?>" <? if ($needle['placeholder']) echo 'style="display:none;"'; ?>>
                 <?= htmlReady($needle['label']) ?>
             </label>

@@ -5,7 +5,7 @@
     <?= CSRFProtection::tokenTag() ?>
 
     <table align="center" cellpadding="2" cellspacing="0">
-        <thead>
+        <thead class="hide-in-dialog">
             <tr>
                 <th colspan="2"><b><?= _('Neues Smiley hochladen') ?></b></th>
             </tr>
@@ -28,7 +28,7 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot data-dialog-button>
             <tr>
                 <td colspan="2" align="center">
                     <?= Button::createAccept(_('Hochladen'), 'upload') ?>

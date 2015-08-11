@@ -77,8 +77,9 @@
                         {
                             text: 'Zur Gesamtübersicht'.toLocaleString(),
                             click: function () {
-                                window.open(STUDIP.URLHelper.getURL('dispatch.php/smileys'), '_blank');
+                                var url = STUDIP.URLHelper.getURL('dispatch.php/smileys');
                                 picker_element.dialog('close');
+                                STUDIP.Dialog.fromURL(url);
                             }
                         },
                         {

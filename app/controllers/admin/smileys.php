@@ -23,7 +23,7 @@ class Admin_SmileysController extends AuthenticatedController
     /**
      * Common tasks for all actions.
      */
-    function before_filter(&$action, &$args)
+    public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
 
@@ -35,19 +35,12 @@ class Admin_SmileysController extends AuthenticatedController
 
         //pagelayout
         PageLayout::setTitle(_('Verwaltung der Smileys'));
-        PageLayout::addSqueezePackage('smileys');
-
-        // Remove layout and add charset for ajax requests
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->response->add_header('Content-Type', 'text/html;charset=windows-1252');
-        }
     }
 
     /**
      * Administrtion view for smileys
      */
-    function index_action()
+    public function index_action()
     {
         $this->view              = Request::option('view', Smiley::getFirstUsedCharacter() ?: 'a');
         $this->smileys           = Smiley::getGrouped($this->view);
@@ -62,8 +55,10 @@ class Admin_SmileysController extends AuthenticatedController
      * @param int    $id   Id of the smiley to edit
      * @param String $view View to return to after editing
      */
-    function edit_action($id, $view)
+    public function edit_action($id, $view)
     {
+        PageLayout::setTitle(_('Smiley bearbeiten'));
+        
         $smiley = Smiley::getById($id);
 
         if (Request::submitted('edit')) {
@@ -115,7 +110,8 @@ class Admin_SmileysController extends AuthenticatedController
      * @param String $view View to return to after deletion
      * @todo needs some of confirmation
      */
-    function delete_action($id, $view) {
+    public function delete_action($id, $view)
+    {
         if ($id == 'bulk') {
             $ids = Request::intArray('smiley_id');
             Smiley::remove($ids);
@@ -138,7 +134,8 @@ class Admin_SmileysController extends AuthenticatedController
      *
      * @param String $view View to return to
      */
-    function count_action($view) {
+    public function count_action($view)
+    {
         $updated = Smiley::updateUsage();
 
         $message  = sprintf(_('%d Zählerstände aktualisiert'), $updated);
@@ -155,7 +152,8 @@ class Admin_SmileysController extends AuthenticatedController
      *
      * @param String $view View to return to
      */
-    function refresh_action($view) {
+    public function refresh_action($view)
+    {
         $result = Smiley::refresh();
 
         $message = sprintf(_('%u Operationen wurden durchgeführt.'), array_sum($result));
@@ -180,7 +178,10 @@ class Admin_SmileysController extends AuthenticatedController
      *
      * @param String $view View to return to if canceled
      */
-    function upload_action($view) {
+    public function upload_action($view)
+    {
+        PageLayout::setTitle(_('Neues Smiley hochladen'));
+        
         if (!Request::submitted('upload')) {
             $this->view = $view;
             return;
@@ -265,11 +266,10 @@ class Admin_SmileysController extends AuthenticatedController
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neues Smiley hochladen'), $this->url_for('admin/smileys/upload', $view), 'icons/16/blue/add.png');
+        $actions->addLink(_('Neues Smiley hochladen'), $this->url_for('admin/smileys/upload', $view), 'icons/16/blue/add.png')->asDialog('size=auto');
         $actions->addLink(_('Smileys zählen'), $this->url_for('admin/smileys/count', $view), 'icons/16/blue/code.png');
         $actions->addLink(_('Tabelle aktualisieren'), $this->url_for('admin/smileys/refresh', $view), 'icons/16/blue/refresh.png');
-        $actions->addLink(_('Smiley-Übersicht öffnen'), URLHelper::getLink('dispatch.php/smileys',
-            array('view' => null)), 'icons/16/blue/smiley.png', array('target' => '_blank'));
+        $actions->addLink(_('Smiley-Übersicht öffnen'), URLHelper::getLink('dispatch.php/smileys'), 'icons/16/blue/smiley.png')->asDialog();
         $sidebar->addWidget($actions);
 
         $widget = new SidebarWidget();

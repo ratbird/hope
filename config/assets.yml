@@ -79,6 +79,7 @@ javascripts:
     - javascripts/responsive.js
     - javascripts/wiki.js
     - javascripts/coursewizard.js
+    - javascripts/smiley.js
     - *header
     - *toolbar
     - *dialog
@@ -92,9 +93,6 @@ javascripts:
 
   raumzeit:
     - javascripts/raumzeit.js
-
-  smileys:
-    - javascripts/smiley.js
 
   settings:
     - javascripts/settings.js
@@ -129,7 +127,6 @@ css:
     studip-jquery-ui.css: screen, print
     jshighlight_tomorrow.css: screen, print
     style.css:  screen
-    smiley.css: screen, print
     print.css:  print
 
   wysiwyg:

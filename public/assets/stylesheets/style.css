@@ -4023,15 +4023,18 @@ div.clear {
   margin: 0;
 }
 #tabs ul,
-#tabs li {
+#tabs li,
+.smiley-tabs li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#tabs li {
+#tabs li,
+.smiley-tabs li {
   float: left;
 }
-#tabs a {
+#tabs a,
+.smiley-tabs a {
   color: #000;
   font-weight: bold;
 }
@@ -4044,30 +4047,39 @@ div.clear {
 #tabs .quiet img {
   opacity: 0.25;
 }
-#tabs li {
+#tabs li,
+.smiley-tabs li {
   background-color: #899ab9;
   border-right: 1px solid #1e3e70;
   border-bottom: 1px solid #1e3e70;
 }
-#tabs li:last-child {
+#tabs li:last-child,
+.smiley-tabs li:last-child {
   border-right: none;
 }
-#tabs li:hover {
+#tabs li:hover,
+.smiley-tabs li:hover {
   background: #a1aec7;
 }
-#tabs li.current {
+#tabs li.current,
+.smiley-tabs li.current {
   border-bottom: 1px solid #fff;
 }
 #tabs li.current,
-#tabs li.current:hover {
+#tabs li.current:hover,
+.smiley-tabs li.current,
+.smiley-tabs li.current:hover {
   background-color: #fff;
 }
 #tabs li.current a,
-#tabs li.current span.quiet {
+#tabs li.current span.quiet,
+.smiley-tabs li.current a,
+.smiley-tabs li.current span.quiet {
   color: #000;
 }
 #tabs a,
-#tabs span.quiet {
+#tabs span.quiet,
+.smiley-tabs a {
   color: #fff;
   display: block;
   padding-left: 1.3em;
@@ -6587,6 +6599,209 @@ div#studyareas {
   float: left;
   padding-left: 10px;
   width: 45%;
+}
+.smiley-tabs {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  margin: 0 0 0.5em;
+  line-height: 1.8em;
+  width: 100%;
+}
+.smiley-tabs,
+.smiley-tabs li {
+  list-style: none;
+  padding: 0;
+}
+.smiley-tabs li {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  display: inline-block;
+  float: none;
+  margin: 0;
+  white-space: nowrap;
+}
+.smiley-tabs li.favorites a:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/16/white/smiley.png");
+  background-image: none, url("../images/icons/white/smiley.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+.smiley-tabs li.favorites.current a:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/16/black/smiley.png");
+  background-image: none, url("../images/icons/black/smiley.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+.smiley-tabs a {
+  display: block;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+.smiley-container {
+  border-collapse: collapse;
+  width: 100%;
+}
+.smiley-container > tbody > tr > td {
+  padding: 0 1em 0 0;
+}
+.smiley-container > tbody > tr > td:last-child {
+  padding-right: 0;
+}
+.smiley-container,
+.smiley-column {
+  table-layout: fixed;
+}
+.smiley-column {
+  margin-right: 1em;
+}
+.smiley-column:last-child {
+  margin-right: 0;
+}
+.smiley-icon img {
+  height: auto;
+  max-width: 100%;
+  width: auto;
+}
+.smiley-toggle {
+  width: 16px;
+  height: 16px;
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
+  background-image: none, url("../images/icons/blue/checkbox-unchecked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+}
+.smiley-toggle.favorite {
+  background-image: url("../images/icons/16/blue/checkbox-checked.png");
+  background-image: none, url("../images/icons/blue/checkbox-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+}
+.smiley-toggle.ajax {
+  background-image: url("../images/ajax_indicator_small.gif");
+}
+.smiley-select option.single {
+  font-family: monospace;
+}
+.smiley-statistics {
+  margin: 0;
+  padding: 0;
+}
+.smiley-statistics dt {
+  clear: left;
+  float: left;
+  padding-right: 0.5em;
+}
+.smiley-statistics dd {
+  font-weight: 700;
+  margin: 0;
+  text-align: right;
+}
+.smiley-picker {
+  width: 420px;
+}
+.smiley-picker .smileys {
+  text-align: center;
+  width: 100%;
+  padding: 5px 0;
+}
+.smiley-picker .smiley,
+.smiley-picker .empty {
+  display: inline-block;
+  height: 80px;
+  vertical-align: middle;
+  width: 80px;
+}
+.smiley-picker .smiley {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  max-height: 80px;
+  max-width: 80px;
+  text-align: center;
+}
+.smiley-picker .smiley:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+.smiley-picker .smiley img {
+  vertical-align: middle;
+  max-height: 76px;
+  max-width: 72px;
+  margin-right: 0.25em;
+}
+.smiley-picker .smiley:hover {
+  background-color: rgba(255, 51, 51, 0.1);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  -webkit-box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
+  -moz-box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
+  box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
+}
+.smiley-picker .navigation {
+  border-collapse: collapse;
+  width: 100%;
+}
+.smiley-picker .navigation img {
+  vertical-align: text-top;
+}
+.smiley-picker .navigation td {
+  padding: 2px;
+}
+.smiley-picker .navigation.top td {
+  border-bottom: 1px solid #24437c;
+}
+.smiley-picker .navigation.bottom td {
+  border-top: 1px solid #24437c;
+}
+.smiley-picker .navigation .active a {
+  color: #ff3333;
+  font-weight: bold;
+}
+.smiley-picker-dialog .ui-dialog-content {
+  padding: 0;
 }
 #responsive-container {
   display: none;

@@ -57,7 +57,8 @@
             <? endif; ?>
                 <td align="right">
                     <a href="<?= $controller->url_for('admin/smileys/edit', $smiley->id, $view) ?>"
-                       title="<?= htmlReady(sprintf(_('Smiley "%s" bearbeiten'), $smiley->name)) ?>">
+                       title="<?= htmlReady(sprintf(_('Smiley "%s" bearbeiten'), $smiley->name)) ?>"
+                       data-dialog="size=auto">
                         <?= Assets::img('icons/16/blue/edit.png') ?>
                     </a>
                     <a href="<?= $controller->url_for('admin/smileys/delete', $smiley->id, $view) ?>"
@@ -71,7 +72,9 @@
         <tfoot>
             <tr>
                 <td>
-                    <input class="middle" type="checkbox" data-proxyfor=":checkbox[name^=smiley_id]" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
+                    <input class="middle" type="checkbox" data-proxyfor=":checkbox[name^=smiley_id]"
+                           data-activates="button[name=bulk-delete]"
+                           name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
                 </td>
                 <td colspan="<?= $favorites_enabled ? 7 : 6 ?>">
                     <?= Studip\Button::createCancel(_('Markierte löschen'), 'bulk-delete') ?>

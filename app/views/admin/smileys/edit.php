@@ -5,7 +5,7 @@
     <?= CSRFProtection::tokenTag() ?>
 
     <table align="center" cellpadding="2" cellspacing="0">
-        <thead>
+        <thead class="hide-in-dialog">
             <tr>
                 <th colspan="2"><b><?= _('Smiley bearbeiten') ?></b></th>
             </tr>
@@ -44,7 +44,7 @@
                 <td><?= date('d.m.Y H:i:s', $smiley->chdate) ?></td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot data-dialog-button>
             <tr>
                 <td colspan="2">
                     <?= Button::createAccept(_('Speichern'), 'edit') ?>

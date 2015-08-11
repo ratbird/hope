@@ -181,7 +181,7 @@
                         <?= _('Falls Sie Ihre E-Mail-Adresse ändern, muss diese Änderung durch die Eingabe '
                              .'Ihres Passworts bestätigt werden:') ?>
                     </p>
-                    <input type="password" name="password" aria-labelledby="email-change-confirm">
+                    <input type="password" name="password_confirmation" aria-labelledby="email-change-confirm">
                 </td>
             </tr>
         <? endif; ?>

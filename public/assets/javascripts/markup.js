@@ -26,7 +26,7 @@ STUDIP.Markup = {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
         },
         codehighlight: function (element) {
-            jQuery(document).find("pre, code").each(function (index, block) {
+            jQuery(document).find("pre.usercode").each(function (index, block) {
                 hljs.highlightBlock(block);
             });
         }

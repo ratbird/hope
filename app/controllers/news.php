@@ -144,49 +144,6 @@ class NewsController extends StudipController
     }
 
     /**
-     * shows news content
-     *
-     * @param string $id        news id
-     */
-    function get_news_action($id)
-    {
-
-        if (is_null($id)) {
-            $this->set_status(400);
-            return $this->render_nothing();
-        }
-
-        $news = new StudipNews($id);
-
-        if ($news->isNew()) {
-            $this->set_status(404);
-            return $this->render_nothing();
-        }
-
-        // check for permission for at least one of those ranges
-        if (!$news->havePermission('view')) {
-            $this->set_status(401);
-            return $this->render_nothing();
-        }
-        $newscontent = $news->toArray();
-
-        // use the same logic here as in show_news_item()
-        if ($newscontent['user_id'] != $GLOBALS['auth']->auth['uid']) {
-            object_add_view($id);
-        }
-
-        object_set_visit($id, "news");
-        if ($GLOBALS['user']->id == 'nobody') {
-            $newscontent['allow_comments'] = 0;
-        }
-        $this->news = $newscontent;
-        $this->content = show_news_item_content($newscontent,
-                                                array(),
-                                                Request::get('range_id')
-        );
-    }
-
-    /**
      * @addtogroup notifications
      *
      * Creating a news triggers a NewsDidCreate notification. The news's ID is

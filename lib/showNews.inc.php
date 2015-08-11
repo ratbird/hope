@@ -1,6 +1,6 @@
 <?php
 # Lifter001: DONE
-# Lifter002: TEST - the small chunks of html in show_news_item() are hard to get rid of [tlx]
+# Lifter002: TEST
 # Lifter007: TODO
 # Lifter003: TEST
 # Lifter010: TODO
@@ -28,33 +28,6 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/language.inc.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/classes/Seminar.class.php';
-
-/**
- *
- * @param unknown_type $cmd_data
- */
-function process_news_commands(&$cmd_data)
-{
-    //Auf und Zuklappen News
-
-    $cmd_data["comopen"]='';
-    $cmd_data["comnew"]='';
-    $cmd_data["comsubmit"]='';
-    $comsubmit = Request::option('comsubmit');
-    if (!empty($comsubmit)) {
-        $cmd_data["comsubmit"]=$comsubmit;
-        Request::set('comopen',$comsubmit);
-    }
-    $comopen = Request::quoted('comopen');
-    if (Request::quoted('comopen')) {
-        $cmd_data["comopen"] = $comopen;
-        Request::set('nopen',$comopen);
-    }
-
-    if (Request::option('nopen')) $cmd_data["nopen"]=Request::option('nopen');
-    if (Request::quoted('nclose')) $cmd_data["nopen"]='';
-    if (Request::quoted('comnew')) $cmd_data["comnew"]=Request::quoted('comnew');
-}
 
 /**
  * generates proper text for confirmation question and deletes comments
@@ -217,78 +190,6 @@ function remove_news($remove_array)
 /**
  *
  * @param unknown_type $range_id
- * @param unknown_type $show_admin <-deprecated
- * @param unknown_type $limit
- * @param unknown_type $open
- * @param unknown_type $width
- * @param unknown_type $last_visited
- * @param unknown_type $cmd_data
- */
-function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = "100%", $last_visited = 0, $cmd_data)
-{
-    global $auth, $SessSemName;
-
-    $news = StudipNews::GetNewsByRange($range_id, true);
-    $may_add = StudipNews::haveRangePermission('edit', $range_id);
-
-    // delete order?
-    if (is_array($news[Request::option('ndelete')])) {
-        CSRFProtection::verifySecurityToken();
-        $question_text = delete_news(Request::option('ndelete'));
-        $question_param = array('ndelete' => Request::option('ndelete'), 'yes' => 1);
-        // reload news items
-        $news = StudipNews::GetNewsByRange($range_id, true);
-        if ($question_text)
-            $question_text = _('Wollen Sie die folgende Aktion jetzt ausführen?') . "\n" . $question_text;
-    }
-    // remove order?
-    elseif ($news[Request::option('nremove')]) {
-        CSRFProtection::verifySecurityToken();
-        $question_text = remove_news(array(Request::option('nremove') => $range_id));
-        $question_param = array('nremove' => Request::option('nremove'), 'yes' => 1);
-        // reload news items
-        $news = StudipNews::GetNewsByRange($range_id, true);
-    }
-
-    // Adjust news' open state
-    foreach ($news as $id => &$news_item) {
-        $news_item['open'] = ($id == $open);
-    }
-
-    // Leave if there are no news and we are not an admin
-    if (!count($news) && !$may_add) {
-        return false;
-    }
-
-    SkipLinks::addIndex(_('Ankündigungen'), 'news_box');
-
-    if (!count($news)) {
-        $template = $GLOBALS['template_factory']->open('news/list-empty');
-        $template->width      = $width;
-        $template->range_id   = $range_id;
-    } else {
-        $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE')
-                ? StudipNews::GetRssIdFromRangeId($range_id)
-                : false;
-
-        $template = $GLOBALS['template_factory']->open('news/list');
-        $template->question_text  = $question_text;
-        $template->question_param = $question_param;
-        $template->width          = $width;
-        $template->range_id       = $range_id;
-        $template->rss_id         = $rss_id;
-        $template->may_add        = $may_add;
-        $template->news           = $news;
-        $template->cmd_data       = $cmd_data;
-    }
-    echo $template->render();
-
-    return true;
-}
-
-/**
- *
- * @param unknown_type $range_id
  * @param unknown_type $type
  */
 function show_rss_news($range_id, $type)
@@ -304,7 +205,9 @@ function show_rss_news($range_id, $type)
         case 'sem':
             $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/course/overview?cid=' . $range_id;
             $sem_obj = Seminar::GetInstance($range_id);
-            if ($sem_obj->read_level > 0) $studip_url .= '&again=yes';
+            if ($sem_obj->read_level > 0) {
+                $studip_url .= '&again=yes';
+            }
             $title = $sem_obj->getName() . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
             $description = _('Neuigkeiten der Veranstaltung') . ' ' . $title;
 
@@ -312,13 +215,14 @@ function show_rss_news($range_id, $type)
         case 'inst':
             $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/institute/overview?auswahl=' . $range_id;
             $object_name = get_object_name($range_id, $type);
-            if (!get_config('ENABLE_FREE_ACCESS')) $studip_url .= "&again=yes";
+            if (!get_config('ENABLE_FREE_ACCESS')) {
+                $studip_url .= "&again=yes";
+            }
             $title = $object_name['name'] . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
             $description = _('Neuigkeiten der Einrichtung') . ' ' . $title;
         break;
         case 'global':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'index.php?again=yes';
-            $item_url_fmt = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/news/get_news/%2$s';
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/start?again=yes';
             $title = 'Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'];
             $description = _('Allgemeine Neuigkeiten') . ' ' . $title;
         break;
@@ -339,7 +243,7 @@ function show_rss_news($range_id, $type)
         $item['body'] = $body;
     }
 
-    header('Content-type: text/xml; charset=utf-8');
+    header('Content-type: application/rss+xml; charset=utf-8');
 
     $template = $GLOBALS['template_factory']->open('news/rss-feed');
     $template->items        = $items;
@@ -351,121 +255,4 @@ function show_rss_news($range_id, $type)
     echo $template->render();
 
     return true;
-}
-
-/**
- *
- * @param unknown_type $news_item
- * @param unknown_type $cmd_data
- * @param unknown_type $range_id
- */
-function show_news_item($news_item, $cmd_data, $range_id)
-{
-    global $auth;
-
-    $id = $news_item['news_id'];
-
-    $tempnew = (($news_item['chdate'] >= object_get_visit($id, 'news', false, false))
-             && ($news_item['user_id'] != $auth->auth['uid']));
-
-    if ($tempnew && Request::get("new_news")) {
-        $news_item['open'] = $tempnew;
-    }
-
-    $titel = htmlReady(mila($news_item['topic']));
-
-    if ($news_item['open']) {
-        $link = '?nclose=true';
-
-        if ($cmd_data['comopen'] != $id) {
-            $titel .= '<a name="anker"></a>';
-        }
-
-        if ($news_item['user_id'] != $auth->auth['uid']) {
-            object_add_view($id);  //Counter for news - not my own
-        }
-
-        object_set_visit($id, 'news'); //and, set a visittime
-    } else {
-        $link = '?nopen=' . $id;
-    }
-
-    $user = User::find($news_item['user_id']);
-
-    $link .= '&username=' . $user->username . '#anker';
-    $titel = sprintf('<a href="%s" onclick="STUDIP.News.openclose(\'%s\', \'%s\'); return false;" class="tree">%s</a>',
-                     URLHelper::getLink($link), $id, $range_id, $titel);
-
-    $template = $GLOBALS['template_factory']->open('news/news');
-    $template->link       = $link;
-    $template->news_item  = $news_item;
-    $template->icon       = Assets::img('icons/16/grey/news.png', array('class' => 'text-bottom'));
-    $template->titel      = $titel;
-    $template->zusatz     = $GLOBALS['template_factory']->render('news/zusatz', compact('user', 'news_item'));
-    $template->cmd_data   = $cmd_data;
-    $template->range_id   = $range_id;
-    $template->tempnew    = $tempnew;
-
-    return $template->render();
-}
-
-/**
- *
- * @param unknown_type $news_item
- * @param unknown_type $cmd_data
- * @param unknown_type $range_id
- */
-function show_news_item_content($news_item, $cmd_data, $range_id)
-{
-    global $auth;
-
-    $id = $news_item['news_id'];
-
-    $user = User::find($news_item['user_id']);
-
-    $unamelink = '&username='.$user->username;
-    $uname = $user->username;
-
-    list($content, $admin_msg) = explode('<admin_msg>', $news_item['body']);
-
-    if (!$content) {
-        $content = _('Keine Beschreibung vorhanden.');
-    }
-
-    if ($news_item['chdate_uid']) {
-        $admin_msg = StudipNews::GetAdminMsg($news_item['chdate_uid'], $news_item['chdate']);
-    }
-
-    //
-    // Kommentare
-    //
-    if ($news_item['allow_comments']) {
-        $showcomments = $cmd_data['comopen'] == $id;
-
-        if (Request::isPost() && $cmd_data['comsubmit'] == $id) {
-            $comment_content = trim(Request::get('comment_content'));
-            if ($comment_content) {
-                $comment = new StudipComment();
-                $comment->setValue('object_id', $id);
-                $comment->setValue('user_id', $auth->auth['uid']);
-                $comment->setValue('content', stripslashes($comment_content));
-                $comment->store();
-            }
-            $showcomments = 1;
-        } else if ($cmd_data['comdelnews'] == $id) {
-            delete_comment($cmd_data['comdel']);
-            $showcomments = 1;
-        }
-    }
-    $news_object = new StudipNews($news_item['news_id']);
-    $template = $GLOBALS['template_factory']->open('news/news-content');
-    $template->news          = $news_item;
-    $template->may_edit      = $news_object->havePermission('edit');
-    $template->may_unassign  = $news_object->havePermission('unassign', $range_id);
-    $template->may_delete    = $news_object->havePermission('delete');
-    $template->content       = $content;
-    $template->show_comments = $showcomments;
-    $template->admin_msg     = $admin_msg;
-
-    return $template->render();
 }

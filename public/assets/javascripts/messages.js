@@ -311,6 +311,6 @@ jQuery(function () {
     });
     jQuery('.widget-links li:has(.tag)').each(STUDIP.Messages.createDroppable);
 
-    jQuery(".adressee .remove_adressee").live("click", STUDIP.Messages.remove_adressee);
-    jQuery(".file .remove_attachment").live("click", STUDIP.Messages.remove_attachment);
+    jQuery(document).on("click", ".adressee .remove_adressee", STUDIP.Messages.remove_adressee);
+    jQuery(document).on("click", ".file .remove_attachment", STUDIP.Messages.remove_attachment);
 });

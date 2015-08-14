@@ -8,7 +8,7 @@ STUDIP.study_area_selection = {
 
     initialize: function () {
         // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
-        jQuery('input[name^="study_area_selection[add]"]').live('click', function () {
+        jQuery(document).on('click', 'input[name^="study_area_selection[add]"]', function () {
             var parameters = jQuery(this).data();
             if (!(parameters && parameters.id)) {
                 return;
@@ -16,7 +16,7 @@ STUDIP.study_area_selection = {
             STUDIP.study_area_selection.add(parameters.id, parameters.course_id || '-');
             return false;
         });
-        jQuery('input[name^="study_area_selection[remove]"]').live('click', function () {
+        jQuery(document).on('click', 'input[name^="study_area_selection[remove]"]', function () {
             var parameters = jQuery(this).data();
             if (!(parameters && parameters.id)) {
                 return;
@@ -24,7 +24,7 @@ STUDIP.study_area_selection = {
             STUDIP.study_area_selection.remove(parameters.id, parameters.course_id || '-');
             return false;
         });
-        jQuery('a.study_area_selection_expand').live('click', function () {
+        jQuery(document).on('click', 'a.study_area_selection_expand', function () {
             var parameters = jQuery(this).data();
             if (!(parameters && parameters.id)) {
                 return;

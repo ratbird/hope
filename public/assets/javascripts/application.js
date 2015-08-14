@@ -23,7 +23,7 @@
 /* ------------------------------------------------------------------------
  * ajax_loader
  * ------------------------------------------------------------------------ */
-jQuery('[data-behaviour="ajaxContent"]').live('click', function () {
+jQuery(document).on('click', '[data-behaviour="ajaxContent"]', function () {
     var parameters = jQuery(this).data(),
         indicator = parameters.hasOwnProperty('indicator') ? parameters.indicator : this,
         target    = parameters.hasOwnProperty('target') ? parameters.target : jQuery(this).next(),
@@ -40,7 +40,7 @@ jQuery('[data-behaviour="ajaxContent"]').live('click', function () {
 /* ------------------------------------------------------------------------
  * messages boxes
  * ------------------------------------------------------------------------ */
-jQuery('.messagebox .messagebox_buttons a').live('click', function () {
+jQuery(document).on('click', '.messagebox .messagebox_buttons a', function () {
     if (jQuery(this).is('.details')) {
         jQuery(this).closest('.messagebox').toggleClass('details_hidden');
     } else if (jQuery(this).is('.close')) {
@@ -49,7 +49,7 @@ jQuery('.messagebox .messagebox_buttons a').live('click', function () {
         });
     }
     return false;
-}).live('focus', function () {
+}).on('focus', '.messagebox .messagebox_buttons a', function () {
     jQuery(this).blur(); // Get rid of the ugly "clicked border" due to the text-indent
 });
 
@@ -89,14 +89,14 @@ jQuery(function () {
  * ------------------------------------------------------------------------ */
 jQuery(function ($) {
 
-    $('table.collapsable .toggler').focus(function () {
+    $(document).on('focus', 'table.collapsable .toggler', function () {
         $(this).blur();
-    }).live('click', function () {
+    }).on('click', 'table.collapsable .toggler', function () {
         $(this).closest('tbody').toggleClass('collapsed');
         return false;
     });
 
-    $('a.load-in-new-row').live('click', function () {
+    $(document).on('click', 'a.load-in-new-row', function () {
         if ($(this).data('busy')) {
             return false;
         }
@@ -127,7 +127,7 @@ jQuery(function ($) {
         return false;
     });
 
-    $('.loaded-details a.cancel').live('click', function () {
+    $(document).on('click', '.loaded-details a.cancel', function () {
         $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
         return false;
     });
@@ -138,7 +138,7 @@ jQuery(function ($) {
  * Toggle dates in seminar_main
  * ------------------------------------------------------------------------ */
 (function ($) {
-    $('.more-dates').live('click', function () {
+    $(document).on('click', '.more-dates', function () {
         $('.more-dates-infos').toggle();
         $('.more-dates-digits').toggle();
         if ($('.more-dates-infos').is(':visible')) {
@@ -150,7 +150,7 @@ jQuery(function ($) {
         }
     });
 
-    $('.more-location-dates').live('click', function () {
+    $(document).on('click', '.more-location-dates', function () {
         $(this).closest('div').prev().toggle();
         $(this).prev().toggle();
 
@@ -167,7 +167,7 @@ jQuery(function ($) {
 /* ------------------------------------------------------------------------
  * only numbers in the input field
  * ------------------------------------------------------------------------ */
-jQuery('input.allow-only-numbers').live('keyup', function () {
+jQuery(document).on('keyup', 'input.allow-only-numbers', function () {
     jQuery(this).val(jQuery(this).val().replace(/\D/, ''));
 });
 
@@ -240,7 +240,7 @@ jQuery.ui.accordion.prototype.options.icons = {
 
 
 jQuery(function ($) {
-    $('a.print_action').live('click', function (event) {
+    $(document).on('click', 'a.print_action', function (event) {
         var url_to_print = this.href;
         $('<iframe/>', {
             name: url_to_print,

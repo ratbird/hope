@@ -55,7 +55,7 @@ STUDIP.CalendarDialog = {
     }
 };
 
-jQuery('td.calendar-day-edit, td.calendar-day-event').live('click', function (event) {
+jQuery(document).on('click', 'td.calendar-day-edit, td.calendar-day-event', function (event) {
     var elem = jQuery(this).find('a').first();
     STUDIP.Dialog.fromURL(elem.attr('href'), {size: 'auto', title: elem.attr('title')});
     event.preventDefault();

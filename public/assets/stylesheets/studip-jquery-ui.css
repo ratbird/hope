@@ -1,3 +1,4 @@
+@import "jquery-ui.structure.css";
 .clearfix {
   *zoom: 1;
 }
@@ -634,8 +635,8 @@ button.ui-button::-moz-focus-inner {
 .ui-menu .ui-menu-item {
   margin: 0;
   padding: 0;
-  zoom: 1;
   width: 100%;
+  zoom: 1;
 }
 .ui-menu .ui-menu-divider {
   margin: 5px -2px 5px -2px;
@@ -652,8 +653,8 @@ button.ui-button::-moz-focus-inner {
   zoom: 1;
   font-weight: normal;
 }
-.ui-menu .ui-menu-item a.ui-state-focus,
-.ui-menu .ui-menu-item a.ui-state-active {
+.ui-menu .ui-menu-item.ui-state-focus,
+.ui-menu .ui-menu-item.ui-state-active {
   font-weight: normal;
   margin: -1px;
 }
@@ -898,12 +899,13 @@ body .ui-tooltip {
 /* Interaction states
 ----------------------------------*/
 .ui-state-default,
+.ui-menu-item .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  border: 1px solid #d8dadc;
   background: #e1e4e5;
-  font-weight: bold;
+  border: 1px solid #d8dadc;
   color: #000;
+  font-weight: bold;
 }
 .ui-state-default a,
 .ui-state-default a:link,
@@ -912,30 +914,37 @@ body .ui-tooltip {
   text-decoration: none;
 }
 .ui-state-hover,
+.ui-menu-item .ui-state-hover,
 .ui-widget-content .ui-state-hover,
 .ui-widget-header .ui-state-hover,
 .ui-state-focus,
+.ui-menu-item .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-  border: 1px solid #8a8f95;
   background: #24437c;
-  font-weight: bold;
+  border: 1px solid #8a8f95;
   color: #fff;
+  font-weight: bold;
 }
 .ui-state-hover a,
-.ui-state-hover a:hover,
+.ui-state-focus a,
 .ui-state-hover a:link,
-.ui-state-hover a:visited {
-  color: #000;
+.ui-state-focus a:link,
+.ui-state-hover a:hover,
+.ui-state-focus a:hover,
+.ui-state-hover a:visited,
+.ui-state-focus a:visited {
+  color: #fff;
   text-decoration: none;
 }
 .ui-state-active,
+.ui-menu-item .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-  border: 1px solid #a5adb2;
   background: #ffffff;
-  font-weight: bold;
+  border: 1px solid #a5adb2;
   color: #000;
+  font-weight: bold;
 }
 .ui-state-active a,
 .ui-state-active a:link,
@@ -1608,6 +1617,9 @@ body .ui-tooltip {
   -webkit-border-radius: 8px;
   border-radius: 8px;
 }
+.ui-front {
+  z-index: 1001;
+}
 .ui-widget_start {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.0em;
@@ -1715,6 +1727,13 @@ body .ui-tooltip {
 }
 .ui-datepicker-calendar .ui-state-active.ui-state-hover {
   color: white;
+}
+/* --- textarea resizer ----------------------------------------------------- */
+textarea.ui-resizable-handle.ui-resizable-s {
+  background: #eeeeee url("../images/vendor/handle_background.png") no-repeat center;
+  bottom: 0;
+  cursor: s-resize;
+  height: 12px;
 }
 .ui-timepicker-div .ui-widget-header {
   margin-bottom: 8px;

@@ -6249,6 +6249,7 @@ div.available-widgets .studip-widget {
 .ui-widget-overlay {
   background: rgba(40, 73, 124, 0.5);
   opacity: 1;
+  position: fixed;
 }
 .ui-dialog {
   border: 3px solid white;
@@ -6267,41 +6268,46 @@ div.available-widgets .studip-widget {
   font-weight: normal;
 }
 .ui-dialog .ui-dialog-titlebar-close {
-  border: 0;
-  background: #1e3e70;
   width: 32px;
   height: 32px;
-  margin-top: -16px;
-  text-align: center;
+  background: #1e3e70;
+  border: 0;
   line-height: 32px;
+  margin-top: -16px;
   padding: 0;
+  text-align: center;
 }
 .ui-dialog .ui-dialog-titlebar-close:hover {
-  border: 0;
-  background: #1e3e70;
   width: 32px;
   height: 32px;
+  background: #1e3e70;
+  border: 0;
   margin-top: -16px;
   padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon {
-  background-image: url("../images/icons/16/white/decline.png");
+  width: 24px;
+  height: 24px;
+  background-image: url("../images/icons/32/white/decline.png");
   background-image: none, url("../images/icons/white/decline.svg");
-  -webkit-background-size: 16px 16px;
-  -moz-background-size: 16px 16px;
-  -o-background-size: 16px 16px;
-  background-size: 16px 16px;
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
   background-position: 0;
-  margin: 0;
   display: inline-block;
+  margin: 0;
+  position: relative;
+  left: 2px;
+  top: 4px;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
-  background-image: url("../images/icons/16/white/decline.png");
+  background-image: url("../images/icons/32/white/decline.png");
   background-image: none, url("../images/icons/white/decline.svg");
-  -webkit-background-size: 16px 16px;
-  -moz-background-size: 16px 16px;
-  -o-background-size: 16px 16px;
-  background-size: 16px 16px;
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
 }
 .ui-dialog.no-close .ui-dialog-titlebar-close {
   display: none;
@@ -6451,7 +6457,6 @@ div.available-widgets .studip-widget {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 1001;
 }
 .modal-overlay-local {
   background-color: rgba(105, 118, 127, 0.5);
@@ -7403,13 +7408,6 @@ img.plugin_preview {
 .smashbox_stripe {
   background: url("../images/background_stripes.jpg") repeat-x;
   border-top: 1px solid #D0D0D0;
-}
-/* --- textarea resizer ----------------------------------------------------- */
-.ui-resizable-handle.ui-resizable-s {
-  background: #eeeeee url("../images/vendor/handle_background.png") no-repeat center;
-  bottom: 0;
-  cursor: s-resize;
-  height: 12px;
 }
 /* --- general style classes ------------------------------------------------ */
 .arrow_down {

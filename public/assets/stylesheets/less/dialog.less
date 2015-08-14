@@ -1,6 +1,7 @@
-.ui-widget-overlay{
+.ui-widget-overlay {
     background: fadeout(@base-color, 50%);
     opacity: 1;
+    position: fixed;
 }
 
 .ui-dialog {
@@ -20,31 +21,34 @@
     }
 
     .ui-dialog-titlebar-close {
-        border: 0;
+        .square(32px);
         background: @brand-color-darker;
-        width: 32px;
-        height: 32px;
-        margin-top:-16px;
-        text-align:center;
+        border: 0;
         line-height:32px;
+        margin-top:-16px;
         padding: 0;
+        text-align:center;
 
         &:hover {
-            border: 0;
+            .square(32px);
             background: @brand-color-darker;
-            width: 32px;
-            height: 32px;
+            border: 0;
             margin-top:-16px;
             padding: 0;
         }
-        .ui-icon{
-            .retina-background-icon('white/decline.png');
+        .ui-icon {
+            .square(24px);
+            .retina-background-icon('white/decline.png', 24px);
             background-position: 0;
+            display:inline-block;
             margin: 0;
 
-            display:inline-block;
+            position: relative;
+            left: 2px;
+            top: 4px;
+
             &:hover{
-                .retina-background-icon('white/decline.png');
+                .retina-background-icon('white/decline.png', 24px);
             }
         }
     }
@@ -115,7 +119,6 @@
     vertical-align: middle;
 }
 
-
 .modal-overlay {
     .ui-widget-overlay;
 
@@ -124,7 +127,6 @@
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 1001;
     
     &-local {
         background-color: fadeout(@light-gray-color, 50%);

@@ -130,8 +130,8 @@
         }
     };
 
-    $("#notification_list .mark_as_read").live('click', STUDIP.PersonalNotifications.markAsRead);
-    $("#notification_list").live('mouseenter', STUDIP.PersonalNotifications.setSeen);
+    $(document).on('click', '#notification_list .mark_as_read', STUDIP.PersonalNotifications.markAsRead);
+    $(document).on('mouseenter', '#notification_list', STUDIP.PersonalNotifications.setSeen);
 
     $(document).ready(function () {
         if ($("#notification_marker").length > 0) {

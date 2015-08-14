@@ -1,5 +1,5 @@
 <form action="<?= $url ?>" method="post">
-    <select id="course_type" name="course_type" style="width: 100%">
+    <select id="course_type" name="course_type" style="width: 100%" onchange="jQuery(this).closest('form').submit();">
         <option value="all" <?= ($selected == 'all' ? 'selected="selected"' : '') ?>><?= _('Alle') ?></option>
         <? foreach ($GLOBALS['SEM_CLASS'] as $class_id => $class) : ?>
             <? if (!$class['studygroup_mode']) : ?>
@@ -12,10 +12,5 @@
             <? endif ?>
         <? endforeach ?>
     </select>
-    <script>
-        jQuery('#course_type').live('change', function() {
-            jQuery(this).closest('form').submit();
-        })
-    </script>
     <noscript><?= \Studip\Button::createAccept(_('Absenden')); ?></noscript>
 </form>

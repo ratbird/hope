@@ -2,6 +2,10 @@
 /*global jQuery, STUDIP */
 (function ($, STUDIP) {
 
+    if (jQuery.ui === undefined) {
+        throw 'Overlays require jQuery UI';
+    }
+
     var element = null,
         overlay = {};
 
@@ -9,7 +13,7 @@
         if (element === null) {
             containment = containment || 'body';
 
-            element = $('<div class="modal-overlay">');
+            element = $('<div class="ui-front modal-overlay">');
             if (ajax) {
                 element.addClass('modal-overlay-ajax');
                 if (ajax === 'dark') {

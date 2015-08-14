@@ -427,7 +427,6 @@
 				}
 				
 				// Timezone
-                console.log(this.support);
 				var showTz = o.showTimezone !== null ? o.showTimezone : this.support.timezone;
 				html += '<dt class="ui_tpicker_timezone_label' + (showTz ? '' : noDisplay) + '">' + o.timezoneText + '</dt>';
 				html += '<dd class="ui_tpicker_timezone' + (showTz ? '' : noDisplay) + '"></dd>';

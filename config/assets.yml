@@ -36,7 +36,7 @@ javascripts:
     - javascripts/studip-dialog.js
 
   sidebar: &sidebar
-    - javascripts/jquery/jquery.sticky-kit.1.0.4.js
+    - javascripts/jquery/jquery.sticky-kit.1.1.2.js
     - javascripts/sidebar.js
 
   base:

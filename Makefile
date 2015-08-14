@@ -33,7 +33,7 @@ test: force_update
 	$(RUN_TESTS)
 
 # recipe to compile all .less files to CSS
-less: $(STYLES)/style.css $(STYLES)/smiley.css $(STYLES)/studip-jquery-ui.css
+less: $(STYLES)/style.css $(STYLES)/studip-jquery-ui.css
 
 $(STYLES)/style.css: $(wildcard $(STYLES)/less/*.less)
 $(STYLES)/studip-jquery-ui.css: $(wildcard $(STYLES)/less/jquery-ui/*.less)

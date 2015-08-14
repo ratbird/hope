@@ -337,8 +337,8 @@ STUDIP.Forum = {
     },
 
     editEntry: function (topic_id) {
-        jQuery('span[data-edit-topic*=]').hide();
-        jQuery('span[data-show-topic*=]').show();
+        jQuery('span[data-edit-topic]').hide();
+        jQuery('span[data-show-topic]').show();
 
         jQuery('span[data-show-topic=' + topic_id +']').hide();
         jQuery('span[data-edit-topic=' + topic_id +']').show().find('textarea').focus();

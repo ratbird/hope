@@ -7,6 +7,7 @@ javascripts:
     - javascripts/jquery/jquery-ui-timepicker-1.5.5.js
     - javascripts/jquery/validator.js
     - javascripts/jquery/jquery.multi-select.js
+    - javascripts/jquery/jquery.scrollTo-2.1.1.js
 
   modernizr: &modernizr
     - javascripts/vendor/modernizr.js
@@ -77,7 +78,6 @@ javascripts:
     - javascripts/dates.js
     - javascripts/tour.js
     - javascripts/tables.js
-    - javascripts/jquery/jquery.scrollTo.js
     - javascripts/start.js
     - javascripts/responsive.js
     - javascripts/wiki.js

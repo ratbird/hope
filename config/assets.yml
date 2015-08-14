@@ -7,7 +7,6 @@ javascripts:
     - javascripts/jquery/jquery-ui-timepicker-1.1.1.js
     - javascripts/jquery/validator.js
     - javascripts/jquery/jquery.multi-select.js
-    - javascripts/jquery/jquery.sticky-kit.1.0.4.js
 
   modernizr: &modernizr
     - javascripts/vendor/modernizr.js
@@ -34,6 +33,10 @@ javascripts:
   dialog: &dialog
     - javascripts/studip-overlay.js
     - javascripts/studip-dialog.js
+
+  sidebar: &sidebar
+    - javascripts/jquery/jquery.sticky-kit.1.0.4.js
+    - javascripts/sidebar.js
 
   base:
     - *jquery
@@ -81,6 +84,7 @@ javascripts:
     - javascripts/coursewizard.js
     - javascripts/smiley.js
     - *header
+    - *sidebar
     - *toolbar
     - *dialog
     - javascripts/studip-css.js

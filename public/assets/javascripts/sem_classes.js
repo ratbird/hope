@@ -161,8 +161,8 @@ STUDIP.admin_sem_class = {
     }
 };
 jQuery(function () {
-    jQuery(".sem_type_delete").live("click", STUDIP.admin_sem_class.delete_sem_type_question);
-    jQuery(".name_input > input").live("blur", STUDIP.admin_sem_class.rename_sem_type);
+    jQuery(document).on("click", ".sem_type_delete", STUDIP.admin_sem_class.delete_sem_type_question);
+    jQuery(document).on("blur", ".name_input > input", STUDIP.admin_sem_class.rename_sem_type);
     jQuery(STUDIP.admin_sem_class.make_sortable);
     jQuery("div[container] > div.droparea > div.plugin select[name=sticky]").change(function () {
         if (this.value === "sticky") {

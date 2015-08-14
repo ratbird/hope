@@ -30,7 +30,7 @@
     };
 
     // (De|Re)activate when help tours start|stop
-    $(document).on('tourstart.studip tourend.studip', function () {
+    $(document).on('tourstart.studip tourend.studip', function (event) {
         STUDIP.Sidebar.setSticky(event.type === 'tourend.studip');
     });
 

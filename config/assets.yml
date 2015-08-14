@@ -3,7 +3,7 @@ javascripts:
   jquery: &jquery
     - javascripts/jquery/jquery-1.11.3.js
     - javascripts/jquery/jquery-ui-1.11.4.js
-    - javascripts/jquery/jquery.placehold-0.3.js
+    - javascripts/jquery/jquery.placehold-1.0.1.js
     - javascripts/jquery/jquery-ui-timepicker-1.5.5.js
     - javascripts/jquery/validator.js
     - javascripts/jquery/jquery.multi-select.js

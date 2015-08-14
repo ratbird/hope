@@ -70,10 +70,10 @@ STUDIP.News = {
                 jQuery('.ui-dialog-content').css({'padding-right' : '1px'});
 
                 // prevent forms within dialog from reloading whole page, and reload dialog instead
-                jQuery('#' + id + ' form').on('click', function (event) {
+                jQuery('#' + id + ' form').live('click', function (event) {
                     jQuery(this).data('clicked', $(event.target));
                 });
-                jQuery('#' + id + ' form').on('submit', function (event) {
+                jQuery('#' + id + ' form').live('submit', function (event) {
                     event.preventDefault();
                     var button = jQuery(this).data('clicked').attr('name');
                     var form_route = jQuery(this).attr('action');
@@ -188,24 +188,24 @@ jQuery(function () {
     }
     STUDIP.News.pending_ajax_request = false;
 
-    jQuery(document).on('click', 'a[rel~="get_dialog"]', function (event) {
+    jQuery('a[rel~="get_dialog"]').live('click', function (event) {
         event.preventDefault();
         var from_x = jQuery(this).position().left + (jQuery(this).outerWidth() / 2);
         var from_y = jQuery(this).position().top + (jQuery(this).outerHeight() / 2) - jQuery(document).scrollTop();
         STUDIP.News.get_dialog('news_dialog', jQuery(this).attr('href'), from_x, from_y);
     });
 
-    jQuery(document).on('click', 'a[rel~="close_dialog"]', function (event) {
+    jQuery('a[rel~="close_dialog"]').live('click', function (event) {
         event.preventDefault();
         jQuery('#news_dialog').dialog('close');
     });
 
     // open/close categories without ajax-request
-    jQuery(document).on('click', '.news_category_header', function (event) {
+    jQuery('.news_category_header').live('click', function (event) {
         event.preventDefault();
         STUDIP.News.toggle_category_view(jQuery(this).parent('div').attr('id'));
     });
-    jQuery(document).on('click', '.news_category_header input[type=image]', function (event) {
+    jQuery('.news_category_header input[type=image]').live('click', function (event) {
         event.preventDefault();
     });
 });

@@ -23,7 +23,7 @@
 
     // Copy elements value to another element on change
     // Used for title choosers
-    $(document).on('change', '[data-target]', function () {
+    $('[data-target]').live('change', function () {
         var target = $(this).data().target;
         $(target).val(this.value);
     });
@@ -39,33 +39,33 @@
 
         $('#edit_userdata .email-change-confirm').hide();
     });
+}(jQuery));
 
-    //
-    $(document).on('change', '#settings-notifications :checkbox', function () {
-        var name = $(this).attr('name');
+//
+$('#settings-notifications :checkbox').live('change', function () {
+    var name = $(this).attr('name');
     
-        if (name === 'all[all]') {
-            $(this).closest('table').find(':checkbox').attr('checked', this.checked);
-            return;
-        }
+    if (name === 'all[all]') {
+        $(this).closest('table').find(':checkbox').attr('checked', this.checked);
+        return;
+    }
 
-        if (/all\[columns\]/.test(name)) {
-            var index = $(this).closest('td').index() + 2;
-            $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox').attr('checked', this.checked);
-        } else if (/all\[rows\]/.test(name)) {
-            $(this).closest('td').siblings().find(':checkbox').attr('checked', this.checked);
-        }
+    if (/all\[columns\]/.test(name)) {
+        var index = $(this).closest('td').index() + 2;
+        $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox').attr('checked', this.checked);
+    } else if (/all\[rows\]/.test(name)) {
+        $(this).closest('td').siblings().find(':checkbox').attr('checked', this.checked);
+    }
 
-        $('.notification.settings tbody :checkbox[name^=all]').each(function () {
-            var other = $(this).closest('td').siblings().find(':checkbox');
-            this.checked = other.filter(':not(:checked)').length === 0;
-        });
-
-        $('.notification.settings thead :checkbox').each(function () {
-            var index = $(this).closest('td').index() + 2,
-                other = $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox');
-            this.checked = other.filter(':not(:checked)').length === 0;
-        });
+    $('.notification.settings tbody :checkbox[name^=all]').each(function () {
+        var other = $(this).closest('td').siblings().find(':checkbox');
+        this.checked = other.filter(':not(:checked)').length === 0;
     });
 
-}(jQuery));
+    $('.notification.settings thead :checkbox').each(function () {
+        var index = $(this).closest('td').index() + 2,
+            other = $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox');
+        this.checked = other.filter(':not(:checked)').length === 0;
+    });
+});
+

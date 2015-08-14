@@ -193,7 +193,7 @@
 
     STUDIP.Tooltip.threshold = 6;
 
-    jQuery(document).on('mouseenter mouseleave', '[data-tooltip]', function (event) {
+    jQuery(document).on('hover', '[data-tooltip]', function (event) {
         var data    = $(this).data(),
             visible = event.type === 'mouseenter',
             content,

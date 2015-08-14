@@ -113,6 +113,8 @@
                 cancel = $(this).is('.cancel'),
                 handler;
 
+            console.log(this, label);
+
             handler = function (event) {
                 // TODO: Find a convenient way to disable buttons
                 this.click();
@@ -468,6 +470,8 @@
                 event.preventDefault();
             }
         }
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     function clickHandler(event) {
@@ -478,6 +482,7 @@
                 value: $(event.target).val()
             });
         }
+        event.preventDefault();
     }
 
     // Handle links, buttons and forms

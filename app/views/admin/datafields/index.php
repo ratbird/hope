@@ -198,7 +198,7 @@ jQuery(function ($) {
         event.preventDefault();
     });
 
-    $(document).on('click', '.datafield_param .cancel-preview', function (event) {
+    $('.datafield_param .cancel-preview').live('click', function (event) {
         $(this).prevAll().show();
         $(this).siblings('.preview').add(this).remove();
 

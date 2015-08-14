@@ -3268,7 +3268,7 @@ elseif ($level == 4) {
     <div id="assi_room_request_with_js" style="margin-bottom:10px;"></div>
     <script>
         jQuery('#assi_room_request_with_js').load('<?=URLHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
-        jQuery(document).on('dialogclose', '#RoomRequestDialogbox', function () {
+        jQuery('#RoomRequestDialogbox').live('dialogclose', function () {
                 jQuery('#assi_room_request_with_js').load('<?=URLHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
             }
         );

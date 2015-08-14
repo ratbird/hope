@@ -4,7 +4,7 @@
 (function ($, STUDIP) {
 
     // Cron task: Change tbody class according to inherent input setting
-    $(document).on('change', '.cron-task input', function () {
+    $('.cron-task input').live('change', function () {
         $(this).closest('tbody').addClass('selected')
                .siblings().removeClass('selected');
     });
@@ -15,7 +15,7 @@
     // will be replaced with the row with the same id from the response.
     // Thus, in your controller you only have to execute the appropriate
     // action and redraw the page with the new state.
-    $(document).on('click', 'a[data-behaviour~="ajax-toggle"]', function (event) {
+    $('a[data-behaviour~="ajax-toggle"]').live('click', function (event) {
         var $that = $(this),
             href  = $that.attr('href'),
             id    = $that.closest('tr').attr('id');
@@ -33,7 +33,7 @@
     // Display the following element and focus it's inherent input element
     // if no value from a select element has been chosen. Hide the following
     // element if a value has been chosen.
-    $(document).on('change', '.cron-item select', function () {
+    $('.cron-item select').live('change', function () {
         var state = $(this).val().length > 0,
             $next = $(this).next();
 
@@ -46,7 +46,7 @@
 
     // Miscellaneous filters:
     // Submit surrounding form on change
-    $(document).on('change', '.cronjob-filters select', function () {
+    $('.cronjob-filters select').live('change', function () {
         $(this).closest('form').submit();
     });
 
@@ -59,5 +59,6 @@
         $('.cron-item select').change();
         $('.cronjobs tfoot select').change();
     });
+
 
 }(jQuery, STUDIP));

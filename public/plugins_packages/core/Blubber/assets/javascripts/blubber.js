@@ -570,7 +570,7 @@ STUDIP.Blubber = {
 jQuery(STUDIP.Blubber.updateTimestamps);
 
 //initialize submit by pressing enter
-jQuery(document).on("keydown", "#threadwriter > textarea", function (event) {
+jQuery("#threadwriter > textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
             STUDIP.Blubber.newPosting();
@@ -586,21 +586,21 @@ jQuery(document).on("keydown", "#threadwriter > textarea", function (event) {
     }
 });
 //initialize submit by pressing enter
-jQuery(document).on("keydown", "#threadwriter.globalstream textarea", function (event) {
+jQuery("#threadwriter.globalstream textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         STUDIP.Blubber.prepareSubmitGlobalPosting();
         event.preventDefault();
     }
 });
 //initialize submit by pressing enter
-jQuery(document).on("keydown", "#blubber_threads textarea.corrector", function (event) {
+jQuery("#blubber_threads textarea.corrector").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         STUDIP.Blubber.submitEditedPosting(this);
         event.preventDefault();
     }
 });
 //initialize submit by pressing enter
-jQuery(document).on("keydown", ".writer > textarea", function (event) {
+jQuery(".writer > textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
             STUDIP.Blubber.write(this);
@@ -616,7 +616,7 @@ jQuery(document).on("keydown", ".writer > textarea", function (event) {
     }
 });
 //initialize click-events on "show more" links to show more comments
-jQuery(document).on("click", "#blubber_threads > li > ul.comments > li.more", function () {
+jQuery("#blubber_threads > li > ul.comments > li.more").live("click", function () {
     var thread_id = jQuery(this).closest("li[id]").attr("id").split("_").pop(),
         li_more = this;
     jQuery(this).wrapInner('<span/>').find('span').showAjaxNotification()
@@ -636,11 +636,11 @@ jQuery(document).on("click", "#blubber_threads > li > ul.comments > li.more", fu
         }
     });
 });
-jQuery(document).on("click", "#blubber_threads a.edit", STUDIP.Blubber.startEditingComment);
-jQuery(document).on("blur", "#blubber_threads textarea.corrector", function () {STUDIP.Blubber.submitEditedPosting(this);});
-jQuery(document).on("click", "#blubber_threads .reshare_blubber, .blubber_contacts .want_to_share", STUDIP.Blubber.reshareBlubber);
-jQuery(document).on("click", "#blubber_threads .thread.public .contextinfo, #blubber_threads .thread.public .open_reshare_context", STUDIP.Blubber.showPublicPanel);
-jQuery(document).on("click", "#blubber_threads .thread.private .contextinfo", STUDIP.Blubber.showPrivatePanel);
+jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
+jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
+jQuery("#blubber_threads .reshare_blubber, .blubber_contacts .want_to_share").live("click", STUDIP.Blubber.reshareBlubber);
+jQuery("#blubber_threads .thread.public .contextinfo, #blubber_threads .thread.public .open_reshare_context").live("click", STUDIP.Blubber.showPublicPanel);
+jQuery("#blubber_threads .thread.private .contextinfo").live("click", STUDIP.Blubber.showPrivatePanel);
 
 //initialize autoresizer, file-dropper and events
 jQuery(function () {

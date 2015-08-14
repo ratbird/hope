@@ -120,7 +120,7 @@
     // Attach global event handlers:
 
     // Navigation: Load any url in this very same dialog
-    $(document).on('click', '.smiley-picker .navigation a', function () {
+    $('.smiley-picker .navigation a').live('click', function () {
         loadURL(this.href);
         return false;
     });
@@ -128,7 +128,7 @@
     // Smiley:
     // Execute select handler with selected smiley's code
     // (typically adds the code to a certain textarea)
-    $(document).on('click', '.smiley-picker .smiley', function () {
+    $('.smiley-picker .smiley').live('click', function () {
         select_handler($(this).data().code);
         picker_element.dialog('close');
         return false;

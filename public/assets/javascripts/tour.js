@@ -1,4 +1,4 @@
-/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+ /*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
 /*global window, $, jQuery, _ */
 
 /* ------------------------------------------------------------------------
@@ -62,7 +62,7 @@ STUDIP.Tour = {
                         jQuery('#tour_prev').hide();
                         jQuery('#tour_controls').show();
                         jQuery('#tour_reset').show();
-                        jQuery('#tour_reset').on('click', function () {
+                        jQuery('#tour_reset').live('click', function () {
                             jQuery.ajax({
                                 'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/1/on'
                             });
@@ -72,7 +72,7 @@ STUDIP.Tour = {
                             STUDIP.Tour.next();
                         });
                         jQuery('#tour_proceed').show();
-                        jQuery('#tour_proceed').on('click', function () {
+                        jQuery('#tour_proceed').live('click', function () {
                             if (STUDIP.Tour.options.last_run_href) {
                                 jQuery.ajax({
                                     'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + STUDIP.Tour.options.last_run_step + '/on',
@@ -372,10 +372,10 @@ STUDIP.Tour = {
                             jQuery('.tour_focus_box').removeClass('tour_focus_box');
                         }
                         jQuery('body').prepend(html);
-                        jQuery('.modaloverlay form').on('click', function (event) {
+                        jQuery('.modaloverlay form').live('click', function (event) {
                             jQuery(this).data('clicked', jQuery(event.target));
                         });
-                        jQuery('.modaloverlay form').on('submit', function (event) {
+                        jQuery('.modaloverlay form').live('submit', function (event) {
                             event.preventDefault();
                             STUDIP.Tour.deleteStep(jQuery('.modaloverlay form input[name=tour_id]').val(), jQuery('.modaloverlay form input[name=step_nr]').val(), jQuery(this).data('clicked').attr('name'));
                             jQuery('.modaloverlay').remove();
@@ -459,12 +459,12 @@ STUDIP.Tour = {
             jQuery('#tour_delete_step').hide();
         }
 
-        jQuery('#tour_delete_step').on('click', function () {
+        jQuery('#tour_delete_step').live('click', function () {
             STUDIP.Tour.deleteStep(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step));
             event.preventDefault();
         });
 
-        jQuery('#tour_no_css').on('click', function () {
+        jQuery('#tour_no_css').live('click', function () {
             jQuery('#tour_selector_overlay').hide();
             if (jQuery('#tour_overlay').length) {
                 jQuery('#tour_overlay').hide();
@@ -473,7 +473,7 @@ STUDIP.Tour = {
             STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
         });
 
-        jQuery('#tour_select_css').on('click', function () {
+        jQuery('#tour_select_css').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
@@ -484,7 +484,7 @@ STUDIP.Tour = {
             STUDIP.Tour.options.edit_mode = 'select_css';
         });
 
-        jQuery('#tour_select_action_next').on('click', function () {
+        jQuery('#tour_select_action_next').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
@@ -495,7 +495,7 @@ STUDIP.Tour = {
             STUDIP.Tour.options.edit_mode = 'select_action_next';
         });
 
-        jQuery('#tour_select_action_prev').on('click', function () {
+        jQuery('#tour_select_action_prev').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
@@ -509,7 +509,7 @@ STUDIP.Tour = {
         if (!jQuery('#tour_selector_overlay').length) {
             jQuery('body').prepend('<div id="tour_selector_overlay" style="z-index:20000;"></div>');
         }
-        jQuery('body').on('click', function (event) {
+        jQuery('body').live('click', function (event) {
             var clicked_element;
             if (STUDIP.Tour.options.edit_mode === 'select_css') {
                 clicked_element = STUDIP.Tour.getSelector(event.target);
@@ -567,24 +567,23 @@ jQuery(function () {
             STUDIP.Tour.destroy();
         }
     });
-
-    jQuery(document).on('keyright', function (event) {
+    jQuery().live('keyright', function (event) {
         STUDIP.Tour.prev();
     });
-    jQuery(document).on('click', '.tour_link', function (event) {
+    jQuery('.tour_link').live('click', function (event) {
         event.preventDefault();
         STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     });
 
-    jQuery(document).on('click', '#tour_next', function () {
+    jQuery('#tour_next').live('click', function () {
         STUDIP.Tour.next();
     });
 
-    jQuery(document).on('click', '#tour_prev', function () {
+    jQuery('#tour_prev').live('click', function () {
         STUDIP.Tour.prev();
     });
 
-    jQuery(document).on('click', '#tour_end', function () {
+    jQuery('#tour_end').live('click', function () {
         STUDIP.Tour.destroy();
     });
 });

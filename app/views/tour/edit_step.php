@@ -102,7 +102,7 @@
 </form>
 </div>
 <script>
-    jQuery(document).on('change', 'input[name=step_css]', function (event) {
+    jQuery('input[name=step_css]').live('change', function (event) {
         if (jQuery('input[name=step_css]').val())
             jQuery('.tour_step_orientation').show();
         else

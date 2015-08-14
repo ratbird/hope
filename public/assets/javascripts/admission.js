@@ -302,7 +302,7 @@ STUDIP.Admission = {
 
 };
 jQuery(document).ready(function ($) {
-    $(document).on('change', 'tr.course input', function (i) {
+    $('tr.course input').live('change', function (i) {
         STUDIP.Admission.toggleNotSavedAlert();
     });
 });

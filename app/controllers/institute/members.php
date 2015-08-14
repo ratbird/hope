@@ -31,7 +31,6 @@ class Institute_MembersController extends AuthenticatedController
 
         $this->admin_view = $GLOBALS['perm']->have_perm('admin') && Request::option('admin_view') !== null;
 
-        PageLayout::addStylesheet('multi-select.css');
         PageLayout::addScript('jquery/jquery.multi-select.js');
         PageLayout::addScript('multi_person_search.js');
     }

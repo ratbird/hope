@@ -463,8 +463,9 @@
     // Actual dialog handler
     function dialogHandler(event) {
         if (!event.isDefaultPrevented()) {
-            var options = $(event.target).data().dialog;
-            if (STUDIP.Dialog.fromElement(event.target, parseOptions(options))) {
+            var target = $(event.target).closest('[data-dialog]'),
+                options = target.data().dialog;
+            if (STUDIP.Dialog.fromElement(target, parseOptions(options))) {
                 event.preventDefault();
             }
         }

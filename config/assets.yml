@@ -12,7 +12,7 @@ javascripts:
     - javascripts/studip-jquery.multi-select.tweaks.js
 
   modernizr: &modernizr
-    - javascripts/vendor/modernizr.js
+    - javascripts/vendor/modernizr-2.8.3.js
 
   highlight: &highlight
     - javascripts/vendor/highlight.pack.js

@@ -24,11 +24,13 @@ STUDIP.MultiPersonSearch = {
 
     dialog: function (name) {
 
+        var count_template = _.template('Sie haben <%= count %> Personen ausgewählt'.toLocaleString());
+
         this.name = name;
 
         $('#' + name + '_selectbox').multiSelect({
             selectableHeader: "<div>" + "Suchergebnisse".toLocaleString() + "</div>",
-            selectionHeader: "<div>" + _.template('Sie haben <%= count %> Personen ausgewählt'.toLocaleString(), {count: "<span id='" + this.name + "_count'>0</span>"}) + ".</div>",
+            selectionHeader: "<div>" + count_template({count: "<span id='" + this.name + "_count'>0</span>"}) + ".</div>",
             selectableFooter: '<a href="javascript:STUDIP.MultiPersonSearch.selectAll();">' + 'Alle hinzufügen'.toLocaleString() + '</a>',
             selectionFooter: '<a href="javascript:STUDIP.MultiPersonSearch.unselectAll();">' + 'Alle entfernen'.toLocaleString() + '</a>'
         });
@@ -76,9 +78,9 @@ STUDIP.MultiPersonSearch = {
     },
 
     search: function () {
-        var searchterm = $("#" + this.name + "_searchinput").val();
-
-        var name = this.name;
+        var searchterm = $("#" + this.name + "_searchinput").val(),
+            name = this.name,
+            not_found_template = _.template('Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.'.toLocaleString());
         $.getJSON(  STUDIP.URLHelper.getURL("dispatch.php/multipersonsearch/ajax_search/" + this.name + "?s="  + searchterm), function( data ) {
             STUDIP.MultiPersonSearch.removeAllNotSelected();
             var searchcount = 0;
@@ -88,7 +90,7 @@ STUDIP.MultiPersonSearch = {
             STUDIP.MultiPersonSearch.refresh();
 
             if (searchcount == 0) {
-                STUDIP.MultiPersonSearch.append('--', _.template('Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.'.toLocaleString(), {needle: searchterm}), true);
+                STUDIP.MultiPersonSearch.append('--', not_found_template({needle: searchterm}), true);
                 STUDIP.MultiPersonSearch.refresh();
             }
         });

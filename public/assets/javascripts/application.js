@@ -351,7 +351,7 @@ jQuery(document).ready(function ($) {
 jQuery(document).on('ready', function () {
     var page_margin    = ($('#layout_page').outerWidth(true) - $('#layout_page').width()) / 2,
         content_margin = $('#layout_content').outerWidth(true) - $('#layout_content').innerWidth(),
-        sidebar_width  = $('#layout_sidebar').outerWidth(true);
+        sidebar_width  = $('#layout-sidebar').outerWidth(true);
 
     function fixScrolling () {
         $('#layout_page').removeClass('oversized').css({
@@ -372,7 +372,7 @@ jQuery(document).on('ready', function () {
             });
 
             $('#layout_page').addClass('oversized').css({
-                minWidth: max_width + content_margin + sidebar_width,
+                minWidth: sidebar_width + content_margin + max_width + page_margin,
                 marginRight: 0,
                 paddingRight: page_margin
             });

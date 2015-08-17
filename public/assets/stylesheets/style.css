@@ -3929,9 +3929,6 @@ input.quicksearchbox {
   height: 14px;
   line-height: 1em;
 }
-.quicksearch_frame {
-  display: inline-block;
-}
 .quicksearch_frame input[type="text"] {
   box-sizing: border-box;
   border-width: 1px 30px 1px 1px;
@@ -6515,6 +6512,9 @@ ol ol {
 }
 .list-csv > li:last-child:after {
   content: "";
+}
+dl dt {
+  font-weight: bold;
 }
 .plus .element_header {
   display: inline-block;

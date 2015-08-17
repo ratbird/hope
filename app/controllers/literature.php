@@ -36,7 +36,6 @@ class LiteratureController extends AuthenticatedController
             throw new AccessDeniedException(_('Die Literaturverwaltung ist nicht aktiviert.'));
         }
 
-        $this->attributes['text'] = array('style' => 'width:98%');
         $this->attributes['textarea'] = array('style' => 'width:98%','rows'=>2);
         $this->attributes['select'] = array();
         $this->attributes['date'] = array();

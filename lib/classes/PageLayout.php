@@ -579,6 +579,23 @@ class PageLayout
             }
         }
 
-        return array_merge($css, $javascripts);
+        $files = array_merge($css, $javascripts);
+
+        // When not in development mode, add the current version number to
+        // the assets file, so browser caches will be informed about an
+        // update
+        if (Studip\ENV !== 'development') {
+            $v = preg_replace('/^(\d+(?:\.\d+)*).*$/', '$1', $GLOBALS['SOFTWARE_VERSION']);
+            $files = array_map(function ($file) use ($v) {
+                if ($file['name'] === 'link') {
+                    $file['attributes']['href'] = URLHelper::getURL($file['attributes']['href'], compact('v'), true);
+                } else if ($file['name'] === 'script') {
+                    $file['attributes']['src'] = URLHelper::getURL($file['attributes']['src'], compact('v'), true);
+                }
+                return $file;
+            }, $files);
+        }
+
+        return $files;
     }
 }

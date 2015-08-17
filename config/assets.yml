@@ -43,7 +43,7 @@ javascripts:
 
   statusgroups: &statusgroups
     - javascripts/app_admin_statusgroups.js
-    - javascripts/jquery/jquery.nestable.js
+    - javascripts/jquery/jquery.nestable-4f93032cfa.js
 
   base:
     - *jquery

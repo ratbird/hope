@@ -177,7 +177,7 @@ jQuery(document).on('keyup', 'input.allow-only-numbers', function () {
  * ------------------------------------------------------------------------ */
 jQuery.ui.accordion.prototype.options.icons = {
     header: 'arrow_right',
-    headerSelected: 'arrow_down'
+    activeHeader : 'arrow_down'
 };
 
 

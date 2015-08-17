@@ -364,6 +364,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
             <?= $flash['open'] ? "active: '#".$flash['open']."',\n" : "" ?>
             collapsible: true,
             autoHeight: false,
+            heightStyle: "content",
             change: function (event, ui) {
                 jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
             }

@@ -29,6 +29,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->user_id = $GLOBALS['user']->user_id;
 
         // Set pagelayout
+        PageLayout::addSqueezePackage('statusgroups');
         PageLayout::setHelpKeyword("Basis.Allgemeines");
         PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
         Navigation::activateItem('/admin/institute/groups');
@@ -42,7 +43,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->group = new Statusgruppen(Request::get('group'));
         } else {
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-            PageLayout::addScript(Assets::javascript_path('app_admin_statusgroups.js'));
         }
     }
 
@@ -53,8 +53,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->checkForChangeRequests();
 
         // Do some basic layouting
-        PageLayout::addStylesheet('jquery-nestable.css');
-        PageLayout::addScript('jquery/jquery.nestable.js');
         $this->setAjaxPaths();
         // Setup sidebar.
         $sidebar = Sidebar::get();

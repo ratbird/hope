@@ -41,6 +41,10 @@ javascripts:
     - javascripts/jquery/jquery.sticky-kit.1.1.2.js
     - javascripts/sidebar.js
 
+  statusgroups: &statusgroups
+    - javascripts/app_admin_statusgroups.js
+    - javascripts/jquery/jquery.nestable.js
+
   base:
     - *jquery
     - *modernizr
@@ -138,5 +142,7 @@ css:
   wysiwyg:
     wysiwyg.css: screen, print
 
+  statusgroups:
+    jquery-nestable.css: screen
   lightbox:
     lightbox.css: screen

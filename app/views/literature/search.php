@@ -166,10 +166,6 @@
         <? endif ?>
     </p>
 <? endif ?>
-<? if (!$num_hits) : ?>
-    <?= MessageBox::info(_('Es liegt kein Suchergebnis vor.')) ?>
-<? endif ?>
-
 
 <?php
 $sidebar = Sidebar::get();

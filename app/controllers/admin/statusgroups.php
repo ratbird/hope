@@ -53,7 +53,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->checkForChangeRequests();
 
         // Do some basic layouting
-        PageLayout::addScript('jquery/jquery.tablednd.js');
         PageLayout::addStylesheet('jquery-nestable.css');
         PageLayout::addScript('jquery/jquery.nestable.js');
         $this->setAjaxPaths();

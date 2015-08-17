@@ -1,4 +1,4 @@
-
+/* TODO This certainly needs to be cleaned up */
 .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; }
 
 .dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
@@ -20,9 +20,9 @@
 }
 .dd-handle:hover { color: #2ea8e5; background: #fff; }
 
-.dd-item > button { display: none; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
-.dd-item > button:before { content: '+'; display: none; position: absolute; width: 100%; text-align: center; text-indent: 0; }
-.dd-item > button[data-action="collapse"]:before { display: none; content: '-'; }
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
+.dd-item > button[data-action="collapse"]:before { display: block; content: '-'; }
 
 .dd-placeholder,
 .dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
@@ -43,34 +43,3 @@
     -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
     box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
 }
-
-/**
- * Nestable Extras
- */
-
-.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
-
-#nestable-menu { padding: 0; margin: 20px 0; }
-
-#nestable-output,
-#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
-
-#nestable2 .dd-handle {
-    color: #fff;
-    border: 1px solid #999;
-    background: #bbb;
-    background: -webkit-linear-gradient(top, #bbb 0%, #999 100%);
-    background:    -moz-linear-gradient(top, #bbb 0%, #999 100%);
-    background:         linear-gradient(top, #bbb 0%, #999 100%);
-}
-#nestable2 .dd-handle:hover { background: #bbb; }
-#nestable2 .dd-item > button:before { color: #fff; }
-
-@media only screen and (min-width: 700px) { 
-
-    .dd { float: left; width: 100%; }
-    .dd + .dd { margin-left: 2%; }
-
-}
-
-.dd-hover > .dd-handle { background: #2ea8e5 !important; }

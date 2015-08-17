@@ -1,111 +1,60 @@
-/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
-/*global window, $, jQuery, _ */
+/*jslint browser: true, unparam: true */
+/*global jQuery, STUDIP */
 
-$(document).ready(function () {
+(function ($, STUDIP) {
+    'use strict';
 
-    STUDIP.modalDialog.apply();
-    STUDIP.statusgroups.apply();
-});
+    var ajax_endpoint = false;
 
-STUDIP.statusgroups = {
-    apply: function () {
-        $('.moveable tbody').sortable({
-            axis: "y",
-            handle: ".dragHandle",
-            helper: function (e, ui) {
-                ui.children().each(function () {
-                    jQuery(this).width(jQuery(this).width());
-                });
-                return ui;
-            },
-            start: function (event, ui) {
-                $(this).closest('table').addClass('nohover');
-            },
-            stop: function (event, ui) {
-                $(this).closest('table').removeClass('nohover');
-                var group = $(this).closest('table').attr('id');
-                var user = ui.item.attr('data-userid');
-                var position = $(ui.item).prevAll().length;
-                $.ajax({
-                    type: 'POST',
-                    url: $('#ajax_move').val(),
-                    dataType: 'html',
-                    data: {group: group, user: user, pos: position},
-                    async: false
-                }).done(function (data) {
-                    $('#' + group + ' tbody').html(data);
-                    STUDIP.statusgroups.apply();
-                    STUDIP.modalDialog.apply();
-                });
-            }
-        });
-    }
-};
-
-STUDIP.modalDialog = {
-    apply: function () {
-        $('a.modal').click(function () {
-            var dialog = $("<div></div>");
-            dialog.load($(this).attr('href'), function () {
-                STUDIP.modalDialog.load($(this));
-            });
-            $('<img/>', {
-                src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
-            }).appendTo(dialog);
-            dialog.dialog({
-                autoOpen: true,
-                autoResize: true,
-                resizable: false,
-                position: 'center',
-                close: function () {
-                    $(this).remove();
+    STUDIP.statusgroups = {
+        apply: function () {
+            $('.movable tbody').sortable({
+                axis: 'y',
+                handle: '.dragHandle',
+                helper: function (event, ui) {
+                    ui.children().each(function () {
+                        $(this).width($(this).width());
+                    });
+                    return ui;
                 },
-                width: 'auto',
-                title: $(this).attr('title'),
-                modal: true
-            });
-            return false;
-        });
-    },
-    load: function (dialog) {
-        dialog.find('.abort').click(function (e) {
-            e.preventDefault();
-            dialog.remove();
-        });
-        dialog.find('.stay_on_dialog').click(function (e) {
-            $(this).attr('disabled', 'true');
-            e.preventDefault();
-            var button = jQuery(this).attr('name');
-            var form = $(this).closest('form');
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: form.serialize() + '&' + button + '=1', // serializes the form's elements.
-                success: function (data)
-                {
-                    dialog.html(data); // show response from the php script.
-                    STUDIP.modalDialog.load(dialog);
+                start: function (event, ui) {
+                    $(this).closest('table').addClass('nohover');
+                },
+                stop: function (event, ui) {
+                    var table    = $(this).closest('table'),
+                        group    = table.attr('id'),
+                        user     = ui.item.attr('data-userid'),
+                        position = $(ui.item).prevAll().length;
+
+                    table.removeClass('nohover');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_endpoint,
+                        dataType: 'html',
+                        data: {group: group, user: user, pos: position},
+                        async: false
+                    }).done(function (data) {
+                        $('tbody', table).html(data);
+                        STUDIP.statusgroups.apply();
+                    });
                 }
             });
+        }
+    };
+
+    $(document).ready(function () {
+        ajax_endpoint = $('meta[name="statusgroups-ajax-movable-endpoint"]').attr('content');
+        STUDIP.statusgroups.apply();
+    }).on('ready dialog-open dialog-update', function () {
+        $('.nestable').nestable({
+            rootClass: 'nestable'
         });
-        dialog.dialog({position: 'center'});
-    }
-};
+    }).on('submit', '#order_form', function () {
+        var structure = $('.nestable').nestable('serialize'),
+            json_data = JSON.stringify(structure);
+        $('#ordering').val(json_data);
+    });
 
-STUDIP.statusgroups.addMembers = {
-    init: function () {
-        $('#search_persons_select_all').show();
-        $('#search_persons_deselect_all').show();
-    },
-    // select all persons from selectable box
-    selectAll: function () {
-        $('#search_persons_selectable option').prop('selected', 'selected');
-        $('#search_persons_add').click();
-    },
+}(jQuery, STUDIP));
 
-    // deselect all persons from selected box
-    deselectAll: function () {
-        $('#search_persons_selected option').prop('selected', 'selected');
-        $('#search_persons_remove').click();
-    }
-};

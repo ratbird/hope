@@ -39,9 +39,10 @@ class Statusgruppen extends SimpleORMap
     {
         $config['db_table'] = 'statusgruppen';
         $config['has_many']['members'] = array(
-            'class_name' => 'StatusgruppeUser',
-            'on_delete' => 'delete',
+            'class_name'        => 'StatusgruppeUser',
             'assoc_foreign_key' => 'statusgruppe_id',
+            'on_delete'         => 'delete',
+            'order_by'          => 'ORDER BY position ASC',
         );
         $config['belongs_to']['parent'] = array(
             'class_name' => 'Statusgruppen',
@@ -51,16 +52,19 @@ class Statusgruppen extends SimpleORMap
         parent::configure($config);
     }
 
-    public function getChildren() {
+    public function getChildren()
+    {
         $result = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($this->id));
         return $result ? : array();
     }
 
-    public function getDatafields() {
+    public function getDatafields() 
+    {
         return DataFieldEntry::getDataFieldEntries(array($this->range_id, $this->statusgruppe_id), 'roleinstdata');
     }
 
-    public function setDatafields($data) {
+    public function setDatafields($data)
+    {
         foreach ($this->getDatafields() as $field) {
             $field->setValueFromSubmit($data[$field->getId()]);
             $field->store();
@@ -73,7 +77,8 @@ class Statusgruppen extends SimpleORMap
      * @param string The course id
      * @return array Statusgroups
      */
-    static public function findBySeminar_id($course_id) {
+    static public function findBySeminar_id($course_id)
+    {
         return self::findBySQL("range_id = ?", array($course_id));
     }
 
@@ -115,7 +120,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $pre Preface of the outputted string (used for recursion)
      * @return array Stringarray of full gendered paths
      */
-    public function getFullGenderedPaths($user_id, $seperator = " > ", $pre = "") {
+    public function getFullGenderedPaths($user_id, $seperator = " > ", $pre = "")
+    {
         $result = array();
         $name = $pre ? $pre . $seperator . $this->getGenderedName($user_id) : $this->getGenderedName($user_id);
         if ($this->isMember($user_id)) {
@@ -135,7 +141,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user_id The user_id
      * @return string The gendered name
      */
-    public function getGenderedName($user_id) {
+    public function getGenderedName($user_id)
+    {
 
 // We have to have at least 1 name gendered
         if ($this->name_m || $this->name_w) {
@@ -158,7 +165,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user The user id
      * @return array All roles
      */
-    public static function getUserRoles($context, $user) {
+    public static function getUserRoles($context, $user)
+    {
         $roles = array();
         $groups = self::findByRange_id($context);
         foreach ($groups as $group) {
@@ -173,7 +181,8 @@ class Statusgruppen extends SimpleORMap
      * @return boolean <b>true</> if the statusgroup has a folder, else 
      * <b>false</b>
      */
-    public function hasFolder() {
+    public function hasFolder()
+    {
         if (!$this->folderid) {
             $query = "SELECT folder_id FROM folder WHERE range_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -189,7 +198,8 @@ class Statusgruppen extends SimpleORMap
      * @param boolean $set <b>true</b> Create a folder
      * <b>false</b> Delete the folder
      */
-    public function updateFolder($set) {
+    public function updateFolder($set)
+    {
         if ($this->hasFolder() && !$set) {
             delete_folder($this->hasFolder(), true);
         }
@@ -204,7 +214,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user_id The user id
      * @return boolean <b>true</b> if user is a member of this group
      */
-    public function isMember($user_id = null) {
+    public function isMember($user_id = null)
+    {
         if ($user_id == null) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -221,14 +232,16 @@ class Statusgruppen extends SimpleORMap
      * 
      * @return string displaystring
      */
-    public function getPlaces() {
+    public function getPlaces()
+    {
         return $this->size ? "( " . min(count($this->members), $this->size) . " / {$this->size} )" : "";
     }
 
     /**
      * Remove all users of this group
      */
-    public function removeAllUsers() {
+    public function removeAllUsers()
+    {
         StatusgruppeUser::deleteBySQL('statusgruppe_id = ?', array($this->id));
     }
 
@@ -237,7 +250,8 @@ class Statusgruppen extends SimpleORMap
      * 
      * @param string $user_id The user id
      */
-    public function removeUser($user_id) {
+    public function removeUser($user_id)
+    {
         // For performance issues we do this manually
         $db = DBManager::get();
         // Get user's position for later resorting
@@ -265,7 +279,8 @@ class Statusgruppen extends SimpleORMap
      * this group
      * @return boolean <b>true</b> if user was added
      */
-    public function addUser($user_id, $check = false) {
+    public function addUser($user_id, $check = false)
+    {
         if ($check && !$this->userMayJoin($user_id)) {
             return false;
         }
@@ -280,7 +295,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user_id The user id
      * @return boolean <b>true</b> if user is allowed to join
      */
-    public function userMayJoin($user_id) {
+    public function userMayJoin($user_id)
+    {
         return !$this->isMember($user_id) && $this->hasSpace() && ($this->selfAssign != 2 || !$this->userHasExclusiveGroup($user_id));
     }
 
@@ -290,7 +306,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user_id The user id
      * @return boolean <b>true</b> if user has already an exclusive group
      */
-    public function userHasExclusiveGroup($user_id) {
+    public function userHasExclusiveGroup($user_id)
+    {
         $sql = "SELECT 1 FROM statusgruppe_user JOIN statusgruppen USING (statusgruppe_id) WHERE range_id = ? AND user_id = ?";
         $stmt = DBManager::get()->prepare($sql);
         $stmt->execute(array($this->range_id, $user_id));
@@ -300,7 +317,8 @@ class Statusgruppen extends SimpleORMap
     /**
      * Sorts the member of a group alphabetic
      */
-    public function sortMembersAlphabetic() {
+    public function sortMembersAlphabetic()
+    {
         foreach ($this->members as $member) {
             $assoc[$member->id] = $member->user->nachname."_".$member->user->vorname;
         }
@@ -317,7 +335,8 @@ class Statusgruppen extends SimpleORMap
      * 
      * @return <b>true</b> if there is free space
      */
-    public function hasSpace() {
+    public function hasSpace()
+    {
         return $this->selfassign && ($this->size || count($this->members) < $this->size);
     }
 
@@ -327,7 +346,8 @@ class Statusgruppen extends SimpleORMap
      * @param string $user 
      * @param type $pos
      */
-    public function moveUser($user_id, $pos) {
+    public function moveUser($user_id, $pos)
+    {
         $statususer = new StatusgruppeUser(array($this->id, $user_id));
         if ($pos > $statususer->position) {
             $sql = "UPDATE statusgruppe_user SET position = position - 1 WHERE statusgruppe_id = ? AND position > ? AND position <= ?";
@@ -343,9 +363,10 @@ class Statusgruppen extends SimpleORMap
         $stmt2->execute(array($pos, $this->id, $statususer->user_id));
     }
 
-    public function store() {
+    public function store()
+    {
         if ($this->isNew()) {
-            $sql = "SELECT MAX(position)+1 FROM statusgruppen WHERE range_id = ?";
+            $sql = "SELECT MAX(position) + 1 FROM statusgruppen WHERE range_id = ?";
             $stmt = DBManager::get()->prepare($sql);
             $stmt->execute(array($this->range_id));
             $this->position = $stmt->fetchColumn();

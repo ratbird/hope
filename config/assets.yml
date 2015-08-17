@@ -143,6 +143,6 @@ css:
     wysiwyg.css: screen, print
 
   statusgroups:
-    jquery-nestable.css: screen
+    statusgroups.css: screen
   lightbox:
     lightbox.css: screen

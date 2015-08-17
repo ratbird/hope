@@ -68,7 +68,8 @@ class MultipersonsearchController extends AuthenticatedController {
     /**
      * Action which shows a js-enabled dialog form.
      */
-    public function js_form_action($name) {
+    public function js_form_action($name)
+    {
         $mp = MultiPersonSearch::load($name);
         $this->name = $name;
         $this->description = $mp->getDescription();

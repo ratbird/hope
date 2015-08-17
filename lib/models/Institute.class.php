@@ -189,6 +189,13 @@ class Institute extends SimpleORMap
             'on_delete'         => 'delete',
             'on_store'          => 'store',
         );
+        $config['has_many']['status_groups'] = array(
+            'class_name'        => 'Statusgruppen',
+            'assoc_foreign_key' => 'range_id',
+            'on_delete'         => 'delete',
+            'on_store'          => 'store',
+            'order_by'          => 'ORDER BY position ASC',
+        );
         parent::configure($config);
     }
 

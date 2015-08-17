@@ -2,6 +2,8 @@
     <?= CSRFProtection::tokenTag() ?>
     <?= sprintf(_('%s wirklich aus %s austragen?'), $user->getFullname(), $group->name) ?>
     <br>
-    <?= Studip\Button::create(_('Entfernen'), 'confirm') ?>
-    <?= Studip\LinkButton::create(_('Abbrechen'), URLHelper::getLink('dispatch.php/admin/statusgroups/index'), array('class' => 'abort')) ?>
+    <div data-dialog-button>
+        <?= Studip\Button::createAccept(_('Entfernen'), 'confirm') ?>
+        <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/statusgroups/index')) ?>
+    </div>
 </form>

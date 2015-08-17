@@ -45,7 +45,7 @@ javascripts:
     - *jquery
     - *modernizr
     - *highlight
-    - javascripts/lodash.underscore-3.10.1.js
+    - javascripts/vendor/lodash.underscore-3.10.1.js
     - javascripts/l10n.js
     - javascripts/init.js
     - javascripts/ajax_notifications.js

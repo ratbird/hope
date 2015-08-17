@@ -61,12 +61,12 @@ STUDIP.MultiPersonSearch = {
         $('#' + this.name + '_quickfilter_' + title + ' option').each(function() {
            count += STUDIP.MultiPersonSearch.append($(this).val(), $(this).text(), STUDIP.MultiPersonSearch.isAlreadyMember($(this).val()));
         });
-        STUDIP.MultiPersonSearch.refresh();
 
         if (count == 0) {
-            STUDIP.MultiPersonSearch.append('--', ' Dieser Filter enthält keine Personen.'.toLocaleString(), true);
-            STUDIP.MultiPersonSearch.refresh();
+            STUDIP.MultiPersonSearch.append('--', ' Dieser Filter enthält keine (neuen) Personen.'.toLocaleString(), true);
         }
+
+        STUDIP.MultiPersonSearch.refresh();
     },
 
     isAlreadyMember: function(user_id) {
@@ -98,25 +98,23 @@ STUDIP.MultiPersonSearch = {
     },
 
     selectAll: function () {
-       $('#' + this.name + '_selectbox option').prop('selected', true);
-       $('#' + this.name + '_selectbox').multiSelect('refresh');
-       STUDIP.MultiPersonSearch.count();
+       $('#' + this.name + '_selectbox').multiSelect('select_all');
+       this.count();
     },
 
     unselectAll: function () {
-        $('#' + this.name + '_selectbox option').prop('selected', false);
-        $('#' + this.name + '_selectbox').multiSelect('refresh');
-        STUDIP.MultiPersonSearch.count();
+        $('#' + this.name + '_selectbox').multiSelect('deselect_all');
+        this.count();
     },
 
     removeAll: function () {
         $('#' + this.name + '_selectbox option').remove();
-        $('#' + this.name + '_selectbox').multiSelect('refresh');
+        this.refresh();
     },
 
     removeAllNotSelected: function () {
         $('#' + this.name + '_selectbox option:not(:selected)').remove();
-        $('#' + this.name + '_selectbox').multiSelect('refresh');
+        this.refresh();
     },
 
     resetSearch: function() {
@@ -126,13 +124,11 @@ STUDIP.MultiPersonSearch = {
 
     append: function (value, text, selected) {
         if ($('#' + this.name + '_selectbox option[value=' + value + ']').length == 0) {
-            var option;
-            if (selected) {
-                option = $('<option/>').attr('value', value).attr('disabled', true).text(_.escape(text));
-            } else {
-                option = $('<option/>').attr('value', value).text(_.escape(text));
-            }
-            $('#' + this.name + '_selectbox').append(option);
+            $('#' + this.name + '_selectbox').multiSelect('addOption', {
+                value: value,
+                text: text,
+                disabled: selected
+            });
             return 1;
         }
         return 0;

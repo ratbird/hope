@@ -29,7 +29,6 @@ class MultiPersonSearch {
     private $quickfilterIds = array();
     private $defaultSelectableUsersIDs = array();
     private $defaultSelectedUsersIDs = array();
-    public static $importsAlreadyAdded = false;
     private $searchObject = null;
     private $additionalHMTL = "";
     private $navigationItem = "";
@@ -72,7 +71,6 @@ class MultiPersonSearch {
        $this->name = $name;
        $_SESSION['multipersonsearch'][$this->name]['lastUse'] = time();
        $this->collectGarbage();
-       $this->loadAssets();
        $this->setDefaultValues();
 
     }
@@ -521,17 +519,6 @@ class MultiPersonSearch {
      */
     public function clearSession() {
         unset($_SESSION['multipersonsearch'][$this->name]);
-    }
-
-    /**
-     * imports stylesheet and javascript files, if not already done.
-     */
-    private function loadAssets() {
-         if (!self::$importsAlreadyAdded) {
-            PageLayout::addScript('jquery/jquery.multi-select.js');
-            PageLayout::addScript('multi_person_search.js');
-            self::$importsAlreadyAdded = true;
-        }
     }
 
     /**

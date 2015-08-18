@@ -64,30 +64,62 @@ class Settings_DeputiesController extends Settings_SettingsController
 
         $exclude_users = array($this->user->user_id);
         if (is_array($deputies)) {
-            $exclude_users = array_merge($exclude_users, array_map(function($d) { return $d['user_id']; }, $deputies));
+            $exclude_users = array_merge($exclude_users, array_map(function ($d) {
+                return $d['user_id'];
+            }, $deputies));
         }
 
         $this->deputies = $deputies;
 
-        $this->search   = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
-                                               'user_id', array('permission'   => getValidDeputyPerms(),
-                                                                'exclude_user' => $exclude_users));
+        $this->search = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
+            'user_id', array('permission'   => getValidDeputyPerms(),
+                             'exclude_user' => $exclude_users
+            ));
 
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(PageLayout::getTitle());
         $actions = new ActionsWidget();
         // add "add dozent" to infobox
-        $mp = MultiPersonSearch::get('add_deputy')
-            ->setLinkText(_('Neue Vertretung hinzufügen'))
+        $mp = MultiPersonSearch::get('settings_add_deputy')
+            ->setLinkText(_('Neue Standardvertretung festlegen'))
             ->setDefaultSelectedUser(array_keys($this->deputies))
-            ->setLinkIconPath("")
-            ->setTitle(_('Neue Vertretung hinzufügen'))
-            ->setExecuteURL(URLHelper::getLink('dispatch.php/settings/deputies/store'))
-            ->setNavigationItem('/settings/deputies')
+            ->setLinkIconPath('')
+            ->setTitle(_('Neue Standardvertretung festlegen'))
+            ->setExecuteURL(URLHelper::getLink('dispatch.php/settings/deputies/add_member'))
+            ->setSearchObject($this->search)
+            ->setNavigationItem('/links/settings/deputies')
             ->render();
         $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
         $actions->addElement($element);
         Sidebar::Get()->addWidget($actions);
+    }
+
+
+    public function add_member_action()
+    {
+        CSRFProtection::verifyRequest();
+
+        $mp = MultiPersonSearch::load('settings_add_deputy');
+        $msg = array();
+        foreach ($mp->getAddedUsers() as $_user_id) {
+            if (isDeputy($_user_id, $this->user->user_id)) {
+                $msg['error'][] = sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname($_user_id, 'full'));
+            } else if ($_user_id == $this->user->user_id) {
+                $msg['error'][] = _('Sie können sich nicht als Ihre eigene Vertretung eintragen!');
+            } else if (addDeputy($_user_id, $this->user->user_id)) {
+                $msg['success'][] = sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_user_id, 'full'));
+            } else {
+                $msg['error'][] = _('Fehler beim Eintragen der Vertretung!');
+            }
+        }
+        // only show an error messagebox once.
+        if (!empty($msg['error'])) {
+            PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.'), $msg['error']));
+        } else {
+            PageLayout::postMessage(MessageBox::success(_('Die gewünschten Personen wurden als Ihre Vertretung eingetragen!'), $msg['success']));
+        }
+
+        $this->redirect('settings/deputies/index');
     }
 
     /**
@@ -102,9 +134,9 @@ class Settings_DeputiesController extends Settings_SettingsController
             $deleted = deleteDeputy($delete, $this->user->user_id);
             if ($deleted) {
                 $this->reportSuccess($deleted == 1
-                                     ? _('Die Vertretung wurde entfernt.')
-                                     : _('Es wurden %s Vertretungen entfernt.'),
-                                     $deleted);
+                    ? _('Die Vertretung wurde entfernt.')
+                    : _('Es wurden %s Vertretungen entfernt.'),
+                    $deleted);
             } else {
                 $this->reportError(_('Fehler beim Entfernen der Vertretung(en).'));
             }
@@ -112,7 +144,7 @@ class Settings_DeputiesController extends Settings_SettingsController
 
         if ($this->edit_about_enabled) {
             $deputies = getDeputies($this->user->user_id, true);
-            $changes  = Request::intArray('edit_about');
+            $changes = Request::intArray('edit_about');
 
             $success = true;
             $changed = 0;

@@ -76,10 +76,10 @@ class PageLayout
     private static $squeeze_packages = array();
 
     /**
-     * Compatibility lookup table (file -> squeeze package)
+     * Compatibility lookup table (old file -> new file/squeeze package)
      *
      * This is used for often used but "deprecated" assets that got
-     * moved into a squeeze package.
+     * renamed or moved into a squeeze package.
      */
     private static $compatibility_lookup = array(
         'jquery/jquery.tablesorter.js' => 'tablesorter', // @since 3.4
@@ -259,16 +259,15 @@ class PageLayout
      */
     public static function addScript($source, $attributes = array())
     {
-        // Check for compatibility lookup entry and add according squeeze
-        // package. This will trigger an E_USER_DEPRECATED error as well.
+        // Check for compatibility lookup entry and rename file resp.
+        // add according squeeze package (if lookup element does not
+        // end in '.js').
         if (array_key_exists($source, self::$compatibility_lookup)) {
-            $squeeze_package = self::$compatibility_lookup[$source];
-            self::addSqueezePackage($squeeze_package);
-
-            $error = sprintf('Direct inclusion of asset "%s" is deprecated, use squeeze package "%s" instead',
-                             $source, $squeeze_package);
-            trigger_error($error, E_USER_DEPRECATED);
-            return;
+            $source = self::$compatibility_lookup[$source];
+            if (!preg_match('/\.js$/', $source)) {
+                self::addSqueezePackage($source);
+                return;
+            }
         }
 
         $attributes['src'] = Assets::javascript_path($source);

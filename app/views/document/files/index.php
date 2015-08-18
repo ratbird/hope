@@ -4,7 +4,7 @@
 
 <form action="<?= $controller->url_for('document/files/bulk/' . $dir_id . '/' . $page) ?>" method="post" data-shiftcheck>
 
-<table class="default documents <? if (!empty($files)) echo 'sortable-table'; ?>">
+<table class="default documents <? if ($files->count() > 0) echo 'sortable-table'; ?>">
     <caption>
         <div class="caption-container">
             <? $last_crumb = end($breadcrumbs); ?>
@@ -77,7 +77,7 @@
     </thead>
     <tbody>
 <? if (!$directory->isRootDirectory()): ?>
-        <tr class="chdir-up" data-folder="<?= $folder_id ?>" data-sort-fixed>
+        <tr class="chdir-up" <? if ($full_access) printf('data-folder="%s"', $folder_id) ?> data-sort-fixed>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td class="document-icon">
@@ -96,7 +96,7 @@
             <td>&nbsp;</td>
         </tr>
 <? endif; ?>
-<? if (empty($files)): ?>
+<? if ($files->count() === 0): ?>
         <tr>
             <td colspan="8" class="empty">
                 <?= _('Dieser Ordner ist leer') ?>
@@ -104,7 +104,7 @@
         </tr>
 <? else: ?>
     <? foreach ($files as $file): ?>
-        <tr data-file="<?= $file->id ?>" <? if ($file->isDirectory()) printf('data-folder="%s"', $file->file->id); ?>>
+        <tr <? if ($full_access) printf('data-file="%s"', $file->id) ?> <? if ($full_access && $file->isDirectory()) printf('data-folder="%s"', $file->file->id); ?>>
             <td class="dragHandle">&nbsp;</td>
             <td>
                 <input type="checkbox" name="ids[]" value="<?= $file->id ?>" <? if (in_array($file->id, $marked)) echo 'checked'; ?>>
@@ -144,12 +144,15 @@
                 <?= reltime($file->file->mkdate) ?>
             </td>
             <td class="options">
+            <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/folder/edit/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Ordner bearbeiten') ?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
                 </a>
+            <? endif; ?>
                 <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Ordner herunterladen') ?>">
                     <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
                 </a>
+            <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Ordner verschieben') ?>">
                     <?= Assets::img('icons/16/blue/move_right/folder-empty.png', array('alt' => _('verschieben'))) ?>
                 </a>
@@ -159,6 +162,7 @@
                 <a href="<?= $controller->url_for('document/folder/delete/' . $file->id) ?>" title="<?= _('Ordner löschen') ?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('alt' => _('löschen'))) ?>
                 </a>
+            <? endif; ?>
             </td>
         <? else: ?>
             <td class="document-icon" data-sort-value="1">
@@ -193,12 +197,15 @@
                 <?= reltime($file->file->mkdate) ?>
             </td>
             <td class="options">
+            <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/edit/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Datei bearbeiten') ?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
                 </a>
+            <? endif; ?>
                 <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Datei herunterladen') ?>">
                     <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
                 </a>
+            <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Datei verschieben') ?>">
                     <?= Assets::img('icons/16/blue/move_right/file.png', array('alt' => _('verschieben'))) ?>
                 </a>
@@ -208,6 +215,7 @@
                 <a href="<?= $controller->url_for('document/files/delete/' . $file->id) ?>" title="<?= _('Datei löschen') ?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('alt' => _('löschen'))) ?>
                 </a>
+            <? endif; ?>
             </td>
         <? endif; ?>
         </tr>
@@ -217,13 +225,17 @@
     <tfoot>
         <tr>
             <td colspan="5">
+        <? if ($full_access || extension_loaded('zip')): ?>
                 <?= _('Alle markierten') ?>
             <? if (extension_loaded('zip')): ?>
                 <?= Studip\Button::create(_('Herunterladen'), 'download') ?>
             <? endif; ?>
+            <? if ($full_access): ?>
                 <?= Studip\Button::create(_('Verschieben'), 'move', array('data-dialog' => '')) ?>
                 <?= Studip\Button::create(_('Kopieren'), 'copy', array('data-dialog' => ''))?>
                 <?= Studip\Button::create(_('Löschen'), 'delete') ?>
+            <? endif; ?>
+        <? endif; ?>
             </td>
             <td colspan="3" class="actions">
                 <?= $GLOBALS['template_factory']->render('shared/pagechooser', array(

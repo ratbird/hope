@@ -12,7 +12,21 @@ class DocumentController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         // Lock context to user id
-        $this->context_id = $GLOBALS['user']->id;
+        $this->owner       = $GLOBALS['user'];
+        $this->context_id  = $this->owner->id;
+        $this->full_access = true;
+
+        if (Config::get()->PERSONALDOCUMENT_OPEN_ACCESS) {
+            $username = Request::username('username', $GLOBALS['user']->username);
+            $user = User::findByUsername($username);
+            if ($user && $user->id !== $GLOBALS['user']->id) {
+                $this->owner       = $user;
+                $this->context_id  = $user->id;
+                $this->full_access = Config::get()->PERSONALDOCUMENT_OPEN_ACCESS_ROOT_PRIVILEDGED && $GLOBALS['user']->perms === 'root';
+
+                URLHelper::bindLinkParam('username', $username);
+            }
+        }
 
         $this->limit = $GLOBALS['user']->cfg->PERSONAL_FILES_ENTRIES_PER_PAGE ?: Config::get()->ENTRIES_PER_PAGE;
 

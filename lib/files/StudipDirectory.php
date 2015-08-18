@@ -48,13 +48,13 @@ class StudipDirectory extends File
      *
      * @return DirectoryEntry  created DirectoryEntry object
      */
-    public function createFile($name, $description = '')
+    public function createFile($name, $description = '', $user_id = null)
     {
         $reflection = new ReflectionClass($this->storage);
         $storage_object = $reflection->newInstance();
 
         $file = new File();
-        $file->user_id    = $GLOBALS['user']->id;
+        $file->user_id    = $user_id ?: $GLOBALS['user']->id;
         $file->filename   = $name;
         $file->mime_type  = 'text/plain';
         $file->size       = 0;
@@ -274,10 +274,10 @@ class StudipDirectory extends File
      * @param int $parent_id place in folder hierarchy
      *
      */
-    public function mkdir($name, $description = '')
+    public function mkdir($name, $description = '', $user_id = null)
     {
         $dir = new StudipDirectory();
-        $dir->user_id    = $GLOBALS['user']->id;
+        $dir->user_id    = $user_id ?: $GLOBALS['user']->id;
         $dir->filename   = $name;
         $dir->mime_type  = '';
         $dir->size       = 0;

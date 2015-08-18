@@ -113,11 +113,17 @@ class ProfileNavigation extends Navigation
             $navigation = new Navigation(_('Kategorien'), 'dispatch.php/settings/categories');
             $this->addSubNavigation('categories', $navigation);
 
-            // user documents page
-            if (Config::get()->PERSONALDOCUMENT_ENABLE) {
-                $navigation = new Navigation(_('Meine Dateien'), 'dispatch.php/document/files');
-                $this->addSubNavigation('files', $navigation);
+        }
+
+        // user documents page
+        if (Config::get()->PERSONALDOCUMENT_ENABLE && ($perm->have_profile_perm('user', $current_user->user_id) || Config::get()->PERSONALDOCUMENT_OPEN_ACCESS)) {
+            $title = _('Meine Dateien');
+            if (Config::get()->PERSONALDOCUMENT_OPEN_ACCESS && $current_user->id !== $user->id) {
+                $title = _('Dateibereich');
             }
+            
+            $navigation = new Navigation($title, 'dispatch.php/document/files');
+            $this->addSubNavigation('files', $navigation);
         }
     }
 }

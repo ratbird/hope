@@ -221,7 +221,8 @@ class File extends SimpleORMap
         $user_id = $user_id ?: $GLOBALS['user']->id;
 
         $valid = $GLOBALS['perm']->have_perm('root')
-              || $this->owner->id === $user_id;
+              || $this->owner->id === $user_id
+              || Config::get()->PERSONALDOCUMENT_OPEN_ACCESS;
 
         if (!$valid && $throw_exception) {
             throw new AccessDeniedException(_('Sie dürfen auf dieses Objekt nicht zugreifen.'));

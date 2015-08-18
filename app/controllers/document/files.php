@@ -82,8 +82,8 @@ class Document_FilesController extends DocumentController
         $this->marked = $this->flash['marked-ids'] ?: array();
         $this->breadcrumbs = FileHelper::getBreadCrumbs($dir_id);
 
-        $config = DocUsergroupConfig::getUserConfig($GLOBALS['user']->id);
-        $this->space_used  = DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
+        $config = DocUsergroupConfig::getUserConfig($this->context_id);
+        $this->space_used  = DiskFileStorage::getQuotaUsage($this->context_id);
         $this->space_total = $config['quota'];
 
         $this->setupSidebar($dir_id, $this->directory->id, $this->page);
@@ -96,6 +96,10 @@ class Document_FilesController extends DocumentController
      */
     public function upload_action($folder_id, $page = 1)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Datei hochladen'));
 
         $folder_id = $folder_id ?: $this->context_id;
@@ -137,7 +141,7 @@ class Document_FilesController extends DocumentController
                 }
 
                 $restQuota = ( (int)$this->userConfig['quota'] -
-                        DiskFileStorage::getQuotaUsage($GLOBALS['user']->id));
+                        DiskFileStorage::getQuotaUsage($this->context_id));
 
                 if ($filesize > $restQuota){
                     $failed[] = array($_FILES['file']['name'][$i], 'quota');
@@ -153,10 +157,7 @@ class Document_FilesController extends DocumentController
                         $this_title .= ' ' . sprintf(_('(%u von %u)'), $i + 1, $count);
                     }
 
-                    $new_file = $directory->createFile($filename);
-                    $new_file->description = $description;
-                    $new_file->name        = $filename;
-                    $new_file->store();
+                    $new_file = $directory->createFile($filename, $description, $this->context_id);
 
                     $handle = $new_file->file;
                     $handle->restricted = $restricted;
@@ -245,6 +246,10 @@ class Document_FilesController extends DocumentController
      */
     public function edit_action($entry_id)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Datei bearbeiten'));
 
         $entry = new DirectoryEntry($entry_id);
@@ -288,6 +293,10 @@ class Document_FilesController extends DocumentController
      */
     public function move_action($file_id, $source_id = null)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Datei verschieben'));
 
         if (Request::isPost()) {
@@ -346,6 +355,10 @@ class Document_FilesController extends DocumentController
      */
     public function copy_action($file_id, $source_id = null)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Datei kopieren'));
 
          if (Request::isPost()) {
@@ -423,6 +436,10 @@ class Document_FilesController extends DocumentController
      */
     public function delete_action($id)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         $entry = DirectoryEntry::find($id);
         $parent_id = FileHelper::getParentId($id) ?: $this->context_id;
 
@@ -519,35 +536,42 @@ class Document_FilesController extends DocumentController
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/files-sidebar.png');
 
-        $widget = new ActionsWidget();
-
-        $widget->addLink(_('Datei hochladen'),
-                         $this->url_for('document/files/upload/' . $current_entry . '/' . $page),
-                         'icons/16/blue/upload.png',
-                         $this->userConfig['forbidden']
-                             ? array('disabled' => '',
-                                     'title' => _('Ihre Upload-Funktion wurde gesperrt.'))
-                             : array())
-               ->asDialog('size=auto');
-
-        $widget->addLink(_('Neuen Ordner erstellen'),
-                         $this->url_for('document/folder/create/' . $current_entry),
-                         'icons/16/blue/add/folder-empty.png')
-               ->asDialog('size=auto');
-
-        $attributes = $root_count > 0
-                    ? array()
-                    : array(
-                        'disabled' => true,
-                        'title'    => _('Ihr Dateibereich enth�lt keine Dateien'),
-                      );
-
-        $widget->addLink(_('Dateibereich leeren'),
-                         $this->url_for('document/folder/delete/all'),
-                         'icons/16/blue/trash.png',
-                         $attributes);
-
-        $sidebar->addWidget($widget);
+        if (Config::get()->PERSONALDOCUMENT_OPEN_ACCESS && $GLOBALS['user']->id !== $this->context_id) {
+            $title = sprintf(_('Dateien von %s'), $this->owner->getFullname());
+            $sidebar->setTitle($title);
+        }
+        
+        if ($this->full_access) {
+            $widget = new ActionsWidget();
+        
+            $widget->addLink(_('Datei hochladen'),
+                             $this->url_for('document/files/upload/' . $current_entry . '/' . $page),
+                             'icons/16/blue/upload.png',
+                             $this->userConfig['forbidden']
+                                 ? array('disabled' => '',
+                                         'title' => _('Ihre Upload-Funktion wurde gesperrt.'))
+                                 : array())
+                   ->asDialog('size=auto');
+        
+            $widget->addLink(_('Neuen Ordner erstellen'),
+                             $this->url_for('document/folder/create/' . $current_entry),
+                             'icons/16/blue/add/folder-empty.png')
+                   ->asDialog('size=auto');
+        
+            $attributes = $root_count > 0
+                        ? array()
+                        : array(
+                            'disabled' => true,
+                            'title'    => _('Ihr Dateibereich enth�lt keine Dateien'),
+                          );
+        
+            $widget->addLink(_('Dateibereich leeren'),
+                             $this->url_for('document/folder/delete/all'),
+                             'icons/16/blue/trash.png',
+                             $attributes);
+        
+            $sidebar->addWidget($widget);
+        }
 
         $widget = new OptionsWidget();
         $widget->setTitle(_('Darstellung anpassen'));
@@ -584,7 +608,7 @@ class Document_FilesController extends DocumentController
                             'disabled' => true,
                             'title'    => _('Ihr Dateibereich enth�lt keine Dateien'),
                           );
-            $widget->addLink(_('Alle meine Dateien herunterladen'),
+            $widget->addLink(_('Alle Dateien herunterladen'),
                              $this->url_for('document/download/' . $this->context_id),
                              'icons/16/blue/download.png',
                              $attributes);

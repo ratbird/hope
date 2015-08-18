@@ -39,6 +39,10 @@ class Document_FolderController extends DocumentController
      */
     public function create_action($parent_id, $page = 1)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Ordner erstellen'));
 
         FileHelper::checkAccess($parent_id);
@@ -56,7 +60,7 @@ class Document_FolderController extends DocumentController
             }
 
             $name      = $parent_dir->ensureUniqueFilename($name);
-            $directory = $parent_dir->mkdir($name, $description);
+            $directory = $parent_dir->mkdir($name, $description, $this->context_id);
 
             $directory->file->filename = $name;
             $directory->file->store();
@@ -73,6 +77,10 @@ class Document_FolderController extends DocumentController
      */
     public function edit_action($folder_id)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         PageLayout::setTitle(_('Ordner bearbeiten'));
 
         $folder = new DirectoryEntry($folder_id);
@@ -108,6 +116,10 @@ class Document_FolderController extends DocumentController
      */
     public function delete_action($folder_id)
     {
+        if (!$this->full_access) {
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
+        }
+
         FileHelper::checkAccess($folder_id);
 
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;

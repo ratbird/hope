@@ -69,7 +69,7 @@ class Document_DownloadController extends AuthenticatedController
         if ($entry_id === 'flashed') {
             foreach ($this->flash['ids'] as $id) {
                 $entry   = new DirectoryEntry($id);
-                if ($entry->isDirectory() && $entry->file->user_id !== $GLOBALS['user']->id) {
+                if ($entry->isDirectory() && !$entry->checkAccess()) {
                     throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
                 }
                 $download_files[] = $entry;
@@ -87,7 +87,7 @@ class Document_DownloadController extends AuthenticatedController
                                   ? 'multiple'
                                   : 'single';
 
-                if ($entry->file->user_id !== $GLOBALS['user']->id) {
+                if (!$entry->checkAccess()) {
                     if ($entry->isDirectory()) {
                         throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
                     } elseif (false) {
@@ -99,10 +99,10 @@ class Document_DownloadController extends AuthenticatedController
                 // Entry id is not a valid directory entry,
                 // so we assume that it is a foreign folder
                 if ($entry_id !== $GLOBALS['user']->id) {
-                    if (User::exists($entry_id)) {
-                        throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
-                    } else {
+                    if (!User::exists($entry_id)) {
                         throw new InvalidArgumentException(_('404 - File not found'));
+                     } elseif (!Config::get()->PERSONALDOCUMENT_OPEN_ACCESS) {
+                        throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
                     }
                 }
 

@@ -12,14 +12,14 @@
 <? endif; ?>
 
 <!-- Alle Datenfelder  -->
-<table class="collapsable default" cellspacing="0" cellpadding="2">
+<table class="collapsable default">
 <caption>
     <?= _('Verwaltung von generischen Datenfeldern') ?>
 </caption>
 <? foreach ($datafields_list as $key => $data): ?>
     <tbody class="<?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'collapsed' ?> <? if (empty($datafields_list[$key])): ?>empty<? endif ?>">
         <tr class="table_header header-row">
-            <td class="toggle-indicator" colspan="11">
+            <th class="toggle-indicator" colspan="11">
             <? if (empty($datafields_list[$key])): ?>
                 <?= sprintf(_('Datenfelder für %s'), $allclasses[$key]) ?>
             <? else: ?>
@@ -27,9 +27,9 @@
                     <?= sprintf(_('Datenfelder für %s'), $allclasses[$key]) ?>
                 </a>
             <? endif; ?>
-            </td>
+            </th>
         </tr>
-        <tr class="table_footer" style="text-align: center;">
+        <tr>
             <th style="text-align: left;"><?=_("Name")?></th>
             <th><?=_("Feldtyp")?></th>
             <th>
@@ -51,7 +51,7 @@
             <th style="text-align: right;"><?= _('Aktionen') ?></th>
         </tr>
     <? foreach ($data as $input => $val): ?>
-        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+        <tr>
             <td>
                 <a name="item_<?= $val->getID() ?>"></a>
                 <?= htmlReady($val->getName()) ?>

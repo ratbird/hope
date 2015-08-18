@@ -9,7 +9,7 @@
         // originalEvent)
         if (event.originalEvent !== undefined) {
             var proxied = $(this).data('proxyfor');
-            $(proxied).filter(':not(:disabled)').attr('checked', this.checked);
+            $(proxied).filter(':not(:disabled)').prop('checked', this.checked);
         }
     }).on('update.proxy', ':checkbox[data-proxyfor]', function () {
         var proxied = $(this).data('proxyfor'),

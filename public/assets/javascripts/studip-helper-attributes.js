@@ -1,7 +1,11 @@
+/*jslint browser: true */
+/*global jQuery */
 /**
  * This file provides a set of global handlers.
  */
 (function ($) {
+    'use strict';
+
     // Use a checkbox as a proxy for a set of other checkboxes. Define
     // proxied elements by a css selector in attribute "data-proxyfor".
     $(document).on('change', ':checkbox[data-proxyfor]', function (event) {
@@ -69,15 +73,19 @@
                 name  = $this.attr('name'),
                 state = $this.prop('checked'),
                 $last = $(last_element),
-                children, idx0, idx1;
+                children,
+                idx0,
+                idx1,
+                tmp;
 
-            if ($form.is($last.closest('form')) && name == $last.attr('name') && state == $last.prop('checked')) {
+            if ($form.is($last.closest('form')) && name === $last.attr('name') && state === $last.prop('checked')) {
                 children = $form.find(':checkbox[name="' + name + '"]:not(:disabled)');
                 idx0 = children.index(event.target);
                 idx1 = children.index(last_element);
                 if (idx0 > idx1) {
-                    // Swap variables, see http://stackoverflow.com/a/20531819
-                    idx0 = idx1 + (idx1=idx0, 0);
+                    tmp = idx0;
+                    idx0 = idx1;
+                    idx1 = idx0;
                 }
                 children.slice(idx0, idx1).prop('checked', state);
             }
@@ -85,7 +93,7 @@
 
         last_element = event.target;
     });
-    
+
     // Display a visible hint that indicates how many characters the user has
     // already input into a text field or how many remaining characters he may
     // input if the element has a maxlength restriction.
@@ -93,11 +101,11 @@
     // are able to specify a custom element for the character display. If none
     // is provided or the selector does not point to a valid element, the
     // display element is created next to the attributed element.
-    $(document).on('focus propertychange keyup', '[data-length-hint]', function (event) {
+    $(document).on('focus propertychange keyup', '[data-length-hint]', function () {
         var selector = $(this).data().lengthHint,
             counter  = $(selector),
             count    = $(this).val().length,
-            max      = parseInt($(this).attr('maxlength')),
+            max      = parseInt($(this).attr('maxlength'), 10),
             element,
             message;
 
@@ -122,15 +130,15 @@
     });
 
     // Lets the user confirm a specific action (submit or click event).
-    var confirmation_handler = function (event) {
+    function confirmation_handler(event) {
         if (!event.isDefaultPrevented()) {
-            var question = $(this).data().confirm
-                        || $(this).attr('title')
-                        || $(this).find('[title]:first').attr('title')
+            var question = $(event.target).data().confirm
+                        || $(event.target).attr('title')
+                        || $(event.target).find('[title]:first').attr('title')
                         || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
-            return confirm(question);
+            return window.confirm(question);
         }
-    };
+    }
     $(document).on('click', 'a[data-confirm],input[data-confirm],button[data-confirm]', confirmation_handler);
     $(document).on('submit', 'form[data-confirm]', confirmation_handler);
 

@@ -68,9 +68,26 @@ class Settings_DeputiesController extends Settings_SettingsController
         }
 
         $this->deputies = $deputies;
+
         $this->search   = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
                                                'user_id', array('permission'   => getValidDeputyPerms(),
                                                                 'exclude_user' => $exclude_users));
+
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(PageLayout::getTitle());
+        $actions = new ActionsWidget();
+        // add "add dozent" to infobox
+        $mp = MultiPersonSearch::get('add_deputy')
+            ->setLinkText(_('Neue Vertretung hinzufügen'))
+            ->setDefaultSelectedUser(array_keys($this->deputies))
+            ->setLinkIconPath("")
+            ->setTitle(_('Neue Vertretung hinzufügen'))
+            ->setExecuteURL(URLHelper::getLink('dispatch.php/settings/deputies/store'))
+            ->setNavigationItem('/settings/deputies')
+            ->render();
+        $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+        $actions->addElement($element);
+        Sidebar::Get()->addWidget($actions);
     }
 
     /**

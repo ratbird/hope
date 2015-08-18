@@ -23,11 +23,10 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
      */
     function before_filter (&$action, &$args)
     {
-
         parent::before_filter($action, $args);
         PageLayout::setTitle(_('Teilnahmebeschränkte Veranstaltungen'));
         Navigation::activateItem('/tools/coursesets/restricted_courses');
-        PageLayout::addScript("jquery/jquery.tablesorter.js");
+        PageLayout::addSqueezePackage('tablesorter');
 
     }
 

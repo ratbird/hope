@@ -20,6 +20,8 @@ class Course_DatesController extends AuthenticatedController
         } else {
             PageLayout::setTitle(_("Termine"));
         }
+
+        PageLayout::addSqueezePackage('tablesorter');
     }
 
     public function index_action()
@@ -47,8 +49,6 @@ class Course_DatesController extends AuthenticatedController
         Navigation::activateItem('/course/schedule/dates');
 
         object_set_visit_module("schedule");
-
-        PageLayout::addScript("jquery/jquery.tablesorter.js");
 
         $this->dates = Course::findCurrent()->getDatesWithExdates();
     }

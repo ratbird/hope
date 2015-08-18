@@ -78,6 +78,18 @@
         width: unit(@size, px);
     }
 }
+.retina-image-before(@image0, @image1, @width: 100%, @height: @width, @padding: 0) {
+    &::before {
+        background-repeat: no-repeat;
+        content: ' ';
+        display: inline-block;
+        height: unit(@height, px);
+        margin-right: @padding;
+        .retina-background-image(@image0, @image1, @width, @height);
+        vertical-align: text-top;
+        width: unit(@width, px);
+    }
+}
 
 // Icon after
 .icon-after(@icon, @size: 16, @padding: 0) {
@@ -90,6 +102,18 @@
         .retina-background-icon(@icon, @size);
         vertical-align: text-top;
         width: unit(@size, px);
+    }
+}
+.retina-image-after(@image0, @image1, @width: 100%, @height: @width, @padding: 0) {
+    &::after {
+        background-repeat: no-repeat;
+        content: ' ';
+        display: inline-block;
+        height: unit(@height, px);
+        margin-left: @padding;
+        .retina-background-image(@image0, @image1, @width, @height);
+        vertical-align: text-top;
+        width: unit(@width, px);
     }
 }
 

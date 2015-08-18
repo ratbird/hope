@@ -1067,16 +1067,21 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
-  height: 12px;
-  margin-left: 3px;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
-  -webkit-background-size: 12px 12px;
-  -moz-background-size: 12px 12px;
-  -o-background-size: 12px 12px;
-  background-size: 12px 12px;
+  height: 8px;
+  margin-left: 0;
+  background-image: url("../images/dreieck_down.png");
   vertical-align: text-top;
-  width: 12px;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortUp::after,
+  .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
+    background-image: url("../images/dreieck_down@2x.png");
+    -webkit-background-size: 16px 8px;
+    -moz-background-size: 16px 8px;
+    -o-background-size: 16px 8px;
+    background-size: 16px 8px;
+  }
 }
 .sortable-table .headerSortUp::after,
 .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
@@ -1087,16 +1092,21 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
-  height: 12px;
-  margin-left: 3px;
-  background-image: url("../images/icons/16/blue/arr_1up.png");
-  background-image: none, url("../images/icons/blue/arr_1up.svg");
-  -webkit-background-size: 12px 12px;
-  -moz-background-size: 12px 12px;
-  -o-background-size: 12px 12px;
-  background-size: 12px 12px;
+  height: 8px;
+  margin-left: 0;
+  background-image: url("../images/dreieck_up.png");
   vertical-align: text-top;
-  width: 12px;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortDown::after,
+  .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
+    background-image: url("../images/dreieck_up@2x.png");
+    -webkit-background-size: 16px 8px;
+    -moz-background-size: 16px 8px;
+    -o-background-size: 16px 8px;
+    background-size: 16px 8px;
+  }
 }
 .sortable-table .headerSortDown::after,
 .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
@@ -3003,6 +3013,16 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
+/*
+.sidebar-widget.sidebar-infobox {
+    border-color: @red;
+    background: @light-gray-color-20;
+
+    .sidebar-widget-header {
+        background: @red-40;
+    }
+}
+*/
 .helpbar-container {
   background: #fff;
   clear: both;

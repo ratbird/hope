@@ -100,22 +100,26 @@ class Settings_DeputiesController extends Settings_SettingsController
         CSRFProtection::verifyRequest();
 
         $mp = MultiPersonSearch::load('settings_add_deputy');
-        $msg = array();
+        $msg = array(
+            'error'   => array(),
+            'success' => array(),
+        );
         foreach ($mp->getAddedUsers() as $_user_id) {
             if (isDeputy($_user_id, $this->user->user_id)) {
                 $msg['error'][] = sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname($_user_id, 'full'));
             } else if ($_user_id == $this->user->user_id) {
                 $msg['error'][] = _('Sie können sich nicht als Ihre eigene Vertretung eintragen!');
-            } else if (addDeputy($_user_id, $this->user->user_id)) {
-                $msg['success'][] = sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_user_id, 'full'));
-            } else {
+            } else if (!addDeputy($_user_id, $this->user->user_id)) {
                 $msg['error'][] = _('Fehler beim Eintragen der Vertretung!');
+            } else {
+                $msg['success'][] = sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_user_id, 'full'));
             }
         }
         // only show an error messagebox once.
         if (!empty($msg['error'])) {
             PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.'), $msg['error']));
-        } else {
+        }
+        if (!empty($msg['success'])) {
             PageLayout::postMessage(MessageBox::success(_('Die gewünschten Personen wurden als Ihre Vertretung eingetragen!'), $msg['success']));
         }
 

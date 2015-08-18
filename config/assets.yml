@@ -45,6 +45,10 @@ javascripts:
     - javascripts/app_admin_statusgroups.js
     - javascripts/jquery/jquery.nestable-4f93032cfa.js
 
+  tablesorter: &tablesorter
+    - javascripts/jquery/jquery.tablesorter-2.22.5.js
+    - javascripts/jquery/jquery.tablesorter.pager-2.22.5.js
+
   base:
     - *jquery
     - *modernizr
@@ -126,6 +130,7 @@ javascripts:
     - javascripts/enrolment.js
 
   document:
+    - *tablesorter
     - javascripts/document.js
 
   lightbox:

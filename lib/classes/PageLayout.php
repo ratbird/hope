@@ -76,6 +76,16 @@ class PageLayout
     private static $squeeze_packages = array();
 
     /**
+     * Compatibility lookup table (file -> squeeze package)
+     *
+     * This is used for often used but "deprecated" assets that got
+     * moved into a squeeze package.
+     */
+    private static $compatibility_lookup = array(
+        'jquery/jquery.tablesorter.js' => 'tablesorter', // @since 3.4
+    );
+
+    /**
      * Initialize default page layout. This should only be called once
      * from phplib_local.inc.php. Don't use this otherwise.
      */
@@ -249,6 +259,18 @@ class PageLayout
      */
     public static function addScript($source, $attributes = array())
     {
+        // Check for compatibility lookup entry and add according squeeze
+        // package. This will trigger an E_USER_DEPRECATED error as well.
+        if (array_key_exists($source, self::$compatibility_lookup)) {
+            $squeeze_package = self::$compatibility_lookup[$source];
+            self::addSqueezePackage($squeeze_package);
+
+            $error = sprintf('Direct inclusion of asset "%s" is deprecated, use squeeze package "%s" instead',
+                             $source, $squeeze_package);
+            trigger_error($error, E_USER_DEPRECATED);
+            return;
+        }
+
         $attributes['src'] = Assets::javascript_path($source);
 
         self::addHeadElement('script', $attributes, '');
@@ -510,7 +532,7 @@ class PageLayout
      */
     public static function getSqueezePackages()
     {
-        return self::$squeeze_packages;
+        return array_unique(self::$squeeze_packages);
     }
 
     /**

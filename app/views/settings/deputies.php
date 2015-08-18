@@ -32,7 +32,7 @@ use Studip\Button, Studip\LinkButton;
             <? foreach ($deputies as $deputy): ?>
                 <tr>
                     <td>
-                        <?= Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL) ?>
+                        <?= Avatar::getAvatar($deputy['user_id'])->getImageTag(Avatar::SMALL) ?>
                         <?= htmlReady($deputy['fullname'] . ' (' . $deputy['username'] . ', ' . _('Status') . ': ' . $deputy['perms'] . ')') ?>
                     </td>
                     <? if ($edit_about_enabled): ?>

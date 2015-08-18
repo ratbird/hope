@@ -40,7 +40,7 @@ class Document_FolderController extends DocumentController
     public function create_action($parent_id, $page = 1)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Ordner erstellen'));
@@ -78,7 +78,7 @@ class Document_FolderController extends DocumentController
     public function edit_action($folder_id)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Ordner bearbeiten'));
@@ -117,7 +117,7 @@ class Document_FolderController extends DocumentController
     public function delete_action($folder_id)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         FileHelper::checkAccess($folder_id);

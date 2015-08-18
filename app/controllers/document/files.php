@@ -97,7 +97,7 @@ class Document_FilesController extends DocumentController
     public function upload_action($folder_id, $page = 1)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Datei hochladen'));
@@ -247,7 +247,7 @@ class Document_FilesController extends DocumentController
     public function edit_action($entry_id)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Datei bearbeiten'));
@@ -294,7 +294,7 @@ class Document_FilesController extends DocumentController
     public function move_action($file_id, $source_id = null)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Datei verschieben'));
@@ -356,7 +356,7 @@ class Document_FilesController extends DocumentController
     public function copy_action($file_id, $source_id = null)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         PageLayout::setTitle(_('Datei kopieren'));
@@ -437,7 +437,7 @@ class Document_FilesController extends DocumentController
     public function delete_action($id)
     {
         if (!$this->full_access) {
-            throw new AccessDeniedException(_('Sie dÃ¼rfen diese Aktion nicht ausfÃ¼hren'));
+            throw new AccessDeniedException(_('Sie dürfen diese Aktion nicht ausführen'));
         }
 
         $entry = DirectoryEntry::find($id);

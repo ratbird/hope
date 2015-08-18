@@ -128,7 +128,7 @@
         <div class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
         </div>
-        <?php foreach ($values['deputies'] as $id => $assigned) : ?>
+        <?php foreach ($values['deputies'] as $id) : ?>
             <?php if ($user = User::find($id)) : ?>
                 <?php if (!in_array($id, array_keys($values['lecturers']))) : ?>
                     <?= $this->render_partial('basicdata/_user',

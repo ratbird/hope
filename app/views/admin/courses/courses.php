@@ -257,6 +257,9 @@
                         case 16:
                             echo $this->render_partial('admin/courses/add_to_archive', compact('values', 'semid'));
                             break;
+                        case 17:
+                            echo $this->render_partial('admin/courses/admission_locked', compact('values', 'semid'));
+                            break;
                     }?>
                 <? elseif (!is_numeric($selected_action) && $actions[$selected_action]['multimode']) : ?>
                     <? $plugin = PluginManager::getInstance()->getPlugin($selected_action) ?>
@@ -266,7 +269,7 @@
                 else : ?>
                     <?=
                     \Studip\LinkButton::createEdit(
-                        _($actions[$selected_action]['title']),
+                        $actions[$selected_action]['title'],
                         URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
                             ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),
                         ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())

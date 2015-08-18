@@ -18,6 +18,11 @@
                                 type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=archiv_sem]" aria-label="',
                 _('Alle auswählen'), '"/></label>';
                 break;
+            case 17:
+                echo '<label>', _('Alle auswählen'), '<input title="', _('Alle auswählen'), '"
+                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=admission_locked]" aria-label="',
+                _('Alle auswählen'), '"/></label>';
+                break;
         }?>
     </th>
 </tr>

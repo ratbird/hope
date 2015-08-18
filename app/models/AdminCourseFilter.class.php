@@ -125,7 +125,8 @@ class AdminCourseFilter
                           WHERE seminar_id = seminare.Seminar_id AND status = 'accepted')",
             'waiting' => "(SELECT COUNT(seminar_id)
                           FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting')"
+                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting')",
+            'course_set' => "(SELECT set_id FROM seminar_courseset WHERE seminar_id = seminare.Seminar_id)"
         );
         $this->settings['query']['joins'] = array(
             'Institute' => array(

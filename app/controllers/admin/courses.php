@@ -350,18 +350,17 @@ class Admin_CoursesController extends AuthenticatedController
                 }
 
                 if($set->hasAdmissionRule('LockedAdmission') && !isset($admission_locked[$course_id])) {
-                    if($ok = CourseSet::removeCourseFromSet($set->getId(), $course_id)) {
-                        $log_msg = "Veranstaltung wurde entsperrt";
+                    if(CourseSet::removeCourseFromSet($set->getId(), $course_id)) {
+                        $log_msg = _('Veranstaltung wurde entsperrt');
                     }
                 }
             }
 
             if(is_null($set) && isset($admission_locked[$course_id])) {
                 if(CourseSet::addCourseToSet($course_set_id, $course_id)) {
-                    $log_msg = "Veranstaltung wurde gesperrt, set_id: " . $course_set_id;
+                    $log_msg = sprintf(_('Veranstaltung wurde gesperrt, set_id: %s'), $course_set_id);
                 }
             }
-
 
             if ($log_msg) {
                 StudipLog::log('SEM_CHANGED_ACCESS', $course_id, NULL, $log_msg);
@@ -560,12 +559,13 @@ class Admin_CoursesController extends AuthenticatedController
                         'url'       => 'dispatch.php/admin/courses/set_locked',
                         'multimode' => true),
         );
-        
+
         if (get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
             $actions[4] = array('name'  => 'Raumanfragen',
                                 'title' => _('Raumanfragen'),
                                 'url'   => 'dispatch.php/course/room_requests/index?cid=%s');
         }
+        
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
             $actions[get_class($plugin)] = array(
                 'name'      => $plugin->getPluginName(),

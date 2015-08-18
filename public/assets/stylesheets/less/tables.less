@@ -622,7 +622,7 @@ table.withdetails {
 }
 
 .sortable-table {
-    .header {
+    .header, .tablesorter-header:not(.sorter-false) {
         white-space: nowrap;
         
         color: @base-color;
@@ -631,10 +631,19 @@ table.withdetails {
             cursor: pointer;
         }
     }
-    .headerSortUp {
-        .icon-after('yellow/arr_1down.png');
+    .headerSortUp, .tablesorter-headerDesc .tablesorter-header-inner {
+        .icon-after('blue/arr_1down.png', 12px, 3px);
+        &::after {
+            vertical-align: inherit;
+        }
     }
-    .headerSortDown {
-        .icon-after('yellow/arr_1up.png');
+    .headerSortDown, .tablesorter-headerAsc .tablesorter-header-inner {
+        .icon-after('blue/arr_1up.png', 12px, 3px);
+        &::after {
+            vertical-align: inherit;
+        }
+    }
+    .tablesorter-headerUnSorted:not(.sorter-false) .tablesorter-header-inner {
+        margin-right: 15px;
     }
 }

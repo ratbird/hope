@@ -2773,12 +2773,12 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selection li[style*="background-image"].ms-elem-selection {
   background-position: 20px center;
 }
-.ms-container .ms-selectable li:not(.disabled):after {
+.ms-container .ms-selectable li:not(.disabled)::after {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
   height: 16px;
-  margin-right: 0;
+  margin-left: 0;
   background-image: url("../images/icons/16/white/arr_1right.png");
   background-image: none, url("../images/icons/white/arr_1right.svg");
   -webkit-background-size: 16px 16px;
@@ -2802,7 +2802,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selectable li:not(.disabled):hover::after {
   visibility: visible;
 }
-.ms-container .ms-selection li:before {
+.ms-container .ms-selection li::before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;

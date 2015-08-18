@@ -67,7 +67,7 @@
 
 // Icon before
 .icon-before(@icon, @size: 16, @padding: 0) {
-    &:before {
+    &::before {
         background-repeat: no-repeat;
         content: ' ';
         display: inline-block;
@@ -81,12 +81,12 @@
 
 // Icon after
 .icon-after(@icon, @size: 16, @padding: 0) {
-    &:after {
+    &::after {
         background-repeat: no-repeat;
         content: ' ';
         display: inline-block;
         height: unit(@size, px);
-        margin-right: @padding;
+        margin-left: @padding;
         .retina-background-icon(@icon, @size);
         vertical-align: text-top;
         width: unit(@size, px);

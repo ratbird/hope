@@ -34,7 +34,7 @@ class Admin_CoursesController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         if (!$GLOBALS['perm']->have_perm('admin')) {
-            throw new AccessDeniedException(_('Sie haben nicht die nötigen Rechte, um diese Seite zu betreten.'));
+            throw new AccessDeniedException();
         }
 
         Navigation::activateItem('/browse/my_courses/list');

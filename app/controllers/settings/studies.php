@@ -28,7 +28,7 @@ class Settings_StudiesController extends Settings_SettingsController {
         parent::before_filter($action, $args);
 
         if (!in_array($this->user->perms, words('autor tutor dozent'))) {
-            throw new AccessDeniedException(_('Sie haben keinen Zugriff auf diesen Bereich.'));
+            throw new AccessDeniedException();
         }
 
         PageLayout::setHelpKeyword('Basis.HomepageUniversitäreDaten');

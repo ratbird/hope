@@ -15,7 +15,7 @@ class Admin_SemClassesController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
         if (!$GLOBALS['perm']->have_perm("root")) {
-            throw new AccessDeniedException(_("Kein Zugriff"));
+            throw new AccessDeniedException();
         }
         PageLayout::setHelpKeyword("Admins.SemClasses");
         PageLayout::setTitle("Veranstaltungskategorien");

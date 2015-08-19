@@ -102,7 +102,7 @@ class MessagesController extends AuthenticatedController {
     {
         $this->message = new Message($message_id);
         if (!$this->message->permissionToRead()) {
-            throw new AccessDeniedException(_('Kein Zugriff'));
+            throw new AccessDeniedException();
         }
 
         PageLayout::setTitle(_('Betreff') . ': ' . $this->message['subject']);
@@ -366,7 +366,7 @@ class MessagesController extends AuthenticatedController {
         if (Request::isPost()) {
             $message = Message::find($message_id);
             if (!$message->permissionToRead()) {
-                throw new AccessDeniedException("Kein Zugriff");
+                throw new AccessDeniedException();
             }
             if (Request::get('add_tag')) {
                 $message->addTag(Request::get('add_tag'));
@@ -381,7 +381,7 @@ class MessagesController extends AuthenticatedController {
     {
         $message = Message::find($message_id);
         if (!$message->permissionToRead()) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         if ($message && $message->permissionToRead($GLOBALS['user']->id)) {
             $this->msg = $message->toArray();
@@ -541,7 +541,7 @@ class MessagesController extends AuthenticatedController {
 
     public function upload_attachment_action() {
         if ($GLOBALS['user']->id === "nobody") {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         if (!$GLOBALS['ENABLE_EMAIL_ATTACHMENTS']) {
             throw new AccessDeniedException(_('Mailanhänge sind nicht erlaubt.'));

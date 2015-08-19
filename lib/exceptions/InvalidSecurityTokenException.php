@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * InvalidSecurityTokenException.php
  *
@@ -19,7 +19,8 @@ class InvalidSecurityTokenException extends AccessDeniedException
     /**
      * @param string this parameter is ignored but required by PHP
      */
-    function __construct($message = NULL) {
-        parent::__construct(_("Ungültiges oder fehlendes Sicherheits-Token."));
+    public function __construct($message = '', $code = 0, Exception $previous = null)
+    {
+        parent::__construct(_('Ungültiges oder fehlendes Sicherheits-Token.'));
     }
 }

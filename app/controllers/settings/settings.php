@@ -107,7 +107,7 @@ class Settings_SettingsController extends AuthenticatedController
     {
         $ticket = Request::get('studipticket');
         if (!$ticket || !check_ticket($ticket)) {
-            throw new AccessDeniedException(_('Fehler beim Zugriff. Bitte versuchen Sie es erneut.'));
+            throw new InvalidSecurityTokenException();
         }
     }
 

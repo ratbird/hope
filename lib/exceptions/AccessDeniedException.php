@@ -1,5 +1,4 @@
 <?php
-# Lifter010: DONE
 /**
  * AccessDeniedException.php
  *
@@ -15,4 +14,13 @@
 
 class AccessDeniedException extends Exception
 {
+    public function __construct($message = '', $code = 0, Exception $previous = null)
+    {
+        if (func_num_args() === 0) {
+            $message = _('Sie haben nicht die Berechtigung, diese Aktion '
+                       . 'auszuführen bzw. diesen Teil des Systems zu betreten.');
+        }
+
+        parent::__construct($message, $code, $previous);
+    }
 }

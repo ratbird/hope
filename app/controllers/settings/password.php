@@ -31,7 +31,7 @@ class Settings_PasswordController extends Settings_SettingsController
         parent::before_filter($action, $args);
 
         if (!$this->shallChange('auth_user_md5.password', 'password')) {
-            throw new AccessDeniedException(_('Sie haben keinen Zutritt zu diesem Bereich.'));
+            throw new AccessDeniedException();
         }
 
         PageLayout::setHelpKeyword('Basis.HomepagePersönlicheDaten');

@@ -38,7 +38,7 @@ class Settings_NotificationController extends Settings_SettingsController
         }
 
         if (!$GLOBALS['auth']->is_authenticated() || $GLOBALS['perm']->have_perm('admin')) {
-            throw new AccessDeniedException(_('Sie dürfen diesen Bereich nicht betreten.'));
+            throw new AccessDeniedException();
         }
 
         PageLayout::setHelpKeyword('Basis.MyStudIPBenachrichtigung');

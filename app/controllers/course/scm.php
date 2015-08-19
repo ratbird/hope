@@ -75,7 +75,7 @@ class Course_ScmController extends StudipController
         }
 
         if (in_array($action, words('create edit move delete')) && !$this->priviledged) {
-            throw new AccessDeniedException(_('Sie sind nicht berechtigt, auf diesen Bereich zuzugreifen'));
+            throw new AccessDeniedException();
         }
 
         if ($GLOBALS['perm']->have_studip_perm('tutor', $GLOBALS['SessSemName'][1])) {

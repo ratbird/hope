@@ -70,7 +70,7 @@ class LiteratureController extends AuthenticatedController
         //checking rights
         if (($o_type == "sem" && !$GLOBALS['perm']->have_studip_perm("tutor", $this->return_range)) ||
             (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->return_range))){
-                throw new AccessDeniedException(_('Keine Berechtigung in diesem Bereich.'));
+                throw new AccessDeniedException();
         }
 
         PageLayout::setTitle(_("Literatur importieren"));
@@ -224,7 +224,7 @@ class LiteratureController extends AuthenticatedController
         PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
         $_range_id = Request::option('_range_id');
         if ($_range_id != $GLOBALS['user']->id && !$GLOBALS['perm']->have_studip_perm('user',$_range_id)){
-            throw new AccessDeniedException(_('Kein Zugriff auf diesen Bereich.'));
+            throw new AccessDeniedException();
         }
         $_the_tree = TreeAbstract::GetInstance("StudipLitList", $_range_id);
         $this->title = sprintf(_("Literatur %s"), $_the_tree->root_name);

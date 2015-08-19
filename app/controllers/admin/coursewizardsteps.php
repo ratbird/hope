@@ -33,8 +33,7 @@ class Admin_CourseWizardStepsController extends AuthenticatedController
 
         // Check permissions to be on this site
         if (!$GLOBALS['perm']->have_perm('root')) {
-            throw new AccessDeniedException(_('Sie haben keine Berechtigung, '.
-                'auf diesen Teil des Systems zuzugreifen.'));
+            throw new AccessDeniedException();
         }
         PageLayout::setTitle(_('Schritte im Veranstaltungsanlegeassistenten'));
         Navigation::activateItem('/admin/config/coursewizardsteps');

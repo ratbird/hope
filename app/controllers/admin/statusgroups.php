@@ -303,7 +303,7 @@ class Admin_StatusgroupsController extends AuthenticatedController
     private function check($rights)
     {
         if (!$this->type[$rights]($this->user_id)) {
-            throw new AccessDeniedException(_('Sie dürfen auf diesen Bereich nicht zugreifen.'));
+            throw new AccessDeniedException();
         }
     }
 

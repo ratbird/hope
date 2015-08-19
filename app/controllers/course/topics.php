@@ -22,7 +22,7 @@ class Course_TopicsController extends AuthenticatedController
         if (Request::isPost() && Request::get("edit") && $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
             $topic = new CourseTopic(Request::option("issue_id"));
             if ($topic['seminar_id'] && ($topic['seminar_id'] !== $_SESSION['SessionSeminar'])) {
-                throw new AccessDeniedException("Kein Zugriff");
+                throw new AccessDeniedException();
             }
             if (Request::submitted("delete_topic")) {
                 $topic->delete();
@@ -105,7 +105,7 @@ class Course_TopicsController extends AuthenticatedController
     public function edit_action($topic_id = null)
     {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         $this->topic = new CourseTopic($topic_id);
         $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
@@ -120,7 +120,7 @@ class Course_TopicsController extends AuthenticatedController
     public function copy_action()
     {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         if (Request::submitted("copy")) {
             $prio = 1;
@@ -195,7 +195,7 @@ class Course_TopicsController extends AuthenticatedController
     public function fetch_topics_action()
     {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         $this->topics = CourseTopic::findBySeminar_id(Request::option("seminar_id"));
         $output = array(

@@ -30,7 +30,7 @@ class Course_PlusController extends AuthenticatedController
                 Navigation::activateItem('/admin/institute/modules');
                 require_once 'lib/admin_search.inc.php';
             } else {
-                throw new AccessDeniedException(_("Keine Berechtigung."));
+                throw new AccessDeniedException();
             }
         }
 
@@ -43,7 +43,7 @@ class Course_PlusController extends AuthenticatedController
         }
 
         if (!$GLOBALS['perm']->have_studip_perm($object_type === 'sem' ? 'tutor' : 'admin', $id)) {
-            throw new AccessDeniedException(_("Keine Berechtigung."));
+            throw new AccessDeniedException();
         }
 
         if ($object_type === "sem") {

@@ -59,7 +59,8 @@ class WysiwygRequest
     {
         if (! $GLOBALS['perm']->have_studip_perm($permission, self::seminarId())) {
             throw new \AccessDeniedException(
-                \_("Es werden mindestens $permission-Zugriffsrechte benötigt.")); 
+                \sprintf(\_('Es werden mindestens %s-Zugriffsrechte benötigt.'),
+                        $permission)); 
         }
     }
 

@@ -81,7 +81,7 @@ class Course_DatesController extends AuthenticatedController
     public function add_topic_action()
     {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         if (!Request::get("title")) {
             throw new Exception("Geben Sie einen Titel an.");
@@ -149,7 +149,7 @@ class Course_DatesController extends AuthenticatedController
     public function remove_topic_action()
     {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         $topic = new CourseTopic(Request::option("issue_id"));
         $date = new CourseDate(Request::option("termin_id"));

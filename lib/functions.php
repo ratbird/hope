@@ -177,7 +177,7 @@ function selectSem ($sem_id)
             if ($course['lesezugriff'] > 0 || !get_config('ENABLE_FREE_ACCESS')) {
                 // redirect to login page if user is not logged in
                 $auth->login_if($auth->auth["uid"] == "nobody");
-                throw new AccessDeniedException(_("Keine Berechtigung."));
+                throw new AccessDeniedException();
             }
         }
         $SessionSeminar = $course["Seminar_id"];
@@ -249,7 +249,7 @@ function selectInst ($inst_id)
     if (!get_config('ENABLE_FREE_ACCESS') && !$perm->have_perm('user')) {
         // redirect to login page if user is not logged in
         $auth->login_if($auth->auth["uid"] == "nobody");
-        throw new AccessDeniedException(_("Keine Berechtigung."));
+        throw new AccessDeniedException();
     }
 
     $SessionSeminar = $inst_id;

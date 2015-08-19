@@ -20,7 +20,7 @@ class FolderController extends AuthenticatedController
         object_set_visit_module('documents');
         
         if (!$GLOBALS['rechte']) {
-            throw new AccessDeniedException(_('Sie dürfen auf diesen Teil des Systems nicht zugreifen.'));
+            throw new AccessDeniedException();
         }
 
         PageLayout::setTitle(_('Neuen Ordner erstellen'));

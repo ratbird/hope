@@ -75,7 +75,7 @@ class StreamsController extends PluginController {
             $this->commentable = true;
         }
         if (!$this->commentable) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
         Navigation::getItem("/course/blubberforum")->setImage('icons/16/black/blubber.png');
@@ -130,7 +130,7 @@ class StreamsController extends PluginController {
         if ($thread['context_type'] === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($thread['Seminar_id']);
             if ($seminar->read_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $thread['Seminar_id'])) {
-                throw new AccessDeniedException("Kein Zugriff");
+                throw new AccessDeniedException();
             }
         }
         BlubberPosting::$course_hashes = $thread['context_type'] === "course" ? $thread['Seminar_id'] : false;
@@ -229,7 +229,7 @@ class StreamsController extends PluginController {
         if ($context_type === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($context);
             if ($seminar->write_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context)) {
-                throw new AccessDeniedException("Kein Zugriff");
+                throw new AccessDeniedException();
             }
         }
         BlubberPosting::$course_hashes = ($context_type === "course" ? $context : false);
@@ -326,7 +326,7 @@ class StreamsController extends PluginController {
         $thread = new BlubberPosting($posting['root_id']);
         if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id']))
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         $this->render_text($posting['description']);
     }
@@ -337,13 +337,13 @@ class StreamsController extends PluginController {
      */
     public function edit_posting_action () {
         if (!Request::isPost()) {
-            throw new Exception("GET not supported");
+            throw new MethodNotAllowedException("GET not supported");
         }
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
         if (($posting['user_id'] !== $GLOBALS['user']->id)
                 && (!$GLOBALS['perm']->have_studip_perm("tutor", $posting['Seminar_id']))) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         $old_content = $posting['description'];
         $messaging = new messaging();
@@ -408,7 +408,7 @@ class StreamsController extends PluginController {
         $thread = new BlubberPosting($posting['root_id']);
         if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id']))
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         BlubberPosting::$course_hashes = ($thread['context_type'] === "course" ? $thread['Seminar_id'] : false);
         $this->render_text(BlubberPosting::format($posting['description']));
@@ -427,7 +427,7 @@ class StreamsController extends PluginController {
         if ($thread['context_type'] === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($context);
             if ($seminar->write_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context)) {
-                throw new AccessDeniedException("Kein Zugriff");
+                throw new AccessDeniedException();
             }
         }
         BlubberPosting::$course_hashes = ($thread['context_type'] === "course" ? $thread['Seminar_id'] : false);
@@ -519,7 +519,7 @@ class StreamsController extends PluginController {
         $context_type = Request::option("context_type");
         if (!Request::isPost()
                 || ($context_type === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $context))) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException();
         }
         //check folders
         $db = DBManager::get();
@@ -683,7 +683,7 @@ class StreamsController extends PluginController {
      */
     public function follow_user_action() {
         if (!$GLOBALS['perm']->have_perm("autor")) {
-            throw new AccessDeniedException("Unerlaubte Methode");
+            throw new AccessDeniedException();
         }
         if (Request::get("external_contact")) {
             $user = BlubberExternalContact::find(Request::option("user_id"));
@@ -738,7 +738,7 @@ class StreamsController extends PluginController {
     public function edit_action($stream_id = null) {
         $this->stream = new BlubberStream($stream_id);
         if ($GLOBALS['user']->id === "nobody") {
-            throw new AccessDeniedException("Access denied!");
+            throw new AccessDeniedException();
         }
         if ($stream_id) {
             Navigation::activateItem("/community/blubber/".$stream_id);

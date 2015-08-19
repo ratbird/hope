@@ -2,6 +2,8 @@
 $current_page = _('Zugriff verweigert');
 ?>
 <?= MessageBox::exception(_('Zugriff verweigert'), array(htmlReady($exception->getMessage()))) ?>
-    <p>
-      <?= _('Zurück zur') ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _('Startseite') ?></a>
-    </p>
+<p>
+    <?= sprintf(_('Zurück zur %sStartseite%s'),
+                sprintf('<a href="%s">', URLHelper::getLink('index.php')),
+                '</a>') ?>
+</p>

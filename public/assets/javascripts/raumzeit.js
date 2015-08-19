@@ -2,14 +2,13 @@
 /*global window, $, jQuery, _, STUDIP */
 
 jQuery(function ($) {
-    $('.bookable_rooms_action').bind('click', function (event) {
+    $(document).on('click', 'a.bookable_rooms_action', function (event) {
         var select = $(this).prev('select')[0];
         var me = $(this);
         if (select !== null && select !== undefined) {
             if (me.attr('data-state') === 'enabled') {
                 STUDIP.Raumzeit.disableBookableRooms(me);
             } else {
-                me.attr('src', STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif');
                 if (me.data('options') === undefined) {
                     me.data('options', $(select).children('option').clone(true));
                 } else {
@@ -42,18 +41,18 @@ jQuery(function ($) {
                         } else {
                             select.title = '';
                         }
-                        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/room-clear.png');
                         me.attr('title', 'Alle Räume anzeigen'.toLocaleString());
                         me.attr('data-state', 'enabled');
                     }
                 });
             }
         }
+        event.preventDefault();
     });
-    $('.bookable_rooms_action').show();
+    $('a.bookable_rooms_action').show();
 
-    $('input[type=checkbox]').bind('change', function () {
-        STUDIP.Raumzeit.disableBookableRooms($('img[data-name=bulk_action]'));
+    $(document).on('change', 'input[name="singledate[]"]', function () {
+        STUDIP.Raumzeit.disableBookableRooms($('a.bookable_rooms_action'));
     });
 });
 
@@ -232,13 +231,12 @@ STUDIP.Raumzeit = {
     disableBookableRooms: function (icon) {
         var select = $(icon).prev('select')[0];
         var me = $(icon);
-
+        select.title = '';
         $(select).children('option').each(function () {
             $(this).attr('disabled', false);
         });
 
         me.attr('data-state', false);
-        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/grey/room-clear.png');
         me.attr('title', 'Nur buchbare Räume anzeigen'.toLocaleString());
     }
 };

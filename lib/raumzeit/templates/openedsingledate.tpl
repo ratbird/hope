@@ -10,7 +10,7 @@ use Studip\Button,
 
     <td class="printcontent" colspan="9" style="padding-left: 10px; padding-top: 0.5em;">
         <a name="<?=$tpl['sd_id']?>"></a>
-        <? if ($tpl['deleted']) : ?>   
+        <? if ($tpl['deleted']) : ?>
             <? include('lib/raumzeit/templates/cancel_action.php'); ?>
             <div style="text-align: center">
             <div class="button-group">
@@ -36,14 +36,14 @@ use Studip\Button,
                 <b><?=_("von")?></b>
                 <input type="text" id="start_stunde" name="start_stunde" maxlength="2" size="2" value="<?=$tpl['start_stunde']?>">:
                 <input type="text" id="start_minute" name="start_minute" maxlength="2" size="2" value="<?=$tpl['start_minute']?>">
-                
+
                 <b><?=_("bis")?></b>
                 <input type="text" id="end_stunde" name="end_stunde" maxlength="2" size="2" value="<?=$tpl['end_stunde']?>">:
                 <input type="text" id="end_minute" name="end_minute" maxlength="2" size="2" value="<?=$tpl['end_minute']?>">&nbsp;<?=_("Uhr")?>
                 <?=Termin_Eingabe_javascript(3,0,mktime(12,0,0,$tpl['month'],$tpl['day'],$tpl['year']),$tpl['start_stunde'],$tpl['start_minute'],$tpl['end_stunde'],$tpl['end_minute']);?>
                 <br>
                 <br>
-               
+
                 <b><?=_("Art:")?></b>
                 <select name="dateType">
                 <?
@@ -60,14 +60,14 @@ use Studip\Button,
                 <br><br>
 
                 <b><?= _("Durchführende Dozenten:") ?></b><br>
-                
+
                 <? $dozenten = $sem->getMembers('dozent') ?>
 
                 <ul class="termin_related teachers">
                         <? foreach ($dozenten as $related_person => $dozent) : ?>
 
-                        <? $related = false; 
-                        if (in_array($related_person, $tpl['related_persons']) !== false) : 
+                        <? $related = false;
+                        if (in_array($related_person, $tpl['related_persons']) !== false) :
                                 $related = true;
                         endif ?>
 
@@ -92,7 +92,7 @@ use Studip\Button,
                     </option>
                     <? endforeach ?>
                 </select>
-                
+
                 <a href="javascript:" onClick="STUDIP.Raumzeit.addLecturer()" title="<?= _('DozentIn hinzufügen') ?>">
                     <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
                 </a>
@@ -106,7 +106,7 @@ use Studip\Button,
                 <?= _("alle") ?>
                 <? endif ?>-->
             </div>
-            
+
             <div style="float: right; width: 49%">
                 <b><?= _('Raumangaben:') ?></b><br>
                 <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
@@ -125,8 +125,10 @@ use Studip\Button,
                     <? endwhile; ?>
                 </select>
 
-                <?= Assets::img('icons/16/grey/room-clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
-                
+                <a href="#" class="bookable_rooms_action" title="<?=_("Nur buchbare Räume anzeigen")?>">
+                <?= Assets::img('icons/16/blue/room-clear.png') ?>
+                </a>
+
                 <br>
                 <br>
 
@@ -152,13 +154,13 @@ use Studip\Button,
                     </label>
                     <br>
                 <? endif ?>
-                
+
                 <br>
                 <br>
                 <br>
-                
+
                 <b><?= _("Beteiligte Gruppen") ?>:</b><br>
-                
+
                 <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()) ?>
                 <ul class="termin_related groups">
                         <? foreach ($gruppen as $statusgruppe) : ?>
@@ -185,13 +187,13 @@ use Studip\Button,
                     </option>
                     <? endforeach ?>
                 </select>
-                
+
                 <a href="javascript:" onClick="STUDIP.Raumzeit.addGroup()" title="<?= _('Gruppe hinzufügen') ?>">
                     <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
                 </a>
             </div>
             <br style="clear: both;"><br>
-            
+
             <div style="text-align: center">
                 <div class="button-group">
                     <?= Button::createAccept(_('Übernehmen'), 'editSingleDate_button') ?>
@@ -208,13 +210,13 @@ use Studip\Button,
                             URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->getId()) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])),
                             array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false")) ?>
                     <? if ($tpl['room_request']) : ?>
-                    <?= LinkButton::create(_('Raumanfrage zurückziehen'), 
+                    <?= LinkButton::create(_('Raumanfrage zurückziehen'),
                             URLHelper::getURL('?cmd=removeRequest&cycle_id='. $tpl['cycle_id'] .'&singleDateID='. $tpl['sd_id'])) ?>
                     <? endif ?>
                 <? endif ?>
                 </div>
             </div>
-            
+
             <input type="hidden" name="cmd" value="editSingleDate">
             <input type="hidden" name="singleDateID" value="<?=$tpl['sd_id']?>">
 

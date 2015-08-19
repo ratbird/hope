@@ -50,8 +50,10 @@ use Studip\Button,
                             <? endwhile ?>
                         <? endif ?>
                     </select>
-                    
-                    <?= Assets::img('icons/16/grey/room-clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
+
+                    <a href="#" class="bookable_rooms_action" title="<?=_("Nur buchbare Räume anzeigen")?>">
+                    <?= Assets::img('icons/16/blue/room-clear.png') ?>
+                    </a>
 
                     <br>
                     <? endif ?>
@@ -86,11 +88,11 @@ use Studip\Button,
 					<? endif; ?>
                 </TD>
                 <TD class="table_row_odd">
-                    <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()); 
+                    <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId());
 					if (sizeof($gruppen) > 0) : ?>
 					<label for="related_statusgruppen[]" style="vertical-align: top;"><?= _("Beteiligte Gruppen:") ?></label>
 					<SELECT name="related_statusgruppen[]" multiple>
-                    
+
                     <? foreach ($gruppen as $gruppe) : ?>
                     <OPTION value="<?= htmlReady($gruppe->getId()) ?>"><?= htmlReady($gruppe['name']) ?></OPTION>
                     <? endforeach; ?>

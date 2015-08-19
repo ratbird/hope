@@ -258,7 +258,7 @@ STUDIP.Admission = {
     checkRuleActivation: function (target) {
         var form = $('#' + target);
         var globalActivation = form.find('input[name=enabled]');
-        if (globalActivation.attr('checked')) {
+        if (globalActivation.prop('checked')) {
             $('#activation').show();
             if (form.find('input[name=activated]:checked').val() === 'studip') {
                 $('#institutes_activation').hide();
@@ -279,17 +279,17 @@ STUDIP.Admission = {
         switch (mode) {
         case 'check':
             $('input[name*="' + inputName + '"]').each(function () {
-                $(this).attr('checked', true);
+                $(this).prop('checked', true);
             });
             break;
         case 'uncheck':
             $('input[name*="' + inputName + '"]').each(function () {
-                $(this).attr('checked', false);
+                $(this).prop('checked', false);
             });
             break;
         case 'invert':
             $('input[name*="' + inputName + '"]').each(function () {
-                $(this).attr('checked', !$(this).attr('checked'));
+                $(this).prop('checked', !$(this).prop('checked'));
             });
             break;
         }

@@ -45,15 +45,15 @@
         var name = $(this).attr('name');
     
         if (name === 'all[all]') {
-            $(this).closest('table').find(':checkbox').attr('checked', this.checked);
+            $(this).closest('table').find(':checkbox').prop('checked', this.checked);
             return;
         }
 
         if (/all\[columns\]/.test(name)) {
             var index = $(this).closest('td').index() + 2;
-            $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox').attr('checked', this.checked);
+            $(this).closest('table').find('tbody td:nth-child(' + index + ') :checkbox').prop('checked', this.checked);
         } else if (/all\[rows\]/.test(name)) {
-            $(this).closest('td').siblings().find(':checkbox').attr('checked', this.checked);
+            $(this).closest('td').siblings().find(':checkbox').prop('checked', this.checked);
         }
 
         $('.notification.settings tbody :checkbox[name^=all]').each(function () {

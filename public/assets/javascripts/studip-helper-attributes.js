@@ -39,7 +39,7 @@
     $(document).on('change', ':checkbox[data-activates]', function () {
         var activates = $(this).data('activates'),
             activated = $(this).prop('checked') || $(this).prop('indeterminate') || false;
-        $(activates).attr('disabled', !activated).trigger('update.proxy');
+        $(activates).prop('disabled', !activated).trigger('update.proxy');
     }).ready(function () {
         $(':checkbox[data-activates]').trigger('change');
     });
@@ -50,7 +50,7 @@
     $(document).on('change update.proxy', 'select[data-activates]', function () {
         var activates = $(this).data('activates'),
             disabled = $(this).is(':disabled') || $(this).val().length === 0;
-        $(activates).attr('disabled', disabled);
+        $(activates).prop('disabled', disabled);
     }).ready(function () {
         $('select[data-activates]').trigger('change');
     });

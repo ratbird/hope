@@ -36,7 +36,7 @@ jQuery(function ($) {
                                 select.title = '';
                             }
                             _.each(result, function (v) {
-                                $(select).children('option[value=' + v + ']').attr('disabled', 'disabled');
+                                $(select).children('option[value=' + v + ']').prop('disabled', true);
                             });
                         } else {
                             select.title = '';
@@ -99,12 +99,12 @@ jQuery(function ($) {
             $('#block_appointments_days input:checkbox').click(function () {
                 var clicked_id = parseInt(this.id.split('_').pop(), 10);
                 if (clicked_id === 0 || clicked_id === 1) {
-                    $('#block_appointments_days input:checkbox').attr('checked', function (i) {
+                    $('#block_appointments_days input:checkbox').prop('checked', function (i) {
                         return i === clicked_id;
                     });
                 } else {
-                    $('#block_appointments_days_0').attr('checked', false);
-                    $('#block_appointments_days_1').attr('checked', false);
+                    $('#block_appointments_days_0').prop('checked', false);
+                    $('#block_appointments_days_1').prop('checked', false);
                 }
             });
         },
@@ -146,12 +146,12 @@ STUDIP.Raumzeit = {
     toggleCheckboxes: function (cycle_id) {
         var checked = false;
         jQuery('table[data-cycleid=' + cycle_id + '] input[name^=singledate]').each(function () {
-            if (jQuery(this).attr('checked')) {
+            if (jQuery(this).prop('checked')) {
                 checked = true;
             }
         });
 
-        jQuery('table[data-cycleid=' + cycle_id + '] input[name*=singledate]').attr('checked', !checked);
+        jQuery('table[data-cycleid=' + cycle_id + '] input[name*=singledate]').prop('checked', !checked);
     },
 
     addLecturer: function () {
@@ -164,7 +164,7 @@ STUDIP.Raumzeit = {
             jQuery('li[data-lecturerid=' + lecturer_id + ']').show();
             //jQuery('li[data-lecturerid=' + lecturer_id + '] input').val('1');
             jQuery('select[name=teachers] option[value=' + lecturer_id + ']').hide();
-            jQuery('select[name=teachers] option[value=none]').attr('selected', 'selected');
+            jQuery('select[name=teachers] option[value=none]').prop('selected', true);
         });
 
         STUDIP.Raumzeit.addFormLecturers();
@@ -214,7 +214,7 @@ STUDIP.Raumzeit = {
             jQuery('li[data-groupid=' + statusgruppe_id + ']').show();
             //jQuery('li[data-groupid=' + statusgruppe_id + '] input').val('1');
             jQuery('select[name=groups] option[value=' + statusgruppe_id + ']').hide();
-            jQuery('select[name=groups] option[value=none]').attr('selected', 'selected');
+            jQuery('select[name=groups] option[value=none]').prop('selected', true);
         });
 
         STUDIP.Raumzeit.addFormGroups();

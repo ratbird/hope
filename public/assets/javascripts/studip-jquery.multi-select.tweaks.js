@@ -41,7 +41,7 @@
             chunks        = $option.text().split('--');
 
         if (index === -1) {
-            $option.attr('disabled', true);
+            $option.prop('disabled', true);
             index = undefined;
         }
 

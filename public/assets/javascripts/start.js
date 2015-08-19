@@ -86,7 +86,7 @@
             url    = icon.attr('href'),
             widget = icon.closest('.studip-widget');
 
-        icon.attr('disabled', true).addClass('ajaxing');
+        icon.prop('disabled', true).addClass('ajaxing');
 
         $.getJSON(url).then(function (response) {
             if (response) {

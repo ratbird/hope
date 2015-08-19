@@ -20,7 +20,7 @@ STUDIP.enrollment = function () {
             var hasHiddenElement = hiddenElement.length > 0;
             index += 1;
             if (!hasDeleteButton) {
-                deleteIcon.clone().attr('class', id + ' delete').appendTo(that);
+                deleteIcon.clone().addClass(id + ' delete').appendTo(that);
             }
 
             if (!hasHiddenElement) {

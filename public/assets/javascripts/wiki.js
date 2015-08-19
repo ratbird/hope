@@ -115,7 +115,7 @@
 
     $(document).on('keyup change', '#wiki textarea[name=body]', function () {
         // Disable "save and edit" button if text was not changed
-        $('#wiki button[name="submit-and-edit"]').attr('disabled', this.value === this.defaultValue);
+        $('#wiki button[name="submit-and-edit"]').prop('disabled', this.value === this.defaultValue);
     }).on('ready', function () {
         if (!STUDIP.wysiwyg || STUDIP.wysiwyg.disabled) {
             // Trigger above disable mechanism only when not using wysiwyg
@@ -123,7 +123,6 @@
         } else {
             $(document).off('keyup change', '#wiki textarea[name=body]');
         }
-        
-        
     });
+
 }(jQuery, STUDIP));

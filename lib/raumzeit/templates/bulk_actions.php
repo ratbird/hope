@@ -70,7 +70,7 @@ use Studip\Button, Studip\LinkButton;
             <?= _("Raum:"); ?>
         </label>
 
-        <select name="room" onFocus="jQuery('input[type=radio][name=action][value=room]').attr('checked', 'checked')">
+        <select name="room" onFocus="jQuery('input[type=radio][name=action][value=room]').prop('checked', true)">
             <option value="">-- <?= _('Raum auswählen') ?> --</value>
             <? while ($res = $resList->next()) : ?>
                 <option value="<?= $res['resource_id'] ?>">
@@ -101,7 +101,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
 
         <input type="text" name="freeRoomText" maxlength="255" value="<?= $tpl['freeRoomText'] ?>" style="margin-left: 25px; width: 90%;"
-            onFocus="jQuery('input[type=radio][name=action][value=freetext]').attr('checked', 'checked')">
+            onFocus="jQuery('input[type=radio][name=action][value=freetext]').prop('checked', true)">
         <br>
         <br>
 

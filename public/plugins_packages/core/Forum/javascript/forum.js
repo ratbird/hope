@@ -205,7 +205,7 @@ STUDIP.Forum = {
             var values = $('form.add_area_form').serializeObject();
 
             // disable submit and cancel buttons, there is no turning back now
-            $('form.add_area_form a.button').attr('disabled', 'disabled');
+            $('form.add_area_form a.button').prop('disabled', true);
 
             jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/add/' + values.category_id + '?cid=' + STUDIP.Forum.seminar_id), {
                 type: 'POST',

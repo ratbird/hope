@@ -11,7 +11,7 @@ jQuery(function ($) {
     $(document).on('click', '.smiley-toggle', function (event) {
         var element = $(this);
 
-        element.attr('disabled', true)
+        element.prop('disabled', true)
                .addClass('ajax');
 
         $.getJSON(element.attr('href')).then(function (json) {
@@ -21,7 +21,7 @@ jQuery(function ($) {
 
             element.toggleClass('favorite', json.state)
                    .removeClass('ajax')
-                   .attr('disabled', false);
+                   .prop('disabled', false);
         });
         event.preventDefault();
     });

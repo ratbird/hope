@@ -20,7 +20,7 @@
             href  = $that.attr('href'),
             id    = $that.closest('tr').attr('id');
 
-        $that.attr('disabled', true).addClass('ajaxing');
+        $that.prop('disabled', true).addClass('ajaxing');
         $.get(href, function (response) {
             var row = $('#' + id, response);
             $that.closest('tr').replaceWith(row);

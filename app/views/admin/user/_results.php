@@ -115,7 +115,7 @@ use Studip\Button, Studip\LinkButton;
 
     <tr>
         <td colspan="11" align="right">
-            <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
+            <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>" data-proxyfor=".check_all">
             <?= Button::create(_('Löschen'), array('title' => _('Alle ausgewählten Benutzer löschen')))?>
         </td>
     </tr>
@@ -124,13 +124,3 @@ use Studip\Button, Studip\LinkButton;
 
 </table>
 </form>
-
-<script>
-jQuery("input[name='check_all']").click(function() {
-    if(jQuery(this).attr("checked")) {
-        jQuery(".check_all").attr("checked","checked");
-    } else {
-        jQuery(".check_all").removeAttr("checked");
-    }
-});
-</script>

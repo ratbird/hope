@@ -343,7 +343,7 @@ jQuery(document).on('change', 'select[data-copy-to]', function () {
 });
 
 jQuery(document).ready(function ($) {
-    $('#checkAll').attr('checked', $('.sem_checkbox:checked').length !== 0);
+    $('#checkAll').prop('checked', $('.sem_checkbox:checked').length !== 0);
 });
 
 // Fix horizontal scroll issue on domready, window load and window resize.

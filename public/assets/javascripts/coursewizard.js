@@ -15,7 +15,7 @@ STUDIP.CourseWizard = {
     {
         // Check if already set.
         if ($('input[name="participating[' + id + ']"]').length == 0) {
-            var wrapper = $('<div>').attr('class', 'institute');
+            var wrapper = $('<div>').addClass('institute');
             $('#wizard-participating').children('div.description').removeClass('hidden-js');
             var input = $('<input>').
                 attr('type', 'hidden').
@@ -102,7 +102,7 @@ STUDIP.CourseWizard = {
     {
         // Check if already set.
         if ($('input[name="' + inputName + '[' + id + ']"]').length == 0) {
-            var wrapper = $('<div>').attr('class', elClass);
+            var wrapper = $('<div>').addClass(elClass);
             $('#' + elId).children('div.description').removeClass('hidden-js');
             var input = $('<input>').
                 attr('type', 'hidden').
@@ -216,7 +216,7 @@ STUDIP.CourseWizard = {
             target.removeClass('tree-open').addClass('tree-closed');
         }
         var checkbox = target.children('input[id="' + node + '"]');
-        checkbox.attr('checked', !checkbox.attr('checked'));
+        checkbox.prop('checked', !checkbox.prop('checked'));
         return false;
     },
 
@@ -253,7 +253,7 @@ STUDIP.CourseWizard = {
                         if (items.length > 0) {
                             $('#sem-tree-search-start').addClass('hidden-js');
                             $('#sem-tree-search-reset').removeClass('hidden-js').css('display', '');
-                            $('#studyareas li input[type="checkbox"]').attr('checked', false);
+                            $('#studyareas li input[type="checkbox"]').prop('checked', false);
                             $('#studyareas li').not('.keep-node').addClass('css-tree-hidden');
                             STUDIP.CourseWizard.buildPartialTree(items, true, '');
                             $('#sem-tree-assign-all').removeClass('hidden-js');
@@ -282,7 +282,7 @@ STUDIP.CourseWizard = {
         $('#sem-tree-search').val('');
         $('.css-tree-hidden').removeClass('css-tree-hidden');
         var notloaded = $('#studyareas li').not('.tree-loaded');
-        notloaded.children('input[type="checkbox"]').attr('checked', false);
+        notloaded.children('input[type="checkbox"]').prop('checked', false);
         notloaded.children('ul').empty();
         $('#sem-tree-assign-all').addClass('hidden-js');
         $('input[name="searchterm"]').remove();

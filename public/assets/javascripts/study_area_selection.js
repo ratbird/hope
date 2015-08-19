@@ -41,7 +41,7 @@ STUDIP.study_area_selection = {
 
     add: function (id, course_id) {
         // may not be visible at the current
-        jQuery('.study_area_selection_add_' + id).attr('disabled', true).fadeTo('slow', 0);
+        jQuery('.study_area_selection_add_' + id).prop('disabled', true).fadeTo('slow', 0);
 
         jQuery.ajax({
             type: 'POST',
@@ -83,7 +83,7 @@ STUDIP.study_area_selection = {
                     visibility: 'visible',
                     opacity: 0
                 }).fadeTo('slow', 1, function () {
-                    jQuery(this).attr('disabled', false);
+                    jQuery(this).prop('disabled', false);
                 });
 
                 STUDIP.study_area_selection.refreshSelection();

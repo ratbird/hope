@@ -5,7 +5,7 @@
     <? if ($tpl['cycle_id']) : ?>
     <td width="1%" style="padding: 0; <?= !$tpl['last_element'] ? "background-image: url('assets/images/forumstrich.gif');" : '' ?>">
         <a name="<?=$tpl['sd_id']?>" />
-  
+
         <? if ($tpl['last_element']) : ?>
         <?= Assets::img('forumstrich2.gif') ?>
         <? else : ?>
@@ -45,7 +45,7 @@
             <?=$tpl['room']?>
             <? if ($tpl['ausruf']) : ?>
                 <a href="javascript:;" onClick="alert('<?=jsReady($tpl['ausruf'], 'inline-single')?>')">
-                    <?= Assets::img($tpl['symbol'], tooltip($tpl['ausruf']))?>
+                    <?= Assets::img($tpl['symbol'], array('title' => $tpl['ausruf']))?>
                 </a>
             <? endif ?>
         <? endif; ?>
@@ -54,7 +54,7 @@
         <? if (!$_LOCKED) : ?>
             <a href="<?= URLHelper::getLink('?cycle_id=' . $tpl['cycle_id'] . '&singleDateID='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>" style="margin-right: 10px">
                 <?= Assets::img('icons/16/'. ($tpl['deleted'] ? 'grey' : 'blue') . '/edit.png', array(
-                    'class' => 'text-top', 
+                    'class' => 'text-top',
                     'title' => _("Termin bearbeiten"),
                 )) ?>
             </a>

@@ -37,13 +37,13 @@ use Studip\Button,
                     </FONT>
                     <? if ($tpl['ausruf']) { ?>
                     <a href="javascript:alert('<?=$tpl['ausruf']?>')">
-                        <?= Assets::img('icons/16/red/exclaim-circle.png', tooltip(_("Wichtige Informationen über Raumbuchungen anzeigen"))) ?>
+                        <?= Assets::img('icons/16/red/exclaim-circle.png', array('title' => _("Wichtige Informationen über Raumbuchungen anzeigen"))) ?>
                     </a>
                     <? } ?>
                     <? if ($tpl['room_request_ausruf']) { ?>
                         &nbsp;
                         <A href="javascript:;" onClick="alert('<?=jsReady($tpl['room_request_ausruf'], 'inline-single')?>');">
-                            <?= Assets::img($tpl['symbol'], tooltip($tpl['room_request_ausruf']))?>
+                            <?= Assets::img($tpl['symbol'], array('title' => $tpl['room_request_ausruf']))?>
                         </A>
                     <? } ?>
                 </TD>
@@ -81,12 +81,12 @@ use Studip\Button,
             </TR>
         </TABLE>
     </TD>
-</tr>    
+</tr>
 <? if (Request::option('editCycleId') == $tpl['md_id']) : ?>
 <tr>
     <td class="table_row_even" colspan="9" style="padding-left: 10px">
         <A name="<?=$tpl['md_id']?>"></A>
-        
+
                     <FORM action="<?= URLHelper::getLink() ?>" method="post" name="EditCycle" style="display: inline">
                         <?= CSRFProtection::tokenTag() ?>
                         <SELECT name="day">
@@ -100,7 +100,7 @@ use Studip\Button,
                         <INPUT type="text" name="end_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndHour'])?>"> :
                         <INPUT type="text" name="end_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndMinute'])?>"> Uhr
                         <?=Termin_Eingabe_javascript(2,0,0,$tpl['mdStartHour'],$tpl['mdStartMinute'],$tpl['mdEndHour'],$tpl['mdEndMinute']);?>
-                        
+
                         <span style="padding-left: 15px">
                             <?=_("SWS:")?>
                             <input type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
@@ -128,13 +128,13 @@ use Studip\Button,
                         <?=_("Beschreibung:")?> <input type="text" name="description" value="<?=$tpl['mdDescription']?>" style="width: 450px">
                         <input type="hidden" name="cycle_id" value="<?=$tpl['md_id']?>">
                         <br><br>
-                        
+
                         <div style="text-align: center">
                             <div class="button-group">
                                 <?= Button::createAccept(_('Übernehmen'), 'editCycle') ?>
                                 <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getUrl()) ?>
                             </div>
-                            
+
                             <div class="button-group">
                                 <? if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                                     <?= LinkButton::create($tpl['room_request'] ? _('Raumanfrage bearbeiten') : _('Raumanfrage erstellen'),

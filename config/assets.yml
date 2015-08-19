@@ -9,6 +9,7 @@ javascripts:
     - javascripts/jquery/jquery.multi-select-0.9.12.js
     - javascripts/jquery/jquery.scrollTo-2.1.1.js
 
+    - javascripts/studip-jquery-tweaks.js
     - javascripts/studip-jquery.multi-select.tweaks.js
 
   modernizr: &modernizr

@@ -3452,6 +3452,7 @@ section.contentbox article.new header h1::before {
   border: 0;
 }
 .ajaxing img,
+.ajaxing image,
 .ajaxing svg {
   display: none;
 }

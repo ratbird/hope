@@ -206,15 +206,10 @@ class Icon
             'height' => $this->get_size(),
         ));
 
-        $result = sprintf('<svg %s><image %s></svg>',
+        $result = sprintf('<svg %s><image %s>%s</image></svg>',
                           $this->tag_options($svg_attributes),
-                          $this->tag_options($png_attributes));
-
-        if ($title) {
-            $result = sprintf('<span %s>%s</span>',
-                              $this->tag_options(compact('title')),
-                              $result);
-        }
+                          $this->tag_options($png_attributes),
+                          $title ? sprintf('<title>%s</title>', htmlReady($title)) : '');
 
         return $result;
     }

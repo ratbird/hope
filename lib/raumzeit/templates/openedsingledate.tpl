@@ -116,7 +116,7 @@ use Studip\Button,
                     <?= _("Raum:"); ?>
                 </label>
 
-                <select name="room_sd" onFocus="jQuery('input[type=radio][name=action][value=room]').attr('checked', 'checked')">
+                <select name="room_sd" onchange="jQuery('input[type=radio][name=action][value=room]').prop('checked', true)">
                     <option value="">-- kein Raum gebucht --</value>
                     <? while ($res = $resList->next()) : ?>
                         <option value="<?= $res['resource_id'] ?>" <?= $res['resource_id'] == $tpl['resource_id'] ? 'selected="selected"' : '' ?>>
@@ -143,7 +143,7 @@ use Studip\Button,
                 <? endif ?>
 
                 <input type="text" name="freeRoomText_sd" maxlength="255" value="<?= $tpl['freeRoomText'] ?>" style="margin-left: 25px; width: 90%;"
-                    onFocus="jQuery('input[type=radio][name=action][value=freetext]').attr('checked', 'checked')">
+                    onfocus="jQuery('input[type=radio][name=action][value=freetext]').prop('checked', true)">
 
                 <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
                     <br>

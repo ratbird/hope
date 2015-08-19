@@ -6,7 +6,7 @@ jQuery(function ($) {
         var select = $(this).prev('select')[0];
         var me = $(this);
         if (select !== null && select !== undefined) {
-            if (me.attr('data-state') === 'enabled') {
+            if (me.data('state') === 'enabled') {
                 STUDIP.Raumzeit.disableBookableRooms(me);
             } else {
                 if (me.data('options') === undefined) {
@@ -233,7 +233,7 @@ STUDIP.Raumzeit = {
         var me = $(icon);
         select.title = '';
         $(select).children('option').each(function () {
-            $(this).attr('disabled', false);
+            $(this).prop('disabled', false);
         });
 
         me.attr('data-state', false);

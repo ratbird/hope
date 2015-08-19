@@ -18,7 +18,9 @@
     STUDIP.HeaderMagic = {
         enable: function () {
             $header = $('#barBottomContainer');
-            $wrapper = $header.wrap('<div class="sticky-wrapper" />').parent().height($header.outerHeight(true));
+            if ($header.closest('.sticky-wrapper').length === 0) {
+                $header.wrap('<div class="sticky-wrapper" />').parent().height($header.outerHeight(true));
+            }
             fold = $header.offset().top;
             STUDIP.Scroll.addHandler('header', scroll);
         },

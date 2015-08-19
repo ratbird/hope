@@ -100,8 +100,17 @@
     $(document).ready(function () {
         if (media_query.matches) {
             responsify();
+            STUDIP.HeaderMagic.disable();
         } else {
             media_query.addListener(responsify);
         }
+
+        media_query.addListener(function () {
+            if (media_query.matches) {
+                STUDIP.HeaderMagic.disable();
+            } else {
+                STUDIP.HeaderMagic.enable();
+            }
+        });
     });
 }(jQuery));

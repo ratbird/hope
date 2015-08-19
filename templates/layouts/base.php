@@ -37,7 +37,7 @@ if ($infobox && is_array($infobox)) {
     if (!$sidebar->getImage()) {
         $sidebar->setImage(is_object($infobox['picture']) ? $infobox['picture']->getURL(Avatar::NORMAL) : $infobox['picture']);
     }
-    foreach (array_reverse($infobox['content']) as $entry) {
+    foreach ($infobox['content'] as $entry) {
         $widget = new InfoboxWidget();
         $widget->setTitle($entry['kategorie']);
         if (isset($entry['eintrag']) && is_array($entry['eintrag'])) {
@@ -46,7 +46,7 @@ if ($infobox && is_array($infobox)) {
                 $widget->addElement(new InfoboxElement($row['text'], $icon));
             }
         }
-        $sidebar->insertWidget($widget, ':first');
+        $sidebar->addWidget($widget);
     }
     unset($infobox);
 }

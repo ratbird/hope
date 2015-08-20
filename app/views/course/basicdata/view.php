@@ -122,7 +122,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                                     ->setSearchObject($dozentUserSearch)
                                     ->setDefaultSelectedUser(array_keys($dozenten))
                                     ->setDataDialogStatus(Request::isXhr())
-                                    ->setJSFunctionOnSubmit('jQuery(this).closest(".ui-dialog-content").dialog("close");')
+                                    ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
                                     ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id));
                                 echo $mps_dozent->render();
 
@@ -198,7 +198,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                                     ->setSearchObject($deputySearch)
                                     ->setDefaultSelectedUser(array_keys($deputies))
                                     ->setDataDialogStatus(Request::isXhr())
-                                    ->setJSFunctionOnSubmit('jQuery(this).closest(".ui-dialog-content").dialog("close");')
+                                    ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
                                     ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id . '/deputy'));
                                 echo $mps_deputy->render();
                                 ?>
@@ -253,7 +253,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                             ->setSearchObject($tutorUserSearch)
                             ->setDefaultSelectedUser(array_keys($tutoren))
                             ->setDataDialogStatus(Request::isXhr())
-                            ->setJSFunctionOnSubmit('jQuery(this).closest(".ui-dialog-content").dialog("close");')
+                            ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
                             ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id . '/tutor'));
                         echo $mps_tutor->render();
                         ?>

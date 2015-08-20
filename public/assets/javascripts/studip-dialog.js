@@ -367,6 +367,12 @@
             height = Math.max(200, Math.min(helper.height() + 130, height));
             // Remove helper element
             helper.remove();
+        } else if (options.size && options.size === 'big') {
+            width  = $('body').width() * 0.9;
+            height = $('body').height() * 0.8;
+        } else if (options.size && options.size === 'small') {
+            width  = 300;
+            height = 200;
         } else if (options.size && options.size.match(/^\d+x\d+$/)) {
             temp = options.size.split('x');
             width = temp[0];

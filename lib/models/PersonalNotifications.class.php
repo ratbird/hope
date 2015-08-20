@@ -51,6 +51,20 @@ class PersonalNotifications extends SimpleORMap
             'set' => false,
         );
 
+        $config['notification_map'] = array(
+            'after_create'  => 'PersonalNotificationsDidCreate',
+            'before_create' => 'PersonalNotificationsWillCreate',
+
+            'after_delete'  => 'PersonalNotificationsDidDelete',
+            'before_delete' => 'PersonalNotificationsWillDelete',
+
+            'after_store'   => 'PersonalNotificationsDidStore',
+            'before_store'  => 'PersonalNotificationsWillStore',
+
+            'after_update'  => 'PersonalNotificationsDidUpdate',
+            'before_update' => 'PersonalNotificationsWillUpdate'
+        );
+
         parent::configure($config);
     }
 
@@ -67,9 +81,9 @@ class PersonalNotifications extends SimpleORMap
             $statement = DBManager::get()->prepare($query);
             $statement->bindValue(':id', $notification->id);
             $statement->execute();
-            
+
             $user_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
-            
+
             foreach ($user_ids as $user_id) {
                 PersonalNotifications::expireCache($user_id);
             }

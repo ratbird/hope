@@ -170,7 +170,7 @@
     };
 
     // Handler for HTTP header X-Location: Relocate to another location
-    STUDIP.Dialog.handlers.header['X-Location'] = function (location) {
+    STUDIP.Dialog.handlers.header['X-Location'] = function (location, options) {
         if (document.location.href === location) {
             document.location.reload(true);
         } else {
@@ -181,7 +181,7 @@
             });
         }
 
-        STUDIP.Dialog.close();
+        STUDIP.Dialog.close(options);
         document.location = location;
 
         return false;

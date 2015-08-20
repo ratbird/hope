@@ -458,6 +458,9 @@
         // Trigger update event on document since options.origin might have been removed
         $(document).trigger('dialog-update', {dialog: instance.element, options: options});
 
+        // Blur background
+        $('#layout_wrapper').css('filter', 'blur(' + STUDIP.Dialog.stack.length + 'px)');
+
         // Create/update dialog
         instance.element.dialog(dialog_options);
     };
@@ -491,6 +494,9 @@
             }
 
             STUDIP.Dialog.removeInstance(options.id);
+
+            // Remove background blur
+            $('#layout_wrapper').css('filter', 'blur(' + STUDIP.Dialog.stack.length + 'px)');
         }
 
         if (options['reload-on-close']) {

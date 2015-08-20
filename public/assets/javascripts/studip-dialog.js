@@ -338,7 +338,7 @@
         var scripts = $('<div>' + content + '</div>').filter('script'), // Extract scripts
             dialog_options = {},
             width  = options.width || $('body').width() * 2 / 3,
-            height = options.height || $('body').height()  * 2 / 3,
+            height = options.height || $('body').height() * 2 / 3,
             temp,
             helper,
             instance = STUDIP.Dialog.getInstance(options.id);
@@ -375,6 +375,7 @@
             width = height = options.size;
         }
 
+        // Set dialog options
         dialog_options = $.extend(dialog_options, {
             width:   width,
             height:  height,
@@ -382,6 +383,15 @@
             title:   $('<div>').text(options.title || '').html(), // kinda like htmlReady()
             modal:   true,
             resizable: options.hasOwnProperty('resize') ? options.resize : true,
+            create: function (event) {
+                $(event.target).parent().css('position', 'fixed');
+            },
+            resizeStop: function (event, ui) {
+                var position = [Math.floor(ui.position.left) - $(window).scrollLeft(),
+                                Math.floor(ui.position.top) - $(window).scrollTop()];
+                $(event.target).parent().css('position', 'fixed');
+                $(event.target).dialog('option', 'position', position);
+            },
             open: function () {
                 var helpbar_element = $('.helpbar a[href*="docs.studip.de"]'),
                     tooltip = helpbar_element.text(),

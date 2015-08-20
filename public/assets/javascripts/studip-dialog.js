@@ -374,7 +374,7 @@
         } else if (options.size && !options.size.match(/\D/)) {
             width = height = options.size;
         }
-
+        
         // Set dialog options
         dialog_options = $.extend(dialog_options, {
             width:   width,
@@ -497,6 +497,13 @@
         .on('click', 'form[data-dialog] :submit', clickHandler)
         .on('click', 'form[data-dialog] input[type=image]', clickHandler)
         .on('submit', 'form[data-dialog]', dialogHandler);
+
+    // Close dialog on click outside of it
+    $(document).on('click', '.ui-widget-overlay', function () {
+        if ($('.ui-dialog').length > 0) {
+            STUDIP.Dialog.close();
+        }
+    });
 
     // Extra: Expose parseOptions to STUDIP object
     STUDIP.parseOptions = parseOptions;

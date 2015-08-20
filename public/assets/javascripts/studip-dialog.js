@@ -374,7 +374,11 @@
         } else if (options.size && !options.size.match(/\D/)) {
             width = height = options.size;
         }
-        
+
+        // Ensure dimensions fit in viewport
+        width  = Math.min(width, $('body').width() * 0.95);
+        height = Math.min(height, $('body').height() * 0.9);
+
         // Set dialog options
         dialog_options = $.extend(dialog_options, {
             width:   width,

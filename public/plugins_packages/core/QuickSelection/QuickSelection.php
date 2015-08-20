@@ -74,6 +74,7 @@ class QuickSelection extends StudIPPlugin implements PortalPlugin
         $template->config = WidgetHelper::getWidgetUserConfig($GLOBALS['user']->id, 'QUICK_SELECTION');
         $template->plugin = $this;
 
+        header('X-Title: ' . _('Schnellzugriff konfigurieren'));
         echo studip_utf8encode($template->render());
     }
 }

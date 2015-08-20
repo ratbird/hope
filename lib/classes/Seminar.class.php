@@ -323,9 +323,9 @@ class Seminar
         $cache_key = 'course/undecorated_data/'. $this->id;
 
         if ($filter) {
-            $sub_key = $GLOBALS['_language'] .'/'. $this->filterStart .'-'. $this->filterEnd;
+            $sub_key = $_SESSION['_language'] .'/'. $this->filterStart .'-'. $this->filterEnd;
         } else {
-            $sub_key = $GLOBALS['_language'] .'/unfiltered';
+            $sub_key = $_SESSION['_language'] .'/unfiltered';
         }
 
         $data = unserialize($cache->read($cache_key));

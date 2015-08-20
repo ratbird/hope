@@ -146,8 +146,10 @@
                 this.instances[id] = {
                     open: false,
                     element: $('<div>'),
-                    options: {}
+                    options: {},
+                    previous: this.stack[0] || false
                 };
+
                 this.stack.unshift(id);
             }
             return this.instances[id];
@@ -156,7 +158,7 @@
             id = id || 'default';
             if (this.hasInstance(id)) {
                 delete this.instances[id];
-                
+
                 var index = this.stack.indexOf(id);
                 this.stack.splice(index, 1);
             }
@@ -342,16 +344,16 @@
 
         var scripts = $('<div>' + content + '</div>').filter('script'), // Extract scripts
             dialog_options = {},
+            instance = STUDIP.Dialog.getInstance(options.id),
+            previous = instance.previous !== false ? STUDIP.Dialog.getInstance(instance.previous) : false,
             width  = options.width || $('body').width() * 2 / 3,
             height = options.height || $('body').height() * 2 / 3,
             temp,
-            helper,
-            instance = STUDIP.Dialog.getInstance(options.id);
+            helper;
 
         if (instance.open) {
             options.title = options.title || instance.element.dialog('option', 'title');
         }
-        instance.options = options;
 
         if (options['center-content']) {
             content = '<div class="studip-dialog-centered-helper">' + content + '</div>';
@@ -389,6 +391,17 @@
         // Ensure dimensions fit in viewport
         width  = Math.min(width, $('body').width() * 0.95);
         height = Math.min(height, $('body').height() * 0.9);
+        if (previous !== false && width > previous.dimensions.width && height > previous.dimensions.height) {
+            width = width > previous.dimensions.width ? previous.dimensions.width * 0.95 : width;
+            height = height > previous.dimensions.height ? previous.dimensions.height * 0.95 : height;
+        }
+
+        // Store options and dimensions
+        instance.options = options;
+        instance.dimensions = {
+            width: window.parseInt(width, 10),
+            height: window.parseInt(height, 10)
+        };
 
         // Set dialog options
         dialog_options = $.extend(dialog_options, {

@@ -4,29 +4,28 @@
 (function ($, document) {
 
     var fold,
-        $header,
         $wrapper,
         was_below_the_fold = false,
         scroll = function (scrolltop) {
             var is_below_the_fold = scrolltop > fold;
             if (is_below_the_fold !== was_below_the_fold) {
-                $header.toggleClass('fixed', is_below_the_fold);
+                $('#barBottomContainer').toggleClass('fixed', is_below_the_fold);
                 was_below_the_fold = is_below_the_fold;
             }
         };
 
     STUDIP.HeaderMagic = {
         enable: function () {
-            $header = $('#barBottomContainer');
-            if ($header.closest('.sticky-wrapper').length === 0) {
-                $header.wrap('<div class="sticky-wrapper" />').parent().height($header.outerHeight(true));
+            var header = $('#barBottomContainer');
+            if (header.closest('.sticky-wrapper').length === 0) {
+                header.wrap('<div class="sticky-wrapper" />').parent().height(header.outerHeight(true));
             }
-            fold = $header.offset().top;
+            fold = header.offset().top;
             STUDIP.Scroll.addHandler('header', scroll);
         },
         disable : function () {
             STUDIP.Scroll.removeHandler('header');
-            $header.removeClass('fixed');
+            $('#barBottomContainer').removeClass('fixed');
         }
     };
 

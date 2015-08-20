@@ -54,9 +54,16 @@ javascripts:
     - *jquery
     - *modernizr
     - *highlight
+
     - javascripts/vendor/lodash.underscore-3.10.1.js
     - javascripts/l10n.js
     - javascripts/init.js
+
+    - *header
+    - *sidebar
+    - *toolbar
+    - *dialog
+
     - javascripts/ajax_notifications.js
     - javascripts/url_helper.js
     - javascripts/updater.js
@@ -94,10 +101,7 @@ javascripts:
     - javascripts/wiki.js
     - javascripts/coursewizard.js
     - javascripts/smiley.js
-    - *header
-    - *sidebar
-    - *toolbar
-    - *dialog
+
     - javascripts/studip-css.js
     - javascripts/studip-tooltip.js
     - javascripts/studip-scroll.js

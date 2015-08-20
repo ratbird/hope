@@ -252,7 +252,7 @@ STUDIP.Blubber = {
             return;
         }
         STUDIP.Blubber.submittingEditedPostingStarted = true;
-        if (jQuery("#posting_" + id).attr("data-autor") === jQuery("#user_id").val()
+        if (jQuery("#posting_" + id).data("autor") === jQuery("#user_id").val()
                 || window.confirm(jQuery("#editing_question").text())) {
             STUDIP.Blubber.submittingEditedPostingStarted = false;
             jQuery.ajax({
@@ -392,7 +392,7 @@ STUDIP.Blubber = {
             + parseInt(jQuery("#stream_time").val(), 10);
         jQuery("#blubber_threads .posting .time").each(function () {
             var new_text = "";
-            var posting_time = parseInt(jQuery(this).attr("data-timestamp"), 10);
+            var posting_time = parseInt(jQuery(this).data("timestamp"), 10);
             var diff = now_seconds - posting_time;
             if (diff < 86400) {
                 if (diff < 2 * 60 * 60) {
@@ -503,7 +503,7 @@ STUDIP.Blubber = {
         if (thread_id) {
             thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
         } else {
-            thread_id = jQuery(this).attr("data-thread_id");
+            thread_id = jQuery(this).data("thread_id");
             panel_open = true;
         }
         jQuery.ajax({

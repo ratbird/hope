@@ -27,7 +27,7 @@ STUDIP.Forum = {
                 var categories = {};
                 categories.categories = {};
                 jQuery(this).find('table').each(function () {
-                    var name = jQuery(this).attr('data-category-id');
+                    var name = jQuery(this).data('category-id');
                     categories.categories[name] = name;
                 });
 
@@ -60,7 +60,7 @@ STUDIP.Forum = {
     },
 
     insertSmiley: function(textarea_id, element) {
-        jQuery('textarea[data-textarea=' + textarea_id + ']').insertAtCaret(jQuery(element).attr('data-smiley'));
+        jQuery('textarea[data-textarea=' + textarea_id + ']').insertAtCaret(jQuery(element).data('smiley'));
     },
 
     approveDelete: function () {
@@ -158,12 +158,12 @@ STUDIP.Forum = {
         var areas = {};
         areas.areas = {};
         jQuery('#sortable_areas').find('table').each(function () {
-            var category_id = jQuery(this).attr('data-category-id');
+            var category_id = jQuery(this).data('category-id');
 
             areas.areas[category_id] = {};
 
             jQuery(this).find('tr').each(function () {
-                var area_id = jQuery(this).attr('data-area-id');
+                var area_id = jQuery(this).data('area-id');
                 areas.areas[category_id][area_id] = area_id;
             });
         });
@@ -241,7 +241,7 @@ STUDIP.Forum = {
             .parent().append(template({
                 area_id : area_id,
                 name : jQuery('tr[data-area-id=' + area_id + '] span.areaname').text().trim(),
-                content : jQuery('tr[data-area-id=' + area_id + '] div.areacontent').attr('data-content')
+                content : jQuery('tr[data-area-id=' + area_id + '] div.areacontent').data('content')
             }));
     },
 
@@ -262,7 +262,7 @@ STUDIP.Forum = {
         jQuery('tr[data-area-id=' + area_id + '] span.areaname').text(name.name);
 
         // store the modified raw-content used for possible subsequent edits
-        jQuery('tr[data-area-id=' + area_id + '] div.areacontent').attr('data-content', name.content);
+        jQuery('tr[data-area-id=' + area_id + '] div.areacontent').data('content', name.content);
 
         // store the modified area and get formatted content-text from server
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/edit/' + area_id + '?cid=' + STUDIP.Forum.seminar_id), {
@@ -295,7 +295,7 @@ STUDIP.Forum = {
         var spanSelector = 'span[data-edit-topic=' + topic_id +']';
 
         var name = $(spanSelector + ' input[name=name]');
-        name.attr('data-reset', name.val());
+        name.data('reset', name.val());
 
         var textarea = $(spanSelector + ' textarea[name=content]');
 
@@ -310,7 +310,7 @@ STUDIP.Forum = {
         }
 
         // remember current textarea value
-        textarea.attr('data-reset', textarea.val());
+        textarea.data('reset', textarea.val());
 
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/update_entry/' + topic_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
@@ -348,11 +348,11 @@ STUDIP.Forum = {
         jQuery('div[id*=preview]').parent().hide();
 
         jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').val(
-            jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').attr('data-reset')
+            jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').data('reset')
         );
 
         jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val(
-            jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').attr('data-reset')
+            jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').data('reset')
         );
 
         jQuery('span[data-edit-topic=' + topic_id +']').hide();
@@ -558,7 +558,7 @@ STUDIP.Forum = {
     cut : function(topic_id) {
         // remove all childs from clipboard
         jQuery('li[data-id=' + topic_id +'] li.selected').each(function(){
-            var tid = jQuery(this).attr('data-id');
+            var tid = jQuery(this).data('id');
             jQuery(this).removeClass('selected');
             delete STUDIP.Forum.clipboard[tid];
         });
@@ -571,7 +571,7 @@ STUDIP.Forum = {
 
         // iterate over every li and remove the paste icon from all li's in the clipboard'
         jQuery('#forum li').each(function() {
-            var tid = jQuery(this).attr('data-id');
+            var tid = jQuery(this).data('id');
             if (tid !== null && !STUDIP.Forum.clipboard[tid]) {
                 jQuery(this).find('a[data-role=paste]').show();
             } else {
@@ -633,7 +633,7 @@ STUDIP.Forum = {
 
     checkCutPaste: function() {
         jQuery('li.selected').find('li').each(function(){
-            var tid = jQuery(this).attr('data-id');
+            var tid = jQuery(this).data('id');
             delete STUDIP.Forum.clipboard[tid];
 
             jQuery(this).removeClass('selected');

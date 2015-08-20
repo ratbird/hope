@@ -22,7 +22,7 @@
             <a href="#"
                class="flash-embedder"
                style="background-image: url('<?= htmlReady($og['image']) ?>');"
-               onClick="jQuery(this).replaceWith(jQuery(this).attr('data-embedder')); return false;"
+               onClick="jQuery(this).replaceWith(jQuery(this).data('embedder')); return false;"
                data-embedder="<?= htmlReady($embedder) ?>"
                title="<?= _("Video abspielen") ?>">
                 <?= Assets::img("icons/80/blue/play.svg", array('class' => "play"))?>
@@ -45,7 +45,7 @@
             <a href="#"
                class="flash-embedder"
                style="background-image: url('<?= htmlReady($og['image']) ?>');"
-               onClick="jQuery(this).replaceWith(jQuery(this).attr('data-embedder')); return false;"
+               onClick="jQuery(this).replaceWith(jQuery(this).data('embedder')); return false;"
                data-embedder="<?= htmlReady($embedder) ?>"
                title="<?= _("Audio abspielen") ?>">
                 <?= Assets::img("icons/100/blue/play.svg")?>

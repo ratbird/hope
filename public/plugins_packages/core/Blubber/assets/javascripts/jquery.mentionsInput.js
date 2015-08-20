@@ -75,7 +75,7 @@
     function initTextarea() {
       elmInputBox = $(domInput);
 
-      if (elmInputBox.attr('data-mentions-input') == 'true') {
+      if (elmInputBox.data('mentions-input') == 'true') {
         return;
       }
 
@@ -84,7 +84,7 @@
       elmInputBox.wrapAll(elmWrapperBox);
       elmWrapperBox = elmInputWrapper.find('> div');
 
-      elmInputBox.attr('data-mentions-input', 'true');
+      elmInputBox.data('mentions-input', 'true');
       elmInputBox.bind('keydown', onInputBoxKeyDown);
       elmInputBox.bind('keypress', onInputBoxKeyPress);
       elmInputBox.bind('input', onInputBoxInput);
@@ -185,7 +185,7 @@
 
     function onAutoCompleteItemClick(e) {
       var elmTarget = $(this);
-      var mention = autocompleteItemCollection[elmTarget.attr('data-uid')];
+      var mention = autocompleteItemCollection[elmTarget.data('uid')];
 
       addMention(mention);
 
@@ -319,7 +319,7 @@
           'display' : utils.htmlEncode(item.name),
           'type'    : utils.htmlEncode(item.type),
           'content' : utils.highlightTerm(utils.htmlEncode((item.name)), query)
-        })).attr('data-uid', itemUid);
+        })).data('uid', itemUid);
 
         if (index === 0) {
           selectAutoCompleteItem(elmListItem);

@@ -23,7 +23,7 @@ QuickSelection = {
                             Ok: function() {
                                 $.ajax({
                                     type: 'POST',
-                                    url: jQuery("#configure_quickselection").attr('data-url'),
+                                    url: jQuery("#configure_quickselection").data('url'),
                                     data: jQuery("#configure_quickselection").serialize(),
                                     success: function(data){
                                        jQuery("#quickSelectionWrap").html(data);

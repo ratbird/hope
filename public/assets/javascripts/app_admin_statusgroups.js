@@ -23,7 +23,7 @@
                 stop: function (event, ui) {
                     var table    = $(this).closest('table'),
                         group    = table.attr('id'),
-                        user     = ui.item.attr('data-userid'),
+                        user     = ui.item.data('userid'),
                         position = $(ui.item).prevAll().length;
 
                     table.removeClass('nohover');

@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     // init form if it is loaded without ajax
     if ($(".mpscontainer").length) {
-        STUDIP.MultiPersonSearch.dialog($(".mpscontainer").attr("data-dialogname"));
+        STUDIP.MultiPersonSearch.dialog($(".mpscontainer").data("dialogname"));
     }
 
 });
@@ -14,10 +14,10 @@ STUDIP.MultiPersonSearch = {
     init: function() {
         $(".multi_person_search_link").each(function() {
             // init js form
-            $(this).attr("href", $(this).attr("data-js-form"));
+            $(this).attr("href", $(this).data("js-form"));
             // init form if it is loaded via ajax
             $(this).on('dialog-open', function (event, parameters) {
-                STUDIP.MultiPersonSearch.dialog($(parameters.dialog).find(".mpscontainer").attr('data-dialogname'));
+                STUDIP.MultiPersonSearch.dialog($(parameters.dialog).find(".mpscontainer").data('dialogname'));
             });
         });
     },
@@ -49,7 +49,7 @@ STUDIP.MultiPersonSearch = {
         });
 
         $("#" + this.name + " .quickfilter").click(function() {
-            STUDIP.MultiPersonSearch.loadQuickfilter($(this).attr("data-quickfilter"));
+            STUDIP.MultiPersonSearch.loadQuickfilter($(this).data("quickfilter"));
             return false;
         });
     },

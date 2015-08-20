@@ -56,7 +56,7 @@
 
             $(this).children().addClass('draggable-topic-handle');
 
-            $(this).addClass('draggable-topic').attr('data-table-id', table_id).draggable({
+            $(this).addClass('draggable-topic').data('table-id', table_id).draggable({
                 axis: 'y',
                 containment: $(this).closest('tbody'),
                 handle: '.draggable-topic-handle',

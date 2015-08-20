@@ -166,7 +166,7 @@ jQuery(function ($) {
         $(this).closest('td').children(':not(span)').toggle();
         if ($(this).is('.cancel') && !$(this).is(':visible')) {
             var textarea = $(this).closest('form').find('textarea');
-            textarea.val(textarea.attr('data-dev'));
+            textarea.val(textarea.data('dev'));
         }
         event.preventDefault();
     });

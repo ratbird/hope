@@ -42,7 +42,7 @@ jQuery(function ($) {
                             select.title = '';
                         }
                         me.attr('title', 'Alle Räume anzeigen'.toLocaleString());
-                        me.attr('data-state', 'enabled');
+                        me.data('state', 'enabled');
                     }
                 });
             }
@@ -192,7 +192,7 @@ STUDIP.Raumzeit = {
         var data = [];
 
         jQuery('ul.teachers li:visible').each(function () {
-            data.push(jQuery(this).attr('data-lecturerid'));
+            data.push(jQuery(this).data('lecturerid'));
         });
 
         jQuery('input[name=related_teachers]').val(data.join(','));
@@ -200,7 +200,7 @@ STUDIP.Raumzeit = {
     addFormGroups: function () {
         var data = [];
         jQuery('ul.groups li:visible').each(function () {
-            data.push(jQuery(this).attr('data-groupid'));
+            data.push(jQuery(this).data('groupid'));
         });
         jQuery('input[name=related_statusgruppen]').val(data.join(','));
     },
@@ -236,7 +236,7 @@ STUDIP.Raumzeit = {
             $(this).prop('disabled', false);
         });
 
-        me.attr('data-state', false);
+        me.data('state', false);
         me.attr('title', 'Nur buchbare Räume anzeigen'.toLocaleString());
     }
 };

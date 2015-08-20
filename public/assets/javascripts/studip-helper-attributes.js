@@ -28,7 +28,10 @@
     }).ready(function () {
         $(':checkbox[data-proxyfor]').each(function () {
             var proxied = $(this).data('proxyfor');
+
             // The following seems like a hack but works perfectly fine.
+            // The attribute needs to be changed so the previous event handler
+            // will work
             $(proxied).attr('data-proxiedby', true).data('proxiedby', this);
         }).trigger('update.proxy');
     });

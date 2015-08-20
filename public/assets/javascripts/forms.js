@@ -9,7 +9,7 @@ STUDIP.Forms = {
     initialize : function () {
         jQuery("input[required],textarea[required]").attr('aria-required', true);
         jQuery("input[pattern][title],textarea[pattern][title]").each(function () {
-            jQuery(this).attr('data-message', jQuery(this).attr('title'));
+            jQuery(this).data('message', jQuery(this).attr('title'));
         });
 
         //localized messages

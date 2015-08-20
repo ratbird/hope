@@ -48,7 +48,7 @@ jQuery(function ($) {
             if ($('tbody tr[data-sort-fixed]', this).length > 0) {
                 $('tbody tr[data-sort-fixed]', this).each(function () {
                     var index = $(this).index();
-                    $(this).attr('data-sort-fixed', index);
+                    $(this).data('sort-fixed', index);
                 });
                 $(this).on('sortEnd', function () {
                     var table = this;

@@ -1,5 +1,5 @@
 <div id="quickSelectionEdit">
-    <form id="configure_quickselection" action="#" data-url="<?=PluginEngine::getURL($plugin, array(), 'save') ?>" method="POST" class="studip_form">
+    <form id="configure_quickselection" action="<?= PluginEngine::getURL($plugin, array(), 'save') ?>" method="post" class="studip_form" data-dialog>
         <fieldset>
             <legend><?= _("Inhalte des Schnellzugriff-Widget:") ?></legend>
             <fieldset>
@@ -11,5 +11,9 @@
             <? endforeach ?>
             </fieldset>
         </fieldset>
+        <footer data-dialog-button>
+            <?= Studip\Button::createAccept(_('Speichern')) ?>
+            <?= Studip\Button::createCancel(_('Abbrechen'), URLHelper::getLink('dispatch.php/start')) ?>
+        </footer>
     </form>
 </div>

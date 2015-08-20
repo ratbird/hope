@@ -135,6 +135,7 @@
 
     STUDIP.Dialog = {
         instances: {},
+        stack: [],
         hasInstance: function (id) {
             id = id || 'default';
             return this.instances.hasOwnProperty(id);
@@ -147,6 +148,7 @@
                     element: $('<div>'),
                     options: {}
                 };
+                this.stack.unshift(id);
             }
             return this.instances[id];
         },
@@ -154,6 +156,9 @@
             id = id || 'default';
             if (this.hasInstance(id)) {
                 delete this.instances[id];
+                
+                var index = this.stack.indexOf(id);
+                this.stack.splice(index, 1);
             }
         },
         shouldOpen: function () {
@@ -510,8 +515,10 @@
 
     // Close dialog on click outside of it
     $(document).on('click', '.ui-widget-overlay', function () {
-        if ($('.ui-dialog').length > 0) {
-            STUDIP.Dialog.close();
+        if ($('.ui-dialog').length > 0 && STUDIP.Dialog.stack.length) {
+            STUDIP.Dialog.close({
+                id: STUDIP.Dialog.stack[0]
+            });
         }
     });
 

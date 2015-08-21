@@ -383,7 +383,7 @@
         } else if (options.size && options.size.match(/^\d+x\d+$/)) {
             temp = options.size.split('x');
             width = temp[0];
-            height = temp[2];
+            height = temp[1];
         } else if (options.size && !options.size.match(/\D/)) {
             width = height = options.size;
         }

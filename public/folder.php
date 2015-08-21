@@ -1290,7 +1290,7 @@ if ($rechte) {
     $actions->addLink(_('Neuer Ordner'),
                       URLHelper::getLink('dispatch.php/folder/create/' . $range_id . '/' . $SessSemName['class']),
                       'icons/16/blue/add/folder-empty.png',
-                      array('data-dialog' => 'size=400x200'));
+                      array('data-dialog' => 'size=auto'));
     $sidebar->addWidget($actions);
 }
 

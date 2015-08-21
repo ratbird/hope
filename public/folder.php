@@ -229,8 +229,10 @@ if ($rechte || $owner || $create_folder_perm) {
             }
         }
         $change = create_folder(addslashes($titel), $description, $open_id, $permission);
-        $folder_system_data["open"][$change] = TRUE;
+
+        PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde erstellt.')));
         $folder_system_data['open']['anker'] = $change;
+        $open_id = false;
     }
 
     //wurde Code fuer Loeschen von Ordnern ubermittelt (=id+"_d_"), wird entsprechende Funktion aufgerufen

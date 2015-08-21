@@ -25,7 +25,7 @@
     }).on('change', ':checkbox[data-proxiedby]', function () {
         var proxy = $(this).data('proxiedby');
         $(proxy).trigger('update.proxy');
-    }).ready(function () {
+    }).on('ready dialog-update', function () {
         $(':checkbox[data-proxyfor]').each(function () {
             var proxied = $(this).data('proxyfor');
 

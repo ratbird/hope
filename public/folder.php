@@ -228,7 +228,7 @@ if ($rechte || $owner || $create_folder_perm) {
                 $description= _("Themenbezogener Dateiordner");
             }
         }
-        $open_id = create_folder(addslashes($titel), $description, $open_id, $permission);
+        $open_id = create_folder($titel, $description, $open_id, $permission);
 
         PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde erstellt.')));
         $folder_system_data['open'][$open_id] = true;

@@ -2802,7 +2802,7 @@ function upload_recursively($range_id, $dir) {
         }
         // Verzeichnis erstellen
         $pos = strrpos($subdir, "/");
-        $name = addslashes(substr($subdir, $pos + 1, strlen($subdir) - $pos));
+        $name = substr($subdir, $pos + 1, strlen($subdir) - $pos);
         $dir_id = create_folder($name, "", $range_id);
         $count['subdirs']++;
         // Verzeichnis hochladen.

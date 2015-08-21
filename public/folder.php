@@ -228,11 +228,11 @@ if ($rechte || $owner || $create_folder_perm) {
                 $description= _("Themenbezogener Dateiordner");
             }
         }
-        $change = create_folder(addslashes($titel), $description, $open_id, $permission);
+        $open_id = create_folder(addslashes($titel), $description, $open_id, $permission);
 
         PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde erstellt.')));
-        $folder_system_data['open']['anker'] = $change;
-        $open_id = false;
+        $folder_system_data['open'][$open_id] = true;
+        $folder_system_data['open']['anker'] = $open_id;
     }
 
     //wurde Code fuer Loeschen von Ordnern ubermittelt (=id+"_d_"), wird entsprechende Funktion aufgerufen

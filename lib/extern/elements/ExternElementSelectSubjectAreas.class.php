@@ -37,10 +37,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-global $RELATIVE_PATH_EXTERN;
-require_once($RELATIVE_PATH_EXTERN."/lib/ExternElement.class.php");
-require_once("lib/classes/StudipSemTreeSearch.class.php");
-
 class ExternElementSelectSubjectAreas extends ExternElement {
 
     var $attributes = array();

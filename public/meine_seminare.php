@@ -17,4 +17,4 @@
  * @category    Stud.IP
  */
 require_once '../lib/bootstrap.php';
-header('Location:'.URLHelper::getURL('dispatch.php/my_courses'));
+header('Location:' . URLHelper::getURL('dispatch.php/my_courses'));

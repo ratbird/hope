@@ -24,10 +24,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
-require_once 'lib/raumzeit/CycleDataDB.class.php';
-require_once 'lib/raumzeit/SingleDate.class.php';
-require_once 'lib/raumzeit/IssueDB.class.php';
-
 /**
  * This class is subject to change, for now it wraps getter
  * and setter to SeminarCycleDate. For compatibility reasons it has

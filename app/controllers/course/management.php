@@ -17,8 +17,6 @@
  * @since       1.10
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 class Course_ManagementController extends AuthenticatedController
 {
     function before_filter(&$action, &$args)

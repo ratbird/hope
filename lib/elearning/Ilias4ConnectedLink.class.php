@@ -6,8 +6,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once("Ilias3ConnectedLink.class.php");
-
 /**
  * class to generate links to ILIAS 4
  *

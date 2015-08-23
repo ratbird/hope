@@ -23,10 +23,8 @@
  * @since       3.1
  */
 
-require_once('lib/meine_seminare_func.inc.php');
-require_once('lib/object.inc.php');
-require_once('lib/functions.php');
-require_once('lib/classes/admission/CourseSet.class.php');
+require_once 'lib/meine_seminare_func.inc.php';
+require_once 'lib/object.inc.php';
 
 class MyRealmModel
 {

@@ -9,6 +9,7 @@
  * @author Dennis Reil, <dennis.reil@offis.de>
  * @package pluginengine
  * @subpackage core
+ * @deprecated
  */
 
 define('SYSTEM_PLUGIN_TOOLBAR',   1);

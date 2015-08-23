@@ -36,17 +36,17 @@
 use Studip\Button, Studip\LinkButton;
 
 # Include all required files ================================================ #
-require_once ("lib/evaluation/evaluation.config.php");
-require_once ("lib/evaluation/classes/db/EvaluationQuestionDB.class.php");
-require_once ("lib/evaluation/classes/EvaluationQuestion.class.php");
-require_once (EVAL_LIB_COMMON);
-require_once (EVAL_LIB_OVERVIEW);
-require_once (EVAL_LIB_TEMPLATE);
-require_once (EVAL_FILE_EVAL);
-require_once (EVAL_FILE_EVALDB);
-require_once (EVAL_FILE_QUESTION);
-require_once (EVAL_FILE_QUESTIONDB);
-require_once (EVAL_FILE_OBJECTDB);
+require_once 'lib/evaluation/evaluation.config.php';
+require_once 'lib/evaluation/classes/db/EvaluationQuestionDB.class.php';
+require_once 'lib/evaluation/classes/EvaluationQuestion.class.php';
+require_once EVAL_LIB_COMMON;
+require_once EVAL_LIB_OVERVIEW;
+require_once EVAL_LIB_TEMPLATE;
+require_once EVAL_FILE_EVAL;
+require_once EVAL_FILE_EVALDB;
+require_once EVAL_FILE_QUESTION;
+require_once EVAL_FILE_QUESTIONDB;
+require_once EVAL_FILE_OBJECTDB;
 # ====================================================== end: including files #
 
 

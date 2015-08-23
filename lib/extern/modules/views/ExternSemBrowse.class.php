@@ -38,9 +38,7 @@
 // +---------------------------------------------------------------------------+
 
 
-global $RELATIVE_PATH_CALENDAR;
-require_once('lib/classes/SemBrowse.class.php');
-require_once('lib/dates.inc.php');
+require_once 'lib/dates.inc.php';
 
 class ExternSemBrowse extends SemBrowse {
     

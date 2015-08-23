@@ -15,13 +15,6 @@
  * @modulegroup vote_modules
  */
 
-
-# Include all required files ================================================ #
-require_once ('lib/classes/cssClassSwitcher.inc.php');
-# ====================================================== end: including files #
-
-
-
 # Define public functions =================================================== #
 /**
  * Creates a message for a success or error report

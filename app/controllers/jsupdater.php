@@ -8,8 +8,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 /**
  * Controller called by the main periodical ajax-request. It collects data,
  * converts the textstrings to utf8 and returns it as a json-object to the

@@ -25,9 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require_once 'lib/datei.inc.php';  // benötigt zum Löschen von Dokumenten
 require_once 'lib/calendar_functions.inc.php';
-require_once "lib/raumzeit/CycleDataDB.class.php";          // Turnus-Daten
-require_once "lib/raumzeit/SingleDate.class.php";           // Einzeltermin
-require_once "lib/raumzeit/raumzeit_functions.inc.php"; // Helper-Funktionen
+require_once 'lib/raumzeit/raumzeit_functions.inc.php'; // Helper-Funktionen
 
 /*
  * getWeekday liefert einen String mit einem Tagesnamen.

@@ -46,9 +46,7 @@ if (version_compare(PHP_VERSION, '5.2', '<'))
 }
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/extern_config.inc.php");
-require_once("lib/classes/DataFieldEntry.class.php");
-require_once("lib/extern/lib/ExternConfigDb.class.php");
+require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/extern_config.inc.php';
 
 /**
 * Returns all statusgruppen for the given range.

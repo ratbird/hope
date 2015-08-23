@@ -28,8 +28,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'app/controllers/authenticated_controller.php';
-
 class Admin_Cronjobs_LogsController extends AuthenticatedController
 {
     /**

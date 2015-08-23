@@ -12,16 +12,9 @@
  * @category    Stud.IP
  * @package     admin
  */
-//uarg
-global $RELATIVE_PATH_RESOURCES;
-
-require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
-require_once 'lib/resources/lib/CheckMultipleOverlaps.class.php';
-require_once 'app/controllers/authenticated_controller.php';
-
 class Resources_HelpersController extends AuthenticatedController
 {
-/**
+    /**
      * common tasks for all actions
      */
     function before_filter(&$action, &$args)

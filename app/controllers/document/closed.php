@@ -10,7 +10,7 @@
  * @since       3.1
  */
 
-require_once dirname(__FILE__) .'/../siteinfo.php';
+require_once 'app/models/siteinfo.php';
 require_once 'document_controller.php';
 
 class Document_ClosedController  extends AuthenticatedController

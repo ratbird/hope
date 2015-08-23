@@ -37,7 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/elements/ExternElementLinkIntern.class.php");
+require_once 'ExternElementLinkIntern.class.php';
 
 class ExternElementLinkInternTemplate extends ExternElementLinkIntern {
 

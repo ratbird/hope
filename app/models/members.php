@@ -1,8 +1,4 @@
 <?php
-
-require_once 'lib/classes/Seminar.class.php';
-require_once 'lib/functions.php';
-
 class MembersModel
 {
 

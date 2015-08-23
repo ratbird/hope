@@ -34,8 +34,8 @@
 
 use Studip\Button;
 
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/ShowSemSchedules.class.php");
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/SemGroupScheduleDayOfWeek.class.php");
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ShowSemSchedules.class.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/SemGroupScheduleDayOfWeek.class.php';
 
 
 class ShowGroupSchedulesDaily extends ShowSemSchedules {

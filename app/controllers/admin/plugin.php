@@ -14,7 +14,6 @@
  * @package     admin
  */
 
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/plugin_administration.php';
 
 class Admin_PluginController extends AuthenticatedController

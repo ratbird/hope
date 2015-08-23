@@ -38,8 +38,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-
 class ExternElementPersondetailsHeader extends ExternElement {
 
     var $attributes = array("table_width", "table_align", "table_border", "table_bgcolor",

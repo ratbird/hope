@@ -8,8 +8,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/studip_controller.php';
-
 class PluginController extends StudipController {
 
     function __construct($dispatcher)

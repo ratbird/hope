@@ -39,8 +39,6 @@ use Studip\Button, Studip\LinkButton;
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternConfig.class.php');
-
 $info = ExternConfig::GetInfo($range_id, $config_id);
 $css_switcher = new CssClassSwitcher("", "");
 

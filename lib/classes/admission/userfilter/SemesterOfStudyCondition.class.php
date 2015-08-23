@@ -15,8 +15,6 @@
  * @category    Stud.IP
  */
 
-require_once(realpath(dirname(__FILE__).'/..').'/UserFilterField.class.php');
-
 class SemesterOfStudyCondition extends UserFilterField
 {
     // --- ATTRIBUTES ---

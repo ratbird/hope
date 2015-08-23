@@ -39,12 +39,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once ('lib/classes/cssClassSwitcher.inc.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomGroups.class.php');
-require_once ('lib/classes/Seminar.class.php');
-
-
 $cssSw = new cssClassSwitcher;
 
 /**

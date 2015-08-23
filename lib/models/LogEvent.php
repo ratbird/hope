@@ -223,7 +223,6 @@ class LogEvent extends SimpleORMap
      * @return string The singledate.
      */
     protected function formatSingledate($field) {
-        require_once('lib/raumzeit/SingleDate.class.php');
         $termin = new SingleDate($this->$field);
         return '<em>' . $termin->toString() . '</em>';
     }

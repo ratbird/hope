@@ -20,22 +20,10 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/functions.php';
 require_once 'lib/admission.inc.php';
 require_once 'lib/dates.inc.php';
-require_once 'lib/raumzeit/MetaDate.class.php';
-require_once 'lib/raumzeit/SeminarDB.class.php';
-require_once 'lib/raumzeit/Issue.class.php';
-require_once 'lib/raumzeit/SingleDate.class.php';
 require_once 'lib/log_events.inc.php';
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/ResourceObject.class.php';
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/DeleteResourcesUser.class.php';
-require_once 'lib/visual.inc.php';
-require_once 'lib/classes/StudipLitList.class.php';
-require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ObjectConnections.class.php";
-require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php";
 require_once 'app/models/studygroup.php';
-require_once 'lib/classes/admission/CourseSet.class.php';
 
 class Seminar
 {

@@ -15,7 +15,6 @@
  */
 
 require_once 'settings.php';
-require_once 'lib/classes/ModulesNotification.class.php';
 
 class Settings_NotificationController extends Settings_SettingsController
 {

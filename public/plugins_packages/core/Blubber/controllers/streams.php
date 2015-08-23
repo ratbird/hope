@@ -8,8 +8,6 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/plugin_controller.php';
-
 /**
  * Controller for displaying streams in Blubber and write and edit Blubber-postings
  */

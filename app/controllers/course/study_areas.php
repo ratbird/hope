@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Course_StudyAreasController
  *
  * This program is free software; you can redistribute it and/or
@@ -14,11 +14,7 @@
  * @since       3.2
  */
 
-
-require_once 'lib/functions.php';
-require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_lecture_tree.php';
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/coursewizardsteps/StudyAreasWizardStep.php';
 
 class Course_StudyAreasController extends AuthenticatedController

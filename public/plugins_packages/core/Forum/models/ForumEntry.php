@@ -12,8 +12,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/visual.inc.php';
-
 class ForumEntry {
     const WITH_CHILDS = true;
     const WITHOUT_CHILDS = false;

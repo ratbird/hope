@@ -16,9 +16,6 @@
  * @package     calendar
  */
 
-global $RELATIVE_PATH_CALENDAR, $CALENDAR_DRIVER;
-
-require_once('lib/calendar/CalendarExportException.class.php');
 require_once('app/models/calendar/SingleCalendar.php');
 
 class CalendarExport

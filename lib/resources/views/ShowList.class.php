@@ -39,12 +39,7 @@
 use Studip\Button,
     Studip\LinkButton;
 
-require_once ($RELATIVE_PATH_RESOURCES."/views/ShowTreeRow.class.php");
-require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
-require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-require_once ($RELATIVE_PATH_RESOURCES."/lib/CheckMultipleOverlaps.class.php");
-require_once ($RELATIVE_PATH_RESOURCES."/lib/AssignObject.class.php");
+require_once $RELATIVE_PATH_RESOURCES . '/views/ShowTreeRow.class.php';
 
 /*****************************************************************************
 ShowList, stellt Liste mit Hilfe von printThread dar

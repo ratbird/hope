@@ -4,8 +4,8 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
-require_once("webservice_client.php");
-require_once("vendor/nusoap/nusoap.php");
+require_once 'webservice_client.php';
+require_once 'vendor/nusoap/nusoap.php';
 
 class Soap_WebserviceClient extends WebserviceClient
 {

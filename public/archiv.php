@@ -49,9 +49,9 @@ Navigation::activateItem('/search/archive');
 // Start of Output
 ob_start();
 
-require_once('lib/msg.inc.php');
-require_once('lib/datei.inc.php');
-require_once('lib/log_events.inc.php');
+require_once 'lib/msg.inc.php';
+require_once 'lib/datei.inc.php';
+require_once 'lib/log_events.inc.php';
 
 $delete_id = Request::option('delete_id');
 $open = Request::option('open');

@@ -15,8 +15,7 @@
  * @category    Stud.IP
  */
 
-require_once('lib/classes/admission/AdmissionRule.class.php');
-require_once('vendor/phpass/PasswordHash.php');
+require_once 'vendor/phpass/PasswordHash.php';
 
 class PasswordAdmission extends AdmissionRule
 {

@@ -34,9 +34,9 @@
 // +--------------------------------------------------------------------------+
 
 # Include all required files ================================================ #
-require_once("lib/evaluation/evaluation.config.php");
-require_once( EVAL_FILE_EVAL );
-require_once( EVAL_FILE_GROUP );
+require_once 'lib/evaluation/evaluation.config.php';
+require_once EVAL_FILE_EVAL;
+require_once EVAL_FILE_GROUP;
 # ====================================================== end: including files #
 
 

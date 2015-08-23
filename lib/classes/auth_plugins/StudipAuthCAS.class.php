@@ -10,7 +10,6 @@
 * @package
 */
 
-require_once 'StudipAuthSSO.class.php';
 require_once 'vendor/phpCAS/CAS.php';
 
 class StudipAuthCAS extends StudipAuthSSO {

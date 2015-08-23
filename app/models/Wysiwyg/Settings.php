@@ -21,8 +21,6 @@
  */
 namespace Studip\Wysiwyg;
 
-require_once 'app/models/Wysiwyg/Singleton.php';
-
 /**
  * WYSIWYG editor settings.
  */

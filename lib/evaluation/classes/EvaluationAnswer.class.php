@@ -33,9 +33,9 @@
 // +--------------------------------------------------------------------------+
 
 # Include all required files ================================================ #
-require_once("lib/evaluation/evaluation.config.php");
-require_once(EVAL_FILE_ANSWERDB);
-require_once(EVAL_FILE_OBJECT);
+require_once 'lib/evaluation/evaluation.config.php';
+require_once EVAL_FILE_ANSWERDB;
+require_once EVAL_FILE_OBJECT;
 # ====================================================== end: including files #
 
 # Define constants ========================================================== #

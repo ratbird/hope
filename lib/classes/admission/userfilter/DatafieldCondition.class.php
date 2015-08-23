@@ -13,8 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once(realpath(dirname(__FILE__).'/..').'/UserFilterField.class.php');
-
 class DatafieldCondition extends UserFilterField
 {
     public static $isParameterized = true;

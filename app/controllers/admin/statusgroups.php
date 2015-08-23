@@ -12,7 +12,6 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_StatusgroupsController extends AuthenticatedController
 {

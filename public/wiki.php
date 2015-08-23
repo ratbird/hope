@@ -40,8 +40,6 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 require_once 'lib/wiki.inc.php';
-require_once 'lib/functions.php';
-require_once 'lib/visual.inc.php';
 
 $view = Request::get('view');
 $keyword = Request::get('keyword');

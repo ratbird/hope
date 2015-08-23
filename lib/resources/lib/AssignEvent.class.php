@@ -36,8 +36,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ('lib/datei.inc.php');
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignObject.class.php');
+require_once 'lib/datei.inc.php';
 
 /*****************************************************************************
 AssignEvent, the assigned events

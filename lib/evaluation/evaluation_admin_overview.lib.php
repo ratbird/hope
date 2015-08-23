@@ -27,12 +27,12 @@ use Studip\Button,
     Studip\LinkButton;
 
 # Include all required files ================================================ #
-require_once('lib/evaluation/evaluation.config.php');
-require_once('lib/datei.inc.php');
-require_once (HTML);
-require_once (EVAL_LIB_COMMON);
-require_once (EVAL_LIB_SHOW);
-require_once (EVAL_FILE_EXPORTMANAGERCSV);
+require_once 'lib/evaluation/evaluation.config.php';
+require_once 'lib/datei.inc.php';
+require_once HTML;
+require_once EVAL_LIB_COMMON;
+require_once EVAL_LIB_SHOW;
+require_once EVAL_FILE_EXPORTMANAGERCSV;
 # ====================================================== end: including files #
 # Define constants ========================================================== #
 /**

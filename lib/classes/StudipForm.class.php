@@ -26,10 +26,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once('lib/visual.inc.php');
-require_once 'lib/functions.php';
-
-
 /**
 * Class to build Studip HTML forms
 *

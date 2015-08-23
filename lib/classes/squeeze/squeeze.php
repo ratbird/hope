@@ -23,12 +23,6 @@ namespace {
 
 namespace Studip\Squeeze {
 
-    require 'Compressor.php';
-    require 'Configuration.php';
-    require 'Exception.php';
-    require 'Packager.php';
-
-
     /**
      * Write all packages specified in $configFile to $outputDir.
      * The default $configFile is "$STUDIP_BASE_PATH/config/assets.yml"

@@ -29,11 +29,11 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 $auth->login_if($auth->auth["uid"] == "nobody");
 $perm->check("tutor");
 
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
-require_once ('lib/admission.inc.php');
-require_once ('lib/statusgruppe.inc.php');
-require_once ('lib/datei.inc.php');
+require_once 'lib/admission.inc.php';
+require_once 'lib/statusgruppe.inc.php';
+require_once 'lib/datei.inc.php';
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
 

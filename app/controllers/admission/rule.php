@@ -14,10 +14,6 @@
  * @since       3.0
  */
 
-require_once('app/controllers/authenticated_controller.php');
-require_once('lib/classes/admission/AdmissionRule.class.php');
-require_once 'lib/classes/admission/CourseSet.class.php';
-
 class Admission_RuleController extends AuthenticatedController {
 
     /**

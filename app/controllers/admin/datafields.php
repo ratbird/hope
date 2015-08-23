@@ -16,10 +16,6 @@
  * @since       2.1
  */
 
-//Imports
-require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/DataFieldEntry.class.php';
-
 class Admin_DatafieldsController extends AuthenticatedController
 {
     public $user_status = array(

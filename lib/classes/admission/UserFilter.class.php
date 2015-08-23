@@ -17,8 +17,6 @@
  * @category    Stud.IP
  */
 
-require_once('lib/classes/admission/UserFilterField.class.php');
-
 class UserFilter
 {
     // --- ATTRIBUTES ---

@@ -38,8 +38,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-
 class ExternElementTableGroup extends ExternElement {
 
     var $attributes = array("tr_class", "tr_style", "td_height", "td_align",

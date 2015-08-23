@@ -37,10 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignObject.class.php';
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignEvent.class.php';
 require_once 'lib/dates.inc.php';
-
 
 function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id = '', $range_id = '', $filter = FALSE, $day_of_week = false)
 {

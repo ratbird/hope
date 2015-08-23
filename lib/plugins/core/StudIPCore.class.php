@@ -4,11 +4,12 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /**
- *  Base functionality for accessing data in the Stud.IP database,
- *  used by the plugin engine and plugins.
- *  @author  Dennis Reil, <Dennis.Reil@offis.de>
- *  @package pluginengine
- *  @subpackage core
+ * Base functionality for accessing data in the Stud.IP database,
+ * used by the plugin engine and plugins.
+ * @author  Dennis Reil, <Dennis.Reil@offis.de>
+ * @package pluginengine
+ * @subpackage core
+ * @deprecated
  */
 class StudIPCore {
 

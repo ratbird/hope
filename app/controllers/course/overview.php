@@ -10,8 +10,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 class Course_OverviewController extends AuthenticatedController
 {
     protected $allow_nobody = true;

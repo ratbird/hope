@@ -23,11 +23,8 @@
  * @package     news
  */
 
-require_once 'lib/functions.php';
-require_once 'lib/visual.inc.php';
 require_once 'lib/language.inc.php';
 require_once 'lib/object.inc.php';
-require_once 'lib/classes/Seminar.class.php';
 
 /**
  * generates proper text for confirmation question and deletes comments

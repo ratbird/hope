@@ -10,12 +10,6 @@
  * the License, or (at your option) any later version.
  */
 
-
-// using UserManagement class for now
-// TODO shall be removed afterwards
-require_once 'lib/classes/UserManagement.class.php';
-require_once 'lib/functions.php';
-
 /**
  * <ClassDescription>
  *
@@ -24,6 +18,8 @@ require_once 'lib/functions.php';
  *
  * @author    mlunzena
  * @copyright (c) Authors
+ *
+ * @todo using UserManagement class for now, shall be removed afterwards
  */
 
 class Studip_User {

@@ -13,22 +13,6 @@ if (isset($GLOBALS['SEM_CLASS'])) {
     $GLOBALS['SEM_CLASS_OLD_VAR'] = $GLOBALS['SEM_CLASS'];
 }
 
-require_once 'lib/classes/SemType.class.php';
-
-require_once 'lib/modules/CoreAdmin.class.php';
-require_once 'lib/modules/CoreStudygroupAdmin.class.php';
-require_once 'lib/modules/CoreOverview.class.php';
-require_once 'lib/modules/CoreParticipants.class.php';
-require_once 'lib/modules/CoreStudygroupParticipants.class.php';
-require_once 'lib/modules/CoreDocuments.class.php';
-require_once 'lib/modules/CoreSchedule.class.php';
-require_once 'lib/modules/CoreScm.class.php';
-require_once 'lib/modules/CoreLiterature.class.php';
-require_once 'lib/modules/CoreWiki.class.php';
-require_once 'lib/modules/CoreResources.class.php';
-require_once 'lib/modules/CoreCalendar.class.php';
-require_once 'lib/modules/CoreElearningInterface.class.php';
-
 /**
  * Class to define and manage attributes of seminar classes (or seminar categories).
  * Usually all sem-classes are stored in a global variable $SEM_CLASS which is

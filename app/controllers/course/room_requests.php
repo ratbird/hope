@@ -14,9 +14,6 @@
  * @package     admin
  */
 
-require_once 'lib/resources/lib/RoomRequest.class.php';
-require_once 'app/controllers/authenticated_controller.php';
-
 class Course_RoomRequestsController extends AuthenticatedController
 {
     /**

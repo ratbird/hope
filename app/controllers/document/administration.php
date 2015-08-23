@@ -8,8 +8,6 @@
  * @since       3.1
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 class Document_AdministrationController extends AuthenticatedController {
 
     public function before_filter(&$action, &$args) 

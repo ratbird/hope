@@ -36,8 +36,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternElementMain.class.php');
-
 class ExternElementMainTemplateSemBrowse extends ExternElementMain {
 
     function ExternElementMainTemplateSemBrowse ($module_name, &$data_fields, &$field_names, &$config) {

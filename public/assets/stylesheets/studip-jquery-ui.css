@@ -2451,6 +2451,9 @@ body .ui-tooltip {
 .ui-widget button {
   font-family: inherit;
 }
+.ui-widget-content {
+  background: #fff;
+}
 .ui-widget-header {
   background-color: #899ab9;
   background-image: none;

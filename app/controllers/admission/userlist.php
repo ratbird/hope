@@ -15,6 +15,9 @@
  * @category    Stud.IP
  */
 
+require_once('app/controllers/authenticated_controller.php');
+require_once('lib/classes/admission/AdmissionUserList.class.php');
+
 class Admission_UserListController extends AuthenticatedController {
 
     /**

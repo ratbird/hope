@@ -16,6 +16,10 @@
  * @package     calendar
  */
 
+global $RELATIVE_PATH_CALENDAR;
+
+require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
+
 class CalendarWriter
 {
 
@@ -25,8 +29,9 @@ class CalendarWriter
 
     function CalendarWriter()
     {
+
         // initialize error handler
-        $GLOBALS['_calendar_error'] = new ErrorHandler();
+        init_error_handler('_calendar_error');
     }
 
     function write(&$event)

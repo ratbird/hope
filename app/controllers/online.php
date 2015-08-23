@@ -13,6 +13,8 @@
  * @since       2.5
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 class OnlineController extends AuthenticatedController
 {
     /**

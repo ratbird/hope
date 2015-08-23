@@ -38,6 +38,8 @@
 // +---------------------------------------------------------------------------+
 
 require_once 'lib/dates.inc.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/AssignObject.class.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/RoomRequest.class.php';
 
 class VeranstaltungResourcesAssign {
     var $db;

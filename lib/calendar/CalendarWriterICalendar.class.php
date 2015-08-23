@@ -16,7 +16,11 @@
  * @package     calendar
  */
 
+global $RELATIVE_PATH_CALENDAR;
+
 define('CALENDAR_WEEKSTART', 'MO');
+
+require_once('lib/calendar/CalendarWriter.class.php');
 
 class CalendarWriteriCalendar extends CalendarWriter
 {

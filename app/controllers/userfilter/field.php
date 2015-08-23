@@ -14,6 +14,10 @@
  * @since       3.0
  */
 
+require_once('app/controllers/authenticated_controller.php');
+require_once('lib/classes/admission/UserFilter.class.php');
+require_once('lib/classes/admission/UserFilterField.class.php');
+
 class Userfilter_FieldController extends AuthenticatedController {
 
     /**

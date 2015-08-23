@@ -4,7 +4,8 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once 'log_events.inc.php';
+require_once('log_events.inc.php');
+require_once('visual.inc.php');
 
 /*
  * Command handlers

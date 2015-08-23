@@ -15,6 +15,10 @@
  * @since    3.1
  */
 
+require_once 'lib/functions.php';
+require_once 'studip_controller.php';
+require_once 'authenticated_controller.php';
+
 class StartController extends AuthenticatedController
 {
     /**

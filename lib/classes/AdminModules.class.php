@@ -36,8 +36,12 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'lib/datei.inc.php';
-require_once 'lib/dates.inc.php';
+global $RELATIVE_PATH_ELEARNING_INTERFACE;
+
+require_once ('lib/datei.inc.php');
+require_once ('lib/dates.inc.php');
+require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
+require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
 
 class AdminModules extends ModulesNotification {
 

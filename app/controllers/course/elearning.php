@@ -13,6 +13,10 @@
  * @since    3.1
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+require_once ($GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . '/ELearningUtils.class.php');
+require_once ($GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . '/ObjectConnections.class.php');
+
 class Course_ElearningController extends AuthenticatedController
 {
     /**

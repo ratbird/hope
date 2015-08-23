@@ -28,13 +28,20 @@ use Studip\Button, Studip\LinkButton;
 
 
 require '../lib/bootstrap.php';
+require_once 'lib/resources/lib/RoomRequest.class.php';
 
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
-require_once 'lib/msg.inc.php';       //Funktionen fuer Nachrichtenmeldungen
-require_once 'lib/dates.inc.php';     //Terminfunktionen
-require_once 'lib/log_events.inc.php';
-require_once 'lib/deputies_functions.inc.php';
+require_once ('lib/msg.inc.php');       //Funktionen fuer Nachrichtenmeldungen
+require_once 'lib/functions.php';       //noch mehr Stuff
+require_once ('lib/visual.inc.php');        //Aufbereitungsfunktionen
+require_once ('lib/dates.inc.php');     //Terminfunktionen
+require_once ('lib/log_events.inc.php');
+require_once ('lib/classes/StudipSemTreeSearch.class.php');
+require_once ('lib/classes/DataFieldEntry.class.php');
+require_once ('lib/classes/SeminarCategories.class.php');
+require_once 'lib/classes/Seminar.class.php';
+require_once ('lib/deputies_functions.inc.php');
 require_once 'lib/classes/admission/CourseSet.class.php';
 
 $sem_create_perm = (in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent');

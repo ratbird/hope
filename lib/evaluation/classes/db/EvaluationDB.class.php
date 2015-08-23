@@ -23,9 +23,9 @@
 
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once EVAL_FILE_OBJECTDB;
-require_once EVAL_FILE_GROUPDB;
+require_once("lib/evaluation/evaluation.config.php");
+require_once(EVAL_FILE_OBJECTDB);
+require_once(EVAL_FILE_GROUPDB);
 # ====================================================== end: including files #
 
 

@@ -12,6 +12,9 @@
  * @category    Stud.IP
  */
 
+require_once 'lib/classes/searchtypes/SearchType.class.php';
+require_once 'app/controllers/authenticated_controller.php';
+
 /**
  * Controller for the ajax-response of the QuickSearch class found in
  * lib/classes/QuickSearch.class.php

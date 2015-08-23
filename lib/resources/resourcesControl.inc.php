@@ -27,8 +27,10 @@ $quick_view_mode = Request::option('quick_view_mode');
 Requires & Registers
 /*****************************************************************************/
 
-require_once 'lib/msg.inc.php';
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/Msg.class.php';
+require_once ('lib/msg.inc.php');
+require_once ($RELATIVE_PATH_RESOURCES."/resourcesFunc.inc.php");
+require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
+require_once ($RELATIVE_PATH_RESOURCES."/views/Msg.class.php");
 
 $_SESSION['resources_data'] = @unserialize($_SESSION['resources_data']);
 if (empty($_SESSION['resources_data'])) {
@@ -206,7 +208,8 @@ Treeview, die Strukturdarstellung, views: resources, make_hierarchie
 
 $edit_structure_object = Request::option('edit_structure_object');
 if ($view == "resources"){
-    require_once $RELATIVE_PATH_RESOURCES . '/views/ShowThread.class.php';
+    require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoots.class.php");
+    require_once ($RELATIVE_PATH_RESOURCES."/views/ShowThread.class.php");
 
 
     if ($edit_structure_object) {
@@ -294,7 +297,8 @@ if ($view == "edit_object_properties" || $view == "objects") {
 Objecteigenschaften anzeigen, views: openobject_details
 /*****************************************************************************/
 if (($view == "openobject_details")  || ($view == "view_details")) {
-    require_once $RELATIVE_PATH_RESOURCES . '/views/ShowObject.class.php';
+    require_once ($RELATIVE_PATH_RESOURCES."/views/ShowObject.class.php");
+    require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 
     //$perms = new ResourceObjectPerms($_SESSION['resources_data']["actual_object"]);
     //echo $perms->getUserPerm();
@@ -520,6 +524,8 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
 }
 
 if ($view == "openobject_group_schedule") {
+    require_once $RELATIVE_PATH_RESOURCES."/lib/ResourcesOpenObjectGroups.class.php";
+
     $resources_groups = ResourcesOpenObjectGroups::GetInstance($SessSemName[1]);
     if(!$resources_groups->isGroup($_SESSION['resources_data']["actual_room_group"])){
         $_SESSION['resources_data']["actual_room_group"] = 0;

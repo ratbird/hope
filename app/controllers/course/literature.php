@@ -13,6 +13,9 @@
  * @since    3.1
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+require_once('lib/classes/StudipLitList.class.php');
+
 class Course_LiteratureController extends AuthenticatedController
 {
     protected $allow_nobody = true;

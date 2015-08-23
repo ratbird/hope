@@ -15,6 +15,8 @@
  * @category    Stud.IP
  */
 
+require_once('lib/classes/admission/AdmissionRule.class.php');
+
 class CourseMemberAdmission extends AdmissionRule
 {
     // --- ATTRIBUTES ---

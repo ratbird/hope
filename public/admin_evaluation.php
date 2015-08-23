@@ -50,6 +50,9 @@ $list = Request::option('list');
 $view = Request::option('view');
 
 
+
+
+require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
 PageLayout::setHelpKeyword("Basis.Evaluationen");

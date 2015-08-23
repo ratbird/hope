@@ -37,6 +37,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/extern_functions.inc.php");
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternModule.class.php");
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternConfigDb.class.php");
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternConfigIni.class.php");
+
 class ExternConfig {
 
     var $id = NULL;

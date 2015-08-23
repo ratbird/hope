@@ -8,7 +8,7 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once __DIR__ . '/StreamAvatar.class.php';
+require_once dirname(__file__)."/StreamAvatar.class.php";
 
 /**
  * A class to fetch blubber-postings from the database and return an array of

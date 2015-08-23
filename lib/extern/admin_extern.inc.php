@@ -40,7 +40,10 @@
 use Studip\Button, Studip\LinkButton;
 
 include('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once $RELATIVE_PATH_EXTERN . '/extern_config.inc.php';
+require_once($RELATIVE_PATH_EXTERN . '/extern_config.inc.php');
+require_once($RELATIVE_PATH_EXTERN . '/lib/extern_functions.inc.php');
+require_once($RELATIVE_PATH_EXTERN . '/lib/ExternConfig.class.php');
+require_once($RELATIVE_PATH_EXTERN . '/lib/ExternModule.class.php');
 
 
 // -- here you have to put initialisations for the current page

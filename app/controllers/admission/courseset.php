@@ -14,8 +14,12 @@
  * @since       3.0
  */
 
-require_once 'app/models/courseset.php';
-require_once 'app/models/rule_administration.php';
+require_once('app/controllers/authenticated_controller.php');
+require_once('app/models/courseset.php');
+require_once('app/models/rule_administration.php');
+require_once('lib/classes/admission/CourseSet.class.php');
+require_once('lib/classes/admission/AdmissionUserList.class.php');
+require_once('lib/classes/admission/RandomAlgorithm.class.php');
 
 class Admission_CoursesetController extends AuthenticatedController {
 

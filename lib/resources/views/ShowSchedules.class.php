@@ -39,7 +39,9 @@
 use Studip\Button,
     Studip\LinkButton;
 
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ScheduleWeek.class.php';
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/AssignEventList.class.php');
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ScheduleWeek.class.php');
+require_once ('lib/classes/cssClassSwitcher.inc.php');
 
 $cssSw = new cssClassSwitcher;
 

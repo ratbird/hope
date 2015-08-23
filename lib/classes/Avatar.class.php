@@ -14,6 +14,9 @@
  */
 
 
+require_once 'lib/visual.inc.php';
+
+
 /**
  * TODO
  *

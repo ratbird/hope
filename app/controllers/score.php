@@ -24,6 +24,7 @@
  * @since       2.4
  */
 
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/score.class.php';
 
 class ScoreController extends AuthenticatedController

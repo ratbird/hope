@@ -15,6 +15,9 @@
  * @since       2.4
  */
 
+
+require_once 'app/controllers/authenticated_controller.php';
+
 /**
  * Controller for the (de-)activation of homepage plugins for every user.
  */

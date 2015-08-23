@@ -3,6 +3,7 @@
 # Lifter003: TEST
 # Lifter007: TODO
 # Lifter010: TODO
+require_once("lib/classes/StudipSemTreeViewSimple.class.php");
 
 class ExternSemLectureTree extends StudipSemTreeViewSimple {
     

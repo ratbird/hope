@@ -24,6 +24,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once('lib/classes/StudipSemTree.class.php');
+require_once('lib/visual.inc.php');
+require_once 'lib/functions.php';
+
+
 /**
 * Class to build search formular and execute search
 *

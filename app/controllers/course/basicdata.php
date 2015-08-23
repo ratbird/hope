@@ -14,6 +14,9 @@
  * @since       2.0
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/Seminar.class.php';
+
 class Course_BasicdataController extends AuthenticatedController
 {
     public $msg = array();

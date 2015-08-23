@@ -23,10 +23,10 @@
 
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once EVAL_FILE_GROUPDB;
-require_once EVAL_FILE_OBJECT;
-require_once EVAL_FILE_QUESTION;
+require_once("lib/evaluation/evaluation.config.php");
+require_once(EVAL_FILE_GROUPDB);
+require_once(EVAL_FILE_OBJECT);
+require_once(EVAL_FILE_QUESTION);
 # ====================================================== end: including files #
 
 

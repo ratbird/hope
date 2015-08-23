@@ -14,6 +14,8 @@
  * @package     admin
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 class Admin_WebserviceAccessController extends AuthenticatedController
 {
     /**

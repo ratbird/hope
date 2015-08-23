@@ -21,6 +21,10 @@
  * @package     resources
 */
 
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php");
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/RoomGroups.class.php");
+
+
 if ($_SESSION['resources_data']['actual_object']) {
     // tlx: WTF is this chunk of code supposed to do?
     // Lines 31-34 are absolutely useless, aren't they?

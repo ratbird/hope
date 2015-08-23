@@ -13,6 +13,7 @@
  * @category    Stud.IP
  */
 
+require_once 'app/controllers/studip_controller.php';
 require_once 'app/models/media_proxy.php';
 
 class MediaProxyController extends StudipController

@@ -12,6 +12,8 @@
 * @category    Stud.IP
 * @package     admin
 */
+require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/admission/CourseSet.class.php';
 
 /**
 * @addtogroup notifications

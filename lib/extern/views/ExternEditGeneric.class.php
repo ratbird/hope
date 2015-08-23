@@ -38,6 +38,8 @@
 // +---------------------------------------------------------------------------+
 
 
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternEdit.class.php");
+
 class ExternEditGeneric extends ExternEdit {
 
     function ExternEditGeneric (&$config, $form_values = "", $faulty_values = "",

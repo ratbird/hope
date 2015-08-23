@@ -15,6 +15,8 @@
  * @package  smiley
  * @since    2.3
  */
+
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/smiley.php';
 
 class SmileysController extends AuthenticatedController

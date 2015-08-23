@@ -16,6 +16,9 @@
  * @category    Stud.IP
  */
 
+require_once('lib/classes/admission/AdmissionRule.class.php');
+require_once('lib/classes/admission/UserFilter.class.php');
+
 class ConditionalAdmission extends AdmissionRule
 {
     // --- ATTRIBUTES ---

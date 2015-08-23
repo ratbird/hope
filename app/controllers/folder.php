@@ -1,4 +1,6 @@
 <?php
+require_once 'app/controllers/authenticated_controller.php';
+
 class FolderController extends AuthenticatedController
 {
     public function before_filter(&$action, &$args)

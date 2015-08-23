@@ -16,6 +16,8 @@
  * @category    Stud.IP
  */
 
+require_once 'lib/calendar/CalendarView.class.php';
+
 /**
  * Kind of bean class for the calendar view.
  *

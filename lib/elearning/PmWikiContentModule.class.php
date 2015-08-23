@@ -15,6 +15,8 @@
  * the License, or (at your option) any later version.
  */
 
+require_once("ContentModule.class.php");
+
 /**
 *
 * This class contains methods to handle PmWiki learning modules 

@@ -9,6 +9,9 @@
  * the License, or (at your option) any later version.
  */
 
+
+require_once 'app/controllers/authenticated_controller.php';
+
 use Studip\Button, Studip\LinkButton;
 
 class Course_PlusController extends AuthenticatedController
@@ -66,7 +69,8 @@ class Course_PlusController extends AuthenticatedController
             $_SESSION['plugin_toggle'] = array();
         }
 
-        if (Config::get()->RESOURCES_ENABLED && !checkAvailableResources($id)) {
+        require_once 'lib/resources/resourcesFunc.inc.php';
+        if (!checkAvailableResources($id)) {
             unset($this->registered_modules['resources']);
         }
 

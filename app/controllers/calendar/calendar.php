@@ -13,6 +13,8 @@
  * @since       
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 class Calendar_CalendarController extends AuthenticatedController
 {
     

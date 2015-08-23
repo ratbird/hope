@@ -14,6 +14,8 @@
  * @since       3.0
  */
 
+require_once 'app/controllers/studip_controller.php';
+
 class PublicCoursesController extends StudipController
 {
     /**

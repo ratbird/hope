@@ -38,8 +38,15 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once 'extern_config.inc.php';
-require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/views/ExternEditModule.class.php';
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/extern_config.inc.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/extern_functions.inc.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/ExternConfig.class.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/ExternElement.class.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/ExternElementMain.class.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/views/ExternEditModule.class.php");
+require_once('lib/functions.php');
+require_once('lib/classes/DataFieldEntry.class.php');
+
 
 class ExternModule {
 

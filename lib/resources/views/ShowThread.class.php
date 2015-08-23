@@ -39,7 +39,9 @@
 use Studip\Button,
     Studip\LinkButton;
 
-require_once $RELATIVE_PATH_RESOURCES . '/views/ShowTreeRow.class.php';
+require_once ($RELATIVE_PATH_RESOURCES."/views/ShowTreeRow.class.php");
+require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
+require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 
 
 /*****************************************************************************

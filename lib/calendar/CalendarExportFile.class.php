@@ -15,6 +15,9 @@
  * @category    Stud.IP
  * @package     calendar
  */
+
+require_once('lib/calendar/CalendarExport.class.php');
+require_once('lib/calendar/CalendarExportException.class.php');
 require_once('lib/datei.inc.php');
 
 class CalendarExportFile extends CalendarExport

@@ -15,9 +15,15 @@
  * the License, or (at your option) any later version.
  */
 
+
 use Studip\Button, Studip\LinkButton;
 
-require_once 'lib/webservices/api/studip_seminar.php';
+require_once("ConnectedLink.class.php");
+
+global $ABSOLUTE_PATH_STUDIP;
+global $RELATIVE_PATH_RESOURCES;
+
+require_once("lib/webservices/api/studip_seminar.php");
 
 /**
 *

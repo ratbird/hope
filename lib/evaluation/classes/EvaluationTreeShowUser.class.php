@@ -22,8 +22,9 @@
 // +---------------------------------------------------------------------------+
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once HTML;
+require_once('lib/visual.inc.php');
+require_once('lib/evaluation/evaluation.config.php');
+require_once( HTML );
 # ====================================================== end: including files #
 
 # Define constants ========================================================== #

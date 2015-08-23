@@ -20,7 +20,7 @@
 
 require '../lib/bootstrap.php';
 
-require_once 'vendor/phplot/phplot.php';
+require_once "vendor/phplot/phplot.php";
 require_once 'lib/msg.inc.php';
 require_once 'lib/datei.inc.php';
 require_once 'lib/evaluation/evaluation.config.php';

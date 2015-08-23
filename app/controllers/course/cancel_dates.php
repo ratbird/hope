@@ -13,6 +13,9 @@
 * @package     admin
 */
 
+require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/raumzeit/IssueDB.class.php';
+
 class Course_CancelDatesController extends AuthenticatedController
 {
     /**

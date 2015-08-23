@@ -38,6 +38,8 @@
 // +---------------------------------------------------------------------------+
 
 
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElementMain.class.php");
+
 class ExternElementContact extends ExternElement {
 
     var $attributes = array("order", "visible", "aliases", "headline", "adradd", "table_width",

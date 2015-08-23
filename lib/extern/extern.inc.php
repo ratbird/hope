@@ -38,6 +38,9 @@
 // +---------------------------------------------------------------------------+
 
 
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/ExternModule.class.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/extern_functions.inc.php");
+
 $default = "";
 
 // set up dummy user environment (but no session)

@@ -11,6 +11,8 @@
  * the License, or (at your option) any later version.
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 /**
  * This controller is used to manipulate the avatar of a course.
  *

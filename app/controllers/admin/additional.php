@@ -1,4 +1,7 @@
 <?php
+//Imports
+require_once 'app/controllers/authenticated_controller.php';
+
 /**
  * additonal.php - controller class for the additonal data
  * 

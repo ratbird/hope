@@ -28,6 +28,7 @@ require_once('lib/messaging.inc.php');
 require_once('lib/log_events.inc.php');
 require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
+require_once('lib/classes/StudipLitList.class.php');
 
 function edit_email($user, $email, $force=False) {
     $msg = '';

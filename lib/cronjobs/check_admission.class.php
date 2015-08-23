@@ -6,6 +6,7 @@
 * @access public
 * @since  2.4
 */
+require_once 'lib/classes/CronJob.class.php';
 
 class CheckAdmissionJob extends CronJob
 {

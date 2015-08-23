@@ -23,7 +23,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'StudipLitImportPluginAbstract.class.php';
+require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
 
 /**
 *

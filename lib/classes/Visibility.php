@@ -16,6 +16,9 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
+require_once 'visibility/VisibilitySettings.php';
+require_once 'visibility/UserPrivacy.php';
+
 class Visibility
 {
 

@@ -36,6 +36,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObjectPerms.class.php";
+
+
 /*
 * allowCreateRooms
 *
@@ -374,6 +377,8 @@ function getSeminarRoomRequest($seminar_id) {
 function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed = true, $single_request = null, $sem_type = null, $faculty = null, $tagged = null)
 {
     global $user, $perm, $RELATIVE_PATH_RESOURCES;
+
+    require_once $RELATIVE_PATH_RESOURCES . '/lib/ResourcesUserRoomsList.class.php';
 
     $db = DBManager::get();
 

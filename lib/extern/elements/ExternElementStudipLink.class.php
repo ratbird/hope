@@ -38,6 +38,8 @@
 // +---------------------------------------------------------------------------+
 
 
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
+
 class ExternElementStudipLink extends ExternElement {
 
     var $attributes = array("linktext", "imageurl", "image", "a_class", "a_style", "font_face",

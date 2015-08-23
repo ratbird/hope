@@ -6,6 +6,7 @@
  * @license GPL2 or any later version
  * @since   3.3
  */
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/wiki.inc.php';
 
 class WikiController extends AuthenticatedController

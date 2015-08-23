@@ -16,6 +16,10 @@
  * @package     calendar
  */
 
+global $RELATIVE_PATH_CALENDAR;
+
+require_once('lib/calendar/CalendarParser.class.php');
+
 class CalendarParserICalendar extends CalendarParser
 {
 

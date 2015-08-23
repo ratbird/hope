@@ -38,9 +38,15 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/views/extern_html_templates.inc.php';
-require_once 'lib/user_visible.inc.php';
-require_once 'lib/dates.inc.php';
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternModule.class.php');
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/views/extern_html_templates.inc.php');
+require_once('lib/classes/DataFieldEntry.class.php');
+require_once('lib/visual.inc.php');
+require_once('lib/user_visible.inc.php');
+require_once('lib/dates.inc.php');
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/extern_functions.inc.php');
+global $_fullname_sql;
+
 
 class ExternModuleTemplatePersBrowse extends ExternModule {
 

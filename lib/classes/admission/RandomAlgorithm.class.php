@@ -15,6 +15,8 @@
  * @since       3.0
  */
 
+require_once('lib/classes/admission/AdmissionAlgorithm.class.php');
+
 class RandomAlgorithm extends AdmissionAlgorithm {
 
     /**

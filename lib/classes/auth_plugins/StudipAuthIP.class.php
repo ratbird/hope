@@ -1,4 +1,6 @@
 <?php
+require_once "lib/classes/auth_plugins/StudipAuthAbstract.class.php";
+
 /*
  * StudipAuthIP.class.php - Stud.IP authentication with user ip
  * Copyright (c) 2014  Florian Bieringer, Uni Passau

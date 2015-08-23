@@ -19,9 +19,11 @@
 use Studip\Button, Studip\LinkButton;
 
 # Include all required files ================================================ #
-require_once 'lib/vote/view/visual.inc.php';
-require_once 'lib/vote/vote.config.php';
+require_once ("lib/vote/view/visual.inc.php");
+require_once ("lib/vote/vote.config.php");
 # ====================================================== end: including files #
+
+
 
 # Define public functions =================================================== #
 /**

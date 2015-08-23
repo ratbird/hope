@@ -15,7 +15,6 @@
  * @subpackage  core
  * @copyright   2009 Stud.IP
  * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
- * @deprecated
  */
 
 /**

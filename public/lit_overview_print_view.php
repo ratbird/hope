@@ -26,12 +26,17 @@ require '../lib/bootstrap.php';
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check('admin');
+require_once('lib/classes/StudipLitCatElement.class.php');
 
-include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
+
 
 $element = new StudipLitCatElement();
 if(Request::quotedArray('_lit_data'))
      $_SESSION['_lit_data'] = Request::quotedArray('_lit_data');
+
+
 
 $header = get_object_name($_inst_id, 'inst');
 ?>

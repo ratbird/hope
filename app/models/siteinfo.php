@@ -13,7 +13,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/user_visible.inc.php';
+require_once('lib/visual.inc.php');
+require_once('lib/user_visible.inc.php');
 
 class Siteinfo {
     private $sme; //SiteinfoMarkupEngine

@@ -14,7 +14,9 @@
  * @category    Stud.IP
  */
 
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/instschedule.php';
+require_once 'lib/calendar/CalendarWeekView.class.php';
 
 /**
  * Controller of the institutes' schedules.

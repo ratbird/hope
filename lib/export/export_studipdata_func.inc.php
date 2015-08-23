@@ -36,7 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'lib/statusgruppe.inc.php';
+require_once("lib/classes/DataFieldEntry.class.php");
+require_once("lib/statusgruppe.inc.php");
 
 /**
 * Converts special charakters into unicode format.

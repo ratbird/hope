@@ -35,6 +35,10 @@
  * @package     raumzeit
  */
 
+require_once 'lib/raumzeit/MetaDateDB.class.php';
+require_once 'lib/raumzeit/CycleData.class.php';
+require_once 'lib/resources/lib/AssignObject.class.php';
+
 class MetaDate
 {
     var $seminar_id = '';

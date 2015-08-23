@@ -8,11 +8,12 @@
  *  the License, or (at your option) any later version.
  */
 
+require_once "lib/classes/UpdateInformation.class.php";
 require_once 'lib/datei.inc.php';
-require_once __DIR__ . '/models/BlubberPosting.class.php';
-require_once __DIR__ . '/models/BlubberExternalContact.class.php';
-require_once __DIR__ . '/models/BlubberStream.class.php';
-require_once __DIR__ . '/models/StreamAvatar.class.php';
+require_once dirname(__file__)."/models/BlubberPosting.class.php";
+require_once dirname(__file__)."/models/BlubberExternalContact.class.php";
+require_once dirname(__file__)."/models/BlubberStream.class.php";
+require_once dirname(__file__)."/models/StreamAvatar.class.php";
 
 class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 

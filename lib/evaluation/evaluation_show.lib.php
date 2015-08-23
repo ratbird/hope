@@ -434,7 +434,10 @@ class EvalShow
 
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once HTML;
-require_once EVAL_LIB_COMMON;
+require_once( "lib/evaluation/evaluation.config.php" );
+require_once( HTML );
+require_once( EVAL_LIB_COMMON );
 # ====================================================== end: including files #
+
+
+?>

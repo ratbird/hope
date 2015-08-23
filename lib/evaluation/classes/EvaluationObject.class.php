@@ -23,7 +23,7 @@
 
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
+require_once("lib/evaluation/evaluation.config.php");
 # ====================================================== end: including files #
 
 

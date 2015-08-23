@@ -30,6 +30,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * transmitted as subject of the notification.
  */
 
+require_once 'lib/functions.php';
+
 //redirect the user where he want to go today....
 function startpage_redirect($page_code) {
     switch ($page_code) {

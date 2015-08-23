@@ -6,6 +6,7 @@
 * @access public
 * @since  3.0
 */
+require_once 'lib/classes/CronJob.class.php';
 
 /**
  * Cronjob class to send the mailqueue each interval.

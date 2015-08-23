@@ -40,16 +40,16 @@ $perm->check('user');
 
 $EVAL_AUSWERTUNG_GRAPH_FORMAT = Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT ?: 'gif';
 
-include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+include ('lib/seminar_open.php');             // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-require_once 'lib/msg.inc.php';
-require_once 'lib/datei.inc.php';
-require_once 'lib/evaluation/evaluation.config.php';
-require_once EVAL_FILE_EVAL;
-require_once EVAL_FILE_OBJECTDB;
-require_once 'lib/export/export_tmp_gc.inc.php';
-require_once 'lib/export/export_xml_func.inc.php';
+require_once('lib/msg.inc.php');
+require_once('lib/datei.inc.php');
+require_once('lib/evaluation/evaluation.config.php');
+require_once(EVAL_FILE_EVAL);
+require_once(EVAL_FILE_OBJECTDB);
+require_once('lib/export/export_tmp_gc.inc.php');
+require_once('lib/export/export_xml_func.inc.php');
 
 // Start of Output
 $eval_id = Request::option('eval_id');

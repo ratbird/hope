@@ -1,5 +1,6 @@
 <?php
 require_once 'lib/log_events.inc.php';
+require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
 
 /**
  * RoomRequest.class.php - model class for table resources_requests

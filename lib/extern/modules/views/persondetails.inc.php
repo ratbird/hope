@@ -5,6 +5,7 @@
 # Lifter010: TODO
 
 require_once 'lib/statusgruppe.inc.php';
+require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php';
 
 if (Config::get()->CALENDAR_ENABLE) {
     require_once 'app/models/calendar/SingleCalendar.php';

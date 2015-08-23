@@ -67,7 +67,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 //$PATH_EXPORT = "export";
 // -- here you have to put initialisations for the current page
 
-require_once 'lib/msg.inc.php';
+require_once ('lib/msg.inc.php');
 require_once $GLOBALS['PATH_EXPORT'] . '/export_config.inc.php';
 
 PageLayout::setHelpKeyword("Basis.Export");

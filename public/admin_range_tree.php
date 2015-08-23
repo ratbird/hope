@@ -40,8 +40,11 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check(Config::get()->RANGE_TREE_ADMIN_PERM ?: 'admin');
+        
+require_once('lib/visual.inc.php');
+require_once('lib/classes/StudipRangeTreeViewAdmin.class.php');
 
-include 'lib/seminar_open.php'; //hier werden die sessions initialisiert
+include('lib/seminar_open.php'); //hier werden die sessions initialisiert
 
 PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Einrichtungshierarchie bearbeiten"));
 Navigation::activateItem('/admin/locations/range_tree');

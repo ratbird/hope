@@ -17,7 +17,10 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'lib/dates.inc.php';
+require_once('lib/raumzeit/SingleDateDB.class.php');
+require_once('lib/dates.inc.php');
+require_once($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/RoomRequest.class.php');
+//require_once($RELATIVE_PATH_RESOURCES.'/lib/VeranstaltungResourcesAssign.class.php');
 
 class SingleDate {
     var $termin_id = '';

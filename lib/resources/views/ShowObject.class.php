@@ -36,8 +36,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once $RELATIVE_PATH_RESOURCES . '/views/ShowList.class.php';
-require_once $RELATIVE_PATH_RESOURCES . '/views/ResourcesBrowse.class.php';
+require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
+require_once ($RELATIVE_PATH_RESOURCES."/views/ShowList.class.php");
+require_once ($RELATIVE_PATH_RESOURCES."/views/ResourcesBrowse.class.php");
 
 /*****************************************************************************
 showObject, Darstellung der Eigenschaften eines Objekts

@@ -1,4 +1,6 @@
 <?php
+require_once 'app/controllers/studip_controller.php';
+
 /**
  * banner.php - controller class for the banners
  *

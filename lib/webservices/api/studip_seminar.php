@@ -10,6 +10,7 @@
  * the License, or (at your option) any later version.
  */
 
+require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_user.php';
 require_once 'lib/webservices/api/studip_institute.php';
 require_once 'lib/webservices/api/studip_session.php';

@@ -22,6 +22,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+require_once 'functions.php';
+
 // Define constants for visibility states.
 define("VISIBILITY_ME", 1);
 define("VISIBILITY_BUDDIES", 2);

@@ -4,7 +4,7 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
-/**
+/*
  * StudipPluginNavigation.class.php - menus for plugins
  *
  * Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>
@@ -13,8 +13,6 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- *
- * @deprecated
  */
 
 

@@ -4,6 +4,8 @@
 # Lifter007: TODO
 # Lifter010: TODO
 
+require_once('lib/visual.inc.php');
+
 $error_message = "";
 
 // stimmt die übergebene range_id?

@@ -24,6 +24,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once ("lib/classes/auth_plugins/StudipAuthAbstract.class.php");
+
 /**
 * Stud.IP authentication against LDAP Server
 *

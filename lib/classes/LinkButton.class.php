@@ -11,6 +11,8 @@
 
 namespace Studip;
 
+require_once 'Interactable.class.php';
+
 /**
  * Represents an HTML link element.
  */

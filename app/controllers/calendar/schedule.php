@@ -15,6 +15,7 @@
  * @category    Stud.IP
  */
 
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
 
 /**

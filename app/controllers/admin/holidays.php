@@ -10,6 +10,8 @@
  * @package   admin
  * @since     3.2
  */
+require_once 'app/controllers/authenticated_controller.php';
+
 class Admin_HolidaysController extends AuthenticatedController
 {
     /**

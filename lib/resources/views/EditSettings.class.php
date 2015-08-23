@@ -38,6 +38,8 @@
 
 use Studip\Button, Studip\LinkButton;
 
+require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
+
 class EditSettings
 {
     private function getDependingResources($category_id)

@@ -39,7 +39,9 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once 'lib/msg.inc.php';
+require_once($RELATIVE_PATH_EXTERN.'/lib/ExternModule.class.php');
+require_once($RELATIVE_PATH_EXTERN.'/lib/ExternConfig.class.php');
+require_once('lib/msg.inc.php');
 
 echo "<table class=\"blank\" border=\"0\" width=\"100%\" ";
 echo "align=\"left\" cellspacing=\"0\" cellpadding=\"0\">\n";

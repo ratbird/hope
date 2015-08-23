@@ -19,6 +19,9 @@
  * @since       File available since Release 3.0
  * @author      Robert Costa <rcosta@uos.de>
  */
+require_once 'authenticated_controller.php';
+require_once 'app/models/WysiwygRequest.php';
+require_once 'app/models/WysiwygDocument.php';
 
 use Studip\WysiwygRequest;
 use Studip\WysiwygDocument;

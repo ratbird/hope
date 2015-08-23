@@ -29,6 +29,7 @@ PageLayout::setHelpKeyword("Basis.Ressourcen");// META:in resourcesControl.inc.p
 
 if (get_config('RESOURCES_ENABLE')) {
     //Steuerung der Ressourcenverwaltung einbinden
+    require_once 'lib/resources/lib/CheckMultipleOverlaps.class.php';
     include ("$RELATIVE_PATH_RESOURCES/resourcesControl.inc.php");
 } else {
     // Start of Output

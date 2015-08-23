@@ -47,8 +47,8 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once 'lib/object.inc.php';
-require_once 'lib/user_visible.inc.php';
+require_once ('lib/object.inc.php');
+require_once ('lib/user_visible.inc.php');
 
 /**
  * This function creates the header line for studip-objects
@@ -2060,7 +2060,7 @@ function match_route($requested_route, $current_route = '')
 }
 
 function studip_default_exception_handler($exception) {
-    require_once 'lib/visual.inc.php';
+    require_once('lib/visual.inc.php');
 
     // send exception to metrics backend
     if (class_exists('Metrics')) {

@@ -15,6 +15,8 @@
  * @category    Stud.IP
  */
 
+require_once('lib/classes/admission/AdmissionRule.class.php');
+
 class LockedAdmission extends AdmissionRule
 {
     // --- ATTRIBUTES ---

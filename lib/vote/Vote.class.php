@@ -3,10 +3,10 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-
 # Include all required files ================================================ #
-require_once 'lib/vote/VoteDB.class.php';
+require_once ("lib/vote/VoteDB.class.php");
 # ====================================================== end: including files #
+
 
 /**
  * This class is used to implement a vote in Stud.IP

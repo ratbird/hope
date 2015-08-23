@@ -14,6 +14,8 @@
  */
 
 require_once 'app/models/smiley.php';
+require_once 'vendor/trails/trails.php';
+require_once 'lib/plugins/core/ForumModule.class.php';
 require_once 'controllers/forum_controller.php';
 
 // Notifications

@@ -37,6 +37,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once 'lib/functions.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/AssignObject.class.php";
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObject.class.php";
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/RoomRequest.class.php";
+
 class DeleteResourcesUser
 {
     var $range_id;

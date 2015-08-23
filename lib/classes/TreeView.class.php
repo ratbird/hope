@@ -24,7 +24,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-
+require_once('lib/visual.inc.php');
 /**
 * Class to print out html represantation of a tree object based on TreeAbstract.class.php
 *

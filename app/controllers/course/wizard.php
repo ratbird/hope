@@ -15,6 +15,8 @@
  * @since       3.3
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 class Course_WizardController extends AuthenticatedController
 {
     protected $utf8decode_xhr = true;

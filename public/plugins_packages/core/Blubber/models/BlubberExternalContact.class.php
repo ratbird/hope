@@ -8,8 +8,8 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once __DIR__ . '/BlubberUser.class.php';
-require_once __DIR__ . '/BlubberContactAvatar.class.php';
+require_once dirname(__file__)."/BlubberUser.class.php";
+require_once dirname(__file__)."/BlubberContactAvatar.class.php";
 
 /**
  * Entity for external contacts that write something in blubber. In most cases

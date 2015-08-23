@@ -10,6 +10,7 @@
  * @package   admin
  * @since     2.1
  */
+require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_SemesterController extends AuthenticatedController
 {

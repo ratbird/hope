@@ -28,8 +28,10 @@ require '../lib/bootstrap.php';
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
-include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+require_once('lib/visual.inc.php');
+require_once 'lib/classes/SemBrowse.class.php';
 require_once 'lib/export/export_linking_func.inc.php';
 
 $intro_text = $head_text = '';

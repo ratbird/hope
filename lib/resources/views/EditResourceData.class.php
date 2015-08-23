@@ -37,6 +37,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/ResourceObject.class.php');
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/ResourceObjectPerms.class.php');
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/ResourcesUserRoomsList.class.php');
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObject.class.php');
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObjectPerms.class.php');
+require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
+
 /*****************************************************************************
 EditResourceData, Darstellung der unterschiedlichen Forms zur
 Bearbeitung eines Objects

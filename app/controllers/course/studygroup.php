@@ -16,9 +16,14 @@
  * @since       1.10
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/Seminar.class.php';
 require_once 'app/models/studygroup.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
+
+// classes required for global-module-settings
+require_once 'lib/classes/AdminModules.class.php';
 
 /**
  * This controller realises the basal functionalities of a studygroup.

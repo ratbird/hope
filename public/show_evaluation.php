@@ -49,16 +49,17 @@ $perm->check ("autor");
 # ============================================================== end: PHP-LIB #
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once 'lib/seminar_open.php';
+require_once ('lib/evaluation/evaluation.config.php');
+require_once ('lib/seminar_open.php');
+require_once ('lib/visual.inc.php');
 
-require_once EVAL_FILE_EVAL;
-require_once EVAL_FILE_EVALDB;
-require_once EVAL_FILE_SHOW_TREEVIEW;
-require_once EVAL_FILE_EVALTREE;
+require_once( EVAL_FILE_EVAL );
+require_once( EVAL_FILE_EVALDB );
+require_once( EVAL_FILE_SHOW_TREEVIEW );
+require_once( EVAL_FILE_EVALTREE );
 
-require_once EVAL_LIB_COMMON;
-require_once EVAL_LIB_SHOW;
+require_once( EVAL_LIB_COMMON );
+require_once( EVAL_LIB_SHOW );
 # ====================================================== end: including files #
 
 header('Content-Type:text/html;charset=windows-1252');

@@ -2,6 +2,9 @@
 /**
  *
  */
+
+require_once 'app/controllers/authenticated_controller.php';
+
 class DocumentController extends AuthenticatedController
 {
     public function before_filter(&$action, &$args)

@@ -15,6 +15,8 @@
  * @since       3.3
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 $stepdir = "../lib/classes/coursewizardsteps";
 foreach (scandir($stepdir) as $file) {
     if (stripos($file, ".php") !== false) {

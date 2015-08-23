@@ -38,6 +38,9 @@
 // +---------------------------------------------------------------------------+
 
 
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternElementMain.class.php');
+
+
 class ExternElementMainTemplateLectures extends ExternElementMain {
 
     /**

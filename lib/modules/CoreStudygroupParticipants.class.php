@@ -9,6 +9,8 @@
  *  the License, or (at your option) any later version.
  */
 
+require_once 'lib/modules/StudipModule.class.php';
+
 class CoreStudygroupParticipants implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {

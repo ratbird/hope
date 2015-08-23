@@ -34,11 +34,11 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 PageLayout::setHelpKeyword("Basis.AnmeldungRegistrierung");
 PageLayout::setTitle(_("Nutzungsbedingungen"));
 // Start of Output
-include 'lib/include/html_head.inc.php'; // Output of html head
-include 'lib/include/header.php';   // Output of Stud.IP head
-include 'lib/include/deprecated_tabs_layout.php';
+include ('lib/include/html_head.inc.php'); // Output of html head
+include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
-require_once 'lib/msg.inc.php';
+require_once('lib/msg.inc.php');
 
 if (!$GLOBALS['ENABLE_SELF_REGISTRATION']){
     parse_window ("error§" . _("In dieser Installation ist die Möglichkeit zur Registrierung ausgeschaltet."), "§",
@@ -91,6 +91,10 @@ include("locale/$_language_path/LC_HELP/pages/nutzung.html");
 </table>
 <?php
 }
+?>
 
+<?php
 include ('lib/include/html_end.inc.php');
-page_close();
+page_close()
+
+?>

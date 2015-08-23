@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * change_view.php - contains Course_ChangeViewController
  *
  * This program is free software; you can redistribute it and/or
@@ -13,6 +13,8 @@
  * @category    Stud.IP
  * @since       2.2
  */
+
+require_once 'app/controllers/authenticated_controller.php';
 
 /**
  * This controller realises a redirector for administrative pages

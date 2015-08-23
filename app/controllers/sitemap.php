@@ -14,6 +14,8 @@
  * @since       2.0
  */
 
+require_once 'app/controllers/authenticated_controller.php';
+
 /**
  * The sitemap is only visible for logged in users, because the sitemap depends
  * on the permissions of the user.

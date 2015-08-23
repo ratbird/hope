@@ -35,6 +35,9 @@
  * @package     raumzeit
  */
 
+require_once('IssueDB.class.php');
+require_once('SingleDate.class.php');
+
 class Issue {
     var $issue_id = '';
     var $seminar_id = '';

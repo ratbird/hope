@@ -19,6 +19,9 @@
  * @package     help
 */
 
+require_once 'lib/functions.php';
+require_once 'app/controllers/authenticated_controller.php';
+
 class HelpContentController extends AuthenticatedController
 {
     

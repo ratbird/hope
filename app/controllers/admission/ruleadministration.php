@@ -15,7 +15,9 @@
  * @since       3.0
  */
 
-require_once 'app/models/rule_administration.php';
+require_once('app/controllers/authenticated_controller.php');
+require_once('app/models/rule_administration.php');
+require_once('lib/classes/admission/AdmissionRule.class.php');
 
 class Admission_RuleAdministrationController extends AuthenticatedController {
 

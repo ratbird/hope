@@ -37,8 +37,11 @@
 use Studip\Button,
     Studip\LinkButton;
 
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ShowSchedules.class.php';
-require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/SemScheduleWeek.class.php';
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/ShowSchedules.class.php");
+require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/SemScheduleWeek.class.php");
+
+
+
 
 /*****************************************************************************
 ShowSchedules - schedule view

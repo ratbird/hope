@@ -1147,6 +1147,8 @@ define (EVAL_ROOT_TAG, "[R]");
 # ===================================================== end: define constants #
 
 # Include all required files ================================================ #
-require_once 'lib/evaluation/evaluation.config.php';
-require_once HTML;
+require_once( "lib/evaluation/evaluation.config.php" );
+require_once( HTML );
 # ====================================================== end: including files #
+
+?>

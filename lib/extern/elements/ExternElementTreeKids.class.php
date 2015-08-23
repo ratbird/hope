@@ -37,6 +37,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
+
 class ExternElementTreeKids extends ExternElement {
 
     var $attributes = array("table_bgcolor",

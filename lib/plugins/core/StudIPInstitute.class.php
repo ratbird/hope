@@ -5,11 +5,10 @@
 # Lifter010: TODO
 
 /**
- * @author Dennis Reil, <Dennis.Reil@offis.de>
- * @package pluginengine
- * @subpackage core
- * @deprecated
- */
+* @author Dennis Reil, <Dennis.Reil@offis.de>
+* @package pluginengine
+* @subpackage core
+*/
 
 class StudIPInstitute {
     var $id;

@@ -17,6 +17,8 @@
  * @since    2.5
  */
 
+require_once 'app/controllers/studip_controller.php';
+
 class Course_ScmController extends StudipController
 {
     /**

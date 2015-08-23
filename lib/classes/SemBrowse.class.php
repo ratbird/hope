@@ -5,7 +5,12 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
-require_once 'lib/dates.inc.php';
+require_once ('lib/visual.inc.php');
+require_once 'lib/functions.php';
+require_once ('lib/dates.inc.php');
+require_once ('lib/classes/StudipSemSearch.class.php');
+require_once ('lib/classes/StudipSemTreeViewSimple.class.php');
+require_once ('lib/classes/StudipSemRangeTreeViewSimple.class.php');
 
 class SemBrowse {
 

@@ -16,8 +16,23 @@
  * @package     calendar
  */
 
+require_once($RELATIVE_PATH_CALENDAR . '/lib/Error.class.php');
+
+function init_error_handler($handler_name)
+{
+    global $$handler_name;
+
+    static $instantiated = array();
+
+    if (!isset($instantiated[$handler_name])) {
+        $$handler_name = new ErrorHandler();
+        $instantiated[$handler_name] = true;
+    }
+}
+
 class ErrorHandler
 {
+
     // this is the state of the error handling if no error has occured
     const ERROR_NORMAL = 1;
     // this is the state of the error handling  a message has to be displayed

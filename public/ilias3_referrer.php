@@ -30,14 +30,17 @@ ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
 
-include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-if (get_config('ELEARNING_INTERFACE_ENABLE')) {
+if (get_config('ELEARNING_INTERFACE_ENABLE'))
+{
+    require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
     ELearningUtils::bench("start");
 
 
     $cms_select = Request::quoted('cms_select');
-    if (isset($ELEARNING_INTERFACE_MODULES[$cms_select]["name"])) {
+    if (isset($ELEARNING_INTERFACE_MODULES[$cms_select]["name"]))
+    {
 
         ELearningUtils::loadClass($cms_select);
         // init session now

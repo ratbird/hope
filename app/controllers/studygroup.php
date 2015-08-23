@@ -14,6 +14,8 @@
  * @category    Stud.IP
  * @package     studygroup
  */
+
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studygroup.php';
 
 class StudygroupController extends AuthenticatedController

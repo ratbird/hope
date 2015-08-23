@@ -28,10 +28,22 @@
  * // namespace will be found in the given directory
  * StudipAutoloader::addAutoloadPath("[...]lib/classes", "Studip");
  * \endcode
+ *
+ * Additionally you may define single class lookups (or a bundle of them).
+ *
+ * Example:
+ * \code
+ * StudipAutoloader::addClassLookup('FooClass', '[...]/bar/foo.php');
+ * StudipAutoloader::addClassLookups(array(
+ *     'Bar' => '[...]/somwhere/inside_this.php',
+ *     'Baz' => '[...]/elsewhere/b_a_z.class.php',
+ * ));
+ * \encode
  */
 class StudipAutoloader
 {
-    protected static $autoload_paths = array();
+    public static $autoload_paths = array();
+    public static $class_lookup = array();
 
     /**
      * Registers the StudipAutoloader as an autoloader.
@@ -89,6 +101,43 @@ class StudipAutoloader
         }
     }
 
+    /**
+     * Add a class and it's location to the lookup table.
+     * You may also pass an array of class that point the same file
+     * in case of combined vendor packages.
+     *
+     * @param mixed $class Class name
+     * @param String $path Path to file
+     * @since Stud.IP 3.4
+     */
+    public function addClassLookup($class, $path)
+    {
+        foreach ((array)$class as $one_class) {
+            self::$class_lookup[$one_class] = $path;
+        }
+    }
+
+    /**
+     * Adds a bundle of classes and their locations to the lookup table.
+     *
+     * @param Array $map Associative array of class name and their locations
+     * @since Stud.IP 3.4
+     */
+    public function addClassLookups(array $map)
+    {
+        self::$class_lookup = array_merge(self::$class_lookup, $map);
+    }
+
+    /**
+     * Remove class from lookup table.
+     *
+     * @param String $class Class name
+     * @since Stud.IP 3.4
+     */
+    public function removeClassLookup($class)
+    {
+        unset(self::$class_lookup[$class]);
+    }
 
     /**
      * Loads the specified class or interface.
@@ -98,7 +147,13 @@ class StudipAutoloader
      */
     public static function loadClass($class)
     {
-        if ($file = self::findFile($class)) {
+        if (isset(self::$class_lookup[$class])) {
+            $file = self::$class_lookup[$class];
+        } else {
+            $file = self::findFile($class);
+        }
+
+        if ($file) {
             include $file;
 
             return true;

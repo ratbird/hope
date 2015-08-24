@@ -14,17 +14,17 @@
     </colgroup>
 
     <thead>
-    <tr>
-        <th></th>
-        <th style="text-align: left"><?= _("Name") ?></th>
-        <th><?= _('Inhalt') ?></th>
-        <th style="text-align: center"><?= _("Datum") ?></th>
-        <th style="text-wrap: none; white-space: nowrap"><b><?= _("Position/Chance") ?></th>
-        <th><?= _("Art") ?></th>
-        <th></th>
-    </tr>
+        <tr>
+            <th></th>
+            <th style="text-align: left"><?= _("Name") ?></th>
+            <th><?= _('Inhalt') ?></th>
+            <th style="text-align: center"><?= _("Datum") ?></th>
+            <th style="text-wrap: none; white-space: nowrap"><b><?= _("Position/Chance") ?></th>
+            <th><?= _("Art") ?></th>
+            <th></th>
+        </tr>
     </thead>
-
+    <tbody>
     <? foreach ($waiting_list as $wait) {
 
         // wir sind in einer Anmeldeliste und brauchen Prozentangaben
@@ -43,7 +43,6 @@
             $seminar_name .= ' (' . _("Studiengruppe") . ', ' . _("geschlossen") . ')';
         }
         ?>
-        <tbody>
         <tr>
             <td title="<?=_("Position oder Wahrscheinlichkeit")?>" style="background:#44<?= $chance_color ?>44">
             </td>
@@ -85,8 +84,8 @@
                 </a>
             </td>
         </tr>
-        </tbody>
     <? } ?>
+    </tbody>
 
 </table>
 <br>

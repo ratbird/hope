@@ -8,7 +8,11 @@
         |
         <?= strftime('%x, %X') ?>
     <? if (Studip\ENV === 'development'): ?>
-        [<?= sprintf('%u db queries', DBManager::get()->query_count) ?>]
+        [
+            <?= sprintf('%u db queries', DBManager::get()->query_count) ?>
+            /
+            <?= relsize(memory_get_peak_usage(true), false) ?> mem
+        ]
     <? endif; ?>
     </div>
 <? endif; ?>

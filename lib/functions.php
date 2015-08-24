@@ -1989,7 +1989,7 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ', $t
         }
     }
 
-    if ($displayed_levels == 1 && !$truncate) {
+    if ($displayed_levels == 1 && count($result) >=2 && !$truncate) {
         $result = array_slice($result, -2);
 
         $fraction = array_shift($result);
@@ -2005,8 +2005,9 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ', $t
 
     $display = array();
     foreach ($result as $template => $size) {
-        if ($truncate || $size == floor($size)) {
+        if ($truncate || $size - floor($size) < 0.1) {
             $template = str_replace('%.1f', '%u', $template);
+            $size     = (int)$size;
         }
         $display[] = sprintf($template, $size, ($verbose && $size !== 1) ? 's' : '');
     }

@@ -68,6 +68,7 @@ class FunctionsTest extends PHPUnit_Framework_TestCase
         
         // Test displayed levels
         $this->assertEquals('1 Megabyte', relsize(1024 * 1024 + 2 * 1024 + 3, true, 1));
+        $this->assertEquals('1.5 Megabytes', relsize(1024 * 1024 + 512 * 1024 + 3, true, 1));
         $this->assertEquals('1 Megabyte, 2 Kilobytes', relsize(1024 * 1024 + 2 * 1024 + 3, true, 2));
         $this->assertEquals('1 Megabyte, 2 Kilobytes, 3 Bytes', relsize(1024 * 1024 + 2 * 1024 + 3, true, 3));
         $this->assertEquals('1 Megabyte, 2 Kilobytes, 3 Bytes', relsize(1024 * 1024 + 2 * 1024 + 3, true, 0));

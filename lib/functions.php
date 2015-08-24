@@ -1962,7 +1962,7 @@ function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance 
  * @return String The filesize in human readable form.
  * @todo Allow "1,3 MB"
  */
-function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
+function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ', $truncate = false)
 {
     $units = array(
         'B' => 'Byte',
@@ -1980,18 +1980,37 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
     foreach ($units as $short => $long) {
         $remainder = $size % 1024;
 
-        $template = sprintf('%%u %s%%s', $verbose ? $long : $short);
-        $result[] = sprintf($template, $remainder, ($verbose && $remainder !== 1) ? 's' : '');
+        $template = sprintf('%%.1f %s%%s', $verbose ? $long : $short);
+        $result[$template] = $remainder;
 
         $size = floor($size / 1024);
         if ($size == 0) {
             break;
         }
     }
-    if ($displayed_levels > 0) {
+
+    if ($displayed_levels == 1 && !$truncate) {
+        $result = array_slice($result, -2);
+
+        $fraction = array_shift($result);
+        $template = key($result);
+        $size     = array_pop($result);
+
+        $result = array(
+            $template => $size + $fraction / 1024,
+        );
+    } elseif ($displayed_levels > 0) {
         $result = array_slice($result, -$displayed_levels);
     }
-    return implode($glue, array_reverse($result));
+
+    $display = array();
+    foreach ($result as $template => $size) {
+        if ($truncate || $size == floor($size)) {
+            $template = str_replace('%.1f', '%u', $template);
+        }
+        $display[] = sprintf($template, $size, ($verbose && $size !== 1) ? 's' : '');
+    }
+    return implode($glue, array_reverse($display));
 }
 
 /**

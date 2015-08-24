@@ -403,17 +403,17 @@ STUDIP.Blubber = {
                         new_text = "Vor einer Minute".toLocaleString();
                     }
                     if (Math.floor(diff / 60) > 1) {
-                        new_text = _.template("Vor <%= distance %> Minuten".toLocaleString(), {distance: Math.floor(diff / 60)});
+                        new_text = _.template("Vor <%= distance %> Minuten".toLocaleString())({distance: Math.floor(diff / 60)});
                     }
                 } else {
-                    new_text = _.template("Vor <%= distance %> Stunden".toLocaleString(), {distance: Math.floor(diff / (60 * 60))});
+                    new_text = _.template("Vor <%= distance %> Stunden".toLocaleString())({distance: Math.floor(diff / (60 * 60))});
                 }
             } else {
                 if (Math.floor(diff / 86400) < 8) {
                     if (Math.floor(diff / 86400) === 1) {
                         new_text = "Vor einem Tag".toLocaleString();
                     } else {
-                        new_text = _.template("Vor <%= distance %> Tagen".toLocaleString(), {distance: Math.floor(diff / 86400)});
+                        new_text = _.template("Vor <%= distance %> Tagen".toLocaleString())({distance: Math.floor(diff / 86400)});
                     }
                 } else {
                     date = new Date(posting_time * 1000);

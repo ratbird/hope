@@ -13,7 +13,7 @@
             <td>
                 <label for="name"><?= _('Name des Semesters') ?></label>
             </td>
-            <td colspan="4">
+            <td>
                 <input required type="text" name="name" id="name"
                        value="<?= htmlReady($semester->name) ?>"
                        <? if (isset($errors['name'])) echo 'class="invalid"'; ?>>
@@ -23,7 +23,7 @@
             <td>
                 <label for="token"><?= _('Kürzel') ?></label>
             </td>
-            <td colspan="4">
+            <td>
                 <input type="text" name="token" id="token"
                        value="<?= htmlReady($semester->semester_token) ?>">
             </td>
@@ -32,7 +32,7 @@
             <td>
                 <label for="description"><?= _('Beschreibung') ?></label>
             </td>
-            <td colspan="4">
+            <td>
                 <textarea name="description" id="description"><?= htmlReady($semester->description) ?></textarea>
             </td>
         </tr>
@@ -53,7 +53,8 @@
                 <input type="text" name="beginn" value="<?= date('d.m.Y', $semester->beginn) ?>" readonly>
             <? else: ?>
                 <input required type="text" id="beginn" name="beginn"
-                       class="has-date-picker <? if (isset($errors['beginn'])) echo 'invalid'; ?>"
+                       <? if (isset($errors['beginn'])) echo 'class="invalid"'; ?>
+                       data-date-picker='{"<":"#ende"}'
                        value="<? if ($semester->beginn) echo date('d.m.Y', $semester->beginn) ?>">
             <? endif; ?>
             </td>
@@ -64,7 +65,8 @@
             </td>
             <td>
                 <input required type="text" id="ende" name="ende"
-                       class="has-date-picker <? if (isset($errors['ende'])) echo 'invalid'; ?>"
+                       <? if (isset($errors['ende'])) echo 'class="invalid"'; ?>
+                       data-date-picker='{">":"#beginn"}'
                        value="<? if ($semester->ende) echo date('d.m.Y', $semester->ende); ?>">
             </td>
         </tr>
@@ -79,7 +81,8 @@
             </td>
             <td>
                 <input required type="text" id="vorles_beginn" name="vorles_beginn"
-                       class="has-date-picker <? if (isset($errors['vorles_beginn'])) echo 'invalid'; ?>"
+                       <? if (isset($errors['vorles_beginn'])) echo 'class="invalid"'; ?>
+                       data-date-picker='{"<":"#vorles_ende",">=":"#beginn"}'
                        value="<? if ($semester->vorles_beginn) echo date('d.m.Y', $semester->vorles_beginn); ?>">
             </td>
         </tr>
@@ -89,7 +92,8 @@
             </td>
             <td>
                 <input required type="text" id="vorles_ende" name="vorles_ende"
-                       class="has-date-picker <? if (isset($errors['vorles_ende'])) echo 'invalid'; ?>"
+                        <? if (isset($errors['vorles_ende'])) echo 'class="invalid"'; ?>
+                       data-date-picker='{">":"#vorles_beginn","<=":"#ende"}'
                        value="<? if ($semester->vorles_ende) echo date('d.m.Y', $semester->vorles_ende); ?>">
             </td>
         </tr>

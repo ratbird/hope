@@ -36,7 +36,8 @@
                 <label for="beginn"><?= _('Beginn') ?>:</label>
             </td>
             <td>
-                <input required type="text" id="beginn" name="beginn" class="has-date-picker"
+                <input required type="text" id="beginn" name="beginn"
+                       data-date-picker='{"<=":"#ende"}'
                        value="<? if ($holiday->beginn) echo date('d.m.Y', $holiday->beginn) ?>">
             </td>
         </tr>
@@ -45,7 +46,8 @@
                 <label for="ende"><?= _('Ende') ?>:</label>
             </td>
             <td>
-                <input required type="text" id="ende" name="ende" class="has-date-picker"
+                <input required type="text" id="ende" name="ende"
+                       data-date-picker='{">=":"#beginn"}'
                        value="<? if ($holiday->ende) echo date('d.m.Y', $holiday->ende) ?>">
             </td>
         </tr>

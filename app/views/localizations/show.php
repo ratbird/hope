@@ -41,11 +41,11 @@ $translations = array(
     'Sie haben nicht angegeben, wer die Nachricht empfangen soll!' => _('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'),
 
     // public/assets/javascripts/multi_person_search.js
-    'Suchergebnisse' => _('Suchergebnisse'),
     'Sie haben <%= count %> Personen ausgewählt' => _('Sie haben <%= count %> Personen ausgewählt'),
+    'Suchergebnisse' => _('Suchergebnisse'),
     'Alle hinzufügen' => _('Alle hinzufügen'),
     'Alle entfernen' => _('Alle entfernen'),
-    ' Dieser Filter enthält keine Personen.' => _(' Dieser Filter enthält keine Personen.'),
+    ' Dieser Filter enthält keine (neuen) Personen.' => _(' Dieser Filter enthält keine (neuen) Personen.'),
     'Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.' => _('Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.'),
 
     // public/assets/javascripts/multi_select.js
@@ -95,6 +95,45 @@ $translations = array(
     'Eingegebene Zeichen: ' => _('Eingegebene Zeichen: '),
     'Wollen Sie die Aktion wirklich ausführen?' => _('Wollen Sie die Aktion wirklich ausführen?'),
 
+    // public/assets/javascripts/studip-jquery.multi-select.tweaks.js
+    'Die Person ist bereits eingetragen.' => _('Die Person ist bereits eingetragen.'),
+
+    // public/assets/javascripts/studip-ui.js
+    'schließen' => _('schließen'),
+    'Zurück' => _('Zurück'),
+    'Vor;' => _('Vor;'),
+    'heute' => _('heute'),
+    'Januar' => _('Januar'),
+    'Februar' => _('Februar'),
+    'März' => _('März'),
+    'April' => _('April'),
+    'Mai' => _('Mai'),
+    'Juni' => _('Juni'),
+    'Juli' => _('Juli'),
+    'August' => _('August'),
+    'September' => _('September'),
+    'Oktober' => _('Oktober'),
+    'November' => _('November'),
+    'Dezember' => _('Dezember'),
+    'Jan' => _('Jan'),
+    'Feb' => _('Feb'),
+    'Mär' => _('Mär'),
+    'Apr' => _('Apr'),
+    'Jun' => _('Jun'),
+    'Jul' => _('Jul'),
+    'Aug' => _('Aug'),
+    'Sep' => _('Sep'),
+    'Okt' => _('Okt'),
+    'Nov' => _('Nov'),
+    'Dez' => _('Dez'),
+    'So' => _('So'),
+    'Mo' => _('Mo'),
+    'Di' => _('Di'),
+    'Mi' => _('Mi'),
+    'Do' => _('Do'),
+    'Fr' => _('Fr'),
+    'Sa' => _('Sa'),
+
     // public/assets/javascripts/tour.js
     'Fehler beim Aufruf des Tour-Controllers' => _('Fehler beim Aufruf des Tour-Controllers'),
 
@@ -123,7 +162,6 @@ $translations = array(
     'Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' => _('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '),
     'Es werden auch alle Beiträge in diesem Bereich gelöscht!' => _('Es werden auch alle Beiträge in diesem Bereich gelöscht!'),
     'Anonym' => _('Anonym'),
-    '%s hat geschrieben:' => _('%s hat geschrieben:'),
     'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. ' => _('Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '),
     'Link zum Beitrag: ' => _('Link zum Beitrag: '),
     'Thema schließen' => _('Thema schließen'),

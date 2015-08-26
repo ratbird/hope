@@ -59,6 +59,8 @@ javascripts:
     - javascripts/l10n.js
     - javascripts/init.js
 
+    - javascripts/studip-ui.js
+
     - *header
     - *sidebar
     - *toolbar

@@ -83,10 +83,9 @@ tatsächlich belegen wollen') ?>
                             ?>
                             <li class="<?= $id ?>">
                                 <?= $prios[$id]['name'] . '&nbsp;' . $prios[$id]['info'] ?>
-                                <input type="hidden" value="<?= $prio ?>" name="admission_prio[<?= $id ?>]"> <?=
-                                Assets::img('icons/16/black/trash',
-                                    array('class' => $id . ' delete hidden-no-js'))
-                                ?>
+                                <input type="hidden" value="<?= $prio ?>" name="admission_prio[<?= $id ?>]"> <a class="<?=$id?> delete hidden-no-js" href="#"><?=
+                                Assets::img('icons/16/black/trash')
+                                ?></a>
                                 <?=
                                 Assets::input('icons/16/black/trash',
                                     array('name' => 'admission_prio_delete[' . $id . ']', 'type' => 'submit', 'class' => 'hidden-js delete'))
@@ -115,7 +114,9 @@ tatsächlich belegen wollen') ?>
         </tbody>
     </table>
     <div class="icons" style="display: none">
-        <?= Assets::img('icons/16/black/trash', array('class' => 'delete')) ?>
+    <a class="delete" href="#">
+        <?= Assets::img('icons/16/black/trash') ?>
+    </a>
     </div>
 
 

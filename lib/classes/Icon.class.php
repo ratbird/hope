@@ -166,11 +166,8 @@ class Icon
      */
     public function render($type = Icon::SVG)
     {
-        if ($type === Icon::SVG) {
-            return $this->render_svg();
-        }
-        if ($type === Icon::PNG) {
-            return $this->render_png();
+        if ($type === Icon::SVG || $type === Icon::PNG) {
+            return $this->render_img($type);
         }
         if ($type === Icon::CSS_BACKGROUND) {
             return $this->render_css_background();
@@ -179,50 +176,16 @@ class Icon
     }
 
     /**
-     * Renders the icon inside a svg html tag.
+     * Renders the icon inside a img html tag.
      *
-     * @return String containing the html representation for svg.
+     * @param int $type Defines in which manner the icon should be rendered,
+     *                  should be either Icon::SVG or Icon::PNG.
+     * @return String containing the html representation for the icon.
      */
-    protected function render_svg()
-    {
-        if ($this->static) {
-            return $this->render_png();
-        }
-
-        $png_attributes = array(
-            'xlink:href' => $this->get_asset(Icon::SVG),
-            'src' => $this->get_asset(Icon::PNG),
-            'alt' => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->icon),
-            'width'  => $this->get_size(),
-            'height' => $this->get_size(),
-        );
-        unset($this->attributes['alt'], $this->attributes['src']);
-
-        $title = $this->attributes['title'] ?: false;
-        unset($this->attributes['title']);
-
-        $svg_attributes = array_merge($this->attributes, array(
-            'width'  => $this->get_size(),
-            'height' => $this->get_size(),
-        ));
-
-        $result = sprintf('<svg %s><image %s>%s</image></svg>',
-                          $this->tag_options($svg_attributes),
-                          $this->tag_options($png_attributes),
-                          $title ? sprintf('<title>%s</title>', htmlReady($title)) : '');
-
-        return $result;
-    }
-
-    /**
-     * Renders the icon inside a img html tag as png.
-     *
-     * @return String containing the html representation for png.
-     */
-    protected function render_png()
+    protected function render_img($type)
     {
         $attributes = array_merge($this->attributes, array(
-            'src'    => $this->static ? $this->icon : $this->get_asset(Icon::PNG),
+            'src'    => $this->static ? $this->icon : $this->get_asset($type),
             'alt'    => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->icon),
             'width'  => $this->get_size(),
             'height' => $this->get_size(),

@@ -241,8 +241,7 @@ a.link-intern::before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-intern.png");
-  background-image: none, url("../images/icons/blue/link-intern.svg");
+  background-image: url("../images/icons/blue/link-intern.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -256,8 +255,7 @@ a.link-extern::before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-extern.png");
-  background-image: none, url("../images/icons/blue/link-extern.svg");
+  background-image: url("../images/icons/blue/link-extern.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -478,8 +476,7 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 }
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -489,16 +486,14 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
   display: block;
 }
 .collapsable .empty .toggle-indicator a {
-  background-image: url("../images/icons/16/grey/arr_1right.png");
-  background-image: none, url("../images/icons/grey/arr_1right.svg");
+  background-image: url("../images/icons/grey/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .collapsable .collapsed .toggle-indicator a {
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -938,8 +933,7 @@ table.default > caption .caption-actions {
   align-self: flex-end;
 }
 table.default > tbody.toggleable.toggled .toggle-switch {
-  background-image: url("../images/icons/16//blue/arr_1right.png");
-  background-image: none, url("../images/icons//blue/arr_1right.svg");
+  background-image: url("../images/icons//blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -954,8 +948,7 @@ table.default > tbody.toggleable .toggle-switch {
   text-shadow: none;
   background-color: transparent;
   border: 0;
-  background-image: url("../images/icons/16//blue/arr_1down.png");
-  background-image: none, url("../images/icons//blue/arr_1down.svg");
+  background-image: url("../images/icons//blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -995,8 +988,7 @@ table.default.has-form textarea {
   min-height: 100px;
 }
 table.withdetails > tbody > tr:not(.details) > td:first-child {
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1013,8 +1005,7 @@ table.withdetails > tbody > tr.open > td {
   background-color: rgba(105, 118, 127, 0.2);
 }
 table.withdetails > tbody > tr.open > td:first-child {
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1260,8 +1251,7 @@ label.required:after {
   display: inline-block;
   height: 16px;
   margin-right: 5px;
-  background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
-  background-image: none, url("../images/icons/blue/checkbox-unchecked.svg");
+  background-image: url("../images/icons/blue/checkbox-unchecked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1275,8 +1265,7 @@ label.required:after {
   display: inline-block;
   height: 16px;
   margin-right: 5px;
-  background-image: url("../images/icons/16/blue/checkbox-checked.png");
-  background-image: none, url("../images/icons/blue/checkbox-checked.svg");
+  background-image: url("../images/icons/blue/checkbox-checked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1637,8 +1626,7 @@ label.required:after {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1669,8 +1657,7 @@ label.required:after {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1684,8 +1671,7 @@ label.required:after {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2884,16 +2870,14 @@ ul.widget-list > li {
   padding-left: 20px;
 }
 .sidebar-widget .widget-options .options-checkbox.options-checked {
-  background-image: url("../images/icons/16/blue/checkbox-checked.png");
-  background-image: none, url("../images/icons/blue/checkbox-checked.svg");
+  background-image: url("../images/icons/blue/checkbox-checked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .sidebar-widget .widget-options .options-checkbox.options-unchecked {
-  background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
-  background-image: none, url("../images/icons/blue/checkbox-unchecked.svg");
+  background-image: url("../images/icons/blue/checkbox-unchecked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2906,16 +2890,14 @@ ul.widget-list > li {
   padding-left: 20px;
 }
 .sidebar-widget .widget-options .options-radio.options-checked {
-  background-image: url("../images/icons/16/blue/radiobutton-checked.png");
-  background-image: none, url("../images/icons/blue/radiobutton-checked.svg");
+  background-image: url("../images/icons/blue/radiobutton-checked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .sidebar-widget .widget-options .options-radio.options-unchecked {
-  background-image: url("../images/icons/16/blue/radiobutton-unchecked.png");
-  background-image: none, url("../images/icons/blue/radiobutton-unchecked.svg");
+  background-image: url("../images/icons/blue/radiobutton-unchecked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2942,8 +2924,7 @@ select.sidebar-selectlist {
   border: 0;
   width: 29px;
   height: 20px;
-  background-image: url("../images/icons/16/white/search.png");
-  background-image: none, url("../images/icons/white/search.svg");
+  background-image: url("../images/icons/white/search.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2989,8 +2970,7 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-intern.png");
-  background-image: none, url("../images/icons/blue/link-intern.svg");
+  background-image: url("../images/icons/blue/link-intern.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3004,8 +2984,7 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-extern.png");
-  background-image: none, url("../images/icons/blue/link-extern.svg");
+  background-image: url("../images/icons/blue/link-extern.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3077,8 +3056,7 @@ select.sidebar-selectlist {
   right: 0;
 }
 .helpbar .helpbar-title {
-  background-image: url("../images/icons/32/white/question-circle.png");
-  background-image: none, url("../images/icons/white/question-circle.svg");
+  background-image: url("../images/icons/white/question-circle.svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -3121,8 +3099,7 @@ select.sidebar-selectlist {
   padding: 0;
 }
 .helpbar .help-tours a {
-  background-image: url("../images/icons/16/white/play.png");
-  background-image: none, url("../images/icons/white/play.svg");
+  background-image: url("../images/icons/white/play.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3133,16 +3110,14 @@ select.sidebar-selectlist {
   padding-left: 20px;
 }
 .helpbar .help-tours a.tour-paused {
-  background-image: url("../images/icons/16/white/pause.png");
-  background-image: none, url("../images/icons/white/pause.svg");
+  background-image: url("../images/icons/white/pause.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .helpbar .help-tours a.tour-completed {
-  background-image: url("../images/icons/16/white/accept.png");
-  background-image: none, url("../images/icons/white/accept.svg");
+  background-image: url("../images/icons/white/accept.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3290,8 +3265,7 @@ section.contentbox article header h1::before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3366,8 +3340,7 @@ section.contentbox article.new header h1::before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/red/arr_1right.png");
-  background-image: none, url("../images/icons/red/arr_1right.svg");
+  background-image: url("../images/icons/red/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3608,80 +3581,70 @@ button.button[disabled]:hover {
   width: 16px;
 }
 .button.accept:before {
-  background-image: url("../images/icons/16/blue/accept.png");
-  background-image: none, url("../images/icons/blue/accept.svg");
+  background-image: url("../images/icons/blue/accept.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.accept:hover:before {
-  background-image: url("../images/icons/16/white/accept.png");
-  background-image: none, url("../images/icons/white/accept.svg");
+  background-image: url("../images/icons/white/accept.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.cancel:before {
-  background-image: url("../images/icons/16/blue/decline.png");
-  background-image: none, url("../images/icons/blue/decline.svg");
+  background-image: url("../images/icons/blue/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.cancel:hover:before {
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/white/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.edit:before {
-  background-image: url("../images/icons/16/blue/edit.png");
-  background-image: none, url("../images/icons/blue/edit.svg");
+  background-image: url("../images/icons/blue/edit.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.edit:hover:before {
-  background-image: url("../images/icons/16/white/edit.png");
-  background-image: none, url("../images/icons/white/edit.svg");
+  background-image: url("../images/icons/white/edit.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-up:before {
-  background-image: url("../images/icons/16/blue/arr_1up.png");
-  background-image: none, url("../images/icons/blue/arr_1up.svg");
+  background-image: url("../images/icons/blue/arr_1up.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-up:hover:before {
-  background-image: url("../images/icons/16/white/arr_1up.png");
-  background-image: none, url("../images/icons/white/arr_1up.svg");
+  background-image: url("../images/icons/white/arr_1up.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-down:before {
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-down:hover:before {
-  background-image: url("../images/icons/16/white/arr_1down.png");
-  background-image: none, url("../images/icons/white/arr_1down.svg");
+  background-image: url("../images/icons/white/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3854,8 +3817,7 @@ a.message-tag::before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/tag.png");
-  background-image: none, url("../images/icons/blue/tag.svg");
+  background-image: url("../images/icons/blue/tag.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3877,8 +3839,7 @@ a.message-tag::before {
   display: inline-block;
   height: 20px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/blue/mail.png");
-  background-image: none, url("../images/icons/blue/mail.svg");
+  background-image: url("../images/icons/blue/mail.svg");
   -webkit-background-size: 20px 20px;
   -moz-background-size: 20px 20px;
   -o-background-size: 20px 20px;
@@ -4187,8 +4148,7 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/grey/info-circle.png");
-  background-image: none, url("../images/icons/grey/info-circle.svg");
+  background-image: url("../images/icons/grey/info-circle.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -4202,8 +4162,7 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/red/info-circle.png");
-  background-image: none, url("../images/icons/red/info-circle.svg");
+  background-image: url("../images/icons/red/info-circle.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6314,8 +6273,7 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close .ui-icon {
   width: 16px;
   height: 16px;
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/white/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6328,8 +6286,7 @@ div.available-widgets .studip-widget {
   top: 1px;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/white/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6404,32 +6361,28 @@ div.available-widgets .studip-widget {
   padding-right: 23px;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept:before {
-  background-image: url("../images/icons/16/blue/accept.png");
-  background-image: none, url("../images/icons/blue/accept.svg");
+  background-image: url("../images/icons/blue/accept.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept:hover:before {
-  background-image: url("../images/icons/16/white/accept.png");
-  background-image: none, url("../images/icons/white/accept.svg");
+  background-image: url("../images/icons/white/accept.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel:before {
-  background-image: url("../images/icons/16/blue/decline.png");
-  background-image: none, url("../images/icons/blue/decline.svg");
+  background-image: url("../images/icons/blue/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel:hover:before {
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/white/decline.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6444,8 +6397,7 @@ div.available-widgets .studip-widget {
   white-space: nowrap;
 }
 .ui-dialog-titlebar-wiki {
-  background-image: url("../images/icons/32/white/question-circle.png");
-  background-image: none, url("../images/icons/white/question-circle.svg");
+  background-image: url("../images/icons/white/question-circle.svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -6666,8 +6618,7 @@ div#studyareas {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/white/smiley.png");
-  background-image: none, url("../images/icons/white/smiley.svg");
+  background-image: url("../images/icons/white/smiley.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6681,8 +6632,7 @@ div#studyareas {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/black/smiley.png");
-  background-image: none, url("../images/icons/black/smiley.svg");
+  background-image: url("../images/icons/black/smiley.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6729,8 +6679,7 @@ div#studyareas {
   text-shadow: none;
   background-color: transparent;
   border: 0;
-  background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
-  background-image: none, url("../images/icons/blue/checkbox-unchecked.svg");
+  background-image: url("../images/icons/blue/checkbox-unchecked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6741,8 +6690,7 @@ div#studyareas {
   vertical-align: middle;
 }
 .smiley-toggle.favorite {
-  background-image: url("../images/icons/16/blue/checkbox-checked.png");
-  background-image: none, url("../images/icons/blue/checkbox-checked.svg");
+  background-image: url("../images/icons/blue/checkbox-checked.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -6884,8 +6832,7 @@ div#studyareas {
   display: inline-block;
   height: 24px;
   margin-right: 0;
-  background-image: url("../images/icons/32/white/arr_1right.png");
-  background-image: none, url("../images/icons/white/arr_1right.svg");
+  background-image: url("../images/icons/white/arr_1right.svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -6906,8 +6853,7 @@ label[for="responsive-toggle"]::before {
   display: inline-block;
   height: 20px;
   margin-right: 0;
-  background-image: url("../images/icons/32/white/hamburger-icon.png");
-  background-image: none, url("../images/icons/white/hamburger-icon.svg");
+  background-image: url("../images/icons/white/hamburger-icon.svg");
   -webkit-background-size: 20px 20px;
   -moz-background-size: 20px 20px;
   -o-background-size: 20px 20px;
@@ -6994,8 +6940,7 @@ label[for="responsive-toggle"]:before {
   display: inline-block;
   height: 24px;
   margin-right: 0;
-  background-image: url("../images/icons/32/white/arr_1down.png");
-  background-image: none, url("../images/icons/white/arr_1down.svg");
+  background-image: url("../images/icons/white/arr_1down.svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -7009,8 +6954,7 @@ label[for="responsive-toggle"]:before {
   display: inline-block;
   height: 24px;
   margin-right: 0;
-  background-image: url("../images/icons/32/white/arr_1right.png");
-  background-image: none, url("../images/icons/white/arr_1right.svg");
+  background-image: url("../images/icons/white/arr_1right.svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -7043,8 +6987,7 @@ label[for="responsive-toggle"]:before {
   display: inline-block;
   height: 20px;
   margin-right: 0;
-  background-image: url("../images/icons/32/white/hamburger-icon-small.png");
-  background-image: none, url("../images/icons/white/hamburger-icon-small.svg");
+  background-image: url("../images/icons/white/hamburger-icon-small.svg");
   -webkit-background-size: 20px 20px;
   -moz-background-size: 20px 20px;
   -o-background-size: 20px 20px;
@@ -7442,8 +7385,7 @@ img.plugin_preview {
 /* --- general style classes ------------------------------------------------ */
 .arrow_down {
   background: transparent top left no-repeat !important;
-  background-image: url("../images/icons/16/blue/arr_1down.png") !important;
-  background-image: none, url("../images/icons/blue/arr_1down.svg") !important;
+  background-image: url("../images/icons/blue/arr_1down.svg") !important;
   -webkit-background-size: 16px 16px !important;
   -moz-background-size: 16px 16px !important;
   -o-background-size: 16px 16px !important;
@@ -7451,8 +7393,7 @@ img.plugin_preview {
 }
 .arrow_right {
   background: transparent top left no-repeat !important;
-  background-image: url("../images/icons/16/blue/arr_1right.png") !important;
-  background-image: none, url("../images/icons/blue/arr_1right.svg") !important;
+  background-image: url("../images/icons/blue/arr_1right.svg") !important;
   -webkit-background-size: 16px 16px !important;
   -moz-background-size: 16px 16px !important;
   -o-background-size: 16px 16px !important;
@@ -7462,8 +7403,7 @@ h1:hover .arrow_down,
 h2:hover .arrow_down,
 h3:hover .arrow_down,
 h4:hover .arrow_down {
-  background-image: url("../images/icons/16/red/arr_1down.png");
-  background-image: none, url("../images/icons/red/arr_1down.svg");
+  background-image: url("../images/icons/red/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -7473,8 +7413,7 @@ h1:hover .arrow_right,
 h2:hover .arrow_right,
 h3:hover .arrow_right,
 h4:hover .arrow_right {
-  background-image: url("../images/icons/16/red/arr_1right.png");
-  background-image: none, url("../images/icons/red/arr_1right.svg");
+  background-image: url("../images/icons/red/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;

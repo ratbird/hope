@@ -56,12 +56,9 @@
 }
 .retina-background-icon(@icon, @size: 16) {
     @temp-icon: replace(@icon, "\.(png|svg)$", '', g);
-    @temp-size: ceil(unit(@size) / 16) * 16;
-    @png: "@{image-path}/icons/@{temp-size}/@{temp-icon}.png";
     @svg: "@{image-path}/icons/@{temp-icon}.svg";
 
-    background-image: url("@{png}");
-    background-image: none, url("@{svg}");
+    background-image: url("@{svg}");
     .background-size(unit(@size, px) unit(@size, px));
 }
 

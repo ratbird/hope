@@ -2782,8 +2782,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   display: inline-block;
   height: 16px;
   margin-left: 0;
-  background-image: url("../images/icons/16/white/arr_1right.png");
-  background-image: none, url("../images/icons/white/arr_1right.svg");
+  background-image: url("../images/icons/white/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2811,8 +2810,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/white/arr_1left.png");
-  background-image: none, url("../images/icons/white/arr_1left.svg");
+  background-image: url("../images/icons/white/arr_1left.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;

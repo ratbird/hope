@@ -377,7 +377,7 @@ class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
 
 namespace Studip\MarkupPrivate\MediaProxy;
 
-use Studip\MarkupPrivate\String;
+use Studip\MarkupPrivate\Text;
 
 /**
  * Check if media proxy should be used and if so return the respective URL.
@@ -568,7 +568,7 @@ class ExternalMediaDeniedException extends UrlException
 
 //// string utilities /////////////////////////////////////////////////////////
 
-namespace Studip\MarkupPrivate\String;
+namespace Studip\MarkupPrivate\Text;
 
 /**
  * Test if string starts with prefix.

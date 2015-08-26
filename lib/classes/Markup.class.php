@@ -436,8 +436,8 @@ function decodeMediaProxyUrl($url) {
     # TODO make it work for 'url=' at any position in query
     $urlpath = removeStudipDomain($url);
     $proxypath = removeStudipDomain(getMediaProxyUrl()) . '?url=';
-    if (String\startsWith($urlpath, $proxypath)) {
-        return \urldecode(String\removePrefix($urlpath, $proxypath));
+    if (Text\startsWith($urlpath, $proxypath)) {
+        return \urldecode(Text\removePrefix($urlpath, $proxypath));
     }
     return $url;
 }
@@ -505,7 +505,7 @@ function removeStudipDomain($url) {
 function getStudipRelativePath($url) {
     $parsed_url = \parse_url(transformInternalIdnaLink($url));
     $parsed_studip_url = getParsedStudipUrl();
-    return String\removePrefix($parsed_url['path'], $parsed_studip_url['path']);
+    return Text\removePrefix($parsed_url['path'], $parsed_studip_url['path']);
 }
 
 /**

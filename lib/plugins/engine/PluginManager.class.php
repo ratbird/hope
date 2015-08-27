@@ -39,9 +39,14 @@ class PluginManager
     private $plugins_default_activations_cache = array();
 
     /**
+     * should only core-plugins be activated? Sober means free of any external plugins.
+     */
+    static public $sober = false;
+
+    /**
      * Returns the PluginManager singleton instance.
      */
-    public static function getInstance ()
+    public static function getInstance ($sober = false)
     {
         static $instance;
 
@@ -49,7 +54,7 @@ class PluginManager
             return $instance;
         }
 
-        return $instance = new PluginManager();
+        return $instance = new PluginManager($sober);
     }
 
     /**
@@ -78,11 +83,7 @@ class PluginManager
         $db = DBManager::get();
         $this->plugins = array();
 
-        if (!Request::get("sober")) {
-            $result = $db->query('SELECT * FROM plugins ORDER BY pluginname');
-        } else {
-            $result = $db->query('SELECT * FROM plugins WHERE pluginpath LIKE "core/%" ORDER BY pluginname');
-        }
+        $result = $db->query('SELECT * FROM plugins ORDER BY pluginname');
 
         foreach ($result as $plugin) {
             $id = (int) $plugin['pluginid'];
@@ -314,9 +315,17 @@ class PluginManager
             }
         }
 
+        if (self::$sober && !$this->isPluginCorePlugin($class, $path)) {
+            return null;
+        }
+
         require_once $pluginfile;
 
         return new ReflectionClass($class);
+    }
+
+    private function isPluginCorePlugin($class, $path) {
+        return stripos($path, "core/") === 0;
     }
 
     /**

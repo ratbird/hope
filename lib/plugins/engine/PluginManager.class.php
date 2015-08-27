@@ -78,7 +78,11 @@ class PluginManager
         $db = DBManager::get();
         $this->plugins = array();
 
-        $result = $db->query('SELECT * FROM plugins ORDER BY pluginname');
+        if (!Request::get("sober")) {
+            $result = $db->query('SELECT * FROM plugins ORDER BY pluginname');
+        } else {
+            $result = $db->query('SELECT * FROM plugins WHERE pluginpath LIKE "core/%" ORDER BY pluginname');
+        }
 
         foreach ($result as $plugin) {
             $id = (int) $plugin['pluginid'];

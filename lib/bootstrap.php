@@ -206,4 +206,8 @@ namespace {
         require_once 'lib/files/FileHelper.php';
     }
 
+    if (Request::get("sober")) {
+        URLHelper::bindLinkParam("sober", $sober);
+    }
+
 }

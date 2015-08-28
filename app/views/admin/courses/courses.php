@@ -261,7 +261,7 @@
                             echo $this->render_partial('admin/courses/admission_locked', compact('values', 'semid'));
                             break;
                     }?>
-                <? elseif (!is_numeric($selected_action) && $actions[$selected_action]['multimode']) : ?>
+                <? elseif (!is_numeric($selected_action) && !$actions[$selected_action]['url']) : ?>
                     <? $plugin = PluginManager::getInstance()->getPlugin($selected_action) ?>
                     <? $template = $plugin->getAdminCourseActionTemplate($semid, $values) ?>
                     <?= $template ? $template->render() : "" ?>

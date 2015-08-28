@@ -245,7 +245,7 @@ class ConnectedCMS
             echo "<b>" . _("Angebundene Lernmodul-Typen: ") . "</b>";
             echo "<br>\n";
             foreach($this->types as $key => $type)
-                echo "<img src=\"" . $type["icon"] . "\"> " . $type["name"] . " ($key)<br>\n";
+                echo Assets::img($type["icon"]) . $type["name"] . " ($key)<br>\n";
             echo "<br>\n";
         }
 

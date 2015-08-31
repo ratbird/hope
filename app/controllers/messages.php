@@ -37,9 +37,17 @@ class MessagesController extends AuthenticatedController {
     {
         Navigation::activateItem('/messaging/messages/inbox');
 
+
         if (Request::get("read_all")) {
             Message::markAllAs($GLOBALS['user']->id, 1);
             PageLayout::postMessage(MessageBox::success(_("Alle Nachrichten wurden als gelesen markiert.")));
+        }
+
+        if (Request::isPost()) {
+            foreach (Request::getArray("bulk") as $message_id) {
+                $this->delete_message($message_id);
+            }
+            PageLayout::postMessage(MessageBox::success(_("Nachrichten wurden gelöscht")));
         }
 
         $this->messages = $this->get_messages(
@@ -52,11 +60,19 @@ class MessagesController extends AuthenticatedController {
         $this->received   = true;
         $this->tags       = Message::getUserTags();
         $this->message_id = $message_id;
+        $this->settings   = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
     }
 
     public function sent_action($message_id = null)
     {
         Navigation::activateItem('/messaging/messages/sent');
+
+        if (Request::isPost()) {
+            foreach (Request::getArray("bulk") as $message_id) {
+                $this->delete_message($message_id);
+            }
+            PageLayout::postMessage(MessageBox::success(_("Nachrichten wurden gelöscht")));
+        }
 
         $this->messages = $this->get_messages(
             false,
@@ -68,6 +84,7 @@ class MessagesController extends AuthenticatedController {
         $this->received   = false;
         $this->tags       = Message::getUserTags();
         $this->message_id = $message_id;
+        $this->settings   = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
 
         $this->render_action("overview");
     }
@@ -408,17 +425,7 @@ class MessagesController extends AuthenticatedController {
 
         $ticket = Request::get('studip-ticket');
         if (Request::isPost() && $ticket && check_ticket($ticket)) {
-            $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "snd"));
-            $success = 0;
-            if (!$messageuser->isNew()) {
-                $messageuser['deleted'] = 1;
-                $success = $messageuser->store();
-            }
-            $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "rec"));
-            if (!$messageuser->isNew()) {
-                $messageuser['deleted'] = 1;
-                $success += $messageuser->store();
-            }
+            $success = $this->delete_message($message_id);
             if ($success) {
                 PageLayout::postMessage(MessageBox::success(_('Nachricht gelöscht!')));
             } else {
@@ -431,6 +438,22 @@ class MessagesController extends AuthenticatedController {
                   : $this->url_for('messages/overview');
 
         $this->redirect($redirect);
+    }
+
+    protected function delete_message($message_id)
+    {
+        $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "snd"));
+        $success = 0;
+        if (!$messageuser->isNew()) {
+            $messageuser['deleted'] = 1;
+            $success = $messageuser->store();
+        }
+        $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "rec"));
+        if (!$messageuser->isNew()) {
+            $messageuser['deleted'] = 1;
+            $success += $messageuser->store();
+        }
+        return $success;
     }
 
     protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null, $search = null)

@@ -31,7 +31,6 @@
                             <?= htmlReady($message_user['fullname']) ?>
                         </a>
                     </li>
-
                 <? endforeach ?>
                 </ul>
                 <? endif ?>

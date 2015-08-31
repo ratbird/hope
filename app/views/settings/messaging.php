@@ -130,6 +130,15 @@
                 <? endif; ?>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <label for="display_bulk_actions"><?= _('Mehrere Nachrichten löschen') ?></label>
+                </td>
+                <td>
+                    <input type="checkbox" value="1" name="display_bulk_actions" id="display_bulk_actions"
+                        <? if ($settings['display_bulk_actions'] == 1) echo 'checked'; ?>>
+                </td>
+            </tr>
         </tbody>
         <tbody>
             <tr>

@@ -61,6 +61,7 @@ class Settings_MessagingController extends Settings_SettingsController
             $settings['logout_markreaded']    = Request::int('logout_markreaded');
             $settings['save_snd']             = Request::int('save_snd', 2);
             $settings['request_mail_forward'] = Request::int('request_mail_forward', 0);
+            $settings['display_bulk_actions'] = Request::int('display_bulk_actions', 0);
 
             $this->config->store('MESSAGING_SETTINGS', $settings);
 

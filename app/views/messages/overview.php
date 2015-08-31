@@ -6,21 +6,34 @@
 <input type="hidden" name="search_subject" id="search_subject" value="<?= htmlReady(Request::get("search_subject")) ?>">
 <input type="hidden" name="search_content" id="search_content" value="<?= htmlReady(Request::get("search_content")) ?>">
 
+<? if (Request::get("tag")) : ?>
+    <form action="<?= $controller->url_for('messages/delete_tag', array('tag' => Request::get("tag"))) ?>" method="post" id="delete_tags_form">
+        <?= CSRFProtection::tokenTag() ?>
+    </form>
+<? endif ?>
+
+<? if ($settings['display_bulk_actions']) : ?>
+<form action="?" method="post" id="bulk">
+    <?= CSRFProtection::tokenTag() ?>
+    <?= \Studip\Button::create(_("Ausgewählte Nachrichten löschen"), "bulk_action", array('onClick' => "jQuery('#bulk').submit();")) ?>
+<? endif ?>
+
+
 <table class="default" id="messages">
     <caption>
         <?= $received ? _("Eingang") : _("Gesendet") ?>
         <? if (Request::get("tag")) : ?>
             <?= ", "._("Schlagwort: ").htmlReady(ucfirst(Request::get("tag"))) ?>
-            <form action="<?= $controller->url_for('messages/delete_tag', array('tag' => Request::get("tag"))) ?>" method="post" style="display: inline;">
-                <button onClick="return window.confirm('<?= _("Schlagwort wirklich löschen?") ?>');" style="background: none; border: none; cursor: pointer;">
-                    <?= Assets::img("icons/20/blue/trash") ?>
-                </button>
-                <?= CSRFProtection::tokenTag() ?>
-            </form>
+            <button onClick="if (window.confirm('<?= _("Schlagwort wirklich löschen?") ?>') { jQuery('#delete_tags_form').submit(); }" style="background: none; border: none; cursor: pointer;" title="<?= _("Schlagwort von allen Nachrichten entfernen.") ?>">
+                <?= Assets::img("icons/20/blue/trash") ?>
+            </button>
         <? endif ?>
     </caption>
     <thead>
         <tr>
+            <? if ($settings['display_bulk_actions']) : ?>
+            <th><input type="checkbox" data-proxyfor="#bulk :checkbox"></th>
+            <? endif ?>
             <th></th>
             <th></th>
             <th><?= _("Betreff") ?></th>
@@ -30,12 +43,13 @@
             <th></th>
         </tr>
     </thead>
+
     <tbody aria-relevant="additions" aria-live="polite">
         <? if (count($messages) > 0) : ?>
             <? if ($more || (Request::int("offset") > 0)) : ?>
             <noscript>
             <tr>
-                <td colspan="5">
+                <td colspan="8">
                     <? if (Request::int("offset") > 0) : ?>
                     <a title="<?= _("zurück") ?>" href="<?= URLHelper::getLink("?", array('offset' => Request::int("offset") - $messageBufferCount > 0 ? Request::int("offset") - $messageBufferCount : null)) ?>"><?= Assets::img("icons/16/blue/arr_1left", array("class" => "text-bottom")) ?></a>
                     <? endif ?>
@@ -49,12 +63,12 @@
             </noscript>
             <? endif ?>
             <? foreach ($messages as $message) : ?>
-            <?= $this->render_partial("messages/_message_row.php", compact("message", "received")) ?>
+            <?= $this->render_partial("messages/_message_row.php", compact("message", "received". "settings")) ?>
             <? endforeach ?>
             <? if ($more || (Request::int("offset") > 0)) : ?>
             <noscript>
             <tr>
-                <td colspan="5">
+                <td colspan="8">
                     <? if (Request::int("offset") > 0) : ?>
                         <a title="<?= _("zurück") ?>" href="<?= URLHelper::getLink("?", array('offset' => Request::int("offset") - $messageBufferCount > 0 ? Request::int("offset") - $messageBufferCount : null)) ?>"><?= Assets::img("icons/16/blue/arr_1left", array("class" => "text-bottom")) ?></a>
                     <? endif ?>
@@ -69,14 +83,19 @@
             <? endif ?>
         <? else : ?>
         <tr>
-            <td colspan="6" style="text-align: center"><?= _("Keine Nachrichten") ?></td>
+            <td colspan="8" style="text-align: center"><?= _("Keine Nachrichten") ?></td>
         </tr>
         <? endif ?>
         <tr id="reloader" class="more">
-            <td colspan="6"><?= Assets::img("ajax_indicator_small.gif") ?></td>
+            <td colspan="8"><?= Assets::img("ajax_indicator_small.gif") ?></td>
         </tr>
     </tbody>
 </table>
+
+<? if ($settings['display_bulk_actions']) : ?>
+    </form>
+<? endif ?>
+
 
 <div style="display: none; background-color: rgba(255,255,255, 0.3); padding: 3px; border-radius: 5px; border: thin solid black;" id="move_handle">
     <?= Assets::img("icons/20/blue/mail", array('class' => "text-bottom")) ?>
@@ -92,6 +111,7 @@ jQuery(function ($) {
 <? endif; ?>
 
 <?php
+
 $sidebar = Sidebar::get();
 $sidebar->setImage('sidebar/mail-sidebar.png');
 
@@ -136,4 +156,3 @@ if (empty($tags)) {
 }
 
 $sidebar->addWidget($folderwidget);
-

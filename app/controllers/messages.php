@@ -103,13 +103,16 @@ class MessagesController extends AuthenticatedController {
             $this->output["more"] = 1;
             array_pop($messages);
         }
+        $this->settings   = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
         $template_factory = $this->get_template_factory();
         foreach ($messages as $message) {
             $this->output['messages'][] = $template_factory
                                             ->open("messages/_message_row.php")
                                             ->render(array('message'    => $message,
                                                            'controller' => $this,
-                                                           'received'   => (bool) Request::int("received")));
+                                                           'received'   => (bool) Request::int("received"),
+                                                           'settings'   => $this->settings
+                                                    ));
         }
 
         $this->render_json($this->output);

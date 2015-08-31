@@ -15,7 +15,6 @@
 <? if ($settings['display_bulk_actions']) : ?>
 <form action="?" method="post" id="bulk">
     <?= CSRFProtection::tokenTag() ?>
-    <?= \Studip\Button::create(_("Ausgewählte Nachrichten löschen"), "bulk_action", array('onClick' => "jQuery('#bulk').submit();")) ?>
 <? endif ?>
 
 
@@ -127,6 +126,16 @@ if (Navigation::getItem('/messaging/messages/inbox')->isActive() && $messages) {
         _('Alle als gelesen markieren'),
         $controller->url_for('messages/overview', array('read_all' => 1)),
         'icons/16/blue/accept.png'
+    );
+}
+if ($settings['display_bulk_actions']) {
+    $actions->addLink(
+        _('Ausgewählte Nachrichten löschen'),
+        "#",
+        'icons/16/blue/trash.png',
+        array(
+            'onclick' => "jQuery('#bulk').submit(); return false;"
+        )
     );
 }
 $sidebar->addWidget($actions);

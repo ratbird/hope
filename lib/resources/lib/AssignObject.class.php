@@ -151,7 +151,7 @@ class AssignObject {
             $id = $event_obj->assign_user_id;
         }
 
-        switch (get_object_type($id, array('date', 'user'))) {
+        switch (get_object_type($id)) {
             case "user":
                 if (!$explain)
                     return get_fullname($id,'full');
@@ -213,8 +213,7 @@ class AssignObject {
     }
 
     function getOwnerType() {
-        $type = get_object_type($this->getAssignUserId(), array('date','user'));
-        return $type;
+        return get_object_type($this->getAssignUserId());
     }
 
     function getResourceId() {
@@ -599,24 +598,36 @@ class AssignObject {
                 // LOGGING
                 if ($this->assign_user_id) {
                     $type = $this->getOwnerType();
+
+                    $debug = 'freie Eingabe zur Belegung: '. $this->getUserFreeName()
+                           . ', eingetragene Person / Einrichtung: ' . $this->getOwnerType()
+                                . ' - ' . $this->GetOwnerName();
+
                     if ($type == 'date') {
                         log_event("RES_ASSIGN_SEM", $this->resource_id, Seminar::GetSemIdByDateId($this->assign_user_id),
-                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $query);
+                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $debug);
                     } else if ($type == 'sem') {
                         log_event("RES_ASSIGN_SEM", $this->resource_id, $this->assign_user_id,
-                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $query);
+                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $debug);
                     } else if ($type == 'user') {
                         $message = sprintf(($create
                                 ? _('%s, Neue Buchung, eingetrageneR NutzerIn: %s (%s)')
                                 : _('%s, Buchungsupdate, eingetrageneR NutzerIn: %s (%s)')) ,
                             $this->getFormattedShortInfo(), get_username($this->assign_user_id), $this->assign_user_id);
-                        log_event("RES_ASSIGN_SINGLE", $this->resource_id, null, $message, $query);
+                        log_event("RES_ASSIGN_SINGLE", $this->resource_id, null, $message, $debug);
+                    } else if ($type == 'inst' || $type == 'fak') {
+                        $message = sprintf(($create
+                                ? _('%s, Neue Buchung, eingetrageneR NutzerIn: %s (%s)')
+                                : _('%s, Buchungsupdate, eingetrageneR NutzerIn: %s (%s)')) ,
+                            $this->getFormattedShortInfo(), get_username($this->assign_user_id), $this->assign_user_id);
+                        log_event("RES_ASSIGN_SINGLE", $this->resource_id, null, $message, $debug);
                     } else {
                         $semid = null;
                         error_log("unknown type of assign_user_id {$this->assign_user_id}");
                     }
                 } else {
-                    log_event("RES_ASSIGN_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(). $create ? " Neue Buchung" : " Buchungsupdate",$query);
+                    log_event("RES_ASSIGN_SINGLE", $this->resource_id, NULL,
+                            $this->getFormattedShortInfo(). ($create ? ", Neue Buchung" : ", Buchungsupdate"), $debug);
                 }
                 $query = sprintf("UPDATE resources_assign SET chdate='%s' WHERE assign_id='%s' ", $chdate, $this->id);
                 $db->exec($query);

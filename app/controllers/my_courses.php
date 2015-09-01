@@ -92,7 +92,7 @@ class MyCoursesController extends AuthenticatedController
 
         $this->sem_data = SemesterData::GetSemesterArray();
 
-        $sem = ($config_sem && $config_sem != '0' ? $config_sem : 'last');
+        $sem = ($config_sem && $config_sem != '0' ? $config_sem : Config::get()->MY_COURSES_DEFAULT_CYCLE);
         if (Request::option('sem_select')) {
             $sem = Request::get('sem_select', $sem);
         }

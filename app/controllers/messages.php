@@ -422,24 +422,6 @@ class MessagesController extends AuthenticatedController {
         }
     }
 
-    public function delete_action($message_id)
-    {
-        $message = Message::find($message_id);
-
-        $success = $this->delete_message($message_id);
-        if ($success) {
-            PageLayout::postMessage(MessageBox::success(_('Nachricht gelöscht!')));
-        } else {
-            PageLayout::postMessage(MessageBox::error(_('Nachricht konnte nicht gelöscht werden.')));
-        }
-
-        $redirect = $message->autor_id === $GLOBALS['user']->id
-                  ? $this->url_for('messages/sent')
-                  : $this->url_for('messages/overview');
-
-        $this->redirect($redirect);
-    }
-
     protected function delete_message($message_id)
     {
         $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "snd"));

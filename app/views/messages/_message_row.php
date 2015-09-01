@@ -1,7 +1,5 @@
 <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
-    <? if ($settings['display_bulk_actions']) : ?>
-        <td><input type="checkbox" name="bulk[]" value="<?= htmlReady($message->getId()) ?>"></td>
-    <? endif ?>
+    <td><input type="checkbox" name="bulk[]" value="<?= htmlReady($message->getId()) ?>"></td>
     <td><?= $message->getNumAttachments() ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
     <td><?= $message->originator->answered ? Assets::img("icons/20/black/outbox", array("title" => _("Beantwortet"))) : "" ?></td>
     <td class="title">
@@ -35,10 +33,5 @@
             <?= htmlReady(ucfirst($tag)) ?>
         </a>
     <? endforeach ?>
-    </td>
-    <td class="actions">
-        <a href="<?= $controller->url_for('messages/delete/' . $message->id) ?>" onClick="return window.confirm('<?= _("Nachricht wirklich löschen?") ?>');">
-            <?= Assets::img("icons/20/blue/trash") ?>
-        </a>
     </td>
 </tr>

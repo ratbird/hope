@@ -10,7 +10,6 @@
  */
 
 require_once 'app/models/siteinfo.php';
-require_once 'app/controllers/studip_controller.php';
 
 class SiteinfoController extends StudipController
 {

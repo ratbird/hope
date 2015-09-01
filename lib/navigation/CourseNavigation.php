@@ -13,30 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/functions.php';
-
-require_once 'lib/modules/CoreAdmin.class.php';
-require_once 'lib/modules/CoreStudygroupAdmin.class.php';
-require_once 'lib/modules/CoreOverview.class.php';
-require_once 'lib/modules/CoreParticipants.class.php';
-require_once 'lib/modules/CoreStudygroupParticipants.class.php';
-require_once 'lib/modules/CoreDocuments.class.php';
-require_once 'lib/modules/CoreSchedule.class.php';
-require_once 'lib/modules/CoreScm.class.php';
-require_once 'lib/modules/CoreLiterature.class.php';
-require_once 'lib/modules/CoreWiki.class.php';
-require_once 'lib/modules/CoreResources.class.php';
-require_once 'lib/modules/CoreCalendar.class.php';
-require_once 'lib/modules/CoreElearningInterface.class.php';
-
-if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-    require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'].'/ObjectConnections.class.php';
-}
-
-if (get_config('RESOURCES_ENABLE')) {
-    require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/resourcesFunc.inc.php';
-}
-
 class CourseNavigation extends Navigation
 {
     /**

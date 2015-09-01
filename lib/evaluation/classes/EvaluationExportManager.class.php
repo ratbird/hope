@@ -23,12 +23,12 @@
 
 
 # Include all required files ================================================ #
-require_once("lib/evaluation/evaluation.config.php");
-require_once('lib/export/export_tmp_gc.inc.php');
-require_once(EVAL_FILE_EVALDB);
-require_once(EVAL_FILE_ANSWERDB);
-require_once(EVAL_FILE_OBJECT);
-require_once(EVAL_FILE_GROUP);
+require_once 'lib/evaluation/evaluation.config.php';
+require_once 'lib/export/export_tmp_gc.inc.php';
+require_once EVAL_FILE_EVALDB;
+require_once EVAL_FILE_ANSWERDB;
+require_once EVAL_FILE_OBJECT;
+require_once EVAL_FILE_GROUP;
 # ====================================================== end: including files #
 
 

@@ -14,19 +14,6 @@
  * @category    Stud.IP
  */
 
-require_once 'AdminNavigation.php';
-require_once 'BrowseNavigation.php';
-require_once 'CalendarNavigation.php';
-require_once 'CommunityNavigation.php';
-require_once 'CourseNavigation.php';
-require_once 'FooterNavigation.php';
-require_once 'LoginNavigation.php';
-require_once 'MessagingNavigation.php';
-require_once 'ProfileNavigation.php';
-require_once 'SearchNavigation.php';
-require_once 'StartNavigation.php';
-require_once 'ToolsNavigation.php';
-
 /**
  * This is the class for the top navigation (toolbar) in the page header.
  */

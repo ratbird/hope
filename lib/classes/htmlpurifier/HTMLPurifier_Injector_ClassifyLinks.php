@@ -1,6 +1,5 @@
 <?php
 require_once 'vendor/HTMLPurifier/HTMLPurifier.auto.php';
-require_once 'lib/visual.inc.php'; // import isLinkIntern
 
 /**
  * Classify links as internal or external and set the class attribute 

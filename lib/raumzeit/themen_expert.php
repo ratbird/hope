@@ -27,15 +27,11 @@ use Studip\Button, Studip\LinkButton;
 
 // -- here you have to put initialisations for the current page
 
-require_once ('lib/raumzeit/raumzeit_functions.inc.php');
-require_once ('lib/raumzeit/themen_expert.inc.php');
+require_once 'lib/raumzeit/raumzeit_functions.inc.php';
+require_once 'lib/raumzeit/themen_expert.inc.php';
 require_once 'lib/admin_search.inc.php';
 
 if (get_config('RESOURCES_ENABLE')) {
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php");
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourcesUserRoomsList.class.php");
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/VeranstaltungResourcesAssign.class.php");
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObjectPerms.class.php");
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 

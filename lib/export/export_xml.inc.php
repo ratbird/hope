@@ -43,11 +43,10 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
     $perm->check("tutor");
 
 $export_pagename = _("Datenexport");
-require_once ('lib/classes/RangeTreeObject.class.php');   // Uni-Baum-Funktionen
-require_once ($PATH_EXPORT.'/export_xml_vars.inc.php');   // XML-Variablen
-require_once ($PATH_EXPORT.'/export_xml_func.inc.php');   // XML-Funktionen
-require_once ($PATH_EXPORT.'/export_studipdata_func.inc.php');   // Studip-Export-Funktionen
-require_once ('lib/dates.inc.php');   // Datumsfunktionen
+require_once $PATH_EXPORT . '/export_xml_vars.inc.php';   // XML-Variablen
+require_once $PATH_EXPORT . '/export_xml_func.inc.php';   // XML-Funktionen
+require_once $PATH_EXPORT . '/export_studipdata_func.inc.php';   // Studip-Export-Funktionen
+require_once 'lib/dates.inc.php';   // Datumsfunktionen
 
 /**
 * Checks given parameters

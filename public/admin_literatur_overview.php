@@ -11,9 +11,9 @@ require '../lib/bootstrap.php';
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("admin");
-require_once ('lib/dbviews/literatur.view.php');
 
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+require_once 'lib/dbviews/literatur.view.php';
+include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
 
 function get_lit_admin_ids($user_id = false)

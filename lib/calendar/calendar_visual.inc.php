@@ -17,9 +17,8 @@
  * @category    Stud.IP
  * @package     calendar
  */
-require_once('lib/visual.inc.php');
-require_once('lib/calendar_functions.inc.php');
-require_once('lib/functions.php');
+
+require_once 'lib/calendar_functions.inc.php';
 
 function create_year_view(&$calendar)
 {

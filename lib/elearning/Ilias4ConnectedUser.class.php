@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once("Ilias3ConnectedUser.class.php");
 
 /**
  * class to handle ILIAS 4 user-accounts

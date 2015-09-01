@@ -37,12 +37,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-global $RELATIVE_PATH_CALENDAR, $RELATIVE_PATH_EXTERN;
-
-require_once($RELATIVE_PATH_EXTERN.'/lib/ExternModule.class.php');
-require_once($RELATIVE_PATH_EXTERN.'/views/extern_html_templates.inc.php');
-require_once('lib/language.inc.php');
-require_once('lib/dates.inc.php');
+require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/views/extern_html_templates.inc.php';
+require_once 'lib/dates.inc.php';
 
 class ExternModulePersondetails extends ExternModule {
 

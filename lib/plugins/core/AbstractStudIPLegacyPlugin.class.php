@@ -23,6 +23,7 @@
  * @author      Marcus Lunzenauer <mlunzena@uos.de>
  * @package     pluginengine
  * @subpackage  core
+ * @deprecated
  */
 
 abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {

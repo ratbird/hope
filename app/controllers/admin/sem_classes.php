@@ -7,7 +7,6 @@
  *  published by the Free Software Foundation; either version 2 of
  *  the License, or (at your option) any later version.
  */
-require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_SemClassesController extends AuthenticatedController
 {

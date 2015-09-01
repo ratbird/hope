@@ -8,7 +8,7 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once dirname(__file__)."/BlubberExternalContact.class.php";
+require_once __DIR__ . '/BlubberExternalContact.class.php';
 
 /**
  * Avatar for external blubber-authors who are most likely anonymous accounts.

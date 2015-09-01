@@ -39,8 +39,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElementMain.class.php");
-
 class ExternElementMainDownload extends ExternElementMain {
 
     /**

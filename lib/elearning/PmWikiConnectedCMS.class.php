@@ -16,10 +16,9 @@
  * the License, or (at your option) any later version.
  */
 
-require_once("clients/xml_rpc_webservice_client.php");
-require_once("clients/soap_webservice_client.php");
-require_once("clients/webservice_client.php");
-require_once("ConnectedCMS.class.php");
+require_once 'clients/xml_rpc_webservice_client.php';
+require_once 'clients/soap_webservice_client.php';
+require_once 'clients/webservice_client.php';
 
 /**
 * main-class for connection to PmWiki

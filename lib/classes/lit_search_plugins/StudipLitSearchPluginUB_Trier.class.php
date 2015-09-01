@@ -24,7 +24,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract_Aleph.class.php");
+require_once 'StudipLitSearchPluginZ3950Abstract_Aleph.class.php';
 
 class StudipLitSearchPluginUB_Trier extends StudipLitSearchPluginZ3950Abstract_Aleph{
 

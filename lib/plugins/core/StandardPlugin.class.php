@@ -12,8 +12,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/modules/StudipModule.class.php';
-
 interface StandardPlugin extends StudipModule
 {
     /**

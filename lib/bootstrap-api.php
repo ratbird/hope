@@ -1,8 +1,7 @@
 <?php
 namespace {
-    require_once 'vendor/docblock-parser/docblock-parser.php';
-
-    StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor/oauth-php/library');
+    StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/vendor/oauth-php/library');
+    StudipAutoloader::addClassLookup('DocBlock', 'vendor/docblock-parser/docblock-parser.php');
 
     // Set base url for URLHelper class
     URLHelper::setBaseUrl($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']);

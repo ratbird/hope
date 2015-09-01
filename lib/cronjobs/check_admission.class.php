@@ -6,7 +6,6 @@
 * @access public
 * @since  2.4
 */
-require_once 'lib/classes/CronJob.class.php';
 
 class CheckAdmissionJob extends CronJob
 {
@@ -41,7 +40,6 @@ class CheckAdmissionJob extends CronJob
 
       public function setUp()
       {
-          require_once 'lib/language.inc.php';
           require_once 'lib/classes/admission/CourseSet.class.php';
           if (empty($GLOBALS['ABSOLUTE_URI_STUDIP'])) {
             throw new Exception('To use check_admission job you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!');

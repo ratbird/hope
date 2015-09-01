@@ -5,8 +5,6 @@
 # Lifter010: TODO
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
-        . "/lib/extern_functions.inc.php");
 global $_fullname_sql;
 
 $attr_subheadline_td = preg_replace('/width\="[^"]+"/i',

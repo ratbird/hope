@@ -23,8 +23,6 @@ page_open(array(
 $perm->check('user');
 
 require_once 'lib/seminar_open.php';
-require_once 'lib/visual.inc.php';
-require_once 'lib/functions.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 

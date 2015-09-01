@@ -39,9 +39,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once $RELATIVE_PATH_RESOURCES . '/lib/AssignEventList.class.php';
-require_once $RELATIVE_PATH_RESOURCES . '/lib/ResourceObject.class.php';
-
 class CheckMultipleOverlaps
 {
     var $begin;

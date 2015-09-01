@@ -6,9 +6,9 @@
 
 /**
  *
- *  @author Dennis Reil, <dennis.reil@offis.de>
- *  @package pluginengine
- *
+ * @author Dennis Reil, <dennis.reil@offis.de>
+ * @package pluginengine
+ * @deprecated
  */
 
 class PluginNavigation extends StudipPluginNavigation {

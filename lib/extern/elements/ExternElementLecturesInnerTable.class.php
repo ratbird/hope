@@ -38,8 +38,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-
 class ExternElementLecturesInnerTable extends ExternElement {
 
     var $attributes = array("tr_class", "tr_style", "td_bgcolor", "td_bgcolor2_",

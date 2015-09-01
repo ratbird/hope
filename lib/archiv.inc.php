@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require_once 'lib/dates.inc.php';
 require_once 'lib/datei.inc.php';
 require_once 'lib/wiki.inc.php'; // getAllWikiPages for dump
-require_once 'lib/language.inc.php';
 require_once 'lib/user_visible.inc.php';
 
 /**

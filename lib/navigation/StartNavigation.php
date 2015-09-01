@@ -172,7 +172,6 @@ class StartNavigation extends Navigation
                 $navigation->addSubNavigation('hierarchy', new Navigation(_('Struktur'), 'resources.php#a', array('view' => 'resources')));
                 if ($perm->have_perm('admin') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
                     if (getGlobalPerms($GLOBALS['user']->id) !== 'admin') {
-                        require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
                         $resList = new ResourcesUserRoomsList($GLOBALS['user']->id, false, false);
                         $show_roomplanning = $resList->roomsExist();
                     } else {

@@ -37,9 +37,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/ExternConfig.class.php');
-
 class ExternElementLinkIntern extends ExternElement {
 
     var $attributes = array("font_size", "font_face", "font_color", "font_class", "font_style",

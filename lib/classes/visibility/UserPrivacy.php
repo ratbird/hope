@@ -1,6 +1,4 @@
 <?php
-require_once 'User_Visibility_Settings.php';
-
 /**
  * UserPrivacy.php - Represents the privacy settings for a user
  *

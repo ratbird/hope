@@ -13,7 +13,6 @@
  * @since       2.4
  */
 
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/messaging.inc.php';
 
 class Settings_SettingsController extends AuthenticatedController

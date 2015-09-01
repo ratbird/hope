@@ -1,6 +1,4 @@
 <?php
-require_once 'app/controllers/studip_controller.php';
-
 class ForumController extends StudipController {
     var $lastlogin = 0;
 

@@ -12,11 +12,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-require_once ("lib/statusgruppe.inc.php");  //Funktionen der Statusgruppen
-require_once ("lib/classes/DataFieldEntry.class.php");
-require_once('lib/classes/searchtypes/SQLSearch.class.php');
-include_once($GLOBALS['PATH_EXPORT'] . "/export_linking_func.inc.php");
+require_once 'lib/statusgruppe.inc.php';  //Funktionen der Statusgruppen
+include_once $GLOBALS['PATH_EXPORT'] . '/export_linking_func.inc.php';
 
 class Institute_MembersController extends AuthenticatedController
 {

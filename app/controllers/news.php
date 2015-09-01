@@ -21,10 +21,8 @@
  * @package     news
  */
 
-require_once 'lib/functions.php';
 require_once 'lib/showNews.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'studip_controller.php';
 
 class NewsController extends StudipController
 {

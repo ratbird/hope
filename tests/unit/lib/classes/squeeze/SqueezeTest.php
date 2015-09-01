@@ -13,6 +13,10 @@ namespace Test;
 require_once dirname(__FILE__) . '/../../../bootstrap.php';
 require_once 'lib/functions.php';
 require_once 'lib/classes/squeeze/squeeze.php';
+require_once 'lib/classes/squeeze/Compressor.php';
+require_once 'lib/classes/squeeze/Configuration.php';
+require_once 'lib/classes/squeeze/Exception.php';
+require_once 'lib/classes/squeeze/Packager.php';
 require_once 'lib/classes/Assets.class.php';
 
 

@@ -16,9 +16,6 @@
  * @package     calendar
  */
 
-require_once('lib/calendar/CalendarImport.class.php');
-require_once('lib/calendar/CalendarExportException.class.php');
-
 class CalendarImportFile extends CalendarImport
 {
 

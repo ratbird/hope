@@ -16,7 +16,6 @@
  * @since       2.0
  */
 
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studycourse.php';
 
 /**

@@ -15,12 +15,6 @@
  * @category    Stud.IP
  */
 
-require_once('lib/classes/admission/AdmissionRule.class.php');
-require_once('lib/classes/admission/UserFilterField.class.php');
-require_once('lib/classes/admission/RandomAlgorithm.class.php');
-require_once('lib/classes/admission/AdmissionPriority.class.php');
-require_once('lib/classes/admission/AdmissionUserList.class.php');
-
 class CourseSet
 {
     // --- ATTRIBUTES ---

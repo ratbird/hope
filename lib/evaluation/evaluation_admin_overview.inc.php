@@ -44,14 +44,11 @@
 
 
 # Include all required files ================================================ #
-require_once('lib/evaluation/evaluation.config.php');
-#require_once ('lib/seminar_open.php');
-#require_once ('lib/include/html_head.inc.php');
-#require_once ('lib/include/header.php');
-require_once (EVAL_LIB_COMMON);
-require_once (EVAL_LIB_OVERVIEW);
-require_once (EVAL_FILE_EVAL);
-require_once (EVAL_FILE_EVALDB);
+require_once 'lib/evaluation/evaluation.config.php';
+require_once EVAL_LIB_COMMON;
+require_once EVAL_LIB_OVERVIEW;
+require_once EVAL_FILE_EVAL;
+require_once EVAL_FILE_EVALDB;
 # ====================================================== end: including files #
 
 define ("DISCARD_OPENID", "discard_openid");

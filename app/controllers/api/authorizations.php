@@ -1,6 +1,5 @@
 <?php
 
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/bootstrap-api.php';
 
 /**

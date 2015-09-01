@@ -14,9 +14,6 @@
  * @category    Stud.IP
  */
 
-require_once('lib/calendar/CalendarColumn.class.php');
-require_once 'lib/calendar/CalendarWeekView.class.php';
-
 define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);

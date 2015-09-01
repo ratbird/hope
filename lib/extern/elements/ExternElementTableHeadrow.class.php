@@ -38,8 +38,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-
 class ExternElementTableHeadrow extends ExternElement {
 
     var $attributes = array("tr_class", "tr_style", "th_height", "th_align",

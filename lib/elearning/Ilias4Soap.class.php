@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once("Ilias3Soap.class.php");
 
 /**
  * class to use ILIAS-4-Webservices

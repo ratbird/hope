@@ -36,13 +36,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObject.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObjectPerms.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/ResourceObject.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/ResourceObjectPerms.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomGroups.class.php');
-require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
-require_once ('lib/dates.inc.php');
+require_once 'lib/dates.inc.php';
 
 
 /*****************************************************************************
@@ -362,8 +356,7 @@ edit/add assigns
 //Objektbelegung erstellen/aendern
 $change_object_schedules = Request::option('change_object_schedules');
 if ($change_object_schedules) {
-    require_once ('lib/calendar_functions.inc.php'); //needed for extended checkdate
-    require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
+    require_once 'lib/calendar_functions.inc.php'; //needed for extended checkdate
 
     // check, if the submit-button has been pressed. Otherwise do not store the assign.
     $storeAssign = false;
@@ -2068,11 +2061,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
 //inform the owner of the requests
 //if ($snd_closed_request_sms) {
 if ($_sendMessage) {
-    require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/RoomRequest.class.php');
-    require_once ('lib/classes/Seminar.class.php');
-    require_once ('lib/messaging.inc.php');
-    require_once ('lib/language.inc.php');
-
+    require_once 'lib/messaging.inc.php';
 
     $messaging = new messaging;
 
@@ -2284,8 +2273,9 @@ if ($ObjectPerms) {
         $ActualObjectPerms = $ObjectPerms;
      else
         $ActualObjectPerms = ResourceObjectPerms::Factory($_SESSION['resources_data']["actual_object"]);
-} else
+} else {
     $ActualObjectPerms = ResourceObjectPerms::Factory($_SESSION['resources_data']["actual_object"]);
+}
 
 //edit or view object
 if (Request::option('edit_object')) {

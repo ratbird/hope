@@ -54,11 +54,7 @@ class SendMailNotificationsJob extends CronJob
      */
     public function setUp()
     {
-        require_once 'lib/language.inc.php';
-        require_once 'lib/functions.php';
         require_once 'lib/deputies_functions.inc.php';
-        require_once 'lib/classes/StudipMail.class.php';
-        require_once 'lib/classes/ModulesNotification.class.php';
 
         if (!Config::get()->MAIL_NOTIFICATION_ENABLE) {
             throw new Exception('Mail notifications are disabled in this Stud.IP installation.');

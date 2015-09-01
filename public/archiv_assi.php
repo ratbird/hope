@@ -27,18 +27,11 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
-require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
-require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
-require_once('lib/archiv.inc.php');
-require_once 'lib/functions.php';
-require_once('lib/visual.inc.php');
-require_once('lib/statusgruppe.inc.php'); //Enthaelt Funktionen fuer Statusgruppen
-require_once('lib/log_events.inc.php'); // Logging
-require_once('lib/classes/DataFieldEntry.class.php'); //Enthaelt Funktionen fuer Statusgruppen
-require_once('lib/classes/StudipLitList.class.php');
-require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
-require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
-require_once 'lib/classes/Seminar.class.php';
+require_once 'lib/dates.inc.php'; // Funktionen zum Loeschen von Terminen
+require_once 'lib/datei.inc.php'; // Funktionen zum Loeschen von Dokumenten
+require_once 'lib/archiv.inc.php';
+require_once 'lib/statusgruppe.inc.php'; //Enthaelt Funktionen fuer Statusgruppen
+require_once 'lib/log_events.inc.php'; // Logging
 
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm",
@@ -50,7 +43,7 @@ $check_perm = (get_config('ALLOW_DOZENT_ARCHIV') ? 'dozent' : 'admin');
 
 $perm->check($check_perm);
 
-include('lib/seminar_open.php'); // initialise Stud.IP-Session
+include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
 
 // -- here you have to put initialisations for the current page

@@ -31,10 +31,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-require_once dirname(__FILE__) . '/studip_cli_env.inc.php';
-require_once 'lib/language.inc.php';
-require_once 'lib/functions.php';
-require_once 'lib/classes/ModulesNotification.class.php';
+require_once __DIR__ . '/studip_cli_env.inc.php';
 
 
 get_config('MAIL_NOTIFICATION_ENABLE') || trigger_error('Mail notifications are disabled in this Stud.IP installation.', E_USER_ERROR);

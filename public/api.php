@@ -18,7 +18,6 @@
 
 namespace {
     require_once '../lib/bootstrap.php';
-    require_once 'lib/functions.php';
 
     page_open(array('sess' => 'Seminar_Session',
                     'auth' => 'Seminar_Default_Auth',

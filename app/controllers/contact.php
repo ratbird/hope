@@ -1,7 +1,5 @@
 <?php
 
-require_once 'app/controllers/authenticated_controller.php';
-
 /**
  * ContactController
  *

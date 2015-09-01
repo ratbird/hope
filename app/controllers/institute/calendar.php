@@ -12,8 +12,6 @@
  * @category    Stud.IP
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 /**
 * This controller provides all functions for a calendar of an institute.
 */

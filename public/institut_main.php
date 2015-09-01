@@ -19,4 +19,4 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 require_once '../lib/bootstrap.php';
-header('Location:'.URLHelper::getURL('dispatch.php/institute/overview', iterator_to_array(Request::getInstance())));
+header('Location:' . URLHelper::getURL('dispatch.php/institute/overview', iterator_to_array(Request::getInstance())));

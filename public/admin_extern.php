@@ -44,8 +44,6 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
         "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("admin");
 
-require_once 'lib/functions.php';
-
 PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenExterneSeiten");
 PageLayout::setTitle(_("Verwaltung externer Seiten"));
 

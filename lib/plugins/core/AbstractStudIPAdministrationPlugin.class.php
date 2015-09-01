@@ -8,6 +8,7 @@
  * @author Dennis Reil <dennis.reil@offis.de>
  * @package pluginengine
  * @subpackage core
+ * @deprecated
  */
 
 class AbstractStudIPAdministrationPlugin extends AbstractStudIPLegacyPlugin

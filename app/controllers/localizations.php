@@ -1,3 +1,4 @@
+
 <?php
 # Lifter010: TODO
 /*
@@ -29,6 +30,7 @@ class LocalizationsController extends Trails_Controller {
      */
     public function before_filter(&$action, &$args)
     {
+        require_once 'lib/language.inc.php';
 
         // substitute dashes with underscores, remove things like .UTF-8
         $args = (array) strtr(current(explode('.', $action)), "-", "_");

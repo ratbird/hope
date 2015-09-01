@@ -36,11 +36,9 @@
 
 use Studip\Button;
 
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ScheduleWeekRequests.class.php');
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ShowSchedules.class.php');
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/VeranstaltungResourcesAssign.class.php');
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/CheckMultipleOverlaps.class.php');
-require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ShowToolsRequests.class.php');
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ScheduleWeekRequests.class.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ShowSchedules.class.php';
+require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/views/ShowToolsRequests.class.php';
 
 $cssSw = new cssClassSwitcher;
 

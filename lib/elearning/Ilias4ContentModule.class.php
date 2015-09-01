@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once("Ilias3ContentModule.class.php");
 
 /**
  * class to handle ILIAS 4 learning modules and tests

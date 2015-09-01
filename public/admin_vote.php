@@ -49,7 +49,6 @@ if (Request::get('admin_inst_id')) {
     $view = 'vote_inst';
 }
 
-require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
 PageLayout::setHelpKeyword("Basis.Votings");

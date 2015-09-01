@@ -10,8 +10,6 @@
  * @since   Stud.IP 3.3
  */
 
-require_once 'app/controllers/authenticated_controller.php';
-
 class Institute_BasicdataController extends AuthenticatedController
 {
     /**
@@ -24,14 +22,6 @@ class Institute_BasicdataController extends AuthenticatedController
         // Ensure only admins gain access to this page
         if (!$GLOBALS['perm']->have_perm("admin")) {
             throw new AccessDeniedException();
-        }
-
-        if (get_config('RESOURCES_ENABLE')) {
-            include_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php';
-        }
-
-        if (get_config('EXTERN_ENABLE')) {
-            require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/ExternConfig.class.php';
         }
     }
 

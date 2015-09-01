@@ -8,9 +8,6 @@
  * @subpackage engine
  */
 
-require_once 'PluginManager.class.php';
-require_once 'PluginNotFoundException.php';
-
 class PluginEngine {
     /**
      * @deprecated

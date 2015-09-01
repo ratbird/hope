@@ -1,6 +1,5 @@
 <?php
 
-require_once 'app/controllers/studip_controller.php';
 require_once 'lib/bootstrap-api.php';
 
 /**

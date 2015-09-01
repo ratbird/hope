@@ -40,10 +40,6 @@
 use Studip\Button, Studip\LinkButton;
 
 include('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once($RELATIVE_PATH_EXTERN . '/extern_config.inc.php');
-require_once($RELATIVE_PATH_EXTERN . '/lib/extern_functions.inc.php');
-require_once($RELATIVE_PATH_EXTERN . '/lib/ExternConfig.class.php');
-require_once($RELATIVE_PATH_EXTERN . '/lib/ExternModule.class.php');
 
 
 // -- here you have to put initialisations for the current page
@@ -111,9 +107,7 @@ if (Request::option('com') == "do_upload_config") {
 
 ob_start();
 
-require_once('lib/msg.inc.php'); //Funktionen für Nachrichtenmeldungen
-require_once('lib/classes/cssClassSwitcher.inc.php');
-require_once('lib/language.inc.php');
+require_once 'lib/msg.inc.php'; //Funktionen für Nachrichtenmeldungen
 
 echo "<table border=\"0\" class=\"blank\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
 echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";

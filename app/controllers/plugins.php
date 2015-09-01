@@ -5,7 +5,6 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  */
-require_once 'app/controllers/studip_controller.php';
 require_once 'app/models/plugin_administration.php';
 
 class PluginsController extends StudipController

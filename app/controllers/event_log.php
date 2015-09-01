@@ -14,7 +14,6 @@
  */
 
 require_once 'app/models/event_log.php';
-require_once 'app/controllers/authenticated_controller.php';
 
 class EventLogController extends AuthenticatedController
 {

@@ -12,8 +12,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'StudipAuthAbstract.class.php';
-
 /*
  * Abstract base class for SSO authentication plugins.
  */

@@ -19,16 +19,15 @@
 
 
 # Include all required files ================================================ #
-
-require_once ("lib/vote/view/visual.inc.php");
-require_once ("lib/vote/view/vote_show.lib.php");
-require_once ("lib/vote/VoteDB.class.php");
-require_once ("lib/vote/Vote.class.php");
-require_once ("lib/vote/TestVote.class.php");
-require_once ("lib/evaluation/evaluation.config.php");
-require_once (EVAL_FILE_OBJECTDB);
-require_once (EVAL_FILE_EVAL);
-require_once (EVAL_LIB_SHOW);
+require_once 'lib/vote/view/visual.inc.php';
+require_once 'lib/vote/view/vote_show.lib.php';
+require_once 'lib/vote/VoteDB.class.php';
+require_once 'lib/vote/Vote.class.php';
+require_once 'lib/vote/TestVote.class.php';
+require_once 'lib/evaluation/evaluation.config.php';
+require_once EVAL_FILE_OBJECTDB;
+require_once EVAL_FILE_EVAL;
+require_once EVAL_LIB_SHOW;
 # ====================================================== end: including files #
 
 # Define public functions =================================================== #

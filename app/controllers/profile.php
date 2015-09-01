@@ -13,19 +13,12 @@
  * @since       2.4
  */
 
-global $RELATIVE_PATH_CALENDAR;
-
-require_once 'app/controllers/authenticated_controller.php';
-
 require_once 'lib/messaging.inc.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 
 require_once 'lib/classes/score.class.php';
-require_once 'lib/classes/StudipLitList.class.php';
-require_once 'lib/classes/DataFieldEntry.class.php';
-
 
 class ProfileController extends AuthenticatedController
 {

@@ -38,8 +38,6 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
-
 class ExternElementReplaceTextSemType extends ExternElement {
 
     var $attributes = array();

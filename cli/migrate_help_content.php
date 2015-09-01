@@ -26,11 +26,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once dirname(__FILE__) . '/studip_cli_env.inc.php';
-require_once 'lib/language.inc.php';
-require_once 'lib/functions.php';
+require_once __DIR__ . '/studip_cli_env.inc.php';
 
-$help_path = dirname(__FILE__) . '/../doc/helpbar';
+$help_path = __DIR__ . '/../doc/helpbar';
 
 $argc = $_SERVER['argc'];
 $argv = $_SERVER['argv'];

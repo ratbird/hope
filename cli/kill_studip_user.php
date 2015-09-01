@@ -34,10 +34,7 @@
 define('SEND_MAIL_ON_DELETE', 1);
 define('KILL_ADMINS' , 0);
 
-require_once dirname(__FILE__) . '/studip_cli_env.inc.php';
-require_once 'lib/language.inc.php';
-require_once 'lib/functions.php';
-require_once 'lib/classes/UserManagement.class.php';
+require_once __DIR__ . '/studip_cli_env.inc.php';
 
 if (SEND_MAIL_ON_DELETE && !($MAIL_LOCALHOST && $MAIL_HOST_NAME && $ABSOLUTE_URI_STUDIP)){
     trigger_error('To use this script you MUST set correct values for $MAIL_LOCALHOST, $MAIL_HOST_NAME and $ABSOLUTE_URI_STUDIP in local.inc!', E_USER_ERROR);

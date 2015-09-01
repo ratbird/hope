@@ -38,8 +38,6 @@
 
 
 require_once 'lib/messaging.inc.php';
-require_once 'lib/functions.php';
-require_once 'lib/language.inc.php';
 require_once 'lib/dates.inc.php';
 require_once 'app/models/calendar/schedule.php';
 

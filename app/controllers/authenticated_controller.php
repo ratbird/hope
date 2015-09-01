@@ -12,9 +12,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'studip_controller.php';
-
-class AuthenticatedController extends StudipController {
+class AuthenticatedController extends StudipController
+{
     protected $with_session = true;  //we do need to have a session for this controller
     protected $allow_nobody = false; //nobody is not allowed and always gets a login-screen
 }

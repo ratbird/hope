@@ -71,7 +71,7 @@ class MessagesController extends AuthenticatedController {
             foreach (Request::getArray("bulk") as $message_id) {
                 $this->delete_message($message_id);
             }
-            PageLayout::postMessage(MessageBox::success(sprintf(_("%s Nachrichten wurden gelöscht"), count(Request::getArray("bulk")))));
+            PageLayout::postMessage(MessageBox::success(sprintf(_("%u Nachrichten wurden gelöscht"), count(Request::getArray("bulk")))));
         }
 
         $this->messages = $this->get_messages(

@@ -586,11 +586,8 @@ class MyRealmModel
     {
         $sem_data  = SemesterData::GetSemesterArray();
         $semesters = array();
-        foreach ($sem_data as $sem_key => $one_sem) {
-            $current_sem = $sem_key;
-            if (!$one_sem['past']) break;
-        }
-
+        $current_sem = SemesterData::GetSemesterIndexById($_SESSION['_default_sem']);
+        
         if (isset($sem_data[$current_sem + 1])) {
             $max_sem = $current_sem + 1;
         } else {

@@ -6785,6 +6785,47 @@ div#studyareas {
 .smiley-picker-dialog .ui-dialog-content {
   padding: 0;
 }
+.oversized-image {
+  cursor: zoom-in;
+}
+.oversized-image-zoom {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.7);
+  cursor: zoom-out;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  -moz-box-align: center;
+  align-items: center;
+}
+.oversized-image-zoom span {
+  background-color: rgba(0, 0, 0, 0.7);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 1px solid #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  display: block;
+  max-width: 98%;
+  max-height: 98%;
+}
+.oversized-image-zoom span img {
+  opacity: 0;
+}
 #responsive-container {
   display: none;
   -webkit-user-select: none;

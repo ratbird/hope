@@ -103,6 +103,7 @@ javascripts:
     - javascripts/wiki.js
     - javascripts/coursewizard.js
     - javascripts/smiley.js
+    - javascripts/big-image-handler.js
 
     - javascripts/studip-css.js
     - javascripts/studip-tooltip.js

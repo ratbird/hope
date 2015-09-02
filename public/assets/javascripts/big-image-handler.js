@@ -61,7 +61,8 @@
         return function () {
             var width  = this.width,
                 height = this.height,
-                title  = $(this).prop('title') || 'Klicken für groß'.toLocaleString();
+                title  = $(this).prop('title')
+                      || 'Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.'.toLocaleString();
             if (width > display_width || height > display_height) {
                 $(img).data('oversized', {
                     width: width,

@@ -38,6 +38,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testFormatReady()
     {
         $expected = '<b>some code</b>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady('*some*code*'));
     }
 
@@ -62,13 +63,17 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 
     public function testFormatReadyTicket1255()
     {
-        $this->assertEquals("!<br>Hallo Welt", formatReady("!\nHallo Welt"));
+        $input = "!\nHallo Welt";
+        $expected = "!<br>Hallo Welt";
+        $expected = $this->wrap($expected);
+        $this->assertEquals($expected, formatReady($input));
     }
 
     public function testLine()
     {
         $input = "Test\n--\nTest";
         $expected = 'Test<br><hr class="content"><br>Test';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -76,6 +81,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '!!%%Überschrift%%';
         $expected = '<h3 class="content"><i>Überschrift</i></h3>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -83,6 +89,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '**some %%code%%**';
         $expected = '<b>some <i>code</i></b>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -90,6 +97,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '++some --code--++';
         $expected = '<big>some <small>code</small></big>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -97,20 +105,21 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '*bold*text* %some%italics%';
         $expected = '<b>bold text</b> <i>some italics</i>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
     public function testMissingClose()
     {
         $input = '**missing %%close';
-        $expected = $input;
+        $expected = $this->wrap($input);
         $this->assertEquals($expected, formatReady($input));
     }
 
     public function testCloseBeforeOpen()
     {
         $input = 'there is -}no markup{- here';
-        $expected = $input;
+        $expected = $this->wrap($input);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -118,6 +127,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '** test %% test ** test %%';
         $expected = '** test <i> test ** test </i>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -125,6 +135,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[img=Stud.IP-Logo]http://www.studip.de/logo.png';
         $expected = '<img src="http://www.studip.de/logo.png" style="" title="Stud.IP-Logo" alt="Stud.IP-Logo">';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -143,6 +154,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
                    .'<td>Mathe Diplom</td>'
                    .'</tr>'
                    .'</table>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -157,6 +169,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
                    .'</ol></li>'
                    .'<li>Schluss</li>'
                    .'</ul>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -171,6 +184,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
                    .'</div>'
                    .'Ebene 1<br>'
                    .'</div>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input, false));
     }
 
@@ -178,6 +192,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[nop]**A**[quote]B[/quote]{-C-}[/nop]';
         $expected = '**A**[quote]B[/quote]{-C-}';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -185,6 +200,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[pre]**A**{-C-}[/pre]';
         $expected = '<pre><b>A</b><strike>C</strike></pre>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -194,6 +210,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
         $expected = '<blockquote>'
                    .'<div class="author"><u>Anonymous</u> hat geschrieben:</div>some text'
                    .'</blockquote>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -201,6 +218,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[Testlink]https://www.studip.de/';
         $expected = '<a class="link-extern" href="https://www.studip.de/" target="_blank">Testlink</a>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
 
@@ -208,6 +226,12 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[Mail]some.user+tag@example.com';
         $expected = '<a class="link-extern" href="mailto:some.user+tag@example.com">Mail</a>';
+        $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
+    }
+
+    private function wrap($string)
+    {
+        return sprintf(FORMATTED_CONTENT_WRAPPER, $string);
     }
 }

@@ -8,6 +8,10 @@
 include_once 'vendor/idna_convert/idna_convert.class.php';
 require_once 'lib/wiki.inc.php';
 
+// Wrapper for formatted content (defined as a constant since it is used
+// in the unit test defined in tests/unit/lib/VisualTest.php as well).
+define('FORMATTED_CONTENT_WRAPPER', '<div class="formatted-content">%s</div>');
+
 /**
  * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.
  * It checks if the new parameters lead to a "lower" trafficlight. If so, the new
@@ -270,7 +274,7 @@ function formatReady($text, $trim=TRUE, $extern=FALSE, $wiki=FALSE, $show_commen
     // Blubber and Forum plugins add media previews after formatReady returns
     OpenGraphURL::$tempURLStorage = array();
 
-    return sprintf('<div class="formatted-content">%s</div>',
+    return sprintf(FORMATTED_CONTENT_WRAPPER,
                    Markup::apply(new StudipFormat(), $text, $trim));
 }
 

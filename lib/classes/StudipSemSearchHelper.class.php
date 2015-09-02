@@ -81,8 +81,8 @@ class StudipSemSearchHelper {
         $this->search_result = new DbSnapshot();
         $combination = $this->params['combination'];
 
-        DBView::addView('sem_tree');
-        $view = new DBView(); 
+        DbView::addView('sem_tree');
+        $view = new DbView(); 
 
         if (isset($this->params['sem']) && $this->params['sem'] != 'all'){
             $sem_number = (int)$this->params['sem'];

@@ -13,10 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once "lib/classes/exportdocument/ExportDocument.interface.php";
-require_once "vendor/tcpdf/tcpdf.php";
-require_once 'app/models/media_proxy.php';
-
 /**
  * Class to create an PDF by putting in Stud.IP-formatted code.
  * Usage:

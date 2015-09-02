@@ -84,7 +84,6 @@ class CourseAvatar extends Avatar
      */
     function getDefaultTitle()
     {
-        require_once 'lib/classes/Seminar.class.php';
         return Seminar::GetInstance($this->user_id)->name;
     }
     

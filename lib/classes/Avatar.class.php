@@ -201,7 +201,6 @@ class Avatar {
      */
     protected function getCssClass($size) {
         if (!isset($this->username)) {
-            require_once 'lib/functions.php';
             $this->username = htmlReady(get_username($this->user_id));
         }
 

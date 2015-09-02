@@ -16,7 +16,6 @@
  * @since       1.10
  */
 
-require_once 'app/models/studygroup.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
 

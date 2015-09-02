@@ -25,12 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
-
-# Include all required files ================================================ #
-require_once ("lib/classes/AuthorObject.class.php");
-# ====================================================== end: including files #
-
-
 # Define all required constants ============================================= #
 /**
  * @const INSTANCEOF_STUDIPOBJECT Is instance of a studip object

@@ -45,6 +45,17 @@ class StudipAutoloader
     public static $autoload_paths = array();
     public static $class_lookup = array();
 
+    // List of all possible file extensions that are tested when trying to
+    // find a class. This list should be ordered by the probability that
+    // a file has this extension (often used extensions first) so that the
+    // file is found quickly and unneccessary, costly calls to file_exists()
+    // can be avoided.
+    protected static $file_extensions = array(
+        '.class.php',
+        '.php',
+        '.interface.php',
+    );
+
     /**
      * Registers the StudipAutoloader as an autoloader.
      */
@@ -177,10 +188,10 @@ class StudipAutoloader
             }
 
             $base =  $item['path'] . DIRECTORY_SEPARATOR . $class_file;
-            if (file_exists($base . '.class.php')) {
-                return $base . '.class.php';
-            } elseif (file_exists($base . '.php')) {
-                return $base . '.php';
+            foreach (self::$file_extensions as $extension) {
+                if (file_exists($base . $extension)) {
+                    return $base . $extension;
+                }
             }
         }
     }

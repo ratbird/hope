@@ -13,9 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
-
-
 /**
  * This class provides a small and intuitive GUI-element for an instant search of
  * courses, persons, institutes or other items. Mainly the structure to include

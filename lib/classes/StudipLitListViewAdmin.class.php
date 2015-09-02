@@ -28,11 +28,8 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once('lib/classes/TreeView.class.php');
-require_once('lib/classes/StudipLitList.class.php');
-require_once('lib/classes/StudipLitClipBoard.class.php');
-require_once('lib/datei.inc.php');
-require_once('lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract.class.php');
+require_once 'lib/datei.inc.php';
+require_once 'lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract.class.php';
 
 /**
 *

@@ -13,8 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/raumzeit/SingleDate.class.php';
-
 /**
  * Formates one SingleDate object or a series of SingleDate objects into a nice format. 
  */

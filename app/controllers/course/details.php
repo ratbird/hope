@@ -15,7 +15,6 @@
  */
 
 require_once 'lib/dates.inc.php'; //Funktionen zum Anzeigen der Terminstruktur
-require_once 'app/models/my_realm.php';
 
 class Course_DetailsController extends AuthenticatedController
 {

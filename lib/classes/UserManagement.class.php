@@ -30,7 +30,6 @@ require_once 'lib/dates.inc.php';   // remove appointments of user
 require_once 'lib/messaging.inc.php';   // remove messages send or recieved by user
 require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
-require_once 'app/models/studygroup.php';
 
 /**
  * Adapter to fake user_data property in UserManagement

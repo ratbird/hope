@@ -1,5 +1,4 @@
 <?php
-require_once 'app/models/my_realm.php';
 require_once 'lib/meine_seminare_func.inc.php';
 
 class MyInstitutesController extends AuthenticatedController

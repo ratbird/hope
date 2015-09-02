@@ -73,8 +73,6 @@ class LiteratureController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Literatur importieren"));
-        require_once ('lib/classes/StudipLitListViewAdmin.class.php');
-        require_once ('lib/classes/StudipLitClipBoard.class.php');
 
         $this->plugin_name  = Request::quoted('plugin_name');
         $plugin = array();
@@ -110,8 +108,6 @@ class LiteratureController extends AuthenticatedController
         }
         $_SESSION['_lit_range'] = $this->_range_id;
 
-        require_once ('lib/classes/StudipLitListViewAdmin.class.php');
-        require_once ('lib/classes/StudipLitClipBoard.class.php');
         require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
         PageLayout::setHelpKeyword("Basis.LiteraturListen");
         PageLayout::setTitle(_("Verwaltung von Literaturlisten"));

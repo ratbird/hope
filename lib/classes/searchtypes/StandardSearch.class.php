@@ -13,9 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/searchtypes/SQLSearch.class.php';
-require_once 'lib/functions.php';
-
 /**
  * Class of type SearchType used for searches with QuickSearch
  * (lib/classes/QuickSearch.class.php). You can search with a sql-syntax in the

@@ -15,9 +15,6 @@
  * @category    Stud.IP
 */
 
-require_once 'lib/classes/StudipSemSearchHelper.class.php';
-require_once 'lib/classes/searchtypes/SearchType.class.php';
-
 class SeminarSearch extends SearchType
 {
     private $styles = array(

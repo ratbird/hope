@@ -11,6 +11,7 @@
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/functions.php';
+require_once 'lib/classes/Interactable.class.php';
 require_once 'lib/classes/Button.class.php';
 
 use \Studip\Button;

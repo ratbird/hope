@@ -13,8 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'app/models/media_proxy.php';
-
 class MediaProxyController extends StudipController
 {
     protected $encoding = null;

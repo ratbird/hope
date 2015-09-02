@@ -69,6 +69,9 @@ namespace {
     StudipAutoloader::addClassLookups(array(
         'email_validation_class' => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/phplib/email_validation.class.php',
         'cssClassSwitcher'       => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/classes/cssClassSwitcher.inc.php',
+        'MediaProxy'             => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/media_proxy.php',
+        'MyRealmModel'           => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/my_realm.php',
+        'StudygroupModel'        => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/studygroup.php',
     ));
 
     // Trails
@@ -90,7 +93,8 @@ namespace {
 
     // Vendor
     StudipAutoloader::addClassLookups(array(
-        'PasswordHash' => 'vendor/phpass/PasswordHash.php',
+        'PasswordHash' => $GLOBALS['STUDIP_BASE_PATH'] . '/vendor/phpass/PasswordHash.php',
+        'TCPDF'        => $GLOBALS['STUDIP_BASE_PATH'] . '/vendor/tcpdf/tcpdf.php',
     ));
 
     // sample the request time and number of db queries every tenth time

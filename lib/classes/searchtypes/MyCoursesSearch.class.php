@@ -14,8 +14,6 @@
  * @category    Stud.IP
 */
 
-require_once 'lib/classes/searchtypes/SearchType.class.php';
-
 class MyCoursesSearch extends StandardSearch
 {
     public $search;

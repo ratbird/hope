@@ -26,11 +26,6 @@
 // +--------------------------------------------------------------------------+
 
 
-# Include all required files ================================================ #
-require_once ("lib/classes/AuthorObject.class.php");
-# =========================================================================== #
-
-
 # Define all required constants ============================================= #
 /**
  * @const INSTANCEOF_STUDIPOBJECT Is instance of a studip object

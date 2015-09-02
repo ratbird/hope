@@ -36,7 +36,6 @@ $perm->check('user');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once ('lib/visual.inc.php');
-require_once ('lib/classes/StudipRangeTreeView.class.php');
 
 PageLayout::setHelpKeyword("Basis.SuchenEinrichtungen");
 PageLayout::setTitle(_("Einrichtungssuche"));
@@ -45,7 +44,7 @@ Navigation::activateItem('/search/institutes');
 // Start of Output
 ob_start();
 
-$view = new DbView();
+$view = DbView::getView('range_tree');
 $the_tree = new StudipRangeTreeView();
 $the_tree->open_ranges['root'] = true;
 if (Request::option('cmd')=="suche"){

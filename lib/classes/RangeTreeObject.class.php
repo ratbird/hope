@@ -25,9 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ("lib/classes/StudipRangeTree.class.php");
-require_once ("lib/classes/RangeTreeObjectInst.class.php");
-
 /**
 * base class for items in the "range tree"
 *
@@ -207,7 +204,7 @@ class RangeTreeObject {
     */
     function initItemDetail(){
         if ($type = $this->item_data['studip_object']){
-            $view = new DbView();
+            $view = DbView::getView('range_tree');
             $view->params = array($this->tree->studip_objects[$type]['table'],
                                 $this->tree->studip_objects[$type]['pk'],
                                 $this->item_data['studip_object_id']);
@@ -232,7 +229,7 @@ class RangeTreeObject {
     * @return   boolean true if categories were found
     */
     function fetchCategories(){
-        $view = new DbView();
+        $view = DbView::getView('range_tree');
         $view->params[] = $this->tree_item_id;
         $rs = $view->get_query("view:TREE_OBJECT_CAT");
         if (is_object($rs)){
@@ -257,7 +254,7 @@ class RangeTreeObject {
     }
     
     function fetchNumStaff(){
-        $view = new DbView();
+        $view = DbView::getView('range_tree');
         if (!($view->params[0] = $this->item_data['studip_object_id']))
             $view->params[0] = $this->tree_item_id;
         $rs = $view->get_query("view:STATUS_COUNT");

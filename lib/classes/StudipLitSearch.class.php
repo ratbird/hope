@@ -156,7 +156,7 @@ class StudipLitSearch {
     }
 
     function GetPreferredPlugin(){
-        $dbv = new DbView();
+        $dbv = DbView::getView('literatur');
         $dbv->params[0] = $GLOBALS['user']->id;
         $rs = $dbv->get_query("view:LIT_GET_FAK_LIT_PLUGIN");
         $rs->next_record();

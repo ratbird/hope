@@ -189,7 +189,7 @@ class ExternSemBrowseTable extends SemBrowse {
             if (!$nameformat = $this->module->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";
             
-            $dbv = new DbView();
+            $dbv = DbView::getView('sem_tree');
                 
             $query = "SELECT seminare.* 
                 , Institute.Name AS Institut,Institute.Institut_id,

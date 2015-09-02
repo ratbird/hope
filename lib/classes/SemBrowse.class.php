@@ -199,7 +199,7 @@ class SemBrowse {
             $inst_ids = $range_object->getAllObjectKids();
         }
         $inst_ids[] = $range_object->item_data['studip_object_id'];
-        $db_view = new DbView();
+        $db_view = DbView::getView('sem_tree');
         $db_view->params[0] = $inst_ids;
         $db_view->params[1] = (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) ? '' : ' AND c.visible=1';
         $db_view->params[1] .= (is_array($this->sem_browse_data['sem_status'])) ? " AND c.status IN('" . join("','",$this->sem_browse_data['sem_status']) ."')" : "";
@@ -724,7 +724,7 @@ class SemBrowse {
             $add_query = "";
         }
 
-        $dbv = new DbView();
+        $dbv = DbView::getView('sem_tree');
 
         $query = ("SELECT seminare.Seminar_id,VeranstaltungsNummer, seminare.status, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name,
                 $add_fields" . $_fullname_sql['full'] ." AS fullname, auth_user_md5.username,

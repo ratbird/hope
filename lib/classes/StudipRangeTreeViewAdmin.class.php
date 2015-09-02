@@ -76,7 +76,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function initTreeStatus(){
-        $view = new DbView();
+        $view = DbView::getView('range_tree');
         $user_id = $GLOBALS['auth']->auth['uid'];
         $user_perm = $GLOBALS['auth']->auth['perm'];
         $studip_object_status = null;
@@ -159,7 +159,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $items_to_order[$i] = $items_to_order[$i+1];
             $items_to_order[$i+1] = $item_id;
         }
-        $view = new DbView();
+        $view = DbView::getView('range_tree');
         for ($i = 0; $i < count($items_to_order); ++$i){
             $view->params = array($i, $items_to_order[$i]);
             $rs = $view->get_query("view:TREE_UPD_PRIO");
@@ -189,7 +189,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $item_id = Request::option('item_id');
         $parent_id = Request::quoted('parent_id');
         $search_str = Request::quoted('edit_search');
-        $view = new DbView();
+        $view = DbView::getView('range_tree');
         if(strlen($search_str) > 1){
             $view->params[0] = $search_str;
             $rs = $view->get_query("view:TREE_SEARCH_INST");
@@ -279,7 +279,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $priority = count($this->tree->getKids($parent_id));
             $affected_rows = $this->tree->InsertItem($item_id,$parent_id,'',$priority,'fak',$studip_object_id);
             if($affected_rows){
-                $view = new DbView();
+                $view = DbView::getView('range_tree');
                 $priority = 0;
                 $rs = $view->get_query("SELECT * FROM Institute WHERE fakultaets_id <> Institut_id AND fakultaets_id = '$studip_object_id' ORDER BY Name");
                 while($rs->next_record()){
@@ -347,7 +347,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($this->mode == "MoveItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
             && ($item_to_move != $item_id) && ($this->tree->tree_data[$item_to_move]['parent_id'] != $item_id)
             && !$this->tree->isChildOf($item_to_move,$item_id)){
-            $view = new DbView();
+            $view = DbView::getView('range_tree');
             $view->params = array($item_id, count($this->tree->getKids($item_id)), $item_to_move);
             $rs = $view->get_query("view:TREE_MOVE_ITEM");
             if ($rs->affected_rows()){
@@ -385,7 +385,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 $items_to_order[$i] = $items_to_order[$i+1];
                 $items_to_order[$i+1] = $cat_id;
             }
-            $view = new DbView();
+            $view = DbView::getView('range_tree');
             for ($i = 0; $i < count($items_to_order); ++$i){
                 $view->params = array($i,$items_to_order[$i]);
                 $rs = $view->get_query("view:CAT_UPD_PRIO");
@@ -420,7 +420,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $inserted = false;
         $updated = 0;
         if ($this->isItemAdmin($item_id)){
-            $view = new DbView();
+            $view = DbView::getView('range_tree');
             if (isset($cat_name['new_entry'])){
                 $view->params = array($view->get_uniqid(),$item_id,$cat_name['new_entry'],$cat_content['new_entry'],$cat_prio['new_entry']);
                 $rs = $view->get_query("view:CAT_INS_ALL");
@@ -456,7 +456,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $item_id = Request::option('item_id');
         $cat_id = Request::option('cat_id');
         if ($this->isItemAdmin($item_id)){
-            $view = new DbView();
+            $view = DbView::getView('range_tree');
             $view->params[0] = $cat_id;
             $rs = $view->get_query("view:CAT_DEL");
             if ($rs->affected_rows()){
@@ -533,7 +533,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
             if ($this->isItemAdmin($item_id)){
-                $view = new DbView();
+                $view = DbView::getView('range_tree');
                 $rs = $view->get_query("SELECT i1.Name,i1.Institut_id,COUNT(i2.Institut_id) as num FROM Institute i1 LEFT JOIN Institute i2 ON i1.Institut_id = i2.fakultaets_id AND i2.fakultaets_id<>i2.Institut_id WHERE i1.fakultaets_id=i1.Institut_id GROUP BY i1.Institut_id ORDER BY Name");
                 $content .= "\n<tr><td align=\"center\">";
                 $content .= "\n<form action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertFak")) . "\" method=\"post\">"

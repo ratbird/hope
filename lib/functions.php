@@ -783,7 +783,7 @@ function TrackAccess ($id, $object_type = null)
 function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
 {
     $the_tree = TreeAbstract::GetInstance("StudipSemTree");
-    $view = new DbView();
+    $view = DbView::getView('sem_tree');
     $ret = null;
     $view->params[0] = $seminar_id;
     $rs = $view->get_query("view:SEMINAR_SEM_TREE_GET_IDS");
@@ -805,7 +805,7 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
 function get_range_tree_path($institut_id, $depth = false, $delimeter = ">")
 {
     $the_tree = TreeAbstract::GetInstance("StudipRangeTree");
-    $view = new DbView();
+    $view = DbView::getView('sem_tree');
     $ret = null;
     $view->params[0] = $institut_id;
     $rs = $view->get_query("view:TREE_ITEMS_OBJECT");
@@ -1043,7 +1043,7 @@ function get_seminar_tutor($seminar_id)
  */
 function get_seminar_sem_tree_entries($seminar_id)
 {
-    $view = new DbView();
+    $view = DbView::getView('sem_tree');
     $ret = null;
     $view->params[0] = $seminar_id;
     $rs = $view->get_query("view:SEMINAR_SEM_TREE_GET_IDS");

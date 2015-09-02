@@ -60,7 +60,7 @@ class StudipSemTreeSearch {
     var $search_result = array();
 
     function StudipSemTreeSearch($seminar_id,$form_name = "search_sem_tree", $auto_search = true){
-        $this->view = new DbView();
+        $this->view = DbView::getView('sem_tree');
         $this->form_name = $form_name;
         $this->tree = TreeAbstract::GetInstance("StudipSemTree", false);
         $this->seminar_id = $seminar_id;

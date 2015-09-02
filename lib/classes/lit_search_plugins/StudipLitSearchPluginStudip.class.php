@@ -40,7 +40,7 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
     
     function StudipLitSearchPluginStudip(){
         parent::StudipLitSearchPluginAbstract();
-        $this->dbv = new DbView();
+        $this->dbv = DbView::getView('literatur');
         $rs = $this->dbv->get_query("view:LIT_GET_CATALOG_COUNT");
         $rs->next_record();
         $this->description = sprintf(_("Stud.IP Literaturkatalog. Inhalt des Kataloges: %s Einträge."), $rs->f(0));

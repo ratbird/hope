@@ -26,8 +26,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-DbView::addView('literatur');
-
 /**
 * class to handle the
 *
@@ -51,6 +49,8 @@ class StudipLitList extends TreeAbstract {
     * @access private
     */
     function StudipLitList($range_id) {
+        DbView::addView('literatur');
+
         if ($GLOBALS['LIT_LIST_FORMAT_TEMPLATE']){
             $this->format_default = $GLOBALS['LIT_LIST_FORMAT_TEMPLATE'];
         }
@@ -297,7 +297,7 @@ class StudipLitList extends TreeAbstract {
                                 'year' => 'Year', 'dc_contributor' => 'Secondary Author', 'dc_publisher' => 'Publisher',
                                 'dc_identifier' => 'ISBN/ISSN', 'dc_source' => 'Original Publication', 'dc_subject' => 'Keywords',
                                 'dc_description' => 'Abstract', 'accession_number' => 'Accession Number', 'note' => 'Notes', 'external_link' => 'URL');
-        $dbv = new DbView();
+        $dbv = DbView::getView('literatur');
         $tree = TreeAbstract::GetInstance("StudipLitList", $range_id);
         $ret = "*Generic\n";
         foreach ($end_note_map as $fields){
@@ -327,7 +327,7 @@ class StudipLitList extends TreeAbstract {
 
     function DeleteListsByRange($range_id){
         $deleted = null;
-        $view = new DbView();
+        $view = DbView::getView('literatur');
         $view->params[] = $range_id;
         $rs = $view->get_query("view:LIT_GET_LIST_BY_RANGE");
         while ($rs->next_record()){
@@ -345,7 +345,7 @@ class StudipLitList extends TreeAbstract {
     }
 
     function GetListCountByRange($range_id){
-        $dbv = new DbView();
+        $dbv = DbView::getView('literatur');
         $dbv->params[0] = $range_id;
         $rs = $dbv->get_query("view:LIT_GET_LIST_COUNT_BY_RANGE");
         $rs->next_record();
@@ -353,7 +353,7 @@ class StudipLitList extends TreeAbstract {
     }
 
     function GetListsByRange($range_id, $format = 'default'){
-        $view = new DbView();
+        $view = DbView::getView('literatur');
         $view->params[] = $range_id;
         $rs = $view->get_query("view:LIT_GET_LIST_BY_RANGE");
         $list_ids = array();
@@ -366,7 +366,7 @@ class StudipLitList extends TreeAbstract {
 
     function GetFormattedListsByRange($range_id, $last_modified_since = false, $copy_link = true){
         $ret = false;
-        $dbv = new DbView();
+        $dbv = DbView::getView('literatur');
         $tree = TreeAbstract::GetInstance("StudipLitList", $range_id);
         if ( ($lists = $tree->getVisibleListIds()) ){
             for ($i = 0; $i < count($lists); ++$i){

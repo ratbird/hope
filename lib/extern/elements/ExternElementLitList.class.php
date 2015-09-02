@@ -141,7 +141,7 @@ class ExternElementLitList extends ExternElement {
         global $_fullname_sql;
         
         $content = array();
-        $dbv = new DbView();
+        $dbv = DbView::getView('literatur');
         if (is_array($args) && isset($args['user_id'])) {
             $tree = TreeAbstract::GetInstance("StudipLitList", $args['user_id']);
         } else {

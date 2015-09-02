@@ -25,8 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-DbView::addView('range_tree');
-
 /**
 * class to handle the "range tree"
 *
@@ -51,6 +49,8 @@ class StudipRangeTree extends TreeAbstract {
     * @access private
     */
     function StudipRangeTree($args) {
+        DbView::addView('range_tree');
+
         $this->root_name = $GLOBALS['UNI_NAME_CLEAN'];
         $this->studip_objects['inst'] = array('pk' => 'Institut_id', 'table' => 'Institute');
         $this->studip_objects['fak'] = array('pk' => 'Institut_id', 'table' => 'Institute');

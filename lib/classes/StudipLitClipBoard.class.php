@@ -24,18 +24,12 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-
-DbView::addView('literatur');
-
 /**
-*
-*
-*
-*
-* @access   public
-* @author   André Noack <noack@data-quest.de>
-* @package
-**/
+ *
+ * @access   public
+ * @author   André Noack <noack@data-quest.de>
+ * @package
+ **/
 class StudipLitClipBoard {
 
     var $dbv;
@@ -53,7 +47,7 @@ class StudipLitClipBoard {
     }
 
     function StudipLitClipBoard(){
-        $this->dbv = new DbView();
+        $this->dbv = DbView::getView('literatur');
         $this->elements =& $_SESSION["_lit_clipboard_elements"];
     }
 

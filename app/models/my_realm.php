@@ -942,7 +942,7 @@ class MyRealmModel
     public static function getSemTree($course_id, $depth = false)
     {
         $the_tree        = TreeAbstract::GetInstance("StudipSemTree");
-        $view            = new DbView();
+        $view            = DbView::getView('sem_tree');
         $ret             = null;
         $view->params[0] = $course_id;
         $rs              = $view->get_query("view:SEMINAR_SEM_TREE_GET_IDS");

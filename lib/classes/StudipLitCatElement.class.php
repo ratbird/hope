@@ -24,10 +24,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once("lib/classes/StudipLitList.class.php");
-
-DbView::addView('literatur');
-
 /**
 *
 *
@@ -47,8 +43,9 @@ class StudipLitCatElement {
     var $classname = "StudipLitCatElement";
     var $persistent_slots = array("fields");
 
-    function StudipLitCatElement($catalog_id = false, $with_form = false){
-        $this->dbv = new DbView();
+    public function StudipLitCatElement($catalog_id = false, $with_form = false)
+    {
+        $this->dbv = DbView::getView('literatur');
         $this->init_form = $with_form;
         $this->initFields();
         if ($catalog_id){

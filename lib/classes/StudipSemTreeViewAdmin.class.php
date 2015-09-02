@@ -132,7 +132,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $items_to_order[$i] = $items_to_order[$i+1];
             $items_to_order[$i+1] = $item_id;
         }
-        $view = new DbView();
+        $view = DbView::getView('sem_tree');
         for ($i = 0; $i < count($items_to_order); ++$i){
             $view->params = array($i, $items_to_order[$i]);
             $rs = $view->get_query("view:SEM_TREE_UPD_PRIO");
@@ -264,7 +264,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         if ($this->mode == "MoveItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
         && ($item_to_move != $item_id) && ($this->tree->tree_data[$item_to_move]['parent_id'] != $item_id)
         && !$this->tree->isChildOf($item_to_move,$item_id)){
-            $view = new DbView();
+            $view = DbView::getView('sem_tree');
             $view->params = array($item_id, count($this->tree->getKids($item_id)), $item_to_move);
             $rs = $view->get_query("view:SEM_TREE_MOVE_ITEM");
             if ($rs->affected_rows()){
@@ -333,7 +333,7 @@ class StudipSemTreeViewAdmin extends TreeView {
 
     function execCommandInsertFak(){
         if($this->isItemAdmin("root") && Request::quoted('insert_fak')){
-            $view = new DbView();
+            $view = DbView::getView('sem_tree');
             $item_id = $view->get_uniqid();
             $view->params = array($item_id,'root','',$this->tree->getNumKids('root')+1,'',Request::quoted('insert_fak'),0);
             $rs = $view->get_query("view:SEM_TREE_INS_ITEM");
@@ -510,7 +510,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         }
         }
         if ($item_id == 'root' && $this->isItemAdmin($item_id)){
-            $view = new DbView();
+            $view = DbView::getView('sem_tree');
             $rs = $view->get_query("view:SEM_TREE_GET_LONELY_FAK");
             $content .= "\n<p><form action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertFak")) . "\" method=\"post\">"
                 . CSRFProtection::tokenTag()
@@ -713,7 +713,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             return false;
         }
         if(!isset($this->admin_ranges[$admin_id])){
-            $view = new DbView();
+            $view = DbView::getView('sem_tree');
             $view->params[0] = $auth->auth['uid'];
             $view->params[1] = $admin_id;
             $rs = $view->get_query("view:SEM_TREE_CHECK_PERM");

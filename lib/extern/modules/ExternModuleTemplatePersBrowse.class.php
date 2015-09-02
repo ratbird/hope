@@ -217,7 +217,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         
         $db = new DB_Seminar();
         
-        $dbv = new DbView();
+        $dbv = DbView::getView('sem_tree');
         
         if ($module_params['initiale']) {
             if ($this->config->getValue('Main', 'onlylecturers')) {
@@ -381,7 +381,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             return array();
         }
         $db = new DB_Seminar();
-        $dbv = new DbView();
+        $dbv = DbView::getView('sem_tree');
         if ($this->config->getValue('Main', 'onlylecturers')) {
             $current_semester = get_sem_num(time());
                 $query = sprintf("SELECT COUNT(DISTINCT aum.user_id) as count_user, "
@@ -441,7 +441,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         $current_semester = get_sem_num(time());
         
         $db_count = new DB_Seminar();
-        $dbv = new DbView();
+        $dbv = DbView::getView('sem_tree');
         $mrks = str_repeat('?,', count($selected_item_ids) - 1) . '?';
         $query = "SELECT Institut_id, Name "
             . "FROM Institute "

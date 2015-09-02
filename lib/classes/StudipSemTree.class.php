@@ -25,8 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-DbView::addView('sem_tree');
-
 /**
 * class to handle the seminar tree
 *
@@ -51,6 +49,8 @@ class StudipSemTree extends TreeAbstract {
     * @access private
     */
     function StudipSemTree($args) {
+        DbView::addView('sem_tree');
+
         $this->root_name = $GLOBALS['UNI_NAME_CLEAN'];
         if (isset($args['visible_only'])){
             $this->visible_only = (int)$args['visible_only'];

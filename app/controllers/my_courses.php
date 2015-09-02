@@ -217,7 +217,6 @@ class MyCoursesController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
-        DbView::addView('sem_tree');
 
         $this->title = _('Meine Veranstaltungen') . ' - ' . _('Farbgruppierungen');
 
@@ -255,7 +254,7 @@ class MyCoursesController extends AuthenticatedController
             $add_query  = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
         }
 
-        $dbv = new DbView();
+        $dbv = DbView::getView('sem_tree');
 
         $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id,
                          seminare.status AS sem_status, seminar_user.gruppe, seminare.visible,

@@ -46,7 +46,7 @@ Navigation::activateItem('/admin/locations/sem_tree');
 // Start of Output
 ob_start();
 
-$view = new DbView();
+$view = DbView::getView('sem_tree');
 $the_tree = new StudipSemTreeViewAdmin(Request::option('start_item_id'));
 $search_obj = new StudipSemSearch();
 

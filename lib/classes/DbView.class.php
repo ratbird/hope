@@ -109,11 +109,27 @@ class DbView {
 
     static protected $dbviews = array();
 
-    static public function addView($view){
-        self::$dbviewfiles[strtolower($view)] = 0;
+    public static function addView($view)
+    {
+        $view = strtolower($view);
+        if (!isset(self::$dbviewfiles[$view])) {
+            self::$dbviewfiles[$view] = 0;
+        }
     }
 
-
+    /**
+     * Convenience method that combines addView() and returns an instance.
+     *
+     * @param String $view Required view (at least this will be present in the
+     *                     returned instance)
+     * @param mixed  $db   classname of db abstraction or existing db object
+     * @return DbView Instance of self with at least the required view loaded
+     */
+    public static function getView($view, $db = '')
+    {
+        self::addView($view);
+        return new self($db);
+    }
 
     /**
     * Constructor

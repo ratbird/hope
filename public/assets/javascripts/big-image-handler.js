@@ -40,10 +40,7 @@
             $link = $img.closest('a'),
             src   = $img.attr('src');
         return $img.closest('[contenteditable]').length > 0
-            || $img.is('[class*=avatar][class*=user]')
-            || $img.is('.ignore-size')
             || ($link.length > 0 && $link.attr('href') !== src)
-            || src.match(STUDIP.ASSETS_URL + 'images/icons')
             || src.match(/\.svg$/);
     }
 
@@ -85,7 +82,7 @@
         // - check if an image is oversized on mouseenter
         // - create overlay/zoom on click on the image
         // - remove overlay/zoom on click on itself or escape key
-        $(document).on('mouseenter.big-image-handler', '#layout_content img', function () {
+        $(document).on('mouseenter.big-image-handler', '.formatted-content img', function () {
             if (!shouldSkip(this)) {
                 var img = new Image();
                 img.onload = oversizedHandler(this);

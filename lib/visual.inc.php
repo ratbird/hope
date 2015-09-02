@@ -269,7 +269,9 @@ function formatReady($text, $trim=TRUE, $extern=FALSE, $wiki=FALSE, $show_commen
     // StudipFormat::markupLinks stores OpenGraph media preview URLs
     // Blubber and Forum plugins add media previews after formatReady returns
     OpenGraphURL::$tempURLStorage = array();
-    return Markup::apply(new StudipFormat(), $text, $trim);
+
+    return sprintf('<div class="formatted-content">%s</div>',
+                   Markup::apply(new StudipFormat(), $text, $trim));
 }
 
 /**

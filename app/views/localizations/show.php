@@ -18,6 +18,9 @@ $translations = array(
     'Blenden Sie die restlichen Termine ein' => _('Blenden Sie die restlichen Termine ein'),
     'Ihre Eingaben wurden bislang noch nicht gespeichert.' => _('Ihre Eingaben wurden bislang noch nicht gespeichert.'),
 
+    // public/assets/javascripts/big-image-handler.js
+    'Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.' => _('Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.'),
+
     // public/assets/javascripts/calendar.js
     'Montag' => _('Montag'),
     'Dienstag' => _('Dienstag'),

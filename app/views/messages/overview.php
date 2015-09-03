@@ -26,7 +26,9 @@
         </caption>
         <thead>
             <tr>
-                <th><input type="checkbox" data-proxyfor="#bulk tbody :checkbox"></th>
+                <th>
+                    <input type="checkbox" data-proxyfor="#bulk tbody :checkbox">
+                </th>
                 <th></th>
                 <th></th>
                 <th><?= _("Betreff") ?></th>
@@ -36,7 +38,7 @@
             </tr>
         </thead>
 
-        <tbody aria-relevant="additions" aria-live="polite">
+        <tbody aria-relevant="additions" aria-live="polite" data-shiftcheck>
             <? if (count($messages) > 0) : ?>
                 <? if ($more || (Request::int("offset") > 0)) : ?>
                 <noscript>

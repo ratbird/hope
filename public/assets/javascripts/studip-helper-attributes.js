@@ -88,7 +88,7 @@
                 if (idx0 > idx1) {
                     tmp = idx0;
                     idx0 = idx1;
-                    idx1 = idx0;
+                    idx1 = tmp;
                 }
                 children.slice(idx0, idx1).prop('checked', state);
             }

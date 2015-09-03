@@ -66,6 +66,18 @@
 
 @import "less/responsive.less";
 
+// Class for DOM elements that should only be visible to Screen readers
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
 /* --- Standardvorgaben ----------------------------------------------------- */
 //TODO: the Body-Background color should be similar to A:link.toolbar and A:visited.toolbar for best effect!!
 html, body { height: 100%; }

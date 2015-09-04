@@ -551,9 +551,8 @@ class MyRealmModel
             });
         }
         $courses = $courses->filter(function ($a) use ($min_sem, $max_sem) {
-            return ($a->end_time >= $min_sem['beginn'] && $a->end_time <= $max_sem['beginn'])
-            || ($a->end_time == -1 && $a->start_time <= $max_sem['beginn'])
-            || ($a->end_time > $max_sem['beginn'] &&  $a->start_time <= $min_sem['beginn']);
+            return $a->start_time <= $max_sem['beginn'] &&
+                   ($min_sem['beginn'] <= $a->start_time + $a->duration_time || $a->duration_time == -1);
         });
         $courses->orderBy($ordering);
 

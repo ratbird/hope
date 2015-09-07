@@ -121,6 +121,8 @@ class Settings_AccountController extends Settings_SettingsController
                     $this->user->username = $new_username;
                     $success[] = _('Ihr Benutzername wurde geändert!');
 
+                    URLHelper::addLinkParam('username', $this->user->username);
+
                     $logout = true;
                 }
             }
@@ -171,7 +173,9 @@ class Settings_AccountController extends Settings_SettingsController
         }
 
         if ($logout) {
-            $this->redirect('settings/account/logout');
+            $token = uniqid('logout', true);
+            $this->flash['logout-token'] = $token;
+            $this->redirect('settings/account/logout?token=' . $token);
         } else {
             $this->redirect('settings/account');
         }
@@ -182,6 +186,10 @@ class Settings_AccountController extends Settings_SettingsController
      */
     public function logout_action()
     {
+        // Check whether this is a valid logout request
+        if ($this->flash['logout-token'] !== Request::get('token')) {
+            $this->redirect('settings/account');
+        }
         $this->username = Request::username('username', $GLOBALS['user']->username);
     }
 }

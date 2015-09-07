@@ -191,9 +191,8 @@ class Assets
         if (($pos = array_search('icons', $parts)) !== false) {
             $source = substr($source, 6);
             $source = preg_replace('/\.png$/', '', $source);
-            return Assets::content_tag('label',
-                                       self::input('blank.gif', $opt) . Icon::create($source, $opt),
-                                       array('class' => 'svg-input'));
+
+            return Icon::create($source, $opt)->render(Icon::SVG | Icon::INPUT);
         }
 
         $size = $opt['size'];

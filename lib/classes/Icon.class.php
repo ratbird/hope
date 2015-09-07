@@ -14,6 +14,7 @@ class Icon
     const SVG = 1;
     const PNG = 2;
     const CSS_BACKGROUND = 4;
+    const INPUT = 256;
 
     const DEFAULT_SIZE = 16;
     const DEFAULT_COLOR = 'blue';
@@ -166,10 +167,10 @@ class Icon
      */
     public function render($type = Icon::SVG)
     {
-        if ($type === Icon::SVG || $type === Icon::PNG) {
-            return $this->render_img($type);
+        if ($type & Icon::SVG || $type & Icon::PNG) {
+            return $this->render_img($type, (bool)($type & Icon::INPUT));
         }
-        if ($type === Icon::CSS_BACKGROUND) {
+        if ($type & Icon::CSS_BACKGROUND) {
             return $this->render_css_background();
         }
         throw new Exception('Unknown type');
@@ -182,7 +183,7 @@ class Icon
      *                  should be either Icon::SVG or Icon::PNG.
      * @return String containing the html representation for the icon.
      */
-    protected function render_img($type)
+    protected function render_img($type, $as_input)
     {
         $attributes = array_merge($this->attributes, array(
             'src'    => $this->static ? $this->icon : $this->get_asset($type),
@@ -191,7 +192,8 @@ class Icon
             'height' => $this->get_size(),
         ));
         
-        return sprintf('<img %s>', $this->tag_options($attributes));
+        return sprintf($as_input ? '<input type="image" %s>' : '<img %s>',
+                       $this->tag_options($attributes));
     }
 
     /**
@@ -222,10 +224,10 @@ class Icon
      */
     protected function get_asset($type)
     {
-        if ($type === Icon::SVG) {
+        if ($type & Icon::SVG) {
             return Assets::url('images/icons/' . $this->color . '/' . $this->icon . '.svg');
         }
-        if ($type === Icon::PNG) {
+        if ($type & Icon::PNG) {
             $size = $this->size;
             if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
                 $size *= 2;

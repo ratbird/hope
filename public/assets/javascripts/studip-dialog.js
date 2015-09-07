@@ -253,7 +253,9 @@
 
         // Predefine options
         if ($(element).is('form,button,input')) {
-            url = $(element).attr('formaction') || $(element).closest('form').attr('action');
+            url = $(element).attr('formaction')
+                || $(element).closest('form').data('formaction')
+                || $(element).closest('form').attr('action');
             options.method = $(element).closest('form').attr('method');
             options.data = $(element).closest('form').serializeArray();
 
@@ -265,6 +267,7 @@
             } else if ($(element).data().triggeredBy) {
                 options.data.push($(element).data().triggeredBy);
             }
+            $(element).closest('form').removeData('formaction');
         } else {
             url = $(element).attr('href');
         }
@@ -517,11 +520,15 @@
 
     function clickHandler(event) {
         if (!event.isDefaultPrevented()) {
-            var form  = $(event.target).closest('form');
+            var form   = $(event.target).closest('form'),
+                action = $(event.target).attr('formaction');
             form.data('triggeredBy', {
                 name: $(event.target).attr('name'),
                 value: $(event.target).val()
             });
+            if (action) {
+                form.data('formaction', action);
+            }
         }
     }
 

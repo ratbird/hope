@@ -240,7 +240,7 @@
             return;
         }
 
-        if (!$(element).is('a,button,form')) {
+        if (!$(element).is('a,button,form,input[type=image],input[type=submit]')) {
             throw 'Dialog.fromElement called on an unsupported element.';
         }
 
@@ -252,12 +252,12 @@
         var url;
 
         // Predefine options
-        if ($(element).is('form,button')) {
+        if ($(element).is('form,button,input')) {
             url = $(element).attr('formaction') || $(element).closest('form').attr('action');
             options.method = $(element).closest('form').attr('method');
             options.data = $(element).closest('form').serializeArray();
 
-            if ($(element).is('button')) {
+            if ($(element).is('button,input')) {
                 options.data.push({
                     name: $(element).attr('name'),
                     value: $(element).val()
@@ -527,7 +527,7 @@
 
     // Handle links, buttons and forms
     $(document)
-        .on('click', 'a[data-dialog],button[data-dialog]', dialogHandler)
+        .on('click', 'a[data-dialog],button[data-dialog],input[type=image][data-dialog],input[type=submit][data-dialog]', dialogHandler)
         .on('click', 'form[data-dialog] :submit', clickHandler)
         .on('click', 'form[data-dialog] input[type=image]', clickHandler)
         .on('submit', 'form[data-dialog]', dialogHandler);

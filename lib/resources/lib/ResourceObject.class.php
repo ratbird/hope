@@ -618,7 +618,7 @@ class ResourceObject {
                     $query = "SELECT level FROM resources_objects WHERE resource_id = ?";
                     $statement = DBManager::get()->prepare($query);
                     $statement->execute(array($this->parent_id));
-                    $level = $statement->fetchColumn();
+                    $level = $statement->fetchColumn() + 1;
                 }
 
                 $query = "INSERT INTO resources_objects

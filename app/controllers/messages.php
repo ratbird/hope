@@ -436,6 +436,27 @@ class MessagesController extends AuthenticatedController {
         return $success;
     }
 
+    public function delete_action($message_id)
+    {
+        $message = Message::find($message_id);
+
+        $ticket = Request::get('studip-ticket');
+        if (Request::isPost() && $ticket && check_ticket($ticket)) {
+            $success = $this->delete_message($message_id);
+            if ($success) {
+                PageLayout::postMessage(MessageBox::success(_('Nachricht gelöscht!')));
+            } else {
+                PageLayout::postMessage(MessageBox::error(_('Nachricht konnte nicht gelöscht werden.')));
+            }
+        }
+
+        $redirect = $message->autor_id === $GLOBALS['user']->id
+            ? $this->url_for('messages/sent')
+            : $this->url_for('messages/overview');
+
+        $this->redirect($redirect);
+    }
+
     protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null, $search = null)
     {
         if ($tag) {

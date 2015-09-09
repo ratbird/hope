@@ -37,6 +37,11 @@
   height: 15px;
 }
 
+// Display formatted content as inline so we don't break any existing code
+// that expects formatReady() to output an inline elements instead of a
+// block element.
+// If browser support for "display: contents" is given, this should be changed
+// to that instead.
 .formatted-content {
-    display: inline-block;
+    display: inline;
 }

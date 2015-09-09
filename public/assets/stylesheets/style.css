@@ -1485,7 +1485,7 @@ label.required:after {
   height: 15px;
 }
 .formatted-content {
-  display: inline-block;
+  display: inline;
 }
 .css-tree,
 .css-tree ul {

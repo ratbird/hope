@@ -102,6 +102,8 @@ jQuery(function ($) {
 </script>
 <? endif; ?>
 
+<div style="display: none;" id="mass_delete_question"><?= _("Wirklich %s Nachrichten löschen?") ?></div>
+
 <?php
 
 $sidebar = Sidebar::get();
@@ -126,7 +128,7 @@ $actions->addLink(
     "#",
     'icons/16/blue/trash.png',
     array(
-        'onclick' => "jQuery('#bulk').submit(); return false;"
+        'onclick' => "if (window.confirm(jQuery('#mass_delete_question').text().replace('%s', jQuery('#bulk tbody :checked').length))) { jQuery('#bulk').submit(); } return false;"
     )
 );
 $sidebar->addWidget($actions);

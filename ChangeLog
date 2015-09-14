@@ -1,3 +1,19 @@
+14.09.2015 v 3.2.1
+https://develop.studip.de/trac/query?milestone=Stud.IP+3.2.1
+- Styles aus Office werden nicht herausgefiltert [#5391]
+- Fehlende svg icons [#5513]
+- Terminkalender (Veranstaltungen) [#5763]
+- Veralteter default in den Terminkalender-Ansichten [#5779]
+- Fehler User merge [#5871]
+- Fatal error: admin_elearning_interface.php [#5880]
+- Einträge in calendar_user werden nicht gelöscht [#5886]
+- Raumzeit: Icons zu Raumanfragen kaputt [#5921]
+- Raumzeit: bookable_rooms_action funzt nicht [#5922]
+- Falscher Link auf Start-Häuschen [#5924]
+- Priorisierung lässt sich nicht löschen [#5943]
+- AdminCourseAction Plugin zeigt Template nicht an [#5949]
+- Elearning Schnittstelle Ilias: Icons kaputt [#5950]
+
 10.07.2015 v 3.2
 http://develop.studip.de/trac/query?milestone=Stud.IP+3.2
 - Entfernung einiger zusätzlicher Funktionen des Wysiwyg. [#4982]

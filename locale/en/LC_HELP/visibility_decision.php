@@ -38,7 +38,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
   <ul>
     <li>you can use Stud.IP actively and take part in courses, forum discussions, etc.
     <li>participant-lists of courses are only accessible for the participants if everyone of them is in agreement with it
-    <li>as soon as you become active in the system – which means creating articles in forum discussions, taking part in non-invisible polls (votings), sending mails, etc. – your name is indicated and it isn’t possible to avoid that other users can see directly whether you are visible or invisible.
+    <li>as soon as you become active in the system - which means creating articles in forum discussions, taking part in non-invisible polls (votings), sending mails, etc. - your name is indicated and it isn't possible to avoid that other users can see directly whether you are visible or invisible.
   </ul>
     </td></tr>
 <tr>
@@ -47,7 +47,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
 <tr>
 <td width="50%" valign="top">
 <p><b>I want to be visible and want to use any opportunity given by Stud.IP.</b></p>
-<p>I accept that the information - listed in the explanations of data protection - are accessible for others.</p>
+<p>I accept that the information - listed in the <a href="<?= URLHelper::getLink('datenschutz.php') ?>" class="link-intern" target="_blank">explanations of data protection</a> - are accessible for others.</p>
 <p>&nbsp;</p>
 </td>
 </tr>
@@ -61,7 +61,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
 <tr>
 <td width="50%" valign="top">
 <p><b>I want to be invisible and put up with using restrictions. </b>
-<p>I note that my personal data - as described and well-founded in the explanation of data protection - is nevertheless accessible for administrators and partly for lecturers of my courses.
+<p>I note that my personal data - as described and well-founded in the <a href="<?= URLHelper::getLink('datenschutz.php') ?>" class="link-intern" target="_blank">explanation of data protection</a> - is nevertheless accessible for administrators and partly for lecturers of my courses.
 </tr>
 <tr>
 <td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=no&vis_cmd=apply')?>"><?= Assets::img('aus.png') ?><br>become invisible</a></td>

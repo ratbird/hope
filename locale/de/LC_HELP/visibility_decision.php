@@ -54,7 +54,7 @@
 <tr>
 <td width="50%" valign="top">
 <p><b>Ich möchte sichtbar sein und alle Möglichkeiten von Stud.IP nutzen können.</b></p>
-<p>Ich akzeptiere damit, dass die in den <a href="datenschutz.php" target="_blank">Erläuterungen zum Datenschutz</a> aufgeführten Informationen
+<p>Ich akzeptiere damit, dass die in den <a href="<?= URLHelper::getLink('datenschutz.php') ?>" class="link-intern" target="_blank">Erläuterungen zum Datenschutz</a> aufgeführten Informationen
 anderen zugänglich sind.</p>
 <p>&nbsp;</p>
 </td>
@@ -69,7 +69,7 @@ anderen zugänglich sind.</p>
 <tr>
 <td width="50%" valign="top">
 <p><b>Ich möchte unsichtbar sein und nehme Einschränkungen in der Nutzung in Kauf.</b>
-<p>Ich nehme damit zur Kenntnis, dass meine persönlichen Daten wie in den <a href="datenschutz.php" target="_blank">Erläuterungen zum Datenschutz</a>
+<p>Ich nehme damit zur Kenntnis, dass meine persönlichen Daten wie in den <a href="<?= URLHelper::getLink('datenschutz.php') ?>" class="link-intern" target="_blank">Erläuterungen zum Datenschutz</a>
 beschrieben und begründet dennoch AdministratorInnen und in Teilen den
 DozentInnen meiner Veranstaltungen zugänglich sind.
 </tr>

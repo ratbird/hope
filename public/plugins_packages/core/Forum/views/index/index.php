@@ -100,7 +100,7 @@ if ($section == 'index') {
                 $unemphasize_url,
                 'icons/16/blue/staple.png',
                 array(
-                    'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
+                    'onclick' => 'STUDIP.Forum.makeThreadUnstickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
                     'id' => "stickyButton"
                 )

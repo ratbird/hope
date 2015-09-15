@@ -150,10 +150,11 @@ else
     parse_window ("error§" . _("Das Exportmodul ist nicht eingebunden. Damit Daten im XML-Format exportiert werden können, muss das Exportmodul in den Systemeinstellungen freigeschaltet werden. Wenden Sie sich bitte an die Administratoren."), "§",
                 _("Exportmodul nicht eingebunden"));
 }
-$template = $GLOBALS['template_factory']->open('layouts/base.php');
-$template->content_for_layout = ob_get_clean();
+if (!in_array($o_mode, words('direct', 'passthrough'))) {
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
 
 
-echo $template->render();
-page_close();
-?>
+    echo $template->render();
+    page_close();
+}

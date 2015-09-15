@@ -3,8 +3,13 @@
 <div id="sortable_areas">
 <? foreach ($list as $category_id => $entries) : ?>
 <a name="cat_<?= $category_id ?>"></a>
-<table class="default forum <?= ForumPerm::has('sort_category', $seminar_id) ? 'movable handle' : '' ?>" data-category-id="<?= $category_id ?>">
-    <caption>
+<table class="default forum <?= ForumPerm::has('sort_category', $seminar_id) ? 'movable' : '' ?>" data-category-id="<?= $category_id ?>">
+    <caption class="handle">
+        <? if (ForumPerm::has('sort_category', $seminar_id)) : ?>
+            <?= Assets::img('icons/16/yellow/arr_2down.png') ?>
+            <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
+        <? endif ?>
+
         <? if (ForumPerm::has('edit_category', $seminar_id) || ForumPerm::has('remove_category', $seminar_id)) : ?>
         <span class="actions" id="tutorCategoryIcons">
             <? if ($category_id == $seminar_id) : ?>

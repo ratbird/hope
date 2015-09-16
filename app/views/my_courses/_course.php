@@ -3,17 +3,17 @@
     <tr>
         <td class="gruppe<?= $course['gruppe'] ?>"></td>
         <td>
-            <? if ($sem_class['studygroup_mode']) : ?>
-                <?=
-                StudygroupAvatar::getAvatar($course['seminar_id'])->is_customized()
-                    ? StudygroupAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2($course['name']))
-                    : Assets::img('icons/20/blue/studygroup.png', tooltip2($course['name'])) ?>
-            <? else : ?>
-                <?=
-                CourseAvatar::getAvatar($course['seminar_id'])->is_customized()
-                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2($course['name']))
-                    : Assets::img('icons/20/blue/seminar.png', tooltip2($course['name'])) ?>
-            <? endif ?>
+            <? $width = "40px" ?>
+            <? $avatar = $sem_class['studygroup_mode']
+                ? StudygroupAvatar::getAvatar($course['seminar_id'])
+                : CourseAvatar::getAvatar($course['seminar_id']) ?>
+            <? $image = $avatar->is_customized()
+                ? $avatar->getURL(Avatar::MEDIUM)
+                : Assets::image_path("icons/blue/".($sem_class['studygroup_mode'] ? "studygroup.svg" : "seminar.svg")) ?>
+            <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $course['seminar_id'])) ?>"
+               style="display: block; width: <?= $width ?>; height: <?= $width ?>; background: url(<?= $image ?>) center center no-repeat; background-size: 100% 100%;"
+                title="<?= htmlReady($course['name']) ?>">
+            </a>
         </td>
         <? if($config_sem_number) :?>
             <td><?= $course['veranstaltungsnummer']?></td>

@@ -33,7 +33,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -258,7 +258,7 @@ td.angemeldet {
   border: 1px solid #000;
 }
 td.indexpage {
-  background: #ffffff url("../images/indexpage.jpg") no-repeat;
+  background: white url("../images/indexpage.jpg") no-repeat;
   text-align: left;
 }
 td.nix {
@@ -441,28 +441,28 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
   background-color: #fff !important;
 }
 .gruppe1 {
-  background-color: #f00 !important;
+  background-color: #d60000 !important;
 }
 .gruppe2 {
-  background-color: #f93 !important;
+  background-color: #f55e33 !important;
 }
 .gruppe3 {
-  background-color: #fc6 !important;
+  background-color: #faaf99 !important;
 }
 .gruppe4 {
-  background-color: #9f9 !important;
+  background-color: #33ab57 !important;
 }
 .gruppe5 {
-  background-color: #6c6 !important;
+  background-color: #99d5ab !important;
 }
 .gruppe6 {
-  background-color: #69c !important;
+  background-color: #b8c2d5 !important;
 }
 .gruppe7 {
-  background-color: #669 !important;
+  background-color: #7e92b0 !important;
 }
 .gruppe8 {
-  background-color: #000 !important;
+  background-color: #000000 !important;
 }
 #my_seminars .gruppe0,
 #settings-notifications .gruppe0,
@@ -546,11 +546,29 @@ tr.sortable th.sortasc {
   background-image: url("../images/dreieck_up.png");
   padding-left: 17px;
 }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  tr.sortable th.sortasc {
+    background-image: url("../images/dreieck_up@2x.png");
+    -webkit-background-size: 16px 16px;
+    -moz-background-size: 16px 16px;
+    -o-background-size: 16px 16px;
+    background-size: 16px 16px;
+  }
+}
 tr.sortable th.sortdesc {
   background-repeat: no-repeat;
   background-position: left center;
   background-image: url("../images/dreieck_down.png");
   padding-left: 17px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  tr.sortable th.sortdesc {
+    background-image: url("../images/dreieck_down@2x.png");
+    -webkit-background-size: 16px 16px;
+    -moz-background-size: 16px 16px;
+    -o-background-size: 16px 16px;
+    background-size: 16px 16px;
+  }
 }
 /* styles for settings tables */
 .settings {
@@ -961,6 +979,16 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   vertical-align: text-top;
   width: 16px;
 }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortUp::after,
+  .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
+    background-image: url("../images/dreieck_down@2x.png");
+    -webkit-background-size: 16px 8px;
+    -moz-background-size: 16px 8px;
+    -o-background-size: 16px 8px;
+    background-size: 16px 8px;
+  }
+}
 .sortable-table .headerSortUp::after,
 .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
   vertical-align: inherit;
@@ -975,6 +1003,16 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-image: url("../images/dreieck_up.png");
   vertical-align: text-top;
   width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortDown::after,
+  .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
+    background-image: url("../images/dreieck_up@2x.png");
+    -webkit-background-size: 16px 8px;
+    -moz-background-size: 16px 8px;
+    -o-background-size: 16px 8px;
+    background-size: 16px 8px;
+  }
 }
 .sortable-table .headerSortDown::after,
 .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
@@ -1633,8 +1671,8 @@ label.required:after {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   overflow: auto;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
@@ -2224,6 +2262,15 @@ li#notification_container:hover .list {
   display: block;
   width: 168px;
   height: 57px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .studip-logo {
+    background-image: url("../images/logos/studip-logo@2x.png");
+    -webkit-background-size: 168px 57px;
+    -moz-background-size: 168px 57px;
+    -o-background-size: 168px 57px;
+    background-size: 168px 57px;
+  }
 }
 #barTopStudip {
   position: absolute;
@@ -3246,9 +3293,9 @@ section.contentbox article.new header h1::before {
   -webkit-border-radius: 9px;
   -moz-border-radius: 9px;
   border-radius: 9px;
-  -webkit-box-shadow: #000000 0px 1px 3px;
-  -moz-box-shadow: #000000 0px 1px 3px;
-  box-shadow: #000000 0px 1px 3px;
+  -webkit-box-shadow: black 0px 1px 3px;
+  -moz-box-shadow: black 0px 1px 3px;
+  box-shadow: black 0px 1px 3px;
 }
 /* --- AJAX indicator ------------------------------------------------------- */
 #ajax_notification {
@@ -3591,21 +3638,21 @@ div.messagebox_details {
 }
 div.messagebox_info {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/info.png");
   background-size: 32px 32px;
   border-color: #28497c;
 }
 div.messagebox_success {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/success.png");
   background-size: 32px 32px;
   border-color: #00962d;
 }
 div.messagebox_error {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/error.png");
   background-size: 32px 32px;
   border-color: #d60000;

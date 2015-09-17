@@ -3,7 +3,6 @@
     <tr>
         <td class="gruppe<?= $course['gruppe'] ?>"></td>
         <td>
-            <? $width = "40px" ?>
             <? $avatar = $sem_class['studygroup_mode']
                 ? StudygroupAvatar::getAvatar($course['seminar_id'])
                 : CourseAvatar::getAvatar($course['seminar_id']) ?>
@@ -11,7 +10,8 @@
                 ? $avatar->getURL(Avatar::MEDIUM)
                 : Assets::image_path("icons/blue/".($sem_class['studygroup_mode'] ? "studygroup.svg" : "seminar.svg")) ?>
             <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $course['seminar_id'])) ?>"
-               style="display: block; width: <?= $width ?>; height: <?= $width ?>; background: url(<?= $image ?>) center center no-repeat; background-size: 100% 100%;"
+               style="background-image: url(<?= $image ?>);"
+               class="course-avatar-overview"
                 title="<?= htmlReady($course['name']) ?>">
             </a>
         </td>

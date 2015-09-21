@@ -168,7 +168,7 @@ class LimitedAdmission extends AdmissionRule
             // How many courses from this set has the user already registered for?
             $db = DBManager::get();
             $number = $db->fetchColumn("SELECT COUNT(*)
-                FROM `seminar_user` WHERE `user_id`=? AND `Seminar_id` IN (
+                FROM `seminar_user` WHERE `user_id`=? AND `status` IN ('user', 'autor') AND `Seminar_id` IN (
                     SELECT `Seminar_id` FROM `seminar_courseset` WHERE `set_id`=?)", array($userId, $this->courseSetId));
             $number += $db->fetchColumn("SELECT COUNT(*)
                 FROM `admission_seminar_user` WHERE `user_id`=? AND `Seminar_id` IN (

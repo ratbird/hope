@@ -136,7 +136,7 @@ jQuery(function ($) {
                     // attributes and styles should be the same
                     // as for <th>, except for 'scope' attribute
                     attributes: ['colspan', 'rowspan'],
-                    styles: ['text-align', 'width', 'height']
+                    styles: ['text-align', 'width', 'height', 'background-color']
                 },
                 thead: {},
                 th: {

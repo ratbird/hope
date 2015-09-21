@@ -45,13 +45,13 @@ class Markup
     }
 
     // HTML entries must beginn with "<!--HTML-->". Whitespace is
-    // ignored and comments may be inserted between "<!--HTML" 
+    // ignored and comments may be inserted between "<!--HTML"
     // and "-->", but must not contain "-" or ">" characters.
     const HTML_MARKER =
         '<!-- HTML: Insert text after this line only. -->';
 
-    // No delimiter is given here to enable using the same 
-    // regular expression in JavaScript. It is assumed that '/' 
+    // No delimiter is given here to enable using the same
+    // regular expression in JavaScript. It is assumed that '/'
     // is used as delimiter and that no modifiers are set.
     const HTML_MARKER_REGEXP =
         '^[\s\n]*<!--[\s\n]*[Hh][Tt][Mm][Ll][^->]*-->';
@@ -70,7 +70,7 @@ class Markup
      */
     public static function isHtml($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
+        // NOTE keep this function in sync with the JavaScript
         // function isHtml in WyswygHtmlHead.php
         if (self::hasHtmlMarker($text)) {
             return true;
@@ -81,7 +81,7 @@ class Markup
 
     public static function hasHtmlMarker($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
+        // NOTE keep this function in sync with the JavaScript
         // function hasHtmlMarker in WyswygHtmlHead.php
         return preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text);
     }
@@ -89,8 +89,8 @@ class Markup
     /**
      * Mark a given text as HTML code.
      *
-     * No sanity-checking is done on the given text. It is simply 
-     * marked up so to be identified by Markup::isHtml as HTML 
+     * No sanity-checking is done on the given text. It is simply
+     * marked up so to be identified by Markup::isHtml as HTML
      * code.
      *
      * @param string $text  The text to be marked up as HTML code.
@@ -99,7 +99,7 @@ class Markup
      */
     public static function markAsHtml($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
+        // NOTE keep this function in sync with the JavaScript
         // function markAsHtml in WyswygHtmlHead.php
         if (self::hasHtmlMarker($text)) {
             return $text; // marker already set, don't set twice
@@ -196,9 +196,9 @@ class Markup
         // note that changes here should also be reflected in CKEditor's
         // settings!!
         //
-        // NOTE The list could be restricted even further by allowing only 
-        // specific values for some attributes and CSS styles, but that is not 
-        // directly supported by HTMLPurifier and would need to be implemented 
+        // NOTE The list could be restricted even further by allowing only
+        // specific values for some attributes and CSS styles, but that is not
+        // directly supported by HTMLPurifier and would need to be implemented
         // with a filter similar to ClassifyLinks.
         //
         // This is a list of further restrictions that can/should be introduced
@@ -206,21 +206,21 @@ class Markup
         //
         // - always open external links in a new tab or window
         //   a[class="link-extern" href="..." target="_blank"]
-        // - only allow left margin and horizontal text alignment to be set in 
+        // - only allow left margin and horizontal text alignment to be set in
         //   divs (NOTE maybe remove these two features completely?):
         //   div[style="margin-left:(40|80|...)px; text-align:(center|right|justify)"]
         // - img[style] should only allow float:left or float:right
-        // - only allow text color and background color to be set in a span's 
-        //   style attribute (NOTE 'wiki-links' are currently set here due to 
-        //   implementation difficulties, but probably this should be 
+        // - only allow text color and background color to be set in a span's
+        //   style attribute (NOTE 'wiki-links' are currently set here due to
+        //   implementation difficulties, but probably this should be
         //   changed...):
         //   span[style="color:(#000000|#800000|...);
         //               background-color:(#000000|#800000|...)"
         //        class="wiki-link"]
-        // - tables should always have the class "content" (it should not be 
+        // - tables should always have the class "content" (it should not be
         //   optional and no other class should be set):
         //   table[class="content"]
-        // - table headings should have a column and/or a row scope or no scope 
+        // - table headings should have a column and/or a row scope or no scope
         //   at all, but nothing else:
         //   th[scope="(col | row)"]
         // - fonts: only Stud.IP-specific fonts should be allowed
@@ -282,7 +282,7 @@ class Markup
             'width',
             'height',
             'color',
-            'background-color',
+            'background-color', // needed by span, td
             'float'
         ));
 

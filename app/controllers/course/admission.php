@@ -82,6 +82,7 @@ class Course_AdmissionController extends AuthenticatedController
         $this->all_domains = UserDomain::getUserDomains();
         $this->seminar_domains = array_map(function($d) {return $d->getId();}, UserDomain::getUserDomainsForSeminar($this->course_id));
         $this->current_courseset = CourseSet::getSetForCourse($this->course_id);
+        $this->activated_admission_rules = AdmissionRule::getAvailableAdmissionRules();
         if (!$this->current_courseset) {
             $available_coursesets = new SimpleCollection();
             foreach (CourseSet::getCoursesetsByInstituteId($this->course->institut_id) as $cs) {

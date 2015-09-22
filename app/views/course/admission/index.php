@@ -29,15 +29,23 @@
                 <?=_("Anmelderegeln erzeugen"); ?>
             </label>
             <div>
-            <? if (!$is_locked['passwort']) : ?>
+            <? if (!$is_locked['passwort'] && isset($activated_admission_rules['PasswordAdmission'])) : ?>
                 <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->url_for('/instant_course_set', array('type' => 'PasswordAdmission')),array('data-dialog' => '')) ?>
             <? endif ?>
             <? if (!$is_locked['admission_type']) : ?>
-                <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', array('type' => 'LockedAdmission')),array('data-dialog' => '')) ?>
-                <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('data-dialog' => '')) ?>
+                <? if (isset($activated_admission_rules['LockedAdmission'])) : ?>
+                    <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', array('type' => 'LockedAdmission')),array('data-dialog' => '')) ?>
+                <? endif ?>
+                <? if (isset($activated_admission_rules['TimedAdmission'])) : ?>
+                    <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('data-dialog' => '')) ?>
+                <? endif ?>
                 <br>
-                <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('data-dialog' => '')) ?>
-                <?= Studip\LinkButton::create(_("Zeitgesteuerte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('data-dialog' => '')) ?>
+                <? if (isset($activated_admission_rules['ParticipantRestrictedAdmission'])) : ?>
+                    <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('data-dialog' => '')) ?>
+                    <? if (isset($activated_admission_rules['TimedAdmission'])) : ?>
+                        <?= Studip\LinkButton::create(_("Zeitgesteuerte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('data-dialog' => '')) ?>
+                    <? endif ?>
+                <? endif ?>
             <? endif ?>
             </div>
             <? if (!$is_locked['admission_type'] && count($available_coursesets)) : ?>

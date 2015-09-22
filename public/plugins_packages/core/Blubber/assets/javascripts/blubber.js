@@ -60,6 +60,7 @@ STUDIP.Blubber = {
             STUDIP.Blubber.alreadyThreadWriting = true;
             var content = jQuery("#new_posting").val();
             var context_type = jQuery("#context_type").val();
+            var context = jQuery("#context_selector [name=context]").val() || jQuery("#context").val();
             var contact_groups = [];
             jQuery("input[type=checkbox].contact_group:checked").each(function (index, input) {
                 contact_groups.push(jQuery(input).val());
@@ -71,7 +72,7 @@ STUDIP.Blubber = {
                 url: STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/new_posting",
                 data: {
                     'context_type': context_type,
-                    'context': jQuery("#context_selector [name=context]").val(),
+                    'context': context,
                     'content': content,
                     'contact_groups': contact_groups,
                     'anonymous_name': jQuery("#anonymous_name").val(),        //nobody only
@@ -100,7 +101,7 @@ STUDIP.Blubber = {
     /**
      * writes a new comment to database and displays it on success
      */
-    write: function (textarea) {
+    writeComment: function (textarea) {
         var content = jQuery(textarea).val();
         var thread = jQuery(textarea).closest("li").attr("id");
         thread = thread.substr(thread.lastIndexOf("_") + 1);
@@ -255,17 +256,18 @@ STUDIP.Blubber = {
         if (jQuery("#posting_" + id).data("autor") === jQuery("#user_id").val()
                 || window.confirm(jQuery("#editing_question").text())) {
             STUDIP.Blubber.submittingEditedPostingStarted = false;
+            new_content = jQuery(textarea).val();
             jQuery.ajax({
                 'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/edit_posting",
                 'data': {
                     'topic_id': id,
-                    'content': jQuery(textarea).val(),
+                    'content': new_content,
                     'cid': jQuery("#seminar_id").val()
                 },
                 'type': "post",
-                'success': function (new_content) {
+                'success': function (formatted_new_content) {
                     if (new_content) {
-                        jQuery("#posting_" + id + " > .content_column .content").html(new_content);
+                        jQuery("#posting_" + id + " > .content_column .content").html(formatted_new_content);
                         STUDIP.Markup.element("#posting_" + id);
                     } else {
                         jQuery("#posting_" + id).fadeOut(function () {jQuery("#posting_" + id).remove();});
@@ -314,72 +316,81 @@ STUDIP.Blubber = {
             //and here the file-dropping function:
             jQuery(textarea).on("drop", function (event) {
                 event.preventDefault();
-                var files = 0;
                 var file_info = event.originalEvent.dataTransfer.files || {};
-                var data = new FormData();
-
-                var thread = jQuery(textarea).closest("li.thread");
-                if (thread && thread.find(".hiddeninfo input[name=context_type]").val() === "course") {
-                    var context_id = thread.find(".hiddeninfo input[name=context]").val();
-                    var context_type = "course";
-                } else {
-                    var context_type = jQuery("#context_selector input[name=context_type]:checked").val();
-                    if ((jQuery("#stream").val() === "course") || jQuery("#context_selector input[name=context_type]:checked").val()) {
-                        var context_id = jQuery("#context_selector input[name=context]").val();
-                        context_type = context_type ? context_type : "course";
-                    }
-                    if (!context_id) {
-                        var context_id = jQuery("#user_id").val();
-                        context_type = "public";
-                    }
-                }
-                jQuery.each(file_info, function (index, file) {
-                    if (file.size > 0) {
-                        data.append(index, file);
-                        files += 1;
-                    }
-                });
-                if (files > 0) {
-                    jQuery(textarea).addClass("uploading");
-                    jQuery.ajax({
-                        'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val()
-                            + "/post_files?context=" + context_id
-                            + "&context_type=" + context_type
-                            + (context_type === "course" ? "&cid=" + context_id : ""),
-                        'data': data,
-                        'cache': false,
-                        'contentType': false,
-                        'processData': false,
-                        'type': 'POST',
-                        'xhr': function () {
-                            var xhr = jQuery.ajaxSettings.xhr();
-                            //workaround for FF<4 https://github.com/francois2metz/html5-formdata
-                            if (data.fake) {
-                                xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + data.boundary);
-                                xhr.send = xhr.sendAsBinary;
-                            }
-                            return xhr;
-                        },
-                        'success': function (json) {
-                            if (typeof json.inserts === "object") {
-                                jQuery.each(json.inserts, function (index, text) {
-                                    jQuery(textarea).val(jQuery(textarea).val() + " " + text);
-                                });
-                            }
-                            if (typeof json.errors === "object") {
-                                alert(json.errors.join("\n"));
-                            } else if (typeof json.inserts !== "object") {
-                                alert("Fehler beim Dateiupload.");
-                            }
-                            jQuery(textarea).trigger("keydown");
-                        },
-                        'complete': function () {
-                            jQuery(textarea).removeClass("hovered").removeClass("uploading");
-                        }
-                    });
-                }
+                STUDIP.Blubber.uploadFiles(textarea, file_info);
             });
         });
+    },
+    uploadFiles: function (textarea, file_info) {
+        var thread = jQuery(textarea).closest("li.thread");
+        var data = new FormData();
+        var files = 0;
+
+        if (thread && thread.find(".hiddeninfo input[name=context_type]").val() === "course") {
+            var context_id = thread.find(".hiddeninfo input[name=context]").val();
+            var context_type = "course";
+        } else {
+            var context_type = jQuery("#context_selector input[name=context_type]:checked").val();
+            if ((jQuery("#stream").val() === "course") || jQuery("#context_selector input[name=context_type]:checked").val()) {
+                var context_id = jQuery("#context_selector input[name=context]").val();
+                context_type = context_type ? context_type : "course";
+            }
+            if (!context_id) {
+                var context_id = jQuery("#user_id").val();
+                context_type = "public";
+            }
+        }
+        jQuery.each(file_info, function (index, file) {
+            if (file.size > 0) {
+                data.append(index, file);
+                files += 1;
+            }
+        });
+        if (files > 0) {
+            jQuery(textarea).addClass("uploading");
+            jQuery.ajax({
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val()
+                + "/post_files?context=" + context_id
+                + "&context_type=" + context_type
+                + (context_type === "course" ? "&cid=" + context_id : ""),
+                'data': data,
+                'cache': false,
+                'contentType': false,
+                'processData': false,
+                'type': 'POST',
+                'xhr': function () {
+                    var xhr = jQuery.ajaxSettings.xhr();
+                    //workaround for FF<4 https://github.com/francois2metz/html5-formdata
+                    if (data.fake) {
+                        xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + data.boundary);
+                        xhr.send = xhr.sendAsBinary;
+                    }
+                    return xhr;
+                },
+                'success': function (json) {
+                    if (typeof json.inserts === "object") {
+                        jQuery.each(json.inserts, function (index, text) {
+                            jQuery(textarea).val(jQuery(textarea).val() + " " + text);
+                        });
+                    }
+                    if (typeof json.errors === "object") {
+                        alert(json.errors.join("\n"));
+                    } else if (typeof json.inserts !== "object") {
+                        alert("Fehler beim Dateiupload.");
+                    }
+                    jQuery(textarea).trigger("keydown");
+                },
+                'complete': function () {
+                    jQuery(textarea).removeClass("hovered").removeClass("uploading");
+                }
+            });
+        }
+    },
+    uploadFilesBySelecting: function (event) {
+        STUDIP.Blubber.uploadFiles(
+            jQuery(this).closest(".writer").find("textarea"),
+            event.target.files
+        );
     },
     /**
      * Every few seconds this function updates all timestamps of all postings
@@ -394,7 +405,7 @@ STUDIP.Blubber = {
             var new_text = "";
             var posting_time = parseInt(jQuery(this).data("timestamp"), 10);
             var diff = now_seconds - posting_time;
-            if (diff < 86400) {
+            if (diff < 2 * 60 * 60) {
                 if (diff < 2 * 60 * 60) {
                     if (Math.floor(diff / 60) === 0) {
                         new_text = "Vor wenigen Sekunden".toLocaleString();
@@ -406,19 +417,12 @@ STUDIP.Blubber = {
                         new_text = _.template("Vor <%= distance %> Minuten".toLocaleString())({distance: Math.floor(diff / 60)});
                     }
                 } else {
-                    new_text = _.template("Vor <%= distance %> Stunden".toLocaleString())({distance: Math.floor(diff / (60 * 60))});
+                    date = new Date(posting_time * 1000);
+                    new_text = date.getHours() + ":" + date.getMinutes();
                 }
             } else {
-                if (Math.floor(diff / 86400) < 8) {
-                    if (Math.floor(diff / 86400) === 1) {
-                        new_text = "Vor einem Tag".toLocaleString();
-                    } else {
-                        new_text = _.template("Vor <%= distance %> Tagen".toLocaleString())({distance: Math.floor(diff / 86400)});
-                    }
-                } else {
-                    date = new Date(posting_time * 1000);
-                    new_text = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-                }
+                date = new Date(posting_time * 1000);
+                new_text = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
             }
             if (jQuery(this).text() !== new_text) {
                 jQuery(this).text(new_text);
@@ -449,13 +453,17 @@ STUDIP.Blubber = {
     prepareSubmitGlobalPosting: function () {
         if (jQuery('#context_type').val()) {
             STUDIP.Blubber.newPosting();
-            jQuery("#context_type").val("");
-            jQuery("#context_selector table > tbody > tr").removeClass("selected");
-            jQuery('#threadwriter .context_selector').removeAttr('class').addClass('select context_selector');
-            jQuery("#context_selector").dialog("close");
+            if ($("#context_selector").hasClass("ui-dialog-content")
+                    && jQuery("#context_selector").dialog("isOpen")) {
+                jQuery("#context_type").val("");
+                jQuery("#context_selector table > tbody > tr").removeClass("selected");
+                jQuery('#threadwriter .context_selector').removeAttr('class').addClass('select context_selector');
+                jQuery("#context_selector").dialog("close");
+            }
         } else {
             jQuery("#submit_button").show();
             STUDIP.Blubber.showContextWindow();
+            jQuery("#submit_button").show();
         }
     },
     /**
@@ -465,7 +473,7 @@ STUDIP.Blubber = {
         if (jQuery('#identity_window_textarea_id').val() === "new_posting") {
             STUDIP.Blubber.newPosting();
         } else {
-            STUDIP.Blubber.write('#' + jQuery('#identity_window_textarea_id').val());
+            STUDIP.Blubber.writeComment('#' + jQuery('#identity_window_textarea_id').val());
         }
     },
     /**
@@ -570,10 +578,11 @@ STUDIP.Blubber = {
 jQuery(STUDIP.Blubber.updateTimestamps);
 
 //initialize submit by pressing enter
-jQuery(document).on("keydown", "#threadwriter > textarea", function (event) {
+jQuery(document).on("keydown", "#threadwriter > .writer textarea", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
-            STUDIP.Blubber.newPosting();
+            STUDIP.Blubber.prepareSubmitGlobalPosting();
+            event.preventDefault();
         } else {
             jQuery("#identity_window_textarea_id").val(jQuery(this).attr("id"));
             jQuery("#identity_window").dialog({
@@ -586,13 +595,6 @@ jQuery(document).on("keydown", "#threadwriter > textarea", function (event) {
     }
 });
 //initialize submit by pressing enter
-jQuery(document).on("keydown", "#threadwriter.globalstream textarea", function (event) {
-    if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
-        STUDIP.Blubber.prepareSubmitGlobalPosting();
-        event.preventDefault();
-    }
-});
-//initialize submit by pressing enter
 jQuery(document).on("keydown", "#blubber_threads textarea.corrector", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         STUDIP.Blubber.submitEditedPosting(this);
@@ -600,10 +602,10 @@ jQuery(document).on("keydown", "#blubber_threads textarea.corrector", function (
     }
 });
 //initialize submit by pressing enter
-jQuery(document).on("keydown", ".writer > textarea", function (event) {
+jQuery(document).on("keydown", "#blubber_threads .writer > textarea", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
-            STUDIP.Blubber.write(this);
+            STUDIP.Blubber.writeComment(this);
         } else {
             jQuery("#identity_window_textarea_id").val(jQuery(this).attr("id"));
             jQuery("#identity_window").dialog({
@@ -641,6 +643,7 @@ jQuery(document).on("blur", "#blubber_threads textarea.corrector", function () {
 jQuery(document).on("click", "#blubber_threads .reshare_blubber, .blubber_contacts .want_to_share", STUDIP.Blubber.reshareBlubber);
 jQuery(document).on("click", "#blubber_threads .thread.public .contextinfo, #blubber_threads .thread.public .open_reshare_context", STUDIP.Blubber.showPublicPanel);
 jQuery(document).on("click", "#blubber_threads .thread.private .contextinfo", STUDIP.Blubber.showPrivatePanel);
+jQuery(document).on("change", "#blubber_threads .uploader, #threadwriter .uploader", STUDIP.Blubber.uploadFilesBySelecting)
 
 //initialize autoresizer, file-dropper and events
 jQuery(function () {

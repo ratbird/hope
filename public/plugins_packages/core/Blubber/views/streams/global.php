@@ -26,15 +26,21 @@
 <div id="editing_question" style="display: none;"><?= _("Wollen Sie den Beitrag wirklich bearbeiten?") ?></div>
 
 <div id="threadwriter" class="globalstream">
-    <div class="row">
+    <div class="row writer">
         <div class="context_selector select" title="<?= _("Kontext der Nachricht auswählen") ?>">
-            <?= Assets::img("icons/32/blue/group2", array('class' => "select click")) ?>
-            <?= Assets::img($plugin->getPluginURL()."/assets/images/public_blue.svg", array('class' => "public click", 'height' => "32px")) ?>
-            <?= Assets::img("icons/32/blue/group3", array('class' => "private click")) ?>
-            <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar click")) ?>
+            <? $width = "50" ?>
+            <?= Assets::img("icons/".$width."/blue/blubber", array('class' => "select click")) ?>
+            <?= Assets::img($plugin->getPluginURL()."/assets/images/public_blue.svg", array('class' => "public click", 'height' => $width."px")) ?>
+            <?= Assets::img("icons/".$width."/blue/group3", array('class' => "private click")) ?>
+            <?= Assets::img("icons/".$width."/blue/seminar", array('class' => "seminar click")) ?>
         </div>
-        <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady("#".$search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
+        <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady("#".$search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
+        <label title="<?= _("Datei hochladen") ?>" class="uploader">
+            <input type="file" style="display: none;" multiple>
+            <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom")) ?>
+        </label>
     </div>
+
     <div id="context_selector_title" style="display: none;"><?= _("Kontext auswählen") ?></div>
     <div id="context_selector" style="display: none;">
         <input type="hidden" name="content_type" id="context_type" value="">
@@ -118,7 +124,7 @@
                 <? endif ?>
             </tbody>
         </table>
-        <div>
+        <div style="text-align: center;">
             <button class="button" id="submit_button" style="display: none;" onClick="STUDIP.Blubber.prepareSubmitGlobalPosting();">
                 <?= _("abschicken") ?>
             </button>
@@ -129,16 +135,14 @@
 
 
 
-<div id="context_background">
 <ul id="blubber_threads" class="globalstream" aria-live="polite" aria-relevant="additions">
     <? foreach ($threads as $thread) : ?>
-    <?= $this->render_partial("streams/thread.php", array('thread' => $thread)) ?>
+    <?= $this->render_partial("streams/_blubber.php", array('thread' => $thread)) ?>
     <? endforeach ?>
     <? if ($more_threads) : ?>
     <li class="more"><?= Assets::img("ajax_indicator_small.gif", array('alt' => "loading")) ?></li>
     <? endif ?>
 </ul>
-</div>
 
 <?php
 

@@ -201,7 +201,7 @@ class StreamsController extends PluginController {
         $output['threads'] = array();
         $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views");
         foreach ($threads as $posting) {
-            $template = $factory->open("streams/thread.php");
+            $template = $factory->open("streams/_blubber.php");
             $template->set_attribute('thread', $posting);
             $template->set_attribute('course_id', $_SESSION['SessionSeminar']);
             $template->set_attribute('controller', $this);
@@ -303,7 +303,7 @@ class StreamsController extends PluginController {
                 }
             }
             $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views");
-            $template = $factory->open("streams/thread.php");
+            $template = $factory->open("streams/_blubber.php");
             $template->set_attribute('thread', $thread);
             $template->set_attribute('controller', $this);
             $output['content'] = $template->render();
@@ -885,7 +885,7 @@ class StreamsController extends PluginController {
         $this->thread = new BlubberPosting($thread_id);
         $success = $this->thread->reshare();
 
-        $template = $this->get_template_factory()->open("streams/thread.php");
+        $template = $this->get_template_factory()->open("streams/_blubber.php");
         $template->set_attributes($this->get_assigned_variables());
         $template->set_layout(null);
         $output = $template->render();

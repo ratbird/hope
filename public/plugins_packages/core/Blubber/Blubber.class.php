@@ -117,7 +117,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
      */
     public function initialize()
     {
-        $this->addStylesheet('assets/stylesheets/blubberforum.less');
+        $this->addStylesheet('assets/stylesheets/blubber.less');
 
         $assets_url = $this->getPluginURL() . '/assets/';
         PageLayout::addHeadElement('script', array('src' => $assets_url . '/javascripts/autoresize.jquery.min.js'), '');

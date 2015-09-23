@@ -59,7 +59,6 @@ namespace {
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/navigation');
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/phplib');
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/raumzeit');
-
     // Classes in /app
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/app/models');
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/app/models', 'Studip');
@@ -74,6 +73,10 @@ namespace {
         'MyRealmModel'           => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/my_realm.php',
         'StudygroupModel'        => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/studygroup.php',
         'StudipPlugin'           => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/StudIPPlugin.class.php',
+        'AbstractStudipPortalPlugin' => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/AbstractStudIPPortalPlugin.class.php',
+        'AbstractStudipSystemPlugin' => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/AbstractStudIPSystemPlugin.class.php',
+        'AbstractStudipHomepagePlugin' => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/AbstractStudIPHomepagePlugin.class.php',
+        'AbstractStudipAdministrationPlugin' => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/AbstractStudIPAdministrationPlugin.class.php',
     ));
 
     // Trails
@@ -184,7 +187,7 @@ namespace {
         }
     }
 
-    // Add paths to autoloader that were defined in config_local.inc.php and 
+    // Add paths to autoloader that were defined in config_local.inc.php and
     // may be optional
     if (Config::get()->RESOURCES_ENABLE) {
         StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/' . $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib');

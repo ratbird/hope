@@ -13,9 +13,9 @@
 
         > .avatar {
             vertical-align: top;
-            width: 52px;
-            max-width: 52px;
-            min-width: 52px;
+            width: @avatar-blubber-size + 2px;
+            max-width: @avatar-blubber-size + 2px;
+            min-width: @avatar-blubber-size + 2px;
             overflow: hidden;
             text-align: center;
             //display: block;
@@ -95,7 +95,6 @@
         }
         > .content_column {
             padding-left: 75px;
-            box-sizing: border-box;
         }
     }
     .comments {
@@ -119,9 +118,9 @@
             justify-content: flex-start;
             background-color: white;
             > .avatar {
-                width: 51px;
-                max-width: 51px;
-                min-width: 51px;
+                width: @avatar-blubber-size + 1px;
+                max-width: @avatar-blubber-size + 1px;
+                min-width: @avatar-blubber-size + 1px;
                 .avatar_image {
                     border-top: none;
                     border-left: none;
@@ -263,8 +262,8 @@
 }
 #blubber_threads {
     .content_column {
+        .box-sizing(border-box);
         padding: 5px;
-        width: 100%;
         > .name {
             color: #888888;
             font-weight: bold;
@@ -285,6 +284,9 @@
                 word-break: break-all;
             }
         }
+    }
+    .comments .content_column {
+        width: ~"calc(100% -" (@avatar-blubber-size + 1px) ~")";        
     }
 }
 
@@ -311,8 +313,6 @@
         background-color: white;
         cursor: pointer;
         color: @base-color;
-        margin-left: -10px;
-        margin-right: -10px;
         padding-left: 70px;
         border-bottom: 1px solid @content-color-60;
         line-height: 30px;

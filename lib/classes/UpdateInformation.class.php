@@ -26,6 +26,16 @@ class UpdateInformation {
     static protected $request = null;
 
     /**
+     * Returns the timestamp of the beginning of the run before.
+     * Use this to only partially update new stuff.
+     * 
+     * @return int Timestamp of the last run
+     */
+    static public function getTimestamp() {
+        return Request::get('server_timestamp');
+    }
+
+    /**
      * Extracts updater data from request
      *
      * @return Array Request data (may be empty if no data is present)

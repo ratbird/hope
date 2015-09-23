@@ -20,6 +20,7 @@
         currentDelayFactor = 0,
         lastJsonResult = null,
         dateOfLastCall = +(new Date()), // Get milliseconds of date object
+        serverTimestamp = 0,
         ajaxRequest = null,
         timeout = null,
         registeredHandlers = {};
@@ -37,24 +38,31 @@
     // Process returned json object by calling registered handlers
     function process(json) {
         $.each(json, function (index, value) {
-            // Call registered handler callback by index
-            if (registeredHandlers.hasOwnProperty(index)) {
-                registeredHandlers[index].callback(value);
-                return;
-            }
 
-            // Legacy: Iterate over global STUDIP object and try to locate
-            // the function to call by it's index in the resulting json
-            // object
-            var func  = STUDIP,
-                nodes = index.split('.'),
-                node = nodes.shift();
-            while (node && func.hasOwnProperty(node)) {
-                func = func[node];
-                node = nodes.shift();
-            }
-            if (nodes.length === 0 && $.isFunction(func)) {
-                func(value);
+            // Set timestamp
+            if (index === 'server_timestamp') {
+                serverTimestamp = value;
+            } else {
+
+                // Call registered handler callback by index
+                if (registeredHandlers.hasOwnProperty(index)) {
+                    registeredHandlers[index].callback(value);
+                    return;
+                }
+
+                // Legacy: Iterate over global STUDIP object and try to locate
+                // the function to call by it's index in the resulting json
+                // object
+                var func = STUDIP,
+                        nodes = index.split('.'),
+                        node = nodes.shift();
+                while (node && func.hasOwnProperty(node)) {
+                    func = func[node];
+                    node = nodes.shift();
+                }
+                if (nodes.length === 0 && $.isFunction(func)) {
+                    func(value);
+                }
             }
         });
 
@@ -149,7 +157,8 @@
         ajaxRequest = $.ajax(url, {
             data: {
                 page: page,
-                page_info: collectData()
+                page_info: collectData(),
+                server_timestamp: serverTimestamp,
             },
             type: 'POST',
             dataType: 'json',

@@ -3408,13 +3408,6 @@ div.autocomplete {
   max-height: 250px;
   width: 250px;
 }
-.course-avatar-overview {
-  height: 40px;
-  width: 40px;
-  background-size: 100% 100%;
-  background-position: center center;
-  display: inline-block;
-}
 #custom_avatar label {
   display: block;
   font-weight: bold;

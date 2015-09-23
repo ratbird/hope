@@ -45,8 +45,10 @@
                         <strong><?= _('beteiligte Einrichtungen') ?></strong>
                     </td>
                     <td>
-                        <?= join(', ', $course->institutes->orderBy('name')
-                                       ->map(function($i) {
+                        <?= join(', ', $course->institutes
+                                        ->findBy('institut_id', $course->institut_id, '<>')
+                                        ->orderBy('name')
+                                        ->map(function($i) {
                                             return sprintf('<a href="%s">%s</a>', URLHelper::getScriptLink("dispatch.php/institute/overview", array('auswahl' => $i->id))
                                                                                 , htmlReady($i->name));
                                 })

@@ -76,6 +76,7 @@ namespace {
         'MediaProxy'             => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/media_proxy.php',
         'MyRealmModel'           => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/my_realm.php',
         'StudygroupModel'        => $GLOBALS['STUDIP_BASE_PATH'] . '/app/models/studygroup.php',
+        'StudipPlugin'           => $GLOBALS['STUDIP_BASE_PATH'] . '/lib/plugins/core/StudIPPlugin.class.php',
     ));
 
     // Trails

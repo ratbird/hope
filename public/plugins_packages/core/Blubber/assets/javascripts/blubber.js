@@ -347,7 +347,9 @@ STUDIP.Blubber = {
             }
         });
         if (files > 0) {
-            jQuery(textarea).addClass("uploading").next(".uploader").addClass("uploading");
+            var writer = jQuery(textarea).closest(".writer");
+            writer.addClass("uploading");
+            jQuery(textarea).next(".uploader").addClass("uploading");
             jQuery.ajax({
                 'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val()
                 + "/post_files?context=" + context_id
@@ -375,11 +377,6 @@ STUDIP.Blubber = {
                             }
                             //Set progress
                             jQuery(textarea).css("background-size", percent + "%");
-                            /*statusbar.find(".progress")
-                                .css({"min-width": percent + "%", "max-width": percent + "%"});
-                            statusbar.find(".progresstext")
-                                .text(percent === 100 ? jQuery("#upload_finished").text() : percent + "%");
-                            */
                         }, false);
                     }
                     return xhr;
@@ -398,7 +395,8 @@ STUDIP.Blubber = {
                     jQuery(textarea).trigger("keydown");
                 },
                 'complete': function () {
-                    jQuery(textarea).removeClass("hovered").removeClass("uploading");
+                    jQuery(textarea).removeClass("hovered");
+                    writer.removeClass("uploading");
                     jQuery(textarea).next(".uploader").removeClass("uploading");
                 }
             });

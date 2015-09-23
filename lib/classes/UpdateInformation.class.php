@@ -19,19 +19,20 @@
  *
  * @author Rasmus Fuhse
  */
-class UpdateInformation {
-
-    static protected $infos = array();
-    static protected $collecting = null;
-    static protected $request = null;
+class UpdateInformation
+{
+    protected static $infos = array();
+    protected static $collecting = null;
+    protected static $request = null;
 
     /**
      * Returns the timestamp of the beginning of the run before.
      * Use this to only partially update new stuff.
-     * 
+     *
      * @return int Timestamp of the last run
      */
-    static public function getTimestamp() {
+    public static function getTimestamp()
+    {
         return Request::get('server_timestamp');
     }
 
@@ -40,7 +41,8 @@ class UpdateInformation {
      *
      * @return Array Request data (may be empty if no data is present)
      */
-    static protected function getRequest() {
+    protected static function getRequest()
+    {
         if (self::$request === null) {
             self::$request = Request::getArray('page_info');
         }
@@ -52,7 +54,8 @@ class UpdateInformation {
      *
      * @return bool indicating whether there is data present for the given index
      */
-    static public function hasData($index) {
+    public static function hasData($index)
+    {
         $request = self::getRequest();
         return isset($request[$index]);
     }
@@ -63,7 +66,8 @@ class UpdateInformation {
      * @param String $index Index to get the request data for
      * @return mixed Array with request data or null if index is invalid
      */
-    static public function getData($index) {
+    public static function getData($index)
+    {
         $request = self::getRequest();
         return $request[$index] ?: null;
     }
@@ -75,7 +79,8 @@ class UpdateInformation {
      * @param string $js_function : "test.testfunction" to get the JS-function "STUDIP.test.testfunction(information);"
      * @param mixed $information : anything that could be translated into a json-object
      */
-    static public function setInformation($js_function, $information) {
+    public static function setInformation($js_function, $information)
+    {
         self::$infos[$js_function] = $information;
     }
 
@@ -83,16 +88,23 @@ class UpdateInformation {
      * returns the information to give it to javascript
      * @return array
      */
-    static public function getInformation() {
-        return self::$infos;
+    public static function getInformation()
+    {
+        $infos = self::$infos;
+
+        // Tell the JS Updater the current timestamp
+        $infos['server_timestamp'] = time();
+
+        return $infos;
     }
-    
+
     /**
      * returns if this request is a request, that wants to collect information
      * to hand it to javascript. Ask for this in your SystemPlugin-constructor.
      * @return: boolean
      */
-    static public function isCollecting() {
+    public static function isCollecting()
+    {
         if (self::$collecting === null) {
             $page = $_SERVER['REQUEST_URI'];
             if (strpos($page, "?") !== false) {

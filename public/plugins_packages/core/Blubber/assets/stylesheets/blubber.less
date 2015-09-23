@@ -1,3 +1,5 @@
+@import (reference) "assets/stylesheets/less/responsive.less";
+
 @avatar-blubber-size: 50px;
 
 #blubber_threads, #blubber_threads > li > ul {
@@ -106,14 +108,17 @@
         border-top: 1px solid @content-color-60;
 
         background-color: @content-color-20;
+        padding-left: 0;
+        padding: 0;
         margin-left: 0px;
         margin-right: 0px;
-        padding-left: 10px;
-        padding-right: 10px;
         padding-bottom: 10px;
 
         .posting {
             margin-top: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+
             display: flex;
             justify-content: flex-start;
             background-color: white;
@@ -316,7 +321,7 @@
         padding-left: 70px;
         border-bottom: 1px solid @content-color-60;
         line-height: 30px;
-        
+
         &:hover {
             background-color: @content-color-40;
         }

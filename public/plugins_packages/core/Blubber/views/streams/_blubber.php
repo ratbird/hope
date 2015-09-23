@@ -181,7 +181,8 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                 <input type="file"
                        style="display: none;"
                        multiple>
-                <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom")) ?>
+                <?= Assets::img('ajax-indicator-black.svg', array('class' => "text-bottom uploading", 'width' => "16px", 'height' => "16px")) ?>
+                <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom upload")) ?>
             </label>
         </div>
     <? endif ?>

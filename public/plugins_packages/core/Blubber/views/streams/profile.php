@@ -32,7 +32,8 @@
             <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= $search ? htmlReady($search) : "" ?></textarea>
             <label title="<?= _("Datei hochladen") ?>" class="uploader">
                 <input type="file" style="display: none;" multiple>
-                <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom")) ?>
+                <?= Assets::img('ajax-indicator-black.svg', array('class' => "text-bottom uploading", 'width' => "16px", 'height' => "16px")) ?>
+                <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom upload")) ?>
             </label>
         </div>
     </div>

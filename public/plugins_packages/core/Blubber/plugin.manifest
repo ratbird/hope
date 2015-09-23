@@ -1,7 +1,7 @@
 pluginclassname=Blubber
 pluginname=Blubber
 origin=core
-version=2.5
+version=2.5.1
 studipMinVersion=2.5
 studipMaxVersion=2.99
 summary=Schneller und einfacher Austausch von Informationen

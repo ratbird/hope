@@ -52,6 +52,17 @@
             .uploader {
                 cursor: pointer;
                 opacity: 0.5;
+                > .uploading {
+                    display: none;
+                }
+                &.uploading {
+                    > .upload {
+                        display: none;
+                    }
+                    > .uploading {
+                        display: inline-block;
+                    }
+                }
             }
             &:hover .uploader {
                 opacity: 1;
@@ -180,6 +191,12 @@
         }
     }
 }
+#threadwriter .writer.uploading, #blubber_threads .writer.uploading {
+    background-image: url("./dot_lightblue.png");
+    background-position: left bottom;
+    background-size: 20px 5px;
+    background-repeat: repeat;
+}
 
 #blubber_threads li.thread .reshares {
     padding: 0px;
@@ -202,9 +219,6 @@
 }
 #blubber_threads > li.thread .additional_tags a:hover {
     color: @active-color;
-}
-#blubber_threads.globalstream {
-
 }
 #blubber_threads .loading {
     text-align: center;
@@ -252,10 +266,6 @@
 }
 #blubber_threads .writer textarea:hover {
     opacity: 1;
-}
-#blubber_threads textarea.uploading {
-    background: url("@{image-path}/ajax_indicator_small.gif") bottom right no-repeat;
-    background-color: yellow;
 }
 #blubber_threads .avatar, #blubber_threads .content {
     vertical-align: middle;
@@ -372,11 +382,23 @@
             align-self: flex-end;
             padding-bottom: 4px;
             padding-right: 4px;
+            > .uploading {
+                display: none;
+            }
+            &.uploading {
+                > .upload {
+                    display: none;
+                }
+                > .uploading {
+                    display: inline-block;
+                }
+            }
         }
         &:hover .uploader {
             opacity: 1;
         }
     }
+
 
 
 }

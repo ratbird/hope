@@ -376,7 +376,7 @@ STUDIP.Blubber = {
                                 percent = Math.ceil(position / total * 100);
                             }
                             //Set progress
-                            jQuery(textarea).css("background-size", percent + "%");
+                            jQuery(textarea).css("background-size", percent + "% 5px");
                         }, false);
                     }
                     return xhr;

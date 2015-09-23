@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once "ContentModuleView.class.php";
 
 /**
 * class to handle content module data

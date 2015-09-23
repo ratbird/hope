@@ -35,8 +35,6 @@
 * @package common
 */
 
-include_once 'Ilias3SaxParser.class.php';
-
 class Ilias3ObjectXMLParser extends Ilias3SaxParser
 {
     var $object_data = array();
@@ -74,7 +72,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
         xml_set_character_data_handler($a_xml_parser,'handlerCharacterData');
     }
 
-    
+
 
 
     /**
@@ -86,7 +84,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
     */
     function handlerBeginTag($a_xml_parser,$a_name,$a_attribs)
     {
-        
+
         switch($a_name)
         {
             case 'Objects':
@@ -96,7 +94,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
             case 'Object':
                 ++$this->curr_obj;
                 $this->reference_count = -1;
-                
+
                 $this->__addProperty('type',$a_attribs['type']);
                 $this->__addProperty('obj_id',$a_attribs['obj_id']);
                 break;
@@ -115,7 +113,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
 
             case 'LastUpdate':
                 break;
-                
+
             case 'ImportId':
                 break;
 
@@ -123,7 +121,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
                 ++$this->reference_count;
                 $this->__addReference($a_attribs['ref_id'], $a_attribs['accessInfo']);
                 break;
-        
+
             case 'Operation':
                 break;
         }
@@ -166,7 +164,7 @@ class Ilias3ObjectXMLParser extends Ilias3SaxParser
             case 'LastUpdate':
                 $this->__addProperty('last_update',trim($this->cdata));
                 break;
-                
+
             case 'ImportId':
                 $this->__addProperty('import_id',trim($this->cdata));
                 break;

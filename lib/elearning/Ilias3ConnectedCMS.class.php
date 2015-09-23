@@ -6,8 +6,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once "ConnectedCMS.class.php";
-
 /**
 * main-class for connection to ILIAS 3
 *
@@ -98,12 +96,12 @@ class Ilias3ConnectedCMS extends ConnectedCMS
     function getPreferences()
     {
         global $connected_cms;
-        
+
         $role_template_name = Request::get('role_template_name');
         $cat_name = Request::get('cat_name');
         $style_setting = Request::option('style_setting');
         $encrypt_passwords = Request::option('encrypt_passwords');
-        
+
         $this->soap_client->setCachingStatus(false);
 
         if ($cat_name != "")
@@ -372,7 +370,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
 //      $this->soap_client->logout();
         $this->soap_client->saveCacheData();
     }
-    
+
     //we have to delete the course only
     function deleteConnectedModules($object_id){
         global $connected_cms;

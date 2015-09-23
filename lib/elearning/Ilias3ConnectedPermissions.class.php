@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once "ConnectedPermissions.class.php";
 
 DEFINE (CRS_NOTIFICATION, "1");
 DEFINE (CRS_NO_NOTIFICATION, "2");

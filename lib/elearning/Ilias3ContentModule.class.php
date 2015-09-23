@@ -3,7 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-require_once "ContentModule.class.php";
 
 /**
 * class to handle ILIAS 3 learning modules and tests
@@ -23,16 +22,16 @@ class Ilias3ContentModule extends ContentModule
     /**
     * constructor
     *
-    * init class. 
+    * init class.
     * @access public
     * @param string $module_id module-id
     * @param string $module_type module-type
     * @param string $cms_type system-type
-    */ 
+    */
     function Ilias3ContentModule($module_id = "", $module_type, $cms_type)
     {
         parent::ContentModule($module_id, $module_type, $cms_type);
-        if ($module_id != "") 
+        if ($module_id != "")
             $this->readData();
     }
 
@@ -52,7 +51,7 @@ class Ilias3ContentModule extends ContentModule
             // If User has no external Account, show module and link to user-assignment
             if (! $connected_cms[$this->cms_type]->user->isConnected())
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ) );
-                
+
             //set module data
             $this->setObjectId($object_data["obj_id"]);
             $this->setTitle($object_data["title"]);
@@ -88,7 +87,7 @@ class Ilias3ContentModule extends ContentModule
         global $connected_cms;
 
         switch ($access_info)
-        {   
+        {
             case "granted":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
                 break;
@@ -124,7 +123,7 @@ class Ilias3ContentModule extends ContentModule
 
 //      echo "PERM".implode($this->allowed_operations,"-");
     }
-    
+
     /**
     * set connection
     *
@@ -136,10 +135,10 @@ class Ilias3ContentModule extends ContentModule
     function setConnection($seminar_id)
     {
         global $connected_cms, $messages, $SessSemName, $DEFAULT_LANGUAGE;
-        
+
         $write_permission = Request::option("write_permission");
         $write_permission_autor = Request::option("write_permission_autor");
-        
+
         $crs_id = ObjectConnections::getConnectionModuleId($seminar_id, "crs", $this->cms_type);
 //      echo "SET?".$this->cms_type;
         $connected_cms[$this->cms_type]->soap_client->setCachingStatus(false);
@@ -158,13 +157,13 @@ class Ilias3ContentModule extends ContentModule
         if ($crs_id == false)
         {
 
-            $lang_array = explode("_",$DEFAULT_LANGUAGE); 
+            $lang_array = explode("_",$DEFAULT_LANGUAGE);
             $course_data["language"] = $lang_array[0];
             $course_data["title"] = "Stud.IP-Kurs " . $SessSemName[0];
             $course_data["description"] = "";
             $ref_id = $connected_cms[$this->cms_type]->main_category_node_id;
             $crs_id = $connected_cms[$this->cms_type]->soap_client->addCourse($course_data, $ref_id);
-            
+
             if ($crs_id == false)
             {
                 $messages["error"] .= _("Zuordnungs-Fehler: Kurs konnte nicht angelegt werden.");
@@ -176,10 +175,10 @@ class Ilias3ContentModule extends ContentModule
             $connected_cms[$this->cms_type]->permissions->CheckUserPermissions($crs_id);
 //          $messages["info"] .= "Neue Kurs-ID: $crs_id. <br>";
         }
-        
-        
+
+
         $ref_id = $this->getId();
-        $ref_id = $connected_cms[$this->cms_type]->soap_client->addReference($this->id, $crs_id); 
+        $ref_id = $connected_cms[$this->cms_type]->soap_client->addReference($this->id, $crs_id);
         $local_roles = $connected_cms[$this->cms_type]->soap_client->getLocalRoles($crs_id);
         $member_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ));
         $admin_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ, OPERATION_WRITE));
@@ -220,7 +219,7 @@ class Ilias3ContentModule extends ContentModule
         global $connected_cms, $messages;
 
         $connected_cms[$this->cms_type]->soap_client->setCachingStatus(false);
-        {   
+        {
             if ( $this->getObjectId() != false)
                 $connected_cms[$this->cms_type]->soap_client->deleteObject($this->getId());
             return parent::unsetConnection($seminar_id);
@@ -263,7 +262,7 @@ class Ilias3ContentModule extends ContentModule
     function setAllowedOperations( $operation_array )
     {
         global $connected_cms;
-        
+
         $this->allowed_operations = array();
         foreach($operation_array as $key => $operation)
         {

@@ -52,15 +52,17 @@
     // This function will return a function to be used as an onload handler.
     function oversizedHandler(img) {
         var display_width  = Math.max(STUDIP.BigImageHandler.threshold,
-                                      parseInt($(img).width(), 10) * pixelRatio),
+                                      parseInt($(img).width(), 10)),
             display_height = Math.max(STUDIP.BigImageHandler.threshold,
-                                      parseInt($(img).height(), 10) * pixelRatio);
+                                      parseInt($(img).height(), 10));
         return function () {
             var width  = this.width,
                 height = this.height,
                 title  = $(this).prop('title')
-                      || 'Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.'.toLocaleString();
-            if (width > display_width || height > display_height) {
+                      || 'Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.'.toLocaleString(),
+                highdpi_check = width / display_width === pixelRatio
+                             && height / display_height === pixelRatio;
+            if (!highdpi_check && (width > display_width || height > display_height)) {
                 $(img).data('oversized', {
                     width: width,
                     height: height

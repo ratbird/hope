@@ -90,12 +90,7 @@ class UpdateInformation
      */
     public static function getInformation()
     {
-        $infos = self::$infos;
-
-        // Tell the JS Updater the current timestamp
-        $infos['server_timestamp'] = time();
-
-        return $infos;
+        return self::$infos;
     }
 
     /**
@@ -111,6 +106,11 @@ class UpdateInformation
                 $page = substr($page, 0, strpos($page, "?"));
             }
             self::$collecting = (stripos($page, "dispatch.php/jsupdater/get") !== false);
+
+            // If we are collecting, store the current timestamp
+            if (self::$collecting) {
+                self::$infos['server_timestamp'] = time();
+            }
         }
         return self::$collecting;
     }

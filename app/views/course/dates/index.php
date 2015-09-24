@@ -23,6 +23,12 @@
 <? foreach ($allSemesters as $semester): ?>
 <table class="dates default" data-table-id="<?= htmlReady($semester->id) ?>">
     <caption><?= htmlReady($semester['name']) ?></caption>
+    <colgroup>
+        <col width="30%">
+        <col width="10%">
+        <col width="30%">
+        <col width="30%">
+    </colgroup>
     <thead>
         <tr class="sortable">
             <th class="sortasc"><?= _('Zeit') ?></th>

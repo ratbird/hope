@@ -79,14 +79,15 @@
 
 .flex-align-self(@alignment) {
     -webkit-align-self: @alignment;
+    -ms-align-self: @alignment;
     align-self: @alignment;
 }
 
-.flex-item(@growth, @shrink) {
+.flex-item(@growth, @shrink, @basis: auto) {
     -webkit-box-flex: @growth;
-    -webkit-flex: @growth @shrink auto;
-    -ms-flex: @growth @shrink auto;
+    -webkit-flex: @growth @shrink @basis;
+    -ms-flex: @growth @shrink @basis;
     -moz-box-flex: @growth;
-    flex: @growth @shrink auto;
+    flex: @growth @shrink @basis;
 
 }

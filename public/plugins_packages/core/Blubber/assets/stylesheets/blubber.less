@@ -35,12 +35,8 @@
             }
         }
         > .writer {
-            display: -ms-flex;
-            -ms-align-items: flex-end;
-            display: -webkit-flex;
-            -webkit-align-items: flex-end;
-            display: flex;
-            align-items: flex-end;
+            .flex();
+            .flex-align-items(flex-end);
             margin-top: 0px;
             padding-top: 5px;
             padding-bottom: 5px;
@@ -135,12 +131,8 @@
             margin-left: 10px;
             margin-right: 10px;
 
-            display: -ms-flex;
-            -ms-justify-content: flex-start;
-            display: -webkit-flex;
-            -webkit-justify-content: flex-start;
-            display: flex;
-            justify-content: flex-start;
+            .flex();
+            .flex-justify-content(flex-start);
             background-color: white;
             > .avatar {
                 width: @avatar-blubber-size + 1px;
@@ -251,8 +243,8 @@
     color: #606060;
 }
 #blubber_threads .content_column > .timer .icon {
-    vertical-align: middle; 
-    opacity: 0.6; 
+    vertical-align: middle;
+    opacity: 0.6;
 }
 #blubber_threads .content_column .permalink {
     opacity: 0.6;
@@ -307,7 +299,7 @@
         }
     }
     .comments .content_column {
-        width: ~"calc(100% -" (@avatar-blubber-size + 1px) ~")";        
+        width: ~"calc(100% -" (@avatar-blubber-size + 1px) ~")";
     }
 }
 
@@ -355,15 +347,11 @@
 
 #threadwriter {
     margin-bottom: 15px;
-    
+
     > .row {
+        .flex();
+        .flex-align-items(flex-start);
         border: 1px solid @content-color-60;
-        display: -ms-flex;
-        -ms-align-items: flex-start;
-        display: -webkit-flex;
-        -webkit-align-items: flex-start;
-        display: flex;
-        align-items: flex-start;
         padding-top: 4px;
         > textarea {
             width: ~"calc(100% - 90px)";
@@ -389,9 +377,7 @@
         .uploader {
             cursor: pointer;
             opacity: 0.5;
-            -ms-align-self: flex-end;
-            -webkit-align-self: flex-end;
-            align-self: flex-end;
+            .flex-align-self(flex-end);
             padding-bottom: 4px;
             padding-right: 4px;
             > .uploading {
@@ -420,10 +406,10 @@
     img.check {
         display: none;
     }
-    
+
     &.selected {
         opacity: 1;
-        
+
         img.check {
             display: block;
         }
@@ -438,11 +424,11 @@ table.select {
     td {
         border: thin solid #aaaaaa;
         text-align: center;
-        
+
         img.check, input[type=checkbox] {
             display: none;
         }
-        
+
         &.selected {
             background-color: #eeeeee;
 
@@ -470,7 +456,7 @@ table.select {
     list-style: none;
     padding: 0px;
     text-align: center;
-    
+
     > li {
         display: inline-block;
     }

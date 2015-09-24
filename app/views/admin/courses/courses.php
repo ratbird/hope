@@ -261,19 +261,20 @@
                             echo $this->render_partial('admin/courses/admission_locked', compact('values', 'semid'));
                             break;
                     }?>
-                <? elseif (!is_numeric($selected_action) && !$actions[$selected_action]['url']) : ?>
+                <? elseif (!is_numeric($selected_action)) : ?>
                     <? $plugin = PluginManager::getInstance()->getPlugin($selected_action) ?>
                     <? $template = $plugin->getAdminCourseActionTemplate($semid, $values) ?>
-                    <?= $template ? $template->render() : "" ?>
-                <?
-                else : ?>
-                    <?=
-                    \Studip\LinkButton::createEdit(
-                        $actions[$selected_action]['title'],
-                        URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
-                            ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),
-                        ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())
-                    ) ?>
+                    <? if ($template) : ?>
+                        <?= $template->render() ?>
+                    <? else : ?>
+                        <?=
+                        \Studip\LinkButton::createEdit(
+                            $actions[$selected_action]['title'],
+                            URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
+                                ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),
+                            ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())
+                        ) ?>
+                    <? endif ?>
                 <? endif ?>
             </td>
         </tr>

@@ -121,7 +121,7 @@ class StudipAutoloader
      * @param String $path Path to file
      * @since Stud.IP 3.4
      */
-    public function addClassLookup($class, $path)
+    public static function addClassLookup($class, $path)
     {
         foreach ((array)$class as $one_class) {
             self::$class_lookup[$one_class] = $path;
@@ -134,7 +134,7 @@ class StudipAutoloader
      * @param Array $map Associative array of class name and their locations
      * @since Stud.IP 3.4
      */
-    public function addClassLookups(array $map)
+    public static function addClassLookups(array $map)
     {
         self::$class_lookup = array_merge(self::$class_lookup, $map);
     }
@@ -145,7 +145,7 @@ class StudipAutoloader
      * @param String $class Class name
      * @since Stud.IP 3.4
      */
-    public function removeClassLookup($class)
+    public static function removeClassLookup($class)
     {
         unset(self::$class_lookup[$class]);
     }

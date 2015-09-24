@@ -35,6 +35,10 @@
             }
         }
         > .writer {
+            display: -ms-flex;
+            -ms-align-items: flex-end;
+            display: -webkit-flex;
+            -webkit-align-items: flex-end;
             display: flex;
             align-items: flex-end;
             margin-top: 0px;
@@ -131,6 +135,10 @@
             margin-left: 10px;
             margin-right: 10px;
 
+            display: -ms-flex;
+            -ms-justify-content: flex-start;
+            display: -webkit-flex;
+            -webkit-justify-content: flex-start;
             display: flex;
             justify-content: flex-start;
             background-color: white;
@@ -350,6 +358,10 @@
     
     > .row {
         border: 1px solid @content-color-60;
+        display: -ms-flex;
+        -ms-align-items: flex-start;
+        display: -webkit-flex;
+        -webkit-align-items: flex-start;
         display: flex;
         align-items: flex-start;
         padding-top: 4px;
@@ -377,6 +389,8 @@
         .uploader {
             cursor: pointer;
             opacity: 0.5;
+            -ms-align-self: flex-end;
+            -webkit-align-self: flex-end;
             align-self: flex-end;
             padding-bottom: 4px;
             padding-right: 4px;

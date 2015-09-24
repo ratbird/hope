@@ -146,4 +146,59 @@ class CronjobTask extends SimpleORMap
         }
         return parent::getValue($field);
     }
+
+// Convenience methods to ease the usage
+
+    /**
+     * Schedules this task for a single execution at the provided time.
+     *
+     * @param int    $timestamp  When the task should be executed
+     * @param String $priority   Priority of the execution (low, normal, high),
+     *                           defaults to normal
+     * @param Array  $parameters Optional parameters passed to the task
+     * @return CronjobSchedule The generated schedule object.
+     */
+    public function scheduleOnce($timestamp, $priority = CronjobSchedule::PRIORITY_NORMAL,
+                                 $parameters = array())
+    {
+        return CronjobScheduler::scheduleOnce($this->id, $timestamp, $priority, $parameters);
+    }
+
+    /**
+     * Schedules this task for periodic execution with the provided schedule.
+     *
+     * @param mixed  $minute      Minute part of the schedule:
+     *                            - null for "every minute" a.k.a. "don't care"
+     *                            - x < 0 for "every x minutes"
+     *                            - x >= 0 for "only at minute x"
+     * @param mixed  $hour        Hour part of the schedule:
+     *                            - null for "every hour" a.k.a. "don't care"
+     *                            - x < 0 for "every x hours"
+     *                            - x >= 0 for "only at hour x"
+     * @param mixed  $day         Day part of the schedule:
+     *                            - null for "every day" a.k.a. "don't care"
+     *                            - x < 0 for "every x days"
+     *                            - x > 0 for "only at day x"
+     * @param mixed  $month       Month part of the schedule:
+     *                            - null for "every month" a.k.a. "don't care"
+     *                            - x < 0 for "every x months"
+     *                            - x > 0 for "only at month x"
+     * @param mixed  $day_of_week Day of week part of the schedule:
+     *                            - null for "every day" a.k.a. "don't care"
+     *                            - 1 >= x >= 7 for "exactly at day of week x"
+     *                              (x starts with monday at 1 and ends with
+     *                               sunday at 7)
+     * @param String $priority   Priority of the execution (low, normal, high),
+     *                           defaults to normal
+     * @param Array  $parameters Optional parameters passed to the task
+     * @return CronjobSchedule The generated schedule object.
+     */
+    public function schedulePeriodic($minute = null, $hour = null,
+                                     $day = null, $month = null, $day_of_week = null,
+                                     $priority = CronjobSchedule::PRIORITY_NORMAL,
+                                     $parameters = array())
+    {
+        return CronjobScheduler::schedulePeriodic($minute, $hour, $day, $month,
+                                                  $day_of_week, $priority, $parameters);
+    }
 }

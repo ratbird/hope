@@ -106,4 +106,39 @@ abstract class CronJob
     public function tearDown()
     {
     }
+
+// Convenience methods to ease the usage
+
+    /**
+     * Registers the cronjob and/or returns the corresponding task.
+     *
+     * @return CronjobTask Task for this cronjob
+     */
+    public static function register()
+    {
+        $class_name = get_called_class();
+        $reflection = new ReflectionClass($class_name);
+
+        $task_id = CronjobScheduler::getInstance()->registerTask($reflection->newInstance());
+
+        return CronjobTask::find($task_id);
+    }
+
+    /**
+     * Unregisters a previously registered task.
+     *
+     * @param String $task_id Id of the task to be unregistered
+     * @return CronjobScheduler to allow chaining
+     * @throws InvalidArgumentException when no task with the given id exists
+     */
+    public static function unregister()
+    {
+        $class_name = get_called_class();
+        $task       = CronjobTask::findOneByClass($class_name);
+
+        if ($task !== null) {
+            CronjobScheduler::getInstance()->unregisterTask($task->id);
+        }
+    }
+
 }

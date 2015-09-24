@@ -60,8 +60,8 @@ class CronjobScheduler
     /**
      * Registers a new executable task.
      *
-     * @param mixed $class_filename Either path of the task class filename (relative
-     *                              to Stud.IP root) or an instance of CronJob
+     * @param mixed $task Either path of the task class filename (relative
+     *                    to Stud.IP root) or an instance of CronJob
      * @param bool   $active Indicates whether the task should be set active
      *                       or not
      * @return String Id of the created task
@@ -99,7 +99,7 @@ class CronjobScheduler
             throw new RuntimeException($message);
         }
 
-        if ($task = CronjobTask::findByClass($class)) {
+        if ($task = CronjobTask::findOneByClass($class)) {
             return $task->task_id;
         }
 

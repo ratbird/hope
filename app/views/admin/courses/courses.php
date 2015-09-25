@@ -275,6 +275,14 @@
                             ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())
                         ) ?>
                     <? endif ?>
+                <? else : ?>
+                    <?=
+                    \Studip\LinkButton::createEdit(
+                        $actions[$selected_action]['title'],
+                        URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
+                            ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),
+                        ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())
+                    ) ?>
                 <? endif ?>
             </td>
         </tr>

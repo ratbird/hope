@@ -20,22 +20,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-/* ------------------------------------------------------------------------
- * ajax_loader
- * ------------------------------------------------------------------------ */
-jQuery(document).on('click', '[data-behaviour="ajaxContent"]', function () {
-    var parameters = jQuery(this).data(),
-        indicator = parameters.hasOwnProperty('indicator') ? parameters.indicator : this,
-        target    = parameters.hasOwnProperty('target') ? parameters.target : jQuery(this).next(),
-        url       = parameters.hasOwnProperty('url') ? parameters.url : jQuery(this).attr('href');
-
-    jQuery(indicator).showAjaxNotification('right');
-    jQuery(target).load(url, function () {
-        jQuery(indicator).hideAjaxNotification();
-    });
-    return false;
-});
-
 
 /* ------------------------------------------------------------------------
  * messages boxes

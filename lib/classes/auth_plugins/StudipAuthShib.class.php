@@ -12,13 +12,6 @@
  * the License, or (at your option) any later version.
  */
 
-if (version_compare(PHP_VERSION, '5.2', '<')) {
-    // emulate the built-in JSON extension of PHP 5.2
-    require_once 'vendor/phpxmlrpc/xmlrpc.inc';
-    require_once 'vendor/phpxmlrpc/jsonrpc.inc';
-    require_once 'vendor/phpxmlrpc/json_extension_api.inc';
-}
-
 class StudipAuthShib extends StudipAuthSSO
 {
     var $env_remote_user = 'HTTP_REMOTE_USER';

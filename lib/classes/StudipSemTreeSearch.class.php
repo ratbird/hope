@@ -150,8 +150,8 @@ class StudipSemTreeSearch {
         }
         $element_name = "{$this->form_name}_{$field_name}[]";
         $ret = "\n<div class=\"selectbox\"";
-        foreach($attributes as $key => $value){
-            $ret .= "$key=\"$value\"";
+        foreach ($attributes as $key => $value){
+            $ret .= " " . $key . "=\"" . htmlReady($value) . "\"";
         }
         $ret .= ">";
         foreach ($this->sem_tree_ranges as $range_id => $sem_tree_id){
@@ -180,9 +180,9 @@ class StudipSemTreeSearch {
 
 
     function getSearchField($attributes = array()){
-        $ret = "\n<input type=\"text\" name=\"{$this->form_name}_search_field\" ";
-        foreach($attributes as $key => $value){
-            $ret .= "$key=\"$value\"";
+        $ret = "\n<input type=\"text\" name=\"{$this->form_name}_search_field\"";
+        foreach ($attributes as $key => $value){
+            $ret .= " " . $key . "=\"" . htmlReady($value) ."\"";
         }
         $ret .= ">";
         return $ret;

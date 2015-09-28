@@ -67,12 +67,24 @@
                 </tr>
                 <tr>
                     <td>
-                        <label><?=_("Veröffentlichungsdatum")?><br>
-                        <input type="text" class="news_date news_prevent_submit" name="news_startdate" value="<?=($news['date']) ? date('d.m.Y', $news['date']) : ""?>" aria-label="<?= _('Einstelldatum') ?>"></label>
+                        <label>
+                            <?= _('Veröffentlichungsdatum') ?><br>
+                            <input type="text" class="news_date news_prevent_submit"
+                                   name="news_startdate" id="news_startdate"
+                                   data-date-picker='{"<=":"#news_enddate"}'
+                                   value="<? if ($news['date']) echo date('d.m.Y', $news['date']); ?>"
+                                   aria-label="<?= _('Einstelldatum') ?>">
+                        </label>
                     </td>
                     <td>
-                        <label><?=_("Ablaufdatum")?><br>
-                        <input type="text" class="news_date news_prevent_submit" name="news_enddate" value="<?=($news['expire']) ? date('d.m.Y', $news['date']+$news['expire']) : ""?>" aria-label="<?= _('Ablaufdatum') ?>"></label>
+                        <label>
+                            <?= _('Ablaufdatum') ?><br>
+                            <input type="text" class="news_date news_prevent_submit"
+                                   name="news_enddate" id="news_enddate"
+                                   data-date-picker='{">=":"#news_startdate"}'
+                                   value="<? if ($news['expire']) echo date('d.m.Y', $news['date'] + $news['expire']) ?>"
+                                   aria-label="<?= _('Ablaufdatum') ?>">
+                        </label>
                     </td>
                 </tr>
                 <tr>
@@ -283,7 +295,6 @@
 </div>
 </form>
 <script>
-    jQuery('.news_date').datepicker();
     jQuery('.news_prevent_submit').keydown(function(event) {
         if (event.which === 13) {
             event.preventDefault();

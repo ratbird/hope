@@ -1,28 +1,20 @@
 <? $user = new User($new['user_id']); ?>
+<? if ($new->havePermission('edit')): ?>
+    <a class='news_user' href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
+        <?= htmlReady($user->getFullName()) ?>
+    </a>
+<? endif; ?>
 
-<a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
-    <?= htmlReady($user->getFullName()) ?>
-</a>
-<span title="<?=($perm ? _("Ablaufdatum") . ': ' . date('d.m.Y', $new['date'] + $new['expire']) : '')?>">
+<span class='news_date' title="<?= ($perm ? _("Ablaufdatum") . ': ' . date('d.m.Y', $new['date'] + $new['expire']) : '') ?>">
     <?= date('d.m.Y', $new['date']) ?>
 </span>
-<span style="color: #050">
-    <?= object_return_views($new['news_id']) ?>
-</span>
 
-<? if ($new['allow_comments']):
-    $num = StudipComment::NumCommentsForObject($new['news_id']);
-    $visited = object_get_visit($new['news_id'], 'news', false, false);
-    $isnew = StudipComment::NumCommentsForObjectSinceLastVisit($new['news_id'], $visited, $GLOBALS['user']->id);
-?>
-    <? if ($isnew): ?>
-        <span class="news-comments-count news-comments-unread" title="<?= sprintf(_('%s neue(r) Kommentar(e)'), $isnew) ?>">
-    <? else: ?>
-        <span class="news-comments-count">
-    <? endif; ?>
-            <?= $num ?>
-        </span>
+<? if ($new->havePermission('edit')): ?>
+    <span title="<?= _('Aufrufe') ?>" class='news_visits' style="color: #050">
+        <?= object_return_views($new['news_id']) ?>
+    </span>
 <? endif; ?>
+
 
 <? if ($new->havePermission('edit')): ?>
     <a href=" <?= URLHelper::getLink('dispatch.php/news/edit_news/' . $new->id) ?>" rel='get_dialog' >
@@ -37,5 +29,22 @@
         <a href=" <?= URLHelper::getLink('', array('delete_news' => $new->id)) ?>" >
             <?= Assets::img('icons/16/blue/trash.png'); ?>
         </a>
+    <? endif; ?>
+<? endif; ?>
+
+<?
+if ($new['allow_comments']):
+    $num = StudipComment::NumCommentsForObject($new['news_id']);
+    $visited = object_get_visit($new['news_id'], 'news', false, false);
+    $isnew = StudipComment::NumCommentsForObjectSinceLastVisit($new['news_id'], $visited, $GLOBALS['user']->id);
+    ?>
+<? if ($num): ?>
+    <? if ($isnew): ?>
+        <span class="news-comments-count news-comments-unread" title="<?= sprintf(_('%s neue(r) Kommentar(e)'), $isnew) ?>">
+        <? else: ?>
+            <span class="news-comments-count">
+            <? endif; ?>
+            <?= $num ?>
+        </span>
     <? endif; ?>
 <? endif; ?>

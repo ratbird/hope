@@ -92,10 +92,20 @@ div.news_dialog_buttons {
     border-top: 1px solid #d1d1d1;
 }
 
-.news-comments-count {
-    color: #aa6; // TODO Find a better suiting color from the colorset
-    
+section.contentbox header nav span.news-comments-count {
+    position: absolute;
+    color: white;
+    background-color: @base-color-80;
+    border-radius: 10px;
+    font-size: 10px;
+    min-width: 15px;
+    text-align: center;
+    margin-top: -7px;
+    height: 15px;
+    padding: 0px;
+    margin-left: -2px;
+
     &.news-comments-unread {
-        color: @red;
+        background-color: @red;
     }
 }

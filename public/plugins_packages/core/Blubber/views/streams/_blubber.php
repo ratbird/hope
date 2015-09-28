@@ -165,7 +165,6 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             <? $more_comments = $thread->getNumberOfChildren() - 3 ?>
             <? if ($more_comments > 0) : ?>
                 <li class="more">
-                    <?= Assets::img("icons/blue/16/arr_1right", array('class' => "text-bottom")) ?>
                     <?= sprintf(ngettext('%u weiterer Kommentar anzeigen', '%u weitere Kommentare anzeigen', $more_comments), $more_comments) ?>
                 </li>
             <? endif; ?>

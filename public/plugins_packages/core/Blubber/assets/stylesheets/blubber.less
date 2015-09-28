@@ -323,6 +323,11 @@
 
 #blubber_threads {
     li.more {
+        .icon-before('blue/arr_1right');
+        &.ajax::before {
+            background-image: url("@{image-path}/ajax-indicator-black.svg");
+        }
+
         background-color: white;
         cursor: pointer;
         color: @base-color;

@@ -637,7 +637,7 @@ jQuery(document).on("keydown", "#blubber_threads .writer > textarea", function (
 jQuery(document).on("click", "#blubber_threads > li > ul.comments > li.more", function () {
     var thread_id = jQuery(this).closest("li[id]").attr("id").split("_").pop(),
         li_more = this;
-    jQuery(this).wrapInner('<span/>').find('span').showAjaxNotification()
+    jQuery(this).addClass('ajax');
     jQuery.getJSON(STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/more_comments", {
         thread_id: thread_id,
         already_there: jQuery(this).closest("ul").children("li[id]").length
@@ -645,7 +645,7 @@ jQuery(document).on("click", "#blubber_threads > li > ul.comments > li.more", fu
         if (!json.more) {
             jQuery(li_more).remove();
         } else {
-            jQuery(li_more).text(json.more);
+            jQuery(li_more).removeClass('ajax').text(json.more);
         }
         if (json.comments) {
             jQuery.each(json.comments, function () {

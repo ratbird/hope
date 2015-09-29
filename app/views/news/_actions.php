@@ -1,5 +1,5 @@
 <? $user = new User($new['user_id']); ?>
-<? if ($new->havePermission('edit')): ?>
+<? if (Config::get()->NEWS_DISPLAY >= 1 || $new->havePermission('edit')): ?>
     <a class='news_user' href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
         <?= htmlReady($user->getFullName()) ?>
     </a>
@@ -9,7 +9,7 @@
     <?= date('d.m.Y', $new['date']) ?>
 </span>
 
-<? if ($new->havePermission('edit')): ?>
+<? if (Config::get()->NEWS_DISPLAY >= 2 || $new->havePermission('edit')): ?>
     <span title="<?= _('Aufrufe') ?>" class='news_visits' style="color: #050">
         <?= object_return_views($new['news_id']) ?>
     </span>

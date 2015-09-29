@@ -142,7 +142,7 @@
 
             // Set max date and adjust current date if neccessary
             if (max_date) {
-                max_date.setDate(max_date.getDate() - (offset || 0));
+                max_date.setTime(max_date.getTime() - (offset || 0) * 24 * 60 * 60 * 1000);
 
                 if (this_date && this_date > max_date) {
                     $(this).datepicker('setDate', max_date);
@@ -179,7 +179,7 @@
 
             // Set min date and adjust current date if neccessary
             if (min_date) {
-                min_date.setDate(min_date.getDate() + (offset || 0));
+                min_date.setTime(min_date.getTime() + (offset || 0) * 24 * 60 * 60 * 1000);
 
                 if (this_date && this_date < min_date) {
                     $(this).datepicker('setDate', min_date);

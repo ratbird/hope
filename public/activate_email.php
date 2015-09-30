@@ -3,11 +3,14 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
+$_GET['cancel_login'] = 1;
+
 require '../lib/bootstrap.php';
 
 use Studip\Button, Studip\LinkButton;
 
-$_GET['cancel_login'] = 1;
+ob_start();
+
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
 function head($headline, $red=False) {
@@ -16,12 +19,12 @@ if($red)
     $class = '_red';
 ?>
 <div align="center">
-<table width="70%" border=0 cellpadding=0 cellspacing=0>
+<table class="zebra no-hover" width="70%" border=0 cellpadding=0 cellspacing=0>
 <tr><td class="table_header_bold<?=$class ?>" colspan=3 align="left">
  <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
  <b>&nbsp;<?= $headline; ?></b>
 </td></tr>
-<tr><td style="background-color: #fff; padding: 1.5em;">
+<tr><td style="padding: 1.5em;">
 <?php
 }
 
@@ -31,7 +34,7 @@ function footer() {
 
 function reenter_mail() {
     echo _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail-Adresse unten an:');
-    echo '<form action="activate_email.php" method="post">'
+    echo '<form action="' . URLHelper::getLink() . '" method="post">'
         . CSRFProtection::tokenTag()
         .'<input type="hidden" name="uid" value="'. htmlReady(Request::option('uid')) .'">'
         .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="email" name="email1"></td></tr>'
@@ -41,7 +44,7 @@ function reenter_mail() {
 
 function mail_explain() {
     echo _('Sie haben Ihre E-Mail-Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.');
-    echo '<br><form action="activate_email.php" method="post">'
+    echo '<br><form action="' . URLHelper::getLink() . '" method="post">'
         . CSRFProtection::tokenTag()
         .'<input type="text" name="key"><input name="uid" type="hidden" value="'.htmlReady(Request::option('uid')).'"><br>'
         .Button::createAccept(). '</form><br><br>';
@@ -51,18 +54,17 @@ function mail_explain() {
 if(!Request::option('uid'))
     header("Location: index.php");
 
+URLHelper::addLinkParam('cancel_login', 1);
+
 // set up user session
 include 'lib/seminar_open.php';
 
 // display header
 PageLayout::setTitle(_('E-Mail Aktivierung'));
-include 'lib/include/html_head.inc.php'; // Output of html head
-include 'lib/include/header.php';
-include ('lib/include/deprecated_tabs_layout.php');
 
 $uid = Request::option('uid');
-if(Request::get('key')) {
-    
+if(Request::get('key') !== null) {
+
     $db = DBManager::get();
     $sth = $db->prepare("SELECT validation_key FROM auth_user_md5 WHERE user_id=?");
     $sth->execute(array($uid));
@@ -71,20 +73,22 @@ if(Request::get('key')) {
     if(Request::quoted('key') == $key) {
         $sth = $db->prepare("UPDATE auth_user_md5 SET validation_key='' WHERE user_id=?");
         $sth->execute(array($uid));
-        unset($_SESSION['half_logged_in']);
+        unset($_SESSION['semi_logged_in']);
         head(PageLayout::getTitle());
         echo _('Ihre E-Mail-Adresse wurde erfolgreich geändert.');
-        printf(' <a href="index.php">%s</a>', _('Zum Login'));
+        printf(' <a href="' . URLHelper::getLink('index.php') . '">%s</a>', _('Zum Login'));
         footer();
     } else if ($key == '') {
         head(PageLayout::getTitle());
         echo _('Ihre E-Mail-Adresse ist bereits geändert.');
-        printf(' <a href="index.php">%s</a>', _('Zum Login'));
+        printf(' <a href="' . URLHelper::getLink('index.php') . '">%s</a>', _('Zum Login'));
         footer();
     } else {
-        head(_('Warnung'), True);
-        echo _("Falscher Bestätigungscode.");
-        footer();
+        if (Request::get('key')) {
+            head(_('Warnung'), True);
+            echo _("Falscher Bestätigungscode.");
+            footer();
+        }
 
         head(PageLayout::getTitle());
         mail_explain();
@@ -92,7 +96,7 @@ if(Request::get('key')) {
             reenter_mail();
         } else {
             printf(_('Sie können sich %seinloggen%s und sich den Bestätigungscode neu oder an eine andere E-Mail-Adresse schicken lassen.'),
-                    '<a href="index.php?again=yes">', '</a>');
+                    '<a href="' . URLHelper::getLink('index.php?again=yes') . '">', '</a>');
         }
         footer();
     }
@@ -133,6 +137,9 @@ if(Request::get('key')) {
     mail_explain();
     footer();
 }
-include 'lib/include/html_end.inc.php';
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();
 ?>

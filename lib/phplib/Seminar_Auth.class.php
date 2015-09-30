@@ -346,8 +346,10 @@ class Seminar_Auth
         if (Request::get('loginname') && !$_COOKIE[get_class($GLOBALS['sess'])]) {
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
-            $login_template = $GLOBALS['template_factory']->open('login_emailactivation');
-            $login_template->set_attribute('uid', $this->need_email_activation);
+            $this->unauth();
+            header('Location: ' . URLHelper::getURL('activate_email.php?cancel_login=1&key=&uid=' . $this->need_email_activation));
+            page_close();
+            die();
         } else {
             unset($_SESSION['semi_logged_in']); // used by email activation
             $login_template = $GLOBALS['template_factory']->open('loginform');

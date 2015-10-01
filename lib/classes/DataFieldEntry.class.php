@@ -544,7 +544,7 @@ class DataFieldLinkEntry extends DataFieldEntry
             $this->setValue('');
         }
         else {
-            $this->setValue(remove_magic_quotes($submitted_value));
+            $this->setValue($submitted_value);
         }
     }
 
@@ -585,7 +585,7 @@ class DataFieldSelectboxEntry extends DataFieldEntry
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
         $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = "<select name=\"$field_name\" name=\"$field_id\" $require>";
+        $ret = "<select name=\"$field_name\" id=\"$field_id\" $require>";
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
@@ -639,7 +639,8 @@ class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
         $field_name = $name . '[' . $this->structure->getID() . '][]';
         $field_id = $name . '_' . $this->structure->getID();
         $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = "<select multiple name=\"$field_name\" name=\"$field_id\" $require>";
+        $ret = "<input type=\"hidden\" name=\"$field_name\" value=\"\">\n";
+        $ret .= "<select multiple name=\"$field_name\" id=\"$field_id\" $require>";
         $values = $this->getValue() ? array_map('trim', explode('|', $this->getValue())) : array();
         foreach($this->type_param as $pkey => $pval)
         {

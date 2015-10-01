@@ -11,7 +11,7 @@
     max-width: 100%;
 
     .posting {
-        border: 1px solid @content-color-60;
+        border: 1px solid @table-header-color;
 
         > .avatar {
             vertical-align: top;
@@ -20,7 +20,6 @@
             min-width: @avatar-blubber-size + 2px;
             overflow: hidden;
             text-align: center;
-            //display: block;
 
             .avatar_image {
                 border: 1px solid @content-color-60;
@@ -41,7 +40,7 @@
             padding-top: 5px;
             padding-bottom: 5px;
             padding-left: 75px;
-            border-top: 1px solid @content-color-60;
+            border-top: 1px solid @table-header-color;
             > textarea {
                 display: block;
                 width: ~"calc(100% - 20px)";
@@ -79,7 +78,8 @@
     }
 
     > .thread {
-        margin-bottom: 25px;
+        margin-bottom: 40px;
+        border-color: @base-color-60;
         > .avatar {
             margin-top: -29px;
             margin-left: 11px;
@@ -113,24 +113,28 @@
         }
     }
     .comments {
-
+        background-color: @table-header-color;
         &:empty {
             display: none;
         }
 
-        border-top: 1px solid @content-color-60;
+        border-top: 1px solid @table-header-color;
 
         background-color: @content-color-20;
         padding-left: 0;
         padding: 0;
         margin-left: 0px;
         margin-right: 0px;
-        padding-bottom: 10px;
+        padding-bottom: 0px;
 
         .posting {
-            margin-top: 10px;
+            margin-top: 0px;
             margin-left: 10px;
             margin-right: 10px;
+            border-top: none;
+            &:last-child {
+                border-bottom: none;
+            }
 
             .flex();
             .flex-justify-content(flex-start);
@@ -165,14 +169,24 @@
 #blubber_threads > li.thread.public .contextinfo > .name, #blubber_threads > li.thread.private .contextinfo > .name {
     font-size: 0.9em;
 }
+
 #blubber_threads > li.thread.private .contextinfo {
     background-color: @content-color-60;
     color: @dark-gray-color-80;
 }
+#blubber_threads > li.thread.private .comments {
+    background-color: @content-color-60;
+}
+
+
 #blubber_threads > li.thread.course .contextinfo {
     background-color: @brand-color-lighter;
     color: white;
 }
+#blubber_threads > li.thread.course .comments {
+    background-color: @brand-color-lighter;
+}
+
 #blubber_threads > li.thread.public .contextinfo:hover, #blubber_threads > li.thread.private .contextinfo:hover {
     cursor: pointer;
 }

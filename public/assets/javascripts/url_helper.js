@@ -68,7 +68,7 @@ STUDIP.URLHelper = {
         if (url !== '') {
             url = STUDIP.URLHelper.resolveURL(url);
         }
-
+        query = decodeURIComponent(query);
         // split query string and merge with param_object
         _.each(query && query.split("&") || [], function (e) {
             var pair = e.split("=");

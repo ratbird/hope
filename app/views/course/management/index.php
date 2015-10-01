@@ -30,24 +30,25 @@ if (Course::findCurrent()) {
 }
 ?>
 
-<div>
-    <div style="margin-left: 1.5em;">
-
-        <? foreach (Navigation::getItem('/course/admin') as $name => $nav) : ?>
-            <? if ($nav->isVisible() && $name != 'main') : ?>
-                <a class="click_me" href="<?= URLHelper::getLink($nav->getURL()) ?>">
-                    <div>
-                        <span class="click_head">
-                            <?= htmlReady($nav->getTitle()) ?>
-                        </span>
-                        <p>
-                            <?= htmlReady($nav->getDescription()) ?>
-                        </p>
-                    </div>
-                </a>
-            <? endif ?>
-        <? endforeach ?>
-
-    </div>
-    <br style="clear: left;">
-</div>
+<ul class="boxed-grid">
+<? foreach (Navigation::getItem('/course/admin') as $name => $nav): ?>
+    <? if ($nav->isVisible() && $name != 'main'): ?>
+        <li>
+            <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
+                <h3>
+                    <?= htmlReady($nav->getTitle()) ?>
+                </h3>
+                <p>
+                    <?= htmlReady($nav->getDescription()) ?>
+                </p>
+            </a>
+        </li>
+    <? endif; ?>
+<? endforeach; ?>
+<!--
+    this is pretty ugly but we need to spawn some empty elements so that the
+    last row of the flex grid won't be messed up if the boxes don't line up
+-->
+    <li></li><li></li><li></li>
+    <li></li><li></li><li></li>
+</ul>

@@ -45,9 +45,9 @@ class Studip_User {
             }
         }
 
-        $this->id = preg_replace('/\W/', '', $this->id);
-        $this->user_name = preg_replace('/[^\w@.-]/', '', $this->user_name);
-        $this->fullname = get_fullname($this->id);
+        if (isset($this->id)) {
+            $this->fullname = get_fullname($this->id);
+        }
     }
 
 

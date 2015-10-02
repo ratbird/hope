@@ -201,13 +201,15 @@ class Navigation implements IteratorAggregate
     public function getImageTag()
     {
         $image = $this->getImage();
-
-        $attributes = array();
-        foreach ($image as $key => $value) {
-            $attributes[] = sprintf('%s="%s"', $key, htmlReady($value));
+        if (is_array($image)) {
+            $attributes = array();
+            foreach ($image as $key => $value) {
+                $attributes[] = sprintf('%s="%s"', $key, htmlReady($value));
+            }
+            return '<img ' . implode(' ', $attributes) . '>';
+        } else {
+            return '';
         }
-
-        return '<img ' . implode(' ', $attributes) . '>';
     }
 
     /**

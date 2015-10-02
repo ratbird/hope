@@ -32,8 +32,7 @@
 // +---------------------------------------------------------------------------+
 
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
-    //8192 === E_DEPRECATED erst ab 5.3 bekannt
-    if ($errno & ~(E_NOTICE | E_STRICT | 8192 | E_WARNING) && error_reporting()){
+    if ($errno & ~(E_NOTICE | E_STRICT | E_DEPRECATED | E_WARNING) && error_reporting()){
         fwrite(STDERR,"$errstr \n$errfile line $errline\n");
         exit(1);
     }

@@ -36,7 +36,9 @@ if (Course::findCurrent()) {
         <li>
             <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
                 <h3>
+                <? if ($nav->getImage()): ?>
                     <?= $nav->getImageTag() ?>
+                <? endif; ?>
                     <?= htmlReady($nav->getTitle()) ?>
                 </h3>
                 <p>

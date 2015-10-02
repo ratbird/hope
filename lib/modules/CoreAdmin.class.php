@@ -31,32 +31,39 @@ class CoreAdmin implements StudipModule {
 
             if ($GLOBALS['SessSemName']['class'] !== "inst") {
                 $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $course_id);
+                $item->setImage('icons/blue/edit.svg');
                 $item->setDescription(_('Prüfen und bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.'));
                 $navigation->addSubNavigation('details', $item);
 
                 $item = new Navigation(_('Infobild'), 'dispatch.php/course/avatar/update/' . $course_id);
+                $item->setImage('icons/blue/file-pic.svg');
                 $item->setDescription(_('Bearbeiten oder löschen Sie das Infobild zu dieser Veranstaltung.'));
                 $navigation->addSubNavigation('avatar', $item);
 
                 $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $course_id);
+                $item->setImage('icons/blue/module.svg');
                 $item->setDescription(_('Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.'));
                 $navigation->addSubNavigation('study_areas', $item);
 
                 $item = new Navigation(_('Zeiten/Räume'), 'raumzeit.php');
+                $item->setImage('icons/blue/date.svg');
                 $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
                 $navigation->addSubNavigation('dates', $item);
 
                 if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
                     $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests/index/' . $course_id);
+                    $item->setImage('icons/blue/resources.svg');
                     $item->setDescription(_('Verwalten Sie hier Raumanfragen zu Veranstaltungszeiten.'));
                     $navigation->addSubNavigation('room_requests', $item);
                 }
 
                 $item = new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission');
+                $item->setImage('icons/blue/lock-locked.svg');
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);
 
                 $item = new AutoNavigation(_('Zusatzangaben'), 'dispatch.php/admin/additional');
+                $item->setImage('icons/blue/add.svg');
                 $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiterer Angaben von Ihren TeilnehmerInnen auswählen.'));
                 $navigation->addSubNavigation('additional_data', $item);
 
@@ -93,10 +100,12 @@ class CoreAdmin implements StudipModule {
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
                 if (get_config('VOTE_ENABLE')) {
                     $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem');
+                    $item->setImage('icons/blue/vote.svg');
                     $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));
                     $navigation->addSubNavigation('vote', $item);
 
                     $item = new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem');
+                    $item->setImage('icons/blue/evaluation.svg');
                     $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));
                     $navigation->addSubNavigation('evaluation', $item);
                 }

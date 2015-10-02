@@ -321,6 +321,7 @@ img.plugin_preview {
         margin: 0 0 1em;
         overflow: hidden;
         padding: 1em;
+        position: relative;
 
         &:hover {
             background-color: #F2F2F2;
@@ -329,6 +330,15 @@ img.plugin_preview {
             p { color: #000; }
         }
     }
+    img {
+        height: calc(100% - 20px);
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        bottom: 10px;
+        opacity: 0.1;
+    }
+
 
     h3 {
         color: inherit;

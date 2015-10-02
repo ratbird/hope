@@ -7368,6 +7368,7 @@ img.plugin_preview {
   margin: 0 0 1em;
   overflow: hidden;
   padding: 1em;
+  position: relative;
 }
 .boxed-grid a:hover {
   background-color: #F2F2F2;
@@ -7375,6 +7376,14 @@ img.plugin_preview {
 }
 .boxed-grid a:hover p {
   color: #000;
+}
+.boxed-grid img {
+  height: calc(80%);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  opacity: 0.1;
 }
 .boxed-grid h3 {
   color: inherit;

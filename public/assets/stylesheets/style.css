@@ -7345,11 +7345,12 @@ img.plugin_preview {
   padding: 0;
 }
 .boxed-grid li {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1  ;
-  -ms-flex: 1  ;
-  -moz-box-flex: 1;
-  flex: 1  ;
+  -webkit-box-flex: 1 1 23em;
+  -webkit-flex: 1 1 23em  ;
+  -ms-flex: 1 1 23em  ;
+  -moz-box-flex: 1 1 23em;
+  flex: 1 1 23em  ;
+  display: block;
   min-width: 23em;
   max-width: 100%;
   padding: 0 0.5em;

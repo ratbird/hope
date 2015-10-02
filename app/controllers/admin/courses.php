@@ -96,6 +96,8 @@ class Admin_CoursesController extends AuthenticatedController
 
         $sortFlag = (Request::get('sortFlag') == 'asc') ? 'DESC' : 'ASC';
 
+        $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT_FLAG', $sortFlag);
+
         if (Request::option('sortby')) {
             $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT', Request::option('sortby'));
         }
@@ -106,11 +108,11 @@ class Admin_CoursesController extends AuthenticatedController
         }
 
         $this->sortby = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT;
-        $this->sortFlag = $sortFlag;
+        $this->sortFlag = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT_FLAG;
 
         $this->courses = $this->getCourses(array(
-            'sortby'      => $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT,
-            'sortFlag'    => $sortFlag,
+            'sortby'      => $this->sortby,
+            'sortFlag'    => $this->sortFlag,
             'view_filter' => $this->view_filter,
             'typeFilter'  => $config_my_course_type_filter
         ));

@@ -12,7 +12,13 @@
     <dd><?= date('d.m.Y H:i:s', $log->executed) ?></dd>
 
     <dt><?= _('Ausführungsdauer') ?></dt>
-    <dd><?= number_format($log->duration, 6, ',', '.') ?> <?= _('Sekunden') ?></dd>
+    <dd>
+    <? if ($log->duration == -1): ?>
+        <?= _('Cronjob läuft noch oder wurde durch einen Fehler abgebrochen') ?>
+    <? else: ?>
+        <?= number_format($log->duration, 6, ',', '.') ?> <?= _('Sekunden') ?>
+    <? endif; ?>
+    </dd>
 
 <? if (!empty($log->output)): ?>
     <dt><?= _('Ausgabe') ?></dt>

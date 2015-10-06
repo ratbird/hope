@@ -39,7 +39,7 @@ class Message extends SimpleORMap
             AND readed = :other_flag";
         $statement = DBManager::get()->prepare($query);
         return $statement->execute(array(
-            'user_id' => $user_id,
+            'user_id' => $user_id ?: $GLOBALS['user']->id,
             'flag' => $state_of_flag ? 1 : 0,
             'other_flag' => $state_of_flag ? 0 : 1
         ));

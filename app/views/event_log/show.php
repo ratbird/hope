@@ -50,7 +50,7 @@ use Studip\Button, Studip\LinkButton;
     <? else: ?>
       <select name="type">
         <? foreach ($types as $name => $title): ?>
-          <option value="<?= $name ?>"><?= htmlReady($title) ?></option>
+          <option value="<?= $name ?>" <?= Request::get('type') == $name ? 'selected' : ''?>><?= htmlReady($title) ?></option>
         <? endforeach ?>
       </select>
 

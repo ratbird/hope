@@ -213,7 +213,7 @@ class PersonalNotifications extends SimpleORMap
             "UPDATE personal_notifications_user AS pnu " .
             "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
             "SET pnu.seen = '1' " .
-            "WHERE pnu.user_id = :user_id " .
+            "WHERE pnu.user_id = :user_id AND pnu.seen = 0 " .
             "AND pn.url = :url " .
             "");
         return $statement->execute(array(
@@ -240,7 +240,7 @@ class PersonalNotifications extends SimpleORMap
             "UPDATE personal_notifications_user AS pnu " .
                 "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
             "SET pnu.seen = '1' " .
-            "WHERE pnu.user_id = :user_id " .
+            "WHERE pnu.user_id = :user_id AND pnu.seen = 0 " .
                 "AND pn.html_id LIKE :html_id " .
         "");
         return $statement->execute(array(

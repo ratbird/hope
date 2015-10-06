@@ -33,12 +33,15 @@ class Message extends SimpleORMap
         PersonalNotifications::markAsReadByHTML('message_%', $user_id ?: $GLOBALS['user']->id);
 
         $query = "UPDATE message_user
-                  SET readed = :flag
-                  WHERE user_id = :user_id";
+            SET readed = :flag
+            WHERE user_id = :user_id
+            AND snd_rec = 'rec' AND deleted = 0
+            AND readed = :other_flag";
         $statement = DBManager::get()->prepare($query);
         return $statement->execute(array(
-            'user_id' => $user_id ?: $GLOBALS['user']->id,
-            'flag'    => $state_of_flag
+            'user_id' => $user_id,
+            'flag' => $state_of_flag ? 1 : 0,
+            'other_flag' => $state_of_flag ? 0 : 1
         ));
     }
 

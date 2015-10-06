@@ -29,56 +29,26 @@ STUDIP.Admission = {
     },
 
     configureRule: function (ruleType, targetUrl) {
-        var loading = 'Wird geladen'.toLocaleString();
-        var title = 'Anmelderegel konfigurieren'.toLocaleString();
-        if ($('#configurerule').length === 0) {
-            $('<div id="configurerule" title="'+title+'">' + loading + '</div>')
-                .dialog({
-                    draggable: false,
-                    modal: true,
-                    resizable: false,
-                    position: ['center', 150],
-                    width: 0.8 * $(window).width(),
-                    close: function () {
-                        $('#configurerule').remove();
-                    }
-                });
-        }
-        $('<img/>', {
-            src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
-        }).appendTo('#configurerule');
         var urlparts = targetUrl.split('?');
         targetUrl = urlparts[0] + '/' + ruleType;
         if (urlparts[1]) {
             targetUrl += '?' + urlparts[1];
         }
-        $('#configurerule').append(loading);
-        $('#configurerule').load(targetUrl);
+
+        STUDIP.Dialog.fromURL(targetUrl, {
+            size: 'auto',
+            title: 'Anmelderegel konfigurieren'.toLocaleString()
+        });
+
         return false;
     },
 
     selectRuleType: function (source) {
-        var loading = 'Wird geladen'.toLocaleString();
-        var title = 'Anmelderegel konfigurieren'.toLocaleString();
-        $('<div id="configurerule" title="'+title+'">' + loading + '</div>')
-            .dialog({
-                draggable: false,
-                modal: true,
-                resizable: false,
-                position: ['center', 150],
-                width: 0.8 * $(window).width(),
-                close: function () {
-                    $('#configurerule').remove();
-                },
-                open: function () {
-                    $('#configurerule').empty();
-                    $('<img/>', {
-                        src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
-                    }).appendTo('#configurerule');
-                    $('#configurerule').append(loading);
-                    $('#configurerule').load($(source).attr('href'), {rules : _.pluck($('#rules input[name="rules[]"]'), 'value')});
-                }
-            });
+        STUDIP.Dialog.fromURL(source, {
+            title: 'Anmelderegel konfigurieren'.toLocaleString(),
+            size: 'auto',
+            data: {rules : _.pluck($('#rules input[name="rules[]"]'), 'value')}
+        });
         return false;
     },
 

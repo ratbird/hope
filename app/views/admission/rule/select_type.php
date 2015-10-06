@@ -17,7 +17,7 @@ foreach ($ruleTypes as $className => $classDetail) {
 <?php
 }
 ?>
-    <div class="submit_wrapper">
+    <div class="submit_wrapper" data-dialog-button>
         <?= CSRFProtection::tokenTag() ?>
         <?= Button::create(_('Weiter >>'), 'configure', array(
             'onclick' => "return $('input[name=ruletype]:checked').val() ? STUDIP.Admission.configureRule($('input[name=ruletype]:checked').val(), '".

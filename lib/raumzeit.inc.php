@@ -98,6 +98,7 @@ function raumzeit_checkboxAction($sem) {
                 $msg .= '<li>'.$termin->toString().'<br>';
                 if (Request::get('cancel_comment') !== null) {
                     $sem->cancelSingleDate($val, Request::option('cycle_id'));
+                    $termin->setExTermin(true);
                     $termin->setComment(Request::get('cancel_comment'));
                     $termin->store();
                     $deleted_dates[] = $termin;
@@ -442,7 +443,7 @@ function raumzeit_editSingleDate($sem) {
                 $termin->addRelatedPerson($dozent_id);
             }
         }
-        
+
         $termin->clearRelatedGroups();
         $gruppen = Statusgruppen::findBySeminar_id($sem->getId());
         $gruppen_ids = array_map(function ($gruppe) { return $gruppe->getId(); }, $gruppen);
@@ -507,7 +508,7 @@ function raumzeit_editSingleDate($sem) {
                     $termin->addRelatedPerson($dozent_id);
                 }
             }
-            
+
             $termin->clearRelatedGroups();
             $gruppen = Statusgruppen::findBySeminar_id($sem->getId());
             $gruppen_ids = array_map(function ($gruppe) { return $gruppe->getId(); }, $gruppen);
@@ -609,7 +610,7 @@ function raumzeit_bulkAction($sem) {
     $group_action = Request::get('related_groups_action');
     $teacher_changed = false;
     $groups_changed = false;
-    
+
     if (in_array($action, array('add', 'delete'))) {
         foreach ($singledates as $singledate) {
             $singledate = new SingleDate($singledate);
@@ -664,7 +665,7 @@ function raumzeit_bulkAction($sem) {
     if ($groups_changed) {
         $sem->createMessage(_("Zugewiesene Gruppen für die Termine wurden geändert."));
     }
-    
+
     foreach($singledates as $termin_id) {
         if (Request::option('cycle_id') != '') {
             $termin = $sem->getSingleDate($termin_id, Request::option('cycle_id'));

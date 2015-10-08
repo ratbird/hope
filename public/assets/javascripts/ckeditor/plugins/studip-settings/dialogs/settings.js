@@ -1,4 +1,6 @@
 CKEDITOR.dialog.add('settingsDialog', function (editor) {
+    var lang = editor.lang['studip-settings'];
+
     // Time span after which the UI will display an abort option
     // to the user if the HTTP request hasn't yet finished.
     var uiTimeout = 3000;
@@ -23,7 +25,7 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
     saveEvents = 0; // remember how many save events are currently active
 
     function save(data) {
-        status.html('...speichere &Auml;nderungen.');
+        status.html(lang.savingChanges);
         saveEvents++;
 
         dialog.disableButton('ok');
@@ -35,7 +37,7 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
             .append(' (')
             .append(
                 $('<a>')
-                .text('Abbrechen')
+                .text(lang.abort)
                 .css('text-decoration', 'underline') // TODO use default styles
                 .click(function (event) {
                     event.preventDefault();
@@ -44,27 +46,27 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
             )
             .append(')');
         }, uiTimeout);
-        
+
         request
         .done(function () {
-            status.html('&Auml;nderungen wurden gespeichert.');
+            status.html(lang.savedChanges);
         })
         .fail(function (xhr) {
             var $error = $('<a>')
-            .text('Info')
+            .text(lang.information)
             .css('text-decoration', 'underline') // TODO use default styles
             .click(function (event) {
                 event.preventDefault();
                 alert(
                     settings.url +
-                    '\n\nStatus: ' + xhr.status +
+                    '\n\n' + lang.status + ' ' + xhr.status +
                     ' ' + xhr.statusText +
-                    '\nResponse: ' + xhr.responseText
+                    '\n' + lang.response + ' ' + xhr.responseText
                 );
             });
 
             status
-            .html('Speichern fehlgeschlagen. (')
+            .html(lang.savingFailed + ' (')
             .append($error)
             .append(')');
         })
@@ -80,7 +82,7 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
     }
 
     return {
-        title: 'Einstellungen',
+        title: lang.dialogTitle,
         width: 400,
         height: 200,
         resizable: CKEDITOR.DIALOG_RESIZE_NONE,
@@ -89,7 +91,7 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
             elements: [{
                 type: 'checkbox',
                 id: 'disable',
-                label: 'WYSIWYG Editor ausschalten',
+                label: lang.disableEditorLabel,
                 onClick: function() {
                     var checkbox = this;
                     checkbox.disable(); // prevent multiple save events
@@ -108,11 +110,7 @@ CKEDITOR.dialog.add('settingsDialog', function (editor) {
             }, {
                 type: 'html',
                 style: 'white-space: normal',
-                html: 'Mit dieser Einstellung k&ouml;nnen Sie den'
-                    + ' WYSIWYG Editor ausschalten. Dadurch m&uuml;ssen'
-                    + ' Sie gegebenenfalls Texte in HTML schreiben.'
-                    + ' Der Editor wird erst vollst&auml;ndig entfernt'
-                    + ' wenn man die Seite neu l&auml;dt.'
+                html: lang.disableEditorInfo
             }]
         }],
         onLoad: function (event) {

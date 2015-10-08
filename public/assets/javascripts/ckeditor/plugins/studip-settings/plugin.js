@@ -1,5 +1,6 @@
 CKEDITOR.plugins.add('studip-settings', {
     icons: 'settings',
+    lang: 'de,en',
     init: function (editor) {
         CKEDITOR.dialog.add(
             'settingsDialog',
@@ -10,7 +11,7 @@ CKEDITOR.plugins.add('studip-settings', {
             new CKEDITOR.dialogCommand('settingsDialog')
         );
         editor.ui.addButton('settings', {
-            label: 'WYSIWYG Einstellungen\n(Editor deaktivieren, usw.)',
+            label: editor.lang['studip-settings'].buttonLabel,
             command: 'settings',
             toolbar: 'others'
         });

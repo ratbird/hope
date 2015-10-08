@@ -1,12 +1,16 @@
 CKEDITOR.plugins.add('studip-wiki', {
     requires: 'widget',
     icons: 'wikilink',
+    lang: 'de,en',
     init: function (editor) {
+        var lang = editor.lang['studip-wiki'];
+
         editor.widgets.add('wikilink', {
-            // TODO place label in editor.lang.studip-wiki.* to localize it
-            button: 'Stud.IP-Wiki Link einf&uuml;gen',
+            button: lang.buttonLabel,
             dialog: 'wikiDialog',
-            template: '<span class="wiki-link">[[Wikiseite]]</span>',
+            template: '<span class="wiki-link">'
+                + lang.wikiLinkTemplate
+                + '</span>',
             allowedContent: 'span(!wiki-link)',
             requiredContent: 'span(wiki-link)',
             upcast: function (element) {
@@ -30,3 +34,4 @@ CKEDITOR.plugins.add('studip-wiki', {
         CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js');
     }
 });
+

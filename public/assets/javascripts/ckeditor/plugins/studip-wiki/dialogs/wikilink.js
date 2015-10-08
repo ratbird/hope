@@ -60,8 +60,9 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
     }
 */
     // dialog
+    var lang = editor.lang['studip-wiki'];
     return {
-        title: 'Stud.IP-Wiki Link',
+        title: lang.dialogTitle,
         minWidth: 400,
         minHeight: 200,
         contents: [{
@@ -70,15 +71,14 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
             elements: [{
                 type: 'text',
                 id: 'wikipage',
-                label: 'Titel der Wiki-Seite',
+                label: lang.pageNameLabel,
                 // TODO regex encoding is not working correctly
                 // ==> german umlauts cannot be entered using the wiki widget
                 // ==> users have to manually enter wikilinks with umlauts atm.
                 validate: CKEDITOR.dialog.validate.regex(
                     /^[\w\.\-\:\(\)§\/@# ÄÖÜäöüß]+$/i,
-                    'Der Seitenname muss aus mindestens einem Zeichen bestehen'
-                    + ' und darf nur folgende Zeichen enthalten:'
-                    + ' a-z A-Z ÄÖÜ äöü ß 0-9 -_:.( )/@#§ und das Leerzeichen.'),
+                    lang.invalidPageName
+                ),
                 setup: function(widget) {
                     this.setValue(widget.data.link);
                 },
@@ -88,11 +88,11 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
             }, {
                 type: 'text',
                 id: 'usertext',
-                label: 'Angezeigter Text (optional)',
+                label: lang.displayTextLabel,
                 validate: CKEDITOR.dialog.validate.regex(
                     /^[^\]]*$/i,
-                    'Die schließende eckige Klammer, ], ist im angezeigten'
-                    + ' Text leider nicht erlaubt.'),
+                    lang.invalidDisplayText
+                ),
                 setup: function(widget) {
                     this.setValue(widget.data.text);
                 },

@@ -1,6 +1,9 @@
 CKEDITOR.plugins.add('studip-upload', {
     icons: 'upload',
+    lang: 'de,en',
     init: function(editor){
+        var lang = editor.lang['studip-upload'];
+
         // utilities
         var isString = function(object) {
                 return (typeof object) === 'string';
@@ -47,9 +50,7 @@ CKEDITOR.plugins.add('studip-upload', {
                     }
                 });
                 if (errors.length) {
-                    var message = 'Es konnten nicht alle Dateien'
-                        + ' hochgeladen werden.\n\n';
-                    alert(message + errors.join('\n'));
+                    alert(lang.uploadError + '\n\n' + errors.join('\n'));
                 }
             };
 
@@ -78,13 +79,14 @@ CKEDITOR.plugins.add('studip-upload', {
                         if (data.result.files) {
                             handleUploads(data.result.files);
                         } else {
-                            alert('Das Hochladen der Datei(en) ist fehlgeschlagen.\n\n' + data.result);
+                            alert(lang.uploadFailed + '\n\n' + data.result);
                         }
                     },
                     fail: function (e, data) {
                         alert(
-                            'Das Hochladen der Datei(en) ist fehlgeschlagen.'
-                            + '\n\nFehler: ' + data.errorThrown.message
+                            lang.uploadFailed + '\n\n'
+                            + lang.error + ' '
+                            + data.errorThrown.message
                         );
                     }
                 });
@@ -99,7 +101,7 @@ CKEDITOR.plugins.add('studip-upload', {
             }
         });
         editor.ui.addButton('upload', {  // toolbar button
-            label: 'Datei hochladen',
+            label: lang.buttonLabel,
             command: 'upload',
             toolbar: 'insert,80'
         });

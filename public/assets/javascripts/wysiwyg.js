@@ -196,6 +196,10 @@ jQuery(function ($) {
             entities_latin: false,
             entities_processNumerical: true,
 
+            // set WYSIWYG's menu language to the language set in Stud.IP
+            defaultLanguage: 'de', // use German if user language not available
+            language: String.locale, // override browser-stored preferences
+
             // configure list of special characters
             // NOTE 17 characters fit in one row of special characters dialog
             specialChars: [].concat(

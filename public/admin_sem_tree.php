@@ -39,6 +39,7 @@ if (!$perm->is_fak_admin()){
 }
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+include 'lib/msg.inc.php';
 
 PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten"));
 Navigation::activateItem('/admin/locations/sem_tree');

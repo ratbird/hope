@@ -137,7 +137,7 @@ class Document_DownloadController extends AuthenticatedController
 
         Metrics::increment('core.personal_files.downloads');
 
-        $this->initiateDownload($inline, $file->filename, $file->mime_type, $file->size, $storage->open('r'));
+        $this->initiateDownload($inline, $file->filename, $file->size, $storage->open('r'));
     }
     
     /**
@@ -170,7 +170,7 @@ class Document_DownloadController extends AuthenticatedController
 
         // TODO: swap "Stud-IP.zip" with a more appropriate name
         $filename = basename($filename, '.zip') . '.zip';
-        $this->initiateDownload(false, $filename, 'application/zip', filesize($tmp_file), fopen($tmp_file, 'r'));
+        $this->initiateDownload(false, $filename, filesize($tmp_file), fopen($tmp_file, 'r'));
         $this->download_remove = $tmp_file;
         
     }
@@ -259,7 +259,7 @@ class Document_DownloadController extends AuthenticatedController
      * @param resource $handle    Underlying file resource handle
      * @see Document_DownloadController::after_filter
      */
-    protected function initiateDownload($inline, $filename, $mime_type, $size, $handle)
+    protected function initiateDownload($inline, $filename, $size, $handle)
     {
         $response = $this->response;
 
@@ -277,7 +277,7 @@ class Document_DownloadController extends AuthenticatedController
         $response->add_header('Content-Disposition', $dispositon);
         $response->add_header('Content-Description', 'File Transfer');
         $response->add_header('Content-Transfer-Encoding' , 'binary');
-        $response->add_header('Content-Type', $mime_type);
+        $response->add_header('Content-Type', get_mime_type($filename));
         $response->add_header('Content-Length', $size);
 
         $this->render_nothing();

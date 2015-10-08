@@ -3,7 +3,7 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
-$_GET['cancel_login'] = 1;
+$_GET['cancel_login'] = '1';
 
 require '../lib/bootstrap.php';
 

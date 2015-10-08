@@ -112,7 +112,7 @@ use Studip\Button,
                 <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
                 <? $resList->reset() ?>
                 <label>
-                    <input type="radio" name="action" value="room" checked="checked">
+                    <input type="radio" name="action" value="room" >
                     <?= _("Raum:"); ?>
                 </label>
 
@@ -131,30 +131,34 @@ use Studip\Button,
 
                 <br>
                 <br>
-
-                <label>
-                    <input type="radio" name="action" value="freetext" <?= $tpl['freeRoomText'] ? 'checked="checked"' : '' ?>>
-                    <?= _('freie Ortsangabe (keine Raumbuchung):') ?><br>
-                </label>
-                <? else : ?>
-                    <br>
-                    <?= _('freie Ortsangabe:') ?><br>
-                    <input type="hidden" name="action" value="freetext">
                 <? endif ?>
+                <label>
+                    <input type="radio" name="action" value="freetext">
+                    <? if (Config::get()->RESOURCES_ENABLE) : ?>
+                        <?= _('freie Ortsangabe (keine Raumbuchung):') ?>
+                    <? else : ?>
+                        <?= _('freie Ortsangabe:') ?>
+                    <? endif ?>
+                    <br>
+                </label>
 
                 <input type="text" name="freeRoomText_sd" maxlength="255" value="<?= $tpl['freeRoomText'] ?>" style="margin-left: 25px; width: 90%;"
                     onfocus="jQuery('input[type=radio][name=action][value=freetext]').prop('checked', true)">
 
-                <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
+                <? if (Config::get()->RESOURCES_ENABLE) : ?>
                     <br>
                     <br>
                     <label>
-                        <input type="radio" name="action" value="noroom" <?= !$tpl['freeRoomText'] && !$tpl['resource_id'] ? 'checked="checked"' : '' ?>>
+                        <input type="radio" name="action" value="noroom">
                         <?=_('kein Raum') ?>
                     </label>
                     <br>
                 <? endif ?>
-
+                <br>
+                <label>
+                    <input type="radio" name="action" value="nochange" checked="checked">
+                    <?=_('keine Änderungen an den Raumangaben vornehmen') ?>
+                </label>
                 <br>
                 <br>
                 <br>

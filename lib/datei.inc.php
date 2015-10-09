@@ -2282,7 +2282,6 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'jpeg':
         case 'png':
         case 'bmp':
-        case 'svg':
             $icon = 'icons/16/blue/file-pic.png';
         break;
         default:
@@ -2329,7 +2328,6 @@ function get_mime_type($filename)
         'jpe'  => 'image/jpeg',
         'png'  => 'image/png',
         'bmp'  => 'image/x-ms-bmp',
-        'svg'  => 'image/svg+xml',
         // audio types
         'mp3'  => 'audio/mp3',
         'oga'  => 'audio/ogg',

@@ -57,7 +57,7 @@ foreach ($groups as $group_id => $group_members):
 
             <th colspan="4">
             <? if ($last_modified): ?>
-                <?= tooltipIcon(_('Letzte Änderung: ') . strftime('%x, %H:%M', $last_modified), true) ?>
+                <?= tooltipIcon(_('Letzte Änderung') . ': '. strftime('%x, %H:%M', $last_modified), true) ?>
             <? endif; ?>
             </th>
         </tr>

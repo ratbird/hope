@@ -24,9 +24,9 @@
         foreach ($dates['regular']['turnus_data'] as $cycle) :
             $first_date = sprintf(_("ab %s"), strftime('%x', $cycle['first_date']['date']));
             if ($cycle['cycle'] == 1) :
-                $cycle_output = $cycle['tostring'] . ' ' . sprintf(_("(zweiwöchentlich, %s)"), $first_date);
+                $cycle_output = $cycle['tostring'] . ' (' . sprintf(_("zweiwöchentlich, %s"), $first_date) . ')';
             elseif ($cycle['cycle'] == 2) :
-                $cycle_output = $cycle['tostring'] . ' ' . sprintf(_("(dreiwöchentlich, %s)"), $first_date);
+                $cycle_output = $cycle['tostring'] . ' (' . sprintf(_("dreiwöchentlich, %s"), $first_date) . ')';
             else :
                 $cycle_output = $cycle['tostring'] . ' (' . $first_date . ')';
             endif;

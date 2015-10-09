@@ -427,7 +427,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         if ($this->start_item_id != 'root'){
             echo "\n<tr><td class=\"table_row_odd\" align=\"left\" valign=\"top\"><div style=\"font-size:10pt;margin-left:10px\"><b>"
-            . _("Studienbereiche:") . "</b><br>" .  $this->getSemPath()
+            . _("Studienbereiche") . ":</b><br>" .  $this->getSemPath()
             . "</div></td></tr>";
         }
         echo "\n<tr><td class=\"blank\"  align=\"left\" valign=\"top\">";

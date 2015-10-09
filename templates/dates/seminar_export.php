@@ -13,11 +13,11 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
     $first_date = sprintf(_("ab %s"), strftime('%x', $cycle['first_date']['date']));
     if ($cycle['cycle'] == 1) :
-        $cycle_output = $cycle['tostring_short'] . ' ' . sprintf(_("(zweiwöchentlich, %s)"), $first_date);
+        $cycle_output = $cycle['tostring_short'] . ' (' . sprintf(_("zweiwöchentlich, %s"), $first_date) . ')';
     elseif ($cycle['cycle'] == 2) :
-        $cycle_output = $cycle['tostring_short'] . ' ' . sprintf(_("(dreiwöchentlich, %s)"), $first_date);
+        $cycle_output = $cycle['tostring_short'] . ' (' . sprintf(_("dreiwöchentlich, %s"), $first_date) . ')';
     else :
-      $cycle_output = $cycle['tostring_short'] . ' ' . _("(wöchentlich)");
+      $cycle_output = $cycle['tostring_short'] . ' (' . _("wöchentlich") . ')';
     endif;
     if ($cycle['desc'])
       $cycle_output .= ' - '. $cycle['desc'];

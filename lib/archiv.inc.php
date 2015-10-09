@@ -214,7 +214,7 @@ function dump_sem($sem_id, $print_view = false)
     //Studienbereiche
     if (isset($SEM_TYPE[$seminar['status']]) && $SEM_CLASS[$SEM_TYPE[$seminar['status']]['class']]['bereiche']) {
         $sem_path = get_sem_tree_path($sem_id) ?: array();
-        $dumpRow(_('Studienbereich(e):'), implode('<br>', array_map('htmlReady', $sem_path)));
+        $dumpRow(_('Studienbereiche') . ':', implode('<br>', array_map('htmlReady', $sem_path)));
     }
 
     $iid = $seminar['Institut_id'];

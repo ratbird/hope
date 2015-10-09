@@ -15,7 +15,7 @@
             <b><?= ($element->getValue('user_id') == 'studip') ? _('Systemeintrag:') : _('Eingetragen von:') ?></b><br>
             <?= ($element->getValue('user_id') == 'studip') ? _('Dies ist ein vom System generierter Eintrag.') : get_fullname($element->getValue("user_id"), 'full', true) ?>
             <br>
-            <b><?= _('Letzte Änderung am:') ?></b><br>
+            <b><?= _('Letzte Änderung') ?>:</b><br>
             <?= strftime('%d.%m.%Y', $element->getValue('chdate')) ?>
         </p>
     <? endif ?>

@@ -2740,7 +2740,7 @@ elseif ($level == 2) {
         <tr <? $cssSw->switchClass() ?>>
             <td colspan="4" class="<? echo $cssSw->getClass() ?>">
 
-                <?= _("Studienbereiche:") ?>
+                <?= _("Studienbereiche") ?>:
                 <?= tooltipIcon( _("Sie müssen mindestens einen Studienbereich auswählen! Der Studienbereich legt z.B. fest, wo die Veranstaltung im Vorlesungsverzeichnis auftaucht.")) ?>
                 <font color="red" size=+2>*</font>
 

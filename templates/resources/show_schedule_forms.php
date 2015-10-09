@@ -98,7 +98,7 @@ use Studip\Button,
                 <? $repeat_buttons = array(
                     'na' => array('name' => _('Keine'), 'action' => 'change_schedule_repeat_none'),
                     'd'  => array('name' => _('Täglich'), 'action' => 'change_schedule_repeat_day'),
-                    'w'  => array('name' => _('Wöchentlich'), 'action' => 'change_schedule_repeat_week'),
+                    'w'  => array('name' => ucfirst(_('wöchentlich')), 'action' => 'change_schedule_repeat_week'),
                     'sd' => array('name' => _('Mehrtägig'), 'action' => 'change_schedule_repeat_severaldays'),
                     'm'  => array('name' => _('Monatlich'), 'action' => 'change_schedule_repeat_month'),
                     'y'  => array('name' => _('Jährlich'),  'action' => 'change_schedule_repeat_year')

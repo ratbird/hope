@@ -12,9 +12,9 @@ echo '</form>';
 if ($request->isNew()) {
     $info_txt = _("Dies ist eine neue Raumanfrage.");
 } else {
-    $info_txt = '<div>' . sprintf(_('Erstellt von: %s'), get_fullname($request->user_id)) . '</div>';
-    $info_txt .= '<div>' . sprintf(_('Erstellt am: %s'), strftime('%x %H:%M', $request->mkdate)) . '</div>';
-    $info_txt .= '<div>' . sprintf(_('Letzte Änderung: %s'), strftime('%x %H:%M', $request->chdate)) . '</div>';
+    $info_txt = '<div>' . _('Erstellt von') . ': ' . get_fullname($request->user_id) . '</div>';
+    $info_txt .= '<div>' . _('Erstellt am') . ': ' . strftime('%x %H:%M', $request->mkdate) . '</div>';
+    $info_txt .= '<div>' . _('Letzte Änderung') . ': ' . strftime('%x %H:%M', $request->chdate) . '</div>';
 }
 $infobox_content = array(
     array(

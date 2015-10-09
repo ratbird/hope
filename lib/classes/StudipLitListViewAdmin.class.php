@@ -471,7 +471,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getBottomRowForTableBox($item_id){
         $content .= "\n<tr><td class=\"table_row_odd\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
-        $content .= _("Letzte Änderung:");
+        $content .= _("Letzte Änderung") . ':';
         $content .= strftime(" %d.%m.%Y ", $this->tree->tree_data[$item_id]['chdate']);
         $content .= "(<a href=\"dispatch.php/profile?username=";
         $content .= $this->tree->tree_data[$item_id]['username'];
@@ -481,7 +481,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getNewLiteratureButton($item_id){
-        $content = LinkButton::create(_('neue Literaturliste'),
+        $content = LinkButton::create(_('Neue Literaturliste'),
                     URLHelper::getURL($this->getSelf('cmd=NewItem&item_id='.$item_id)),
                     array('title' => _('Eine neue Literaturliste anlegen')));
         $content .= "&nbsp;";
@@ -490,7 +490,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getEditFormatingButton($item_id){
-        $content = LinkButton::create(_('bearbeiten'),
+        $content = LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL($this->getSelf('cmd=EditItem&item_id='.$item_id)),
                     array('title' => _("Dieses Element bearbeiten")));
         $content .= "&nbsp;";
@@ -526,7 +526,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getSortButton($item_id){
-        $content = LinkButton::create(_('sortieren'),
+        $content = LinkButton::create(_('Sortieren'),
                     URLHelper::getURL($this->getSelf('cmd=SortKids&item_id='.$item_id)),
                     array('title' => _('Elemente dieser Liste alphabetisch sortieren')));
         $content .= "&nbsp;";

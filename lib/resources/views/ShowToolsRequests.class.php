@@ -324,12 +324,12 @@ class ShowToolsRequests
                         <?
                         $names = $this->selectSemInstituteNames($semObj->getInstitutId());
 
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".$reqObj->getTypeExplained()."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt am:") ." ". strftime('%x %H:%M', $reqObj->mkdate) . '<br>';
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung:") ." ". strftime('%x %H:%M', $reqObj->chdate) . '<br>';
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung von:") . " <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->last_modified_by ?: $reqObj->user_id))."\">".htmlReady(get_fullname($reqObj->last_modified_by ?: $reqObj->user_id))."</a><br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage").": ".$reqObj->getTypeExplained()."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von").": <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt am") .": ". strftime('%x %H:%M', $reqObj->mkdate) . '<br>';
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung") . ": ". strftime('%x %H:%M', $reqObj->chdate) . '<br>';
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung von") . ": <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->last_modified_by ?: $reqObj->user_id))."\">".htmlReady(get_fullname($reqObj->last_modified_by ?: $reqObj->user_id))."</a><br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende") . ': ';
                         foreach ($semObj->getMembers('dozent') as $doz) {
                             if ($dozent){
                                 echo ", ";
@@ -338,9 +338,9 @@ class ShowToolsRequests
                             $dozent = true;
                         }
                         print "<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($names['inst_name'])."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakultät:")." ".htmlReady($names['fak_name'])."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl:")." ".$semObj->getNumberOfParticipants('total').'<br>';
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung").": ".htmlReady($names['inst_name'])."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakultät").": ".htmlReady($names['fak_name'])."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl").": ".$semObj->getNumberOfParticipants('total').'<br>';
                         ?>
                     </font>
                 </td>
@@ -349,7 +349,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("angeforderte Belegungszeiten:")?></b><br><br>
+                    <font size="-1"><b><?=_("angeforderte Belegungszeiten")?>:</b><br><br>
                     <?
                     $dates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
                     if (count($dates)) {
@@ -364,7 +364,7 @@ class ShowToolsRequests
                             }
 
                             if ($reqObj->getType() != 'date') {
-                                echo _("regelmäßige Buchung ab:")." ".strftime("%x", $dates['first_event']);
+                                echo _("regelmäßige Buchung ab").": ".strftime("%x", $dates['first_event']);
                             }
                      } else {
                             print _("nicht angegeben");
@@ -376,7 +376,7 @@ class ShowToolsRequests
                     <table cellpadding="2" cellspacing="0" border="0" width="90%">
                         <tr>
                             <td width="70%">
-                                <font size="-1"><b><?=_("angeforderter Raum:")?></b></font>
+                                <font size="-1"><b><?=_("angeforderter Raum")?>:</b></font>
                             </td>
                             <?
                             unset($resObj);
@@ -456,7 +456,7 @@ class ShowToolsRequests
                             ?>
                         <tr>
                             <td style="border-top:1px solid;" width="100%" colspan="<?=$cols+2?>">
-                                <font size="-1"><b><?=_("Raumgruppe berücksichtigen:")?></b></font>
+                                <font size="-1"><b><?=_("Raumgruppe berücksichtigen")?>:</b></font>
                             </td>
                         </tr>
                         <tr>
@@ -540,7 +540,7 @@ class ShowToolsRequests
                         ?>
                         <tr>
                             <td style="border-top:1px solid;" width="100%" colspan="<?=$cols+2?>">
-                                <font size="-1"><b><?=_("weitere passende Räume:")?></b>
+                                <font size="-1"><b><?=_("weitere passende Räume")?>:</b>
                                 </font>
                             </td>
                         </tr>
@@ -644,7 +644,7 @@ class ShowToolsRequests
                         ?>
                         <tr>
                             <td style="border-top:1px solid;" width="100%" colspan="<?=$cols+2?>">
-                                <font size="-1"><b><?=_("Räume aus der Merkliste:")?></b></font>
+                                <font size="-1"><b><?=_("Räume aus der Merkliste")?>:</b></font>
                             </td>
                         </tr>
                         <?
@@ -712,7 +712,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("gewünschte Raumeigenschaften:")?></b><br><br>
+                    <font size="-1"><b><?=_("gewünschte Raumeigenschaften")?>:</b><br><br>
                     <?
                     $properties = $reqObj->getProperties();
                     if (sizeof($properties)) {
@@ -762,7 +762,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("Kommentar des Anfragenden:")?></b><br><br>
+                    <font size="-1"><b><?=_("Kommentar des Anfragenden")?>:</b><br><br>
                     <?
                     if ($comment = $reqObj->getComment())
                         print $comment;
@@ -781,7 +781,7 @@ class ShowToolsRequests
                     <?
                     $user_status_mkdate = $reqObj->getUserStatus($GLOBALS['user']->id);
                     ?>
-                    <b><?=("Benachrichtigungen:")?></b><br>
+                    <b><?=("Benachrichtigungen")?>:</b><br>
                     <input type="radio" onChange="jQuery(this).closest('form').submit()" name="reply_recipients" id="reply_recipients_requester" value="requester" checked>
                     <label for="reply_recipients_requester">
                     <?=_("Ersteller")?>
@@ -791,7 +791,7 @@ class ShowToolsRequests
                     <?=_("Ersteller und alle Lehrenden")?>
                     </label>
                     <br>
-                    <b><?=("Anfrage markieren:")?></b><br>
+                    <b><?=("Anfrage markieren")?>:</b><br>
                     <input type="radio" onChange="jQuery(this).closest('form').submit()" name="request_user_status" id="request_user_status_0" value="0" checked>
                     <label for="request_user_status_0">
                     <?=_("unbearbeitet")?>
@@ -801,7 +801,7 @@ class ShowToolsRequests
                     <?=_("bearbeitet")?>
                     </label>
                     <br><br>
-                    <b><?=_("Kommentar zur Belegung (intern):")?></b><br><br>
+                    <b><?=_("Kommentar zur Belegung (intern)")?>:</b><br><br>
                     <textarea name="comment_internal" style="width: 90%" rows="2"></textarea>
                 </td>
             </tr>

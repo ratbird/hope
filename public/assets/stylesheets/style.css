@@ -6640,6 +6640,9 @@ div#studyareas {
   float: left;
   padding-right: 0.5em;
 }
+.smiley-statistics dt::after {
+  content: ':';
+}
 .smiley-statistics dd {
   font-weight: 700;
   margin: 0;

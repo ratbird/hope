@@ -562,15 +562,15 @@ class RoomRequest extends SimpleORMap
             }
             $requestData[] = '';
         } else {
-            $requestData[] = sprintf(_('Erstellt von: %s'), get_fullname($this->user_id));
-            $requestData[] = sprintf(_('Erstellt am: %s'), strftime('%x %H:%M', $this->mkdate));
-            $requestData[] = sprintf(_('Letzte Änderung: %s'), strftime('%x %H:%M', $this->chdate));
-            $requestData[] = sprintf(_('Letzte Änderung von: %s'), get_fullname($this->last_modified_by ?: $this->user_id));
+            $requestData[] = _('Erstellt von') . ': ' . get_fullname($this->user_id);
+            $requestData[] = _('Erstellt am') . ': ' . strftime('%x %H:%M', $this->mkdate);
+            $requestData[] = _('Letzte Änderung') . ': ' . strftime('%x %H:%M', $this->chdate);
+            $requestData[] = _('Letzte Änderung von') . ': ' . get_fullname($this->last_modified_by ?: $this->user_id);
         }
         if ($this->resource_id) {
             $resObject = ResourceObject::Factory($this->resource_id);
-            $requestData[] = sprintf(_('Raum: %s'), $resObject->getName());
-            $requestData[] = sprintf(_('verantwortlich: %s'), $resObject->getOwnerName());
+            $requestData[] = _('Raum') . ': ' . $resObject->getName();
+            $requestData[] = _('verantwortlich') . ': ' . $resObject->getOwnerName();
         } else {
             $requestData[] = _('Es wurde kein spezifischer Raum gewünscht');
         }
@@ -599,10 +599,10 @@ class RoomRequest extends SimpleORMap
 
         // if the room-request has been declined, show the decline-notice placed by the room-administrator
         if ($this->getClosed() == 3) {
-            $requestData[] = _('Nachricht RaumadministratorIn:');
+            $requestData[] = _('Nachricht RaumadministratorIn') . ':';
             $requestData[] = $this->getReplyComment();
         } else {
-            $requestData[] = _('Nachricht an den/die RaumadministratorIn:');
+            $requestData[] = _('Nachricht an den/die RaumadministratorIn') . ':';
             $requestData[] = $this->getComment();
         }
         return join("\n", $requestData);

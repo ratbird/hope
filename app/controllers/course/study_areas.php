@@ -48,7 +48,8 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->values['StudyAreasWizardStep']['studyareas'] = $this->get_area_ids($this->course->id);
         $this->values['StudyAreasWizardStep']['ajax_url'] = $this->url_for('course/study_areas/ajax');
         $this->values['StudyAreasWizardStep']['no_js_url'] = $this->url_for('course/study_areas/show');
-        PageLayout::setTitle(sprintf(_("%s - Studienbereiche"), $this->course->getFullname()));
+
+        PageLayout::setTitle($this->course->getFullname() . ' - ' . _('Studienbereiche'));
     }
 
 
@@ -144,7 +145,7 @@ class Course_StudyAreasController extends AuthenticatedController
             $studyareas = Request::getArray('studyareas');
 
             if (empty($studyareas)) {
-                PageLayout::postMessage(MessageBox::error(_('Sie müssen mindesens einen Studienbereich auswählen')));
+                PageLayout::postMessage(MessageBox::error(_('Sie müssen mindestens einen Studienbereich auswählen')));
                 $this->redirect($url);
                 return;
             }
@@ -181,7 +182,7 @@ class Course_StudyAreasController extends AuthenticatedController
         }
 
         if(empty($assigned)) {
-            return _('Sie müssen mindesens einen Studienbereich auswählen');
+            return _('Sie müssen mindestens einen Studienbereich auswählen');
         }
         $this->course->study_areas = SimpleORMapCollection::createFromArray(StudipStudyArea::findMany(array_values($assigned)));
 

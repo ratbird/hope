@@ -69,7 +69,7 @@ class StudipSemTreeViewSimple {
     function showSemTree(){
         echo "\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         echo "\n<tr><td class=\"table_row_odd\" align=\"left\" valign=\"top\" style=\"font-size:10pt;\">"
-            . "<div style=\"font-size:10pt;margin-left:10px\"><b>" . _("Studienbereiche:"). "</b><br>". $this->getSemPath();
+            . "<div style=\"font-size:10pt;margin-left:10px\"><b>" . _("Studienbereiche"). ":</b><br>". $this->getSemPath();
         echo "</div></td>";
         echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){

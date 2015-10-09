@@ -7,6 +7,9 @@ $translations = array(
     'Gefundene Nutzer' => _('Gefundene Nutzer'),
     'Wollen Sie diesen Filter wirklich entfernen?' => _('Wollen Sie diesen Filter wirklich entfernen?'),
 
+    // app/views/messages/overview.php
+    'Wirklich %s Nachrichten löschen?' => _('Wirklich %s Nachrichten löschen?'),
+
     // public/assets/javascripts/admission.js
     'Wird geladen' => _('Wird geladen'),
     'Anmelderegel konfigurieren' => _('Anmelderegel konfigurieren'),
@@ -153,9 +156,6 @@ $translations = array(
     'Vor wenigen Sekunden' => _('Vor wenigen Sekunden'),
     'Vor einer Minute' => _('Vor einer Minute'),
     'Vor <%= distance %> Minuten' => _('Vor <%= distance %> Minuten'),
-    'Vor <%= distance %> Stunden' => _('Vor <%= distance %> Stunden'),
-    'Vor einem Tag' => _('Vor einem Tag'),
-    'Vor <%= distance %> Tagen' => _('Vor <%= distance %> Tagen'),
     'Sichtbarkeit' => _('Sichtbarkeit'),
 
     // public/plugins_packages/core/Forum/javascript/forum.js

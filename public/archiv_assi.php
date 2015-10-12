@@ -205,7 +205,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     $msg['info'] .= _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht rückgängig gemacht werden!");
     // check is Veranstaltung running
     if ($seminar['duration_time'] == -1) {
-        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.");
+        $msg['info'] .= _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.");
     } elseif (time() < $seminar['start_time'] + $seminar['duration_time']) {
         $msg['info'] .= _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.");
     }

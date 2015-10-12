@@ -48,6 +48,8 @@ class Course_DatesController extends AuthenticatedController
         object_set_visit_module("schedule");
 
         $this->dates = Course::findCurrent()->getDatesWithExdates();
+        $this->lecturer_count = Course::findCurrent()->countMembersWithStatus('dozent');
+
     }
 
     public function details_action($termin_id)

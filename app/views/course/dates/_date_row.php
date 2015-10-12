@@ -10,7 +10,7 @@
                 <?= htmlReady($date->getFullname()) ?>
             </a>
         <? endif ?>
-        <? if (count($date->dozenten)) : ?>
+        <? if (count($date->dozenten) && count($date->dozenten) != $lecturer_count) : ?>
             (<? foreach ($date->dozenten as $key => $dozent) {
                 if ($key > 0) {
                     echo ", ";

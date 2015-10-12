@@ -46,7 +46,7 @@ class Course_DatesController extends AuthenticatedController
         Navigation::activateItem('/course/schedule/dates');
 
         object_set_visit_module("schedule");
-
+        $this->last_visitdate = object_get_visit(Course::findCurrent()->id, 'schedule');
         $this->dates = Course::findCurrent()->getDatesWithExdates();
         $this->lecturer_count = Course::findCurrent()->countMembersWithStatus('dozent');
 

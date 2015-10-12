@@ -288,6 +288,9 @@ class AdminCourseFilter
     public function getCourses($grouped = true)
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
+        if (empty($this->settings['query']['where'])) {
+            return array();
+        }
         $statement = DBManager::get()->prepare($this->createQuery());
         $statement->execute($this->settings['parameter']);
         $_SESSION['AdminCourseFilter_settings'] = $this->settings;
@@ -300,6 +303,9 @@ class AdminCourseFilter
     public function countCourses()
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
+        if (empty($this->settings['query']['where'])) {
+            return 0;
+        }
         return DBManager::get()->fetchColumn($this->createQuery(true), $this->settings['parameter']);
     }
 

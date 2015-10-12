@@ -94,10 +94,9 @@ class Admin_CoursesController extends AuthenticatedController
         // Get the view filter
         $this->view_filter = $this->getFilterConfig();
 
-        $sortFlag = (Request::get('sortFlag') == 'asc') ? 'DESC' : 'ASC';
-
-        $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT_FLAG', $sortFlag);
-
+        if (Request::get('sortFlag')) {
+            $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT_FLAG', Request::get('sortFlag') == 'asc' ? 'DESC' : 'ASC');
+        }
         if (Request::option('sortby')) {
             $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT', Request::option('sortby'));
         }
@@ -108,7 +107,7 @@ class Admin_CoursesController extends AuthenticatedController
         }
 
         $this->sortby = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT;
-        $this->sortFlag = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT_FLAG;
+        $this->sortFlag = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT_FLAG ?: 'ASC';
 
         $this->courses = $this->getCourses(array(
             'sortby'      => $this->sortby,
@@ -565,7 +564,7 @@ class Admin_CoursesController extends AuthenticatedController
                                 'title' => _('Raumanfragen'),
                                 'url'   => 'dispatch.php/course/room_requests/index?cid=%s');
         }
-        
+
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
             $actions[get_class($plugin)] = array(
                 'name'      => $plugin->getPluginName(),

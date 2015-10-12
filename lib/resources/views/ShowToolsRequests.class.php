@@ -897,7 +897,7 @@ class ShowToolsRequests
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE);
-                $html = Assets::img('icons/16/red/progress.png', tooltip2($desc));
+                $html = Assets::img('icons/16/red/radiobutton-checked.png', tooltip2($desc));
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -909,11 +909,11 @@ class ShowToolsRequests
                             else
                                 $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val2["begin"]), date("H:i", $val2["begin"]), date("H:i", $val2["end"]));
                 }
-                $html = Assets::img('icons/16/yellow/progress.png', tooltip2($desc));
+                $html = Assets::img('icons/16/yellow/radiobutton-checked.png', tooltip2($desc));
                 $status = 1;
             }
         } else {
-            $html = Assets::img('icons/16/green/progress.png', tooltip2(_('Es existieren keine Überschneidungen')));
+            $html = Assets::img('icons/16/green/radiobutton-checked.png', tooltip2(_('Es existieren keine Überschneidungen')));
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);
@@ -927,7 +927,7 @@ class ShowToolsRequests
                     $lock_desc .= sprintf(_('%s, %s Uhr bis %s, %s Uhr') . "\n",
                                           date('d.m.Y', $val['begin']),
                                           date('H:i', $val['begin']),
-                                          date('d.m.Y', $val['end']), 
+                                          date('d.m.Y', $val['end']),
                                           date('H:i', $val['end']));
                 }
             }

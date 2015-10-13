@@ -203,14 +203,14 @@ class Course_DatesController extends AuthenticatedController
         $template->set_attribute('dates', $dates);
         $content = $template->render();
 
+        $content = mb_encode_numericentity($content, array(0x80, 0xffff, 0, 0xffff), 'cp1252');
         $filename = prepareFilename($course['name'] . '-' . _("Ablaufplan")) . '.doc';
-        header("Content-type: application/vnd.ms-word");
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-        header("Expires: 0");
-        header("Cache-Control: private");
-        header("Pragma: cache");
-        echo mb_encode_numericentity($content, array(0x80, 0xffff, 0, 0xffff), 'cp1252');
 
-        $this->render_nothing();
+        $this->set_content_type(get_mime_type($filename));
+        $this->response->add_header('Content-Disposition', 'attachment;filename="' . $filename . '"');
+        $this->response->add_header('Expires', 0);
+        $this->response->add_header('Cache-Control', 'private');
+        $this->response->add_header('Pragma', 'cache');
+        $this->render_text($content);
     }
 }

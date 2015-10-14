@@ -105,6 +105,7 @@ javascripts:
     - javascripts/smiley.js
     - javascripts/big-image-handler.js
 
+    - javascripts/studip-secure-forms.js
     - javascripts/studip-css.js
     - javascripts/studip-tooltip.js
     - javascripts/studip-scroll.js

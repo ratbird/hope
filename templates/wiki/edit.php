@@ -1,11 +1,11 @@
-<form method="post" action="<?= URLHelper::getLink('?cmd=edit', compact('keyword')) ?>">
+<form method="post" action="<?= URLHelper::getLink('?cmd=edit', compact('keyword')) ?>" data-secure>
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="wiki" value="<?= htmlReady($keyword) ?>">
     <input type="hidden" name="version" value="<?= htmlReady($version) ?>">
     <input type="hidden" name="submit" value="true">
     <input type="hidden" name="cmd" value="show">
 
-    <textarea name="body" class="wiki-editor add_toolbar resizable" data-secure="true"><?= htmlready($body) ?></textarea>
+    <textarea name="body" class="wiki-editor add_toolbar resizable"><?= htmlready($body) ?></textarea>
     <br><br>
     <div class="button-group">
         <?= Studip\Button::createAccept(_('Speichern')) ?>

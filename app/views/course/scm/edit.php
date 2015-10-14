@@ -12,15 +12,16 @@ use Studip\Button,
     ?>
 </p>
 
-<form action="<?= $controller->url_for('course/scm/edit/' . $scm->id) ?>" method="post" class="studip_form">
+<form action="<?= $controller->url_for('course/scm/edit/' . $scm->id) ?>" method="post" class="studip_form" data-secure>
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
     <legend>
         <?= _('Titel') ?>
     </legend>
-            <input id="tab_name" type="text" name="tab_name" value="<?= htmlReady($scm->tab_name) ?>"
-               placeholder="<?= _('Titel der Informationsseite') ?>" maxlength="20"
-               data-length-hint>
+            <input required id="tab_name" type="text" name="tab_name"
+                   value="<?= htmlReady($scm->tab_name) ?>"
+                   placeholder="<?= _('Titel der Informationsseite') ?>"
+                   data-length-hint maxlength="20">
     <label>
         <?= _('oder wählen Sie hier einen Namen aus:') ?>
         <select name="tab_name_template" data-copy-to="input[name=tab_name]">
@@ -36,7 +37,7 @@ use Studip\Button,
             <?= _('Inhalt') ?>
         </legend>
         <div>
-        <textarea style="width: 100%;" class="add_toolbar" name="content" data-secure="true"><?= htmlReady($scm->content) ?></textarea>
+        <textarea style="width: 100%;" class="add_toolbar" name="content"><?= htmlReady($scm->content) ?></textarea>
         </div>
     </fieldset>
     <? if (!$scm->isNew()): ?>

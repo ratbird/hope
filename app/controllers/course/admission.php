@@ -309,7 +309,12 @@ class Course_AdmissionController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success(_("Die zugelassenen Nutzerdomänen wurden geändert.")));
             }
         }
-        $this->redirect($this->url_for('/index'));
+        if (Request::isXhr()) {
+            $this->response->add_header('X-Dialog-Close', 1);
+            $this->render_nothing();
+        } else {
+            $this->redirect($this->url_for('/index'));
+        }
     }
 
     function change_course_set_action()

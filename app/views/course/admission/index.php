@@ -186,7 +186,8 @@
     <? endif ?>
 </form>
 <? if (count($all_domains)) : ?>
-<form class="studip_form" action="<?= $controller->link_for('/change_domains') ?>" method="post">
+<form class="studip_form" action="<?= $controller->link_for('/change_domains') ?>" method="post"
+      <? if (Request::isXhr()) echo 'data-dialog="reload-on-close"'; ?>>
 <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _("Zugelassenene Nutzerdomänen")?></legend>

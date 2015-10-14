@@ -71,7 +71,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     // entscheidet, ob der aktuelle Termin ausgewählt ist oder nicht
     if (Request::option('cycle_id') == $cycle_id) {
         $options =  Request::optionArray('singledate');
-        
+
         if (empty($options)) {
             if ($val->getStartTime() >= time()) {
                 $tpl['checked'] = true;
@@ -83,6 +83,13 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
         if ($val->getStartTime() >= time()) {
             $tpl['checked'] = true;
         }
+    }
+
+    if (Request::get('singleDateID')) {
+        $tpl['checked'] = Request::get('singleDateID') == $val->getSingleDateId();
+    }
+    if (Request::get('cmd') == 'createNewSingleDate') {
+        $tpl['checked'] = false;
     }
 
     /* css-Klasse auswählen, sowie Template-Feld für den Raum mit Text füllen */
@@ -141,7 +148,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['end_minute'] = date('i',$val->getEndTime());
     $tpl['related_persons'] = $val->getRelatedPersons();
     $tpl['related_groups'] = $val->getRelatedGroups();
-    
+
     if ($request = RoomRequest::findByDate($val->getSingleDateID())) {
         $tpl['room_request'] = $request;
         $tpl['ausruf']  = _("Für diesen Termin existiert eine Raumanfrage:");
@@ -315,5 +322,5 @@ function raumzeit_send_cancel_message($comment, $dates)
         $msg = new messaging();
         return $msg->insert_message($message, $recipients, '____%system%____', '', '', '', '', $subject, true);
     }
-    
+
 }

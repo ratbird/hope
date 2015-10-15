@@ -59,7 +59,7 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/?edit_area=' . $entry['topic_id']) ?>"
                     onClick="STUDIP.Forum.editArea('<?= $entry['topic_id'] ?>');return false;">
                     <?= Assets::img('icons/16/blue/edit.png',
-                        array('class' => 'edit-area', 'title' => 'Name/Beschreibung des Bereichs ?ndern')) ?>
+                        array('class' => 'edit-area', 'title' => 'Name/Beschreibung des Bereichs ändern')) ?>
                 </a>
                 <? endif ?>
 
@@ -67,7 +67,7 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
                    onClick="STUDIP.Forum.deleteArea(this, '<?= $entry['topic_id'] ?>'); return false;">
                     <?= Assets::img('icons/16/blue/trash.png',
-                        array('class' => 'delete-area', 'title' => 'Bereich mitsamt allen Eintr?gen l?schen!')) ?>
+                        array('class' => 'delete-area', 'title' => 'Bereich mitsamt allen Einträgen löschen!')) ?>
                 </a>
                 <? endif ?>
             </span>

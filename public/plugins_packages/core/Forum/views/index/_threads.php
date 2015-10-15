@@ -21,7 +21,7 @@
     <thead>
         <tr>
             <th colspan="2"><?= _('Thema') ?></th>
-            <th data-type="answers"><?= _("Beitr?ge") ?></th>
+            <th data-type="answers"><?= _("Beiträge") ?></th>
             <th data-type="last_posting"><?= _("letzte Antwort") ?></th>
         </tr>
     </thead>
@@ -56,7 +56,7 @@
 
             <br>
             <?= Assets::img('icons/16/black/lock-locked.png', array(
-                    'title' => _('Dieses Thema ist geschlossen, es k?nnen keine neuen Beitr?ge erstellt werden.'),
+                    'title' => _('Dieses Thema ist geschlossen, es können keine neuen Beiträge erstellt werden.'),
                     'id'    => 'img-locked-' . $entry['topic_id'],
                     'style' => $entry['closed'] ? '' : 'display: none'
             )) ?>
@@ -101,11 +101,11 @@
                     
                     <? if (ForumPerm::has('remove_entry', $seminar_id)) : ?>
                     <a href="<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
-                        onClick="STUDIP.Forum.showDialog('<?= _('M?chten Sie dieses Thema wirklich l?schen?') ?>',
+                        onClick="STUDIP.Forum.showDialog('<?= _('M?chten Sie dieses Thema wirklich löschen?') ?>',
                        '<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id'] .'?approve_delete=1&page='. ForumHelpers::getPage()) ?>',
                        'tr[data-area-id=<?= $entry['topic_id'] ?>] td.areaentry'); return false;">
                         <?= Assets::img('icons/16/blue/trash.png', 
-                            array('class' => 'move-thread', 'title' => _('Dieses Thema l?schen'))) ?>
+                            array('class' => 'move-thread', 'title' => _('Dieses Thema löschen'))) ?>
                     </a>
                     <? endif ?>
                     
@@ -116,7 +116,7 @@
                                 onclick="STUDIP.Forum.closeThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
                                 <?= Assets::img('icons/16/blue/lock-locked.png', 
-                                    array('title' => _('Thema schlie?en'))) ?>
+                                    array('title' => _('Thema schließen'))) ?>
                             </a>
                         <? else : ?>
                             <a href="<?= PluginEngine::getURL('coreforum/index/open_thread/' . $entry['topic_id'] . '/' 

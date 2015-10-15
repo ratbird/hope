@@ -215,7 +215,7 @@
             <dd>
                 Beitr?ge:
                 <?= ForumEntry::countUserEntries($post['user_id']) ?><br>
-                <?= _('Erhaltene "Gef?llt mir!":') ?>
+                <?= _('Erhaltene "Gefällt mir!":') ?>
                 <?= ForumLike::receivedForUser($post['user_id']) ?>
             </dd>
             <? endif ?>

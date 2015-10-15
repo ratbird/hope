@@ -124,7 +124,7 @@
                                 onclick="STUDIP.Forum.openThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
                                 <?= Assets::img('icons/16/blue/lock-unlocked.png', 
-                                    array('title' => _('Thema ?ffnen'))) ?>
+                                    array('title' => _('Thema öffnen'))) ?>
                             </a>
                         <? endif ?>
                     <? endif ?>

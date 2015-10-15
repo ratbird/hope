@@ -59,7 +59,7 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/?edit_area=' . $entry['topic_id']) ?>"
                     onClick="STUDIP.Forum.editArea('<?= $entry['topic_id'] ?>');return false;">
                     <?= Assets::img('icons/16/blue/edit.png',
-                        array('class' => 'edit-area', 'title' => 'Name/Beschreibung des Bereichs ändern')) ?>
+                        array('class' => 'edit-area', 'title' => 'Name/Beschreibung des Bereichs ï¿½ndern')) ?>
                 </a>
                 <? endif ?>
 
@@ -67,7 +67,7 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
                    onClick="STUDIP.Forum.deleteArea(this, '<?= $entry['topic_id'] ?>'); return false;">
                     <?= Assets::img('icons/16/blue/trash.png',
-                        array('class' => 'delete-area', 'title' => 'Bereich mitsamt allen Einträgen löschen!')) ?>
+                        array('class' => 'delete-area', 'title' => 'Bereich mitsamt allen Eintrï¿½gen lï¿½schen!')) ?>
                 </a>
                 <? endif ?>
             </span>
@@ -87,7 +87,7 @@
             <?= _('Anonym') ?>
         <? endif; ?>
         <? if (!$entry['last_posting']['anonymous'] || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
-        <a href="<?= UrlHelper::getLink('about.php?username='. $entry['last_posting']['username']) ?>">
+        <a href="<?= UrlHelper::getLink('dispatch.php/profile', array('username' => $entry['last_posting']['username'])) ?>">
             <?= htmlReady(($temp_user = User::find($entry['last_posting']['user_id'])) ? $temp_user->getFullname() : $entry['last_posting']['user_fullname']) ?>
         </a><br>
         <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['last_posting']['date']) ?>

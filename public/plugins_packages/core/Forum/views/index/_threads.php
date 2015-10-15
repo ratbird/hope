@@ -21,7 +21,7 @@
     <thead>
         <tr>
             <th colspan="2"><?= _('Thema') ?></th>
-            <th data-type="answers"><?= _("Beiträge") ?></th>
+            <th data-type="answers"><?= _("Beitrï¿½ge") ?></th>
             <th data-type="last_posting"><?= _("letzte Antwort") ?></th>
         </tr>
     </thead>
@@ -56,7 +56,7 @@
 
             <br>
             <?= Assets::img('icons/16/black/lock-locked.png', array(
-                    'title' => _('Dieses Thema ist geschlossen, es können keine neuen Beiträge erstellt werden.'),
+                    'title' => _('Dieses Thema ist geschlossen, es kï¿½nnen keine neuen Beitrï¿½ge erstellt werden.'),
                     'id'    => 'img-locked-' . $entry['topic_id'],
                     'style' => $entry['closed'] ? '' : 'display: none'
             )) ?>
@@ -101,11 +101,11 @@
                     
                     <? if (ForumPerm::has('remove_entry', $seminar_id)) : ?>
                     <a href="<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
-                        onClick="STUDIP.Forum.showDialog('<?= _('Möchten Sie dieses Thema wirklich löschen?') ?>',
+                        onClick="STUDIP.Forum.showDialog('<?= _('Mï¿½chten Sie dieses Thema wirklich lï¿½schen?') ?>',
                        '<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id'] .'?approve_delete=1&page='. ForumHelpers::getPage()) ?>',
                        'tr[data-area-id=<?= $entry['topic_id'] ?>] td.areaentry'); return false;">
                         <?= Assets::img('icons/16/blue/trash.png', 
-                            array('class' => 'move-thread', 'title' => _('Dieses Thema löschen'))) ?>
+                            array('class' => 'move-thread', 'title' => _('Dieses Thema lï¿½schen'))) ?>
                     </a>
                     <? endif ?>
                     
@@ -116,7 +116,7 @@
                                 onclick="STUDIP.Forum.closeThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
                                 <?= Assets::img('icons/16/blue/lock-locked.png', 
-                                    array('title' => _('Thema schließen'))) ?>
+                                    array('title' => _('Thema schlieï¿½en'))) ?>
                             </a>
                         <? else : ?>
                             <a href="<?= PluginEngine::getURL('coreforum/index/open_thread/' . $entry['topic_id'] . '/' 
@@ -124,7 +124,7 @@
                                 onclick="STUDIP.Forum.openThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
                                 <?= Assets::img('icons/16/blue/lock-unlocked.png', 
-                                    array('title' => _('Thema öffnen'))) ?>
+                                    array('title' => _('Thema ï¿½ffnen'))) ?>
                             </a>
                         <? endif ?>
                     <? endif ?>
@@ -153,7 +153,7 @@
                 <?= _('Anonym') ?>
             <? endif; ?>
             <? if (!$entry['anonymous'] || $entry['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
-                <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['user_id'])) ?>">
+                <a href="<?= UrlHelper::getLink('dipatch.php/profile', array('username' => get_username($entry['user_id']))) ?>">
                     <?= htmlReady(($temp_user = User::find($entry['user_id'])) ? $temp_user->getFullname() : $entry['author']) ?>
                 </a>
                 <? endif; ?>
@@ -179,7 +179,7 @@
                 <?= _('Anonym') ?>
             <? endif; ?>
             <? if (!$entry['last_posting']['anonymous'] || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
-            <a href="<?= UrlHelper::getLink('about.php?username='. $entry['last_posting']['username']) ?>">
+            <a href="<?= UrlHelper::getLink('dispatch.php/profile', array('username' => $entry['last_posting']['username'])) ?>">
                 <?= htmlReady(($temp_user = User::find($entry['last_posting']['user_id'])) ? $temp_user->getFullname() : $entry['last_posting']['user_fullname']) ?>
             </a>
             <? endif; ?>

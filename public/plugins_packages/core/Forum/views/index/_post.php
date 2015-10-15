@@ -11,7 +11,7 @@
     'remove_entry' => ForumPerm::has('remove_entry', $constraint['seminar_id']),
 ) ?>
 
-<!-- Anker, um zu diesem Posting springen zu können -->
+<!-- Anker, um zu diesem Posting springen zu kï¿½nnen -->
 <a name="<?= $post['topic_id'] ?>"></a>
 
 <form method="post" data-topicid="<?= $post['topic_id'] ?>" action="<?= PluginEngine::getLink('coreforum/index/update_entry/' . $post['topic_id']) ?>">
@@ -37,7 +37,7 @@
                     <?= _('von Stud.IP erstellt') ?>, 
                     <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
                 <? else : ?>
-                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($post['user_id']))) ?>">
                     <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::SMALL,
                         array('title' => get_username($post['user_id']))) ?>
 
@@ -58,7 +58,7 @@
 
                 <? if($constraint['closed']) : ?>
                 <?= Assets::img('icons/16/black/lock-locked.png', array(
-                    'title' => _('Dieses Thema wurde geschlossen. Sie können daher nicht auf diesen Beitrag antworten.')
+                    'title' => _('Dieses Thema wurde geschlossen. Sie kï¿½nnen daher nicht auf diesen Beitrag antworten.')
                 )) ?>
                 <? endif ?>
 
@@ -99,8 +99,8 @@
             <div class="button-group">
 
         <span data-edit-topic="<?= $post['topic_id'] ?>" <?= ($edit_posting == $post['topic_id']) ? '' : 'style="display: none;"' ?>>
-            <!-- Buttons für den Bearbeitungsmodus -->
-            <?= Studip\Button::createAccept(_('Änderungen speichern'), '',
+            <!-- Buttons fï¿½r den Bearbeitungsmodus -->
+            <?= Studip\Button::createAccept(_('ï¿½nderungen speichern'), '',
                 array('onClick' => "STUDIP.Forum.saveEntry('". $post['topic_id'] ."'); return false;")) ?>
 
             <?= Studip\LinkButton::createCancel(_('Abbrechen'), PluginEngine::getLink('coreforum/index/index/'. $post['topic_id'] .'#'. $post['topic_id']),
@@ -110,7 +110,7 @@
         </span>
                 
         <span data-show-topic="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
-            <!-- Aktions-Buttons für diesen Beitrag -->
+            <!-- Aktions-Buttons fï¿½r diesen Beitrag -->
 
 
             <? if (ForumPerm::has('add_entry', $constraint['seminar_id'])) : ?>
@@ -136,12 +136,12 @@
                 <? $confirmLink = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'])  ?>
                 <? $confirmLinkApproved = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'] . '?approve_delete=1')  ?>
                 <? if ($constraint['depth'] == $post['depth']) : /* this is not only a posting, but a thread */ ?>
-                    <? $confirmText = _('Wenn Sie diesen Beitrag löschen wird ebenfalls das gesamte Thema gelöscht. Sind Sie sicher, dass Sie das tun möchten?')  ?>
-                    <?= Studip\LinkButton::create(_('Thema löschen'), $confirmLink,
+                    <? $confirmText = _('Wenn Sie diesen Beitrag lï¿½schen wird ebenfalls das gesamte Thema gelï¿½scht. Sind Sie sicher, dass Sie das tun mï¿½chten?')  ?>
+                    <?= Studip\LinkButton::create(_('Thema lï¿½schen'), $confirmLink,
                         array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLinkApproved'); return false;")) ?>
                 <? else : ?>
-                    <? $confirmText = _('Möchten Sie diesen Beitrag wirklich löschen?') ?>
-                    <?= Studip\LinkButton::create(_('Beitrag löschen'), $confirmLink,
+                    <? $confirmText = _('Mï¿½chten Sie diesen Beitrag wirklich lï¿½schen?') ?>
+                    <?= Studip\LinkButton::create(_('Beitrag lï¿½schen'), $confirmLink,
                         array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLinkApproved'); return false;")) ?>
                 <? endif ?>
             </span>
@@ -176,7 +176,7 @@
             <? if (!$post['anonymous'] || $post['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <dt>
                 <? if ($post['user_id'] != 'nobody' && $post['user_id']) : ?>
-                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => get_username($post['user_id']))) ?>">
                     <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::MEDIUM,
                         array('title' => get_username($post['user_id']))) ?>
                 </a>
@@ -200,7 +200,7 @@
                         <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
                     <? endif ?>
 
-                    <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
+                    <a href="<?= URLHelper::getLink('dipatch.php/profile', array('username' => get_username($post['user_id'])))?>">
                         <span class="username" data-profile="<?= $post['topic_id'] ?>">
                             <?= htmlReady(get_fullname($post['user_id'])) ?>
                         </span>
@@ -213,9 +213,9 @@
             </dd>
             <? if ($post['user_id']) : ?>
             <dd>
-                Beiträge:
+                Beitrï¿½ge:
                 <?= ForumEntry::countUserEntries($post['user_id']) ?><br>
-                <?= _('Erhaltene "Gefällt mir!":') ?>
+                <?= _('Erhaltene "Gefï¿½llt mir!":') ?>
                 <?= ForumLike::receivedForUser($post['user_id']) ?>
             </dd>
             <? endif ?>

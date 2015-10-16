@@ -33,10 +33,14 @@ class CalendarWidgetView extends CalendarWeekView
         foreach ($this->entries as $column) {
             $column->setURL(false);
             foreach ($column->entries as $key => $entry) {
-                list($course_id, $cycle_id) = explode('-', $entry['id']);
+                if (isset($entry['cycle_id'])) {
+                    list($course_id, $cycle_id) = explode('-', $entry['id']);
 
-                $url = URLHelper::getLink('dispatch.php/course/details/?sem_id=' . $course_id);
-                $column->entries[$key]['url'] = $url;
+                    $url = URLHelper::getLink('dispatch.php/course/details/?sem_id=' . $course_id);
+                    $column->entries[$key]['url'] = $url;
+                } else {
+                    unset($column->entries[$key]['url']);
+                }
 
                 unset($column->entries[$key]['onClick']);
                 unset($column->entries[$key]['icons']);

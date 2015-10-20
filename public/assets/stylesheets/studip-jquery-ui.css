@@ -2661,10 +2661,10 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selectable li span,
 .ms-container .ms-selection li span {
   -webkit-box-flex: 10;
-  -webkit-flex: 10 0 ;
-  -ms-flex: 10 0 ;
+  -webkit-flex: 10 0 auto;
+  -ms-flex: 10 0 auto;
   -moz-box-flex: 10;
-  flex: 10 0 ;
+  flex: 10 0 auto;
 }
 .ms-container .ms-selectable li.ms-hover,
 .ms-container .ms-selection li.ms-hover,
@@ -2707,10 +2707,10 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 .ms-container .ms-selectable li:not(.disabled)::after {
   -webkit-box-flex: 0;
-  -webkit-flex: 0 1 ;
-  -ms-flex: 0 1 ;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
   -moz-box-flex: 0;
-  flex: 0 1 ;
+  flex: 0 1 auto;
   visibility: hidden;
 }
 .ms-container .ms-selectable li:not(.disabled):hover {
@@ -2735,10 +2735,10 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 .ms-container .ms-selection li::before {
   -webkit-box-flex: 0;
-  -webkit-flex: 0 1 ;
-  -ms-flex: 0 1 ;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
   -moz-box-flex: 0;
-  flex: 0 1 ;
+  flex: 0 1 auto;
   margin-left: -36px;
   margin-right: 36px;
   visibility: hidden;

@@ -82,8 +82,14 @@
     -ms-align-self: @alignment;
     align-self: @alignment;
 }
-
-.flex-item(@growth, @shrink: ~'', @basis: ~'') {
+.flex-item(@growth) {
+    -webkit-box-flex: @growth;
+    -webkit-flex: @growth;
+    -ms-flex: @growth;
+    -moz-box-flex: @growth;
+    flex: @growth;
+}
+.flex-item(@growth, @shrink, @basis: auto) {
     -webkit-box-flex: @growth;
     -webkit-flex: @growth @shrink @basis;
     -ms-flex: @growth @shrink @basis;

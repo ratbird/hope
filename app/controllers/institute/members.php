@@ -137,7 +137,7 @@ class Institute_MembersController extends AuthenticatedController
             }
         }
 
-        if ($cmd == 'removeFromInstitute' && $GLOBALS['perm']->have_studip_perm('admin', $this->inst_id)) {
+        if ($cmd == 'removeFromInstitute' && $GLOBALS['perm']->get_profile_perm(get_userid($username)) == 'admin' && $username != $GLOBALS['user']->username) {
             $del_user_id = get_userid($username);
             if (is_array($this->group_list) && count($this->group_list) > 0) {
                 $query = "DELETE FROM statusgruppe_user

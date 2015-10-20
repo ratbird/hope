@@ -111,7 +111,10 @@ use Studip\Button, Studip\LinkButton;
             print '</a>';
             print '</td>';
 
-            if ($admin_view && !LockRules::Check($range_id, 'participants')) {
+            if ($admin_view && !LockRules::Check($range_id, 'participants')
+                && ($member['inst_perms'] != 'admin'
+                || ($GLOBALS['perm']->get_profile_perm($member['user_id']) == 'admin'
+                && $member['user_id'] != $GLOBALS['user']->id))) {
                 echo '<td width="1%" nowrap>';
                 if ($member['statusgruppe_id']) {    // if we are in a view grouping by statusgroups
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$member['username'].'&role_id='. $member['statusgruppe_id']).'">';
@@ -120,6 +123,8 @@ use Studip\Button, Studip\LinkButton;
                 }
                 echo Assets::img('icons/16/blue/trash.png', array('class' => 'text-top'));
                 echo "</a>&nbsp\n</td>\n";
+            } else {
+                echo '<td>&nbsp;</td>';
             }
         }
 

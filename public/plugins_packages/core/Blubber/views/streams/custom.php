@@ -150,6 +150,7 @@ if ($streamAvatar->is_customized()) {
 
 $actions = new ActionsWidget();
 $actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), "icons/16/blue/edit");
+$actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), "icons/16/blue/trash", array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
 $sidebar->addWidget($actions);
 
 $controller->addTagCloudWidgetToSidebar($tags, 'custom/' . $stream->getId());

@@ -821,6 +821,29 @@ class StreamsController extends PluginController {
         }
     }
 
+    public function delete_action($stream_id = null)
+    {
+        $this->stream = new BlubberStream($stream_id);
+        if ($GLOBALS['user']->id === "nobody") {
+            throw new AccessDeniedException();
+        }
+        if ($stream_id) {
+            Navigation::activateItem("/community/blubber/" . $stream_id);
+        }
+        if ($this->stream['user_id'] && $this->stream['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException("Not allowed to edit stream");
+        }
+        $this->stream->delete();
+        PageLayout::postMessage(MessageBox::success(_("Blubberstream gelöscht.")));
+        $path = "streams/global";
+        foreach (BlubberStream::findMine() as $stream) {
+            if ($stream['defaultstream']) {
+                $path = "streams/custom/".$stream->getId();
+            }
+        }
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), $path));
+    }
+
     public function get_streams_threadnumber_action() {
         $stream = new BlubberStream();
         //Pool-rules

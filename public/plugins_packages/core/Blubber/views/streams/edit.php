@@ -261,9 +261,8 @@ if ($streamAvatar->is_customized()) {
     $sidebar->setContextAvatar($streamAvatar);
 }
 
-$actions = new LinksWidget();
-$actions->setTitle(_("Aktionen"));
-
+$actions = new ActionsWidget();
 if (!$stream->isNew()) {
-    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global"), "icons/16/blue/trash");
+    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), "icons/16/blue/trash", array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
 }
+$sidebar->addWidget($actions);

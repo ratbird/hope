@@ -4,13 +4,23 @@ namespace RESTAPI\Routes;
 use RESTAPI\RouteMap;
 use RESTAPI\Router;
 
+/**
+ * API routes for accessing user config values.
+ *
+ * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license GPL2 or any later version
+ * @since   Stud.IP 3.4
+ *
+ * @condition user_id ^[0-9a-f]{32}$
+ */
 class UserConfig extends RouteMap
 {
     // Stores the user's config instance
     private $config;
 
     /**
-     * Performs access checks.
+     * Performs checks if the user exists and may actually access the
+     * requested config.
      *
      * @param Router $router     Instance of the api router
      * @param array  $handler    Detected handler router

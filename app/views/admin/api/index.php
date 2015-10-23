@@ -41,7 +41,7 @@
                    title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/info-circle.png') ?>
                 </a>
-                <a href="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" title="<?= _('Applikation bearbeiten') ?>">
+                <a href="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" title="<?= _('Applikation bearbeiten') ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/edit.png') ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/api/permissions', $consumer->id) ?>" title="<?= _('Zugriffsberechtigungen verwalten') ?>">

@@ -111,7 +111,7 @@
         </div>
     </fieldset>
 
-    <div class="type-button">
+    <div class="type-button" data-dialog-button>
         <?= Button::createAccept(_('speichern'), 'store') ?>
         <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/api')) ?>
     </div>

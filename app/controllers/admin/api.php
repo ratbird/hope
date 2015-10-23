@@ -15,26 +15,34 @@ class Admin_ApiController extends AuthenticatedController
 
         $GLOBALS['perm']->check('root');
 
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-
         Navigation::activateItem('/admin/config/api');
         PageLayout::setTitle(_('API Verwaltung'));
-        
+
         $this->types = array(
             'website' => _('Website'),
             'desktop' => _('Herkömmliches Desktopprogramm'),
             'mobile'  => _('Mobile App')
         );
 
-        $sidebar = Sidebar::Get();
+        // Sidebar
         $views = new ViewsWidget();
-        $views->setTitle(_('Aktionen'));
+        $views->addLink(_('Registrierte Applikationen'),
+                        $this->url_for('admin/api'))
+              ->setActive($action === 'index');
+        $views->addLink(_('Globale Zugriffseinstellungen'),
+                        $this->url_for('admin/api/permissions'))
+              ->setActive($action == 'permissions');
+        $views->addLink(_('Konfiguration'),
+                        $this->url_for('admin/api/config'))
+              ->setActive($action == 'config');
+        Sidebar::get()->addWidget($views);
 
-        $views->addLink(_('Registrierte Applikationen'), $this->url_for('admin/api'))->setActive($action == 'index');
-        $views->addLink(_('Neue Applikation registrieren'), $this->url_for('admin/api/edit'))->setActive($action == 'edit');
-        $views->addLink(_('Globale Zugriffseinstellungen'), $this->url_for('admin/api/permissions'))->setActive($action == 'permissions');
-        $views->addLink(_('Konfiguration'), $this->url_for('admin/api/config'))->setActive($action == 'config');
-        $sidebar->addWidget($views);
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neue Applikation registrieren'),
+                          $this->url_for('admin/api/edit'),
+                          'icons/blue/add.svg')
+                ->asDialog();
+        Sidebar::get()->addWidget($actions);
     }
 
     /**
@@ -162,7 +170,7 @@ class Admin_ApiController extends AuthenticatedController
                     $permissions->set(urldecode($route), urldecode($method), (bool)$granted, true);
                 }
             }
-            
+
             $permissions->store();
 
             PageLayout::postMessage(MessageBox::success(_('Die Zugriffsberechtigungen wurden erfolgreich gespeichert')));

@@ -12,6 +12,9 @@ use RESTAPI\Router;
  * @since   Stud.IP 3.4
  *
  * @condition user_id ^[0-9a-f]{32}$
+ *
+ * @status 404 if user does not exist
+ * @status 403 if user may access the request config item
  */
 class UserConfig extends RouteMap
 {
@@ -45,6 +48,9 @@ class UserConfig extends RouteMap
      * Returns the value of a specific config entry for a given user
      *
      * @get /user/:user_id/config/:field
+     *
+     * @return mixed Value for the request config item
+     * @status 404 if config item does not exist
      */
     public function getConfig($user_id, $field)
     {
@@ -61,6 +67,9 @@ class UserConfig extends RouteMap
      * Stored the value of a specific config entry for a given user
      *
      * @put /user/:user_id/config/:field
+     *
+     * @status 204 on success
+     * @status 400 if no value is given
      */
     public function setConfig($user_id, $field)
     {
@@ -77,6 +86,8 @@ class UserConfig extends RouteMap
      * Removes a specific config entry for a given user
      *
      * @delete /user/:user_id/config/:field
+     *
+     * @status 204 on success
      */
     public function deleteConfig($user_id, $field)
     {

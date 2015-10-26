@@ -18,8 +18,6 @@ require_once 'lib/object.inc.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 
-require_once 'lib/classes/score.class.php';
-
 class ProfileController extends AuthenticatedController
 {
     function before_filter(&$action, &$args)
@@ -88,10 +86,9 @@ class ProfileController extends AuthenticatedController
 
         // GetScroreList
         if (get_config('SCORE_ENABLE')) {
-            $score  = new Score($this->current_user->user_id);
-            if ($this->current_user->user_id === $GLOBALS['user']->id || $score->ReturnPublik()) {
-                $this->score         = $score->GetMyScore($this->current_user->user_id);
-                $this->score_title   = $score->gettitel($this->score, $score->GetGender($this->current_user->user_id));
+            if ($this->current_user->user_id === $GLOBALS['user']->id || $this->current_user->score) {
+                $this->score         = Score::GetMyScore($this->current_user);
+                $this->score_title   = Score::getTitel($this->current_user->score, $this->current_user->geschlecht);
             }
         }
 
@@ -132,7 +129,7 @@ class ProfileController extends AuthenticatedController
 
         // get kings informations
         if (Config::Get()->SCORE_ENABLE) {
-            if ($this->current_user->user_id === $GLOBALS['user']->id || $score->ReturnPublik()) {
+            if ($this->current_user->user_id === $GLOBALS['user']->id || $this->current_user->score) {
                 $kings = $this->profile->getKingsInformations();
 
                 if ($kings != null) {

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/classes/score.class.php';
-
 class RecalculateScore extends Migration {
 
     function description() {
@@ -21,9 +19,8 @@ class RecalculateScore extends Migration {
             SELECT user_id FROM user_info WHERE score > 0
         ");
         $statement->execute();
-        $score = new Score($GLOBALS['user']->id);
         while ($user_id = $statement->fetch(PDO::FETCH_COLUMN, 0)) {
-            $score->GetMyScore($user_id);
+            Score::GetMyScore($user_id);
         }
     }
 

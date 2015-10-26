@@ -24,8 +24,6 @@
  * @since       2.4
  */
 
-require_once 'lib/classes/score.class.php';
-
 class ScoreController extends AuthenticatedController
 {
     /**
@@ -44,7 +42,7 @@ class ScoreController extends AuthenticatedController
         }
 
         parent::before_filter($action, $args);
-        
+
         if (!Config::Get()->SCORE_ENABLE) {
             throw new AccessDeniedException(_('Die Rangliste und die Score-Funktion sind nicht aktiviert.'));
         }
@@ -53,7 +51,6 @@ class ScoreController extends AuthenticatedController
         PageLayout::setTitle(_('Rangliste'));
         Navigation::activateItem('/community/score');
 
-        $this->score = new Score($GLOBALS['user']->id);
     }
 
     /**
@@ -65,55 +62,46 @@ class ScoreController extends AuthenticatedController
     {
         $vis_query = get_vis_query('b');
 
-        $query = "SELECT COUNT(*)
-                  FROM user_info AS a
-                  LEFT JOIN auth_user_md5 AS b USING (user_id)
-                  WHERE score > 0 AND locked = 0 AND {$vis_query}";
-        $statement = DBManager::get()->query($query);
-        $count        = $statement->fetchColumn();
-
         // Calculate offsets
         $max_per_page = get_config('ENTRIES_PER_PAGE');
-        $max_pages    = ceil($count / $max_per_page);
 
         if ($page < 1) {
             $page = 1;
-        } elseif ($page > $max_pages) {
-            $page = $max_pages;
         }
 
         $offset = max(0, ($page - 1) * $max_per_page);
 
         // Liste aller die mutig (oder eitel?) genug sind
-        $query = "SELECT a.user_id,username,score,geschlecht, {$GLOBALS['_fullname_sql']['full']} AS fullname
+        $query = "SELECT SQL_CALC_FOUND_ROWS a.user_id,username,score,geschlecht, {$GLOBALS['_fullname_sql']['full']} AS fullname
                   FROM user_info AS a
                   LEFT JOIN auth_user_md5 AS b USING (user_id)
                   WHERE score > 0 AND locked = 0 AND {$vis_query}
                   ORDER BY score DESC
                   LIMIT " . (int)$offset . "," . (int)$max_per_page;
-        $result = DBManager::get()->query($query);
+        $result = DBManager::get()->fetchAll($query);
+        $count = DBManager::get()->fetchColumn("SELECT FOUND_ROWS()");
 
         $persons = array();
-        while ($row = $result->fetch()) {
+        foreach ($result as $row) {
             $row['is_king'] = StudipKing::is_king($row['user_id'], true);
-            $persons[] = $row;
+            $persons[$row['user_id']] = $row;
         }
-
-        $this->persons         = $persons;
+        $persons = Score::getScoreContent($persons);
+        $this->persons         = array_values($persons);
         $this->numberOfPersons = $count;
         $this->page            = $page;
         $this->offset          = $offset;
         $this->max_per_page    = $max_per_page;
-        
+        $this->current_user    = User::findCurrent();
+
         // Set up sidebar and helpbar
-        
+
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/medal-sidebar.png');
 
         $actions = new OptionsWidget();
-        $published = $this->score->ReturnPublik();
         $actions->addCheckbox(_('Ihren Wert veröffentlichen'),
-                              $published,
+                              $this->current_user->score,
                               $this->url_for('score/publish'),
                               $this->url_for('score/unpublish'));
         $sidebar->addWidget($actions);
@@ -126,7 +114,9 @@ class ScoreController extends AuthenticatedController
      */
     public function publish_action()
     {
-        $this->score->PublishScore();
+        $user = User::findCurrent();
+        $user->score = Score::getMyScore($user);
+        $user->store();
         PageLayout::postMessage(MessageBox::success(_('Ihr Wert wurde auf der Rangliste veröffentlicht.')));
         $this->redirect('score');
     }
@@ -136,7 +126,9 @@ class ScoreController extends AuthenticatedController
      */
     public function unpublish_action()
     {
-        $this->score->KillScore();
+        $user = User::findCurrent();
+        $user->score = 0;
+        $user->store();
         PageLayout::postMessage(MessageBox::success(_('Ihr Wert wurde von der Rangliste gelöscht.')));
         $this->redirect('score');
     }

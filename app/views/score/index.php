@@ -2,8 +2,8 @@
     <caption>
         <span class="actions" style="font-size: 0.9em;">
             <?= _('Ihre Punkte:') ?>
-            <strong><?= number_format($score->ReturnMyScore(), 0, ',', '.') ?></strong>
-            (<?= $score->ReturnMyTitle() ?>)
+            <strong><?= number_format(Score::getMyScore($this->current_user), 0, ',', '.') ?></strong>
+            (<?= Score::getTitel($this->current_user->score, $this->current_user->geschlecht) ?>)
         </span>
         <?= _('Stud.IP-Rangliste')?>
     </caption>
@@ -34,7 +34,7 @@
                 <?= $offset + $index + 1 ?>.
             </td>
             <td>
-                <?= Avatar::getAvatar($person['user_id'])->getImageTag(Avatar::SMALL) ?>
+                <?= Avatar::getAvatar($person['user_id'], $person['username'])->getImageTag(Avatar::SMALL, array('title' => $person['fullname'])) ?>
             </td>
             <td>
                 <a href="<?= URLHelper::getLink('dispatch.php/profile?username='. $person['username']) ?>">
@@ -44,9 +44,55 @@
                 <?= Assets::img('icons/16/yellow/crown.png', array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
             <? endforeach ?>
             </td>
-            <td><?= $score->GetScoreContent($person['user_id']) ?></td>
+            <td>
+            <?
+            $content = Assets::img('blank.gif', array('width' => 16)) . ' ';
+
+            // News
+            if ($news = $person['newscount']) {
+                $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $news), $news);
+                $content .= sprintf('<a href="%s">%s</a> ',
+                                    URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                    Assets::img('icons/16/blue/news.png', tooltip2($tmp)));
+            } else {
+                $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+            }
+
+            // Votes
+            if ($vote = $person['votecount']) {
+                $tmp = sprintf(ngettext('Eine Umfrage', '%s Umfragen', $vote), $vote);
+                $content .= sprintf('<a href="%s">%s</a> ',
+                                    URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                    Assets::img('icons/16/blue/vote.png', tooltip2($tmp)));
+            } else {
+                $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+            }
+
+            // Termine
+            if ($termin = $person['eventcount']) {
+                $tmp = sprintf(ngettext('Ein Termin', '%s Termine', $termin), $termin);
+                $content .= sprintf('<a href="%s">%s</a> ',
+                                    URLHelper::getLink('dispatch.php/profile#a', compact('username')),
+                                    Assets::img('icons/16/blue/schedule.png', tooltip2($tmp)));
+            } else {
+                $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+            }
+
+            // Literaturangaben
+            if ($lit = $person['litcount']) {
+                $tmp = sprintf(ngettext('Eine Literaturangabe', '%s Literaturangaben', $lit), $lit);
+                $content .= sprintf('<a href="%s">%s</a> ',
+                                    URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                    Assets::img('icons/16/blue/literature.png', tooltip2($tmp)));
+            } else {
+                $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+            }
+
+            echo $content;
+            ?>
+            </td>
             <td><?= number_format($person['score'], 0, ',', '.') ?></td>
-            <td><?= $score->GetTitel($person['score'], $person['geschlecht']) ?></td>
+            <td><?= Score::getTitel($person['score'], $person['geschlecht']) ?></td>
             <td style="text-align: right">
             <? if($person['user_id'] == $GLOBALS['user']->id): ?>
                 <a href="<?= $controller->url_for('score/unpublish') ?>">

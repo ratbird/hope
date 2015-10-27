@@ -1,7 +1,7 @@
             </div>
         </div>
     </div>
-    <? include 'templates/footer.php'; ?>
+    <?= $GLOBALS['template_factory']->render('footer') ?>
 <!-- Ende Page -->
 </div>
 

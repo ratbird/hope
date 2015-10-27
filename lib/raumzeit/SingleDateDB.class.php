@@ -129,7 +129,8 @@ class SingleDateDB
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin->getTerminId()));
 
-        if (count($termin->related_persons)) {
+        if (count($termin->related_persons)
+                && (count($termin->related_persons) < CourseMember::countBySQL("Seminar_id = ? AND status = 'dozent'", array($termin->range_id)))) {
             $query = "INSERT IGNORE INTO termin_related_persons (range_id, user_id) VALUES (?, ?)";
             $statement = DBManager::get()->prepare($query);
 
@@ -144,7 +145,8 @@ class SingleDateDB
         $query = "DELETE FROM termin_related_groups WHERE termin_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin->getTerminId()));
-        if (count($termin->related_groups)) {
+        if (count($termin->related_groups)
+                && (count($termin->related_groups) < Statusgruppen::countBySQL("range_id = ?", array($termin->range_id)))) {
             $query = "INSERT IGNORE INTO termin_related_groups (termin_id, statusgruppe_id) VALUES (?, ?)";
             $statement = DBManager::get()->prepare($query);
             foreach ($termin->getRelatedGroups() as $statusgruppe_id) {

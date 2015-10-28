@@ -295,7 +295,7 @@ input.ui-button {
 }
 .ui-buttonset .ui-button {
   margin-left: 0;
-  margin-right: -0.3em;
+  margin-right: -.3em;
 }
 /* workarounds */
 /* reset extra padding in Firefox, see h5bp.com/l */
@@ -676,8 +676,8 @@ button.ui-button::-moz-focus-inner {
   height: .8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-  top: -0.3em;
-  margin-left: -0.6em;
+  top: -.3em;
+  margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
   top: 0;
@@ -694,9 +694,9 @@ button.ui-button::-moz-focus-inner {
   height: 100px;
 }
 .ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
+  left: -.3em;
   margin-left: 0;
-  margin-bottom: -0.6em;
+  margin-bottom: -.6em;
 }
 .ui-slider-vertical .ui-slider-range {
   left: 0;
@@ -1092,7 +1092,7 @@ input.ui-button {
 }
 .ui-buttonset .ui-button {
   margin-left: 0;
-  margin-right: -0.3em;
+  margin-right: -.3em;
 }
 /* workarounds */
 button.ui-button::-moz-focus-inner {
@@ -1448,8 +1448,8 @@ button.ui-button::-moz-focus-inner {
   height: .8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-  top: -0.3em;
-  margin-left: -0.6em;
+  top: -.3em;
+  margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
   top: 0;
@@ -1466,9 +1466,9 @@ button.ui-button::-moz-focus-inner {
   height: 100px;
 }
 .ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
+  left: -.3em;
   margin-left: 0;
-  margin-bottom: -0.6em;
+  margin-bottom: -.6em;
 }
 .ui-slider-vertical .ui-slider-range {
   left: 0;
@@ -1619,7 +1619,7 @@ body .ui-tooltip {
   color: #3c454e;
 }
 .ui-widget-header {
-  border: 1px solid #899ab9;
+  border: 1px solid #899bba;
   background: #7e92b0 url(../images/vendor/jquery-ui/ui-bg_gloss-wave_55_5c9ccc_500x100.png) 50% 50% repeat-x;
   color: #ffffff;
   font-weight: bold;
@@ -1652,7 +1652,7 @@ body .ui-tooltip {
 .ui-menu-item .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-  background: #24437c;
+  background: #28497c;
   border: 1px solid #8a8f95;
   color: #fff;
   font-weight: bold;
@@ -2370,7 +2370,7 @@ body .ui-tooltip {
   background: #fff;
 }
 .ui-widget-header {
-  background-color: #899ab9;
+  background-color: #899bba;
   background-image: none;
 }
 .ui-widget_columnl {
@@ -2387,7 +2387,7 @@ body .ui-tooltip {
   padding: 2%;
 }
 .ui-widget_head {
-  background-color: #899ab9;
+  background-color: #899bba;
   color: white;
   font-size: 1.3em;
   line-height: 30px;
@@ -2420,7 +2420,7 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-  background-color: #899ab9;
+  background-color: #899bba;
   color: white;
 }
 .ui-datepicker-header .ui-icon {
@@ -2457,7 +2457,7 @@ body .ui-tooltip {
   background-image: none;
 }
 .ui-datepicker-calendar .ui-state-active {
-  color: #36598f;
+  color: #365a90;
 }
 .ui-datepicker-calendar .ui-state-active.ui-state-hover {
   color: white;
@@ -2670,7 +2670,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selection li.ms-hover,
 .ms-container .ms-selectable li:hover,
 .ms-container .ms-selection li:hover {
-  background: #24437c;
+  background: #28497c;
   color: #fff;
 }
 .ms-container .ms-selectable li.disabled,
@@ -2714,7 +2714,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   visibility: hidden;
 }
 .ms-container .ms-selectable li:not(.disabled):hover {
-  background-color: #24437c;
+  background-color: #28497c;
 }
 .ms-container .ms-selectable li:not(.disabled):hover::after {
   visibility: visible;
@@ -2744,7 +2744,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   visibility: hidden;
 }
 .ms-container .ms-selection li:hover {
-  background-color: #24437c;
+  background-color: #28497c;
 }
 .ms-container .ms-selection li:hover::before {
   visibility: visible;

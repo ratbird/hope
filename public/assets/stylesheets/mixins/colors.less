@@ -1,8 +1,21 @@
-@brand-color-darker: #1e3e70;
-@brand-color-dark: #24437c;
-@brand-color-light: #36598f;
-@brand-color-lighter: #899ab9;
-@public_course_bgcolor: #c53d3d;
+@base-color: #28497c;
+
+
+
+@brand-color-dark: @base-color;
+@brand-color-darker: hsv(hsvhue(@base-color)-0.2, 
+    (hsvsaturation(@base-color)+4.5%), 
+    (hsvvalue(@base-color)-4.7)); // #1f3f70;
+	
+@brand-color-light: hsv(hsvhue(@base-color), 
+    (hsvsaturation(@base-color)-5.5%), 
+    (hsvvalue(@base-color)+7.5)); // #36598f;
+
+@brand-color-lighter: hsv(hsvhue(@base-color)+2.3, 
+    (hsvsaturation(@base-color)-41.8%), 
+    (hsvvalue(@base-color)+23.9)); // #899ab9;
+
+@public_course_bgcolor: @red;
 
 @alternating-color-even: #f2f2f2;
 @alternating-color-odd:  #e2e2e2;
@@ -12,16 +25,16 @@
 @table-header-color: #d1d1d1;
 @table-footer-color: #d1d1d1;
 
-@active-color: #f33;
+@active-color: @red;
 @black: #000000;
 
-@base-color: #28497c;
+//@base-color: #28497c;
 @base-color-80: mix(@base-color, #fff, 80%); // #536d96
 @base-color-60: mix(@base-color, #fff, 60%); // #7e92b0
 @base-color-40: mix(@base-color, #fff, 40%); // #a9b6cb
 @base-color-20: mix(@base-color, #fff, 20%); // #d4dbe5
 
-@content-color: #899ab9;
+@content-color: @brand-color-lighter;
 @content-color-80: mix(@content-color, #fff, 80%); // #a1aec7
 @content-color-60: mix(@content-color, #fff, 60%); // #b8c2d5
 @content-color-40: mix(@content-color, #fff, 40%); // #d0d7e3
@@ -45,6 +58,8 @@
 @activity-color-40: mix(@activity-color, #fff, 40%); // #ffe4ad
 @activity-color-20: mix(@activity-color, #fff, 20%); // #fff2d6
 
+//categories
+
 @orange: #f26e00;
 @orange-80: mix(@orange, #fff, 80%); // #f58b33
 @orange-60: mix(@orange, #fff, 60%); // #f7a866
@@ -63,17 +78,35 @@
 @violet-40: mix(@violet, #fff, 40%); // #dfabcb
 @violet-20: mix(@violet, #fff, 20%); // #efd5e5
 
+@dark-violet: #682c8b;
+@dark-violet-80: mix(@dark-violet, #fff, 80%); // #8656a2
+@dark-violet-60: mix(@dark-violet, #fff, 60%); // #a480b9
+@dark-violet-40: mix(@dark-violet, #fff, 40%); // #c2aad0
+@dark-violet-20: mix(@dark-violet, #fff, 20%); // #e0d4e7
+
 @green: #6ead10;
 @green-80: mix(@green, #fff, 80%); // #8bbd40
 @green-60: mix(@green, #fff, 60%); // #a8ce70
 @green-40: mix(@green, #fff, 40%); // #c5dea0
 @green-20: mix(@green, #fff, 20%); // #e2efcf
 
-@dark-green: #009630;
-@dark-green-80: mix(@dark-green, #fff, 80%); // #33ab5a
-@dark-green-60: mix(@dark-green, #fff, 60%); // #66c083
-@dark-green-40: mix(@dark-green, #fff, 40%); // #99d5ac
-@dark-green-20: mix(@dark-green, #fff, 20%); // #ccead6
+@dark-green: #008512;
+@dark-green-80: mix(@dark-green, #fff, 80%); // #339d41
+@dark-green-60: mix(@dark-green, #fff, 60%); // #66b570
+@dark-green-40: mix(@dark-green, #fff, 40%); // #99cea0
+@dark-green-20: mix(@dark-green, #fff, 20%); // #cce6cf
+
+@petrol: #129c94;
+@petrol-80: mix(@petrol, #fff, 80%); // #41afaa
+@petrol-60: mix(@petrol, #fff, 60%); // #70c3bf
+@petrol-40: mix(@petrol, #fff, 40%); // #a0d7d4
+@petrol-20: mix(@petrol, #fff, 20%); // #cfebe9
+
+@brown: #a85d45;
+@brown-80: mix(@brown, #fff, 80%); // #b97d6a
+@brown-60: mix(@brown, #fff, 60%); // #ca9eaf
+@brown-40: mix(@brown, #fff, 40%); // #dcbeb4
+@brown-20: mix(@brown, #fff, 20%); // #edded9
 
 @fieldset-header: @content-color-20;
 @fieldset-border: @base-color-20;

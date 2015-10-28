@@ -312,9 +312,6 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                     <? endif ?>
                     </tbody>
                 </table>
-                <? if (!$perm_dozent) : ?>
-                    <span style="color: #ff0000"><?= _("Die Personendaten können Sie mit Ihrem Status nicht bearbeiten!") ?></span>
-                <? endif; ?>
 
                 <script>
                     STUDIP.MultiPersonSearch.init();

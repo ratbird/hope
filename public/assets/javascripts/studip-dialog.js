@@ -322,11 +322,6 @@
             headers: {'X-Dialog': true}
         }).done(function (response, status, xhr) {
             var advance = true;
-            // Check response for messageboxes
-            console.log($(response));
-            if ($(response).children(':not(.messagebox)')) {
-                console.log('BENIS');
-        }
 
             // Trigger event
             $(options.origin || document).trigger('dialog-load', {xhr: xhr, options: options});

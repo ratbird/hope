@@ -51,13 +51,17 @@ class Seminar_Register_Auth extends Seminar_Auth
             $register_template->set_attribute('geschlecht', Request::int('geschlecht', 0));
         }
         PageLayout::setHelpKeyword('Basis.AnmeldungRegistrierung');
-        $header_template = $GLOBALS['template_factory']->open('header');
-        $header_template->current_page = _('Registrierung');
+        PageLayout::setTitle(_('Registrierung'));
+        // $header_template = $GLOBALS['template_factory']->open('header');
+        // $header_template->current_page = _('Registrierung');
 
-        include 'lib/include/html_head.inc.php';
-        echo $header_template->render();
+        $layout = $GLOBALS['template_factory']->open('layouts/base.php');
+        $register_template->set_layout($layout);
+
+        // include 'lib/include/html_head.inc.php';
+        // echo $header_template->render();
         echo $register_template->render();
-        include 'lib/include/html_end.inc.php';
+        // include 'lib/include/html_end.inc.php';
     }
 
     /**

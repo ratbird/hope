@@ -53,19 +53,16 @@ $graphtypes = array(
     <input type="hidden" name="template_id" value="<?= $templates['template_id'] ?>">
     <input type="hidden" name="eval_id" value="<?= $eval_id ?>">
 
-    <table class="default zebra">
+    <table class="default">
+        <caption>
+            <?= _('Auswertungskonfiguration') ?>
+        </caption>
         <colgroup>
             <col width="50%">
             <col width="25%">
             <col width="25%">
         </colgroup>
         <thead>
-            <tr>
-                <th class="table_header_bold" colspan="3">
-                    <?= Assets::img('icons/16/white/test.png') ?>
-                    <?= _('Auswertungskonfiguration') ?>
-                </th>
-            </tr>
             <tr>
                 <th><?= _('Optionen') ?></th>
                 <th style="text-align: center;"><?= _('Ja') ?></th>

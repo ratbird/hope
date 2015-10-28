@@ -19,12 +19,16 @@ if($red)
     $class = '_red';
 ?>
 <div align="center">
-<table class="zebra no-hover" width="70%" border=0 cellpadding=0 cellspacing=0>
-<tr><td class="table_header_bold<?=$class ?>" colspan=3 align="left">
- <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
- <b>&nbsp;<?= $headline; ?></b>
-</td></tr>
-<tr><td style="padding: 1.5em;">
+<table class="default" width="70%">
+    <tbody>
+        <tr>
+            <td class="table_header_bold<?=$class ?>" colspan=3 align="left">
+                <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
+                <b>&nbsp;<?= $headline; ?></b>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 1.5em;">
 <?php
 }
 
@@ -142,4 +146,3 @@ $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();
 echo $template->render();
 page_close();
-?>

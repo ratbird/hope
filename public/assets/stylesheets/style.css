@@ -313,73 +313,6 @@ td.tree-elbow-line svg,
 td.tree-elbow-end svg {
   display: block;
 }
-/* Zebra styles for tables */
-tr.hover_odd {
-  background-color: #eeeeee;
-}
-tr.hover_odd:hover {
-  background-color: #ced8f2;
-}
-tr.hover_even {
-  background-color: #f8f8f8;
-}
-tr.hover_even:hover {
-  background-color: #b7c2e2;
-}
-.table_row_odd {
-  background-color: #eeeeee;
-}
-.table_row_even {
-  background-color: #f8f8f8;
-}
-table.zebra > tbody > tr,
-table.zebra-hover > tbody > tr {
-  background-color: #e2e2e2;
-}
-table.zebra > tbody > tr:nth-child(2n+1),
-table.zebra-hover > tbody > tr:nth-child(2n+1) {
-  background-color: #f2f2f2;
-}
-.zebra table.zebra > tbody > tr,
-.zebra table.zebra-hover > tbody > tr {
-  background-color: #e7ebf1;
-}
-.zebra table.zebra > tbody > tr:nth-child(2n+1),
-.zebra table.zebra-hover > tbody > tr:nth-child(2n+1) {
-  background-color: #f3f5f8;
-}
-table.zebra-hover > tbody > tr:hover {
-  background-color: #b7c2e2;
-}
-table.zebra-hover > tbody > tr:hover:nth-child(2n+1) {
-  background-color: #ced8f2;
-}
-.zebra table.zebra-hover > tbody > tr:hover {
-  background-color: #b7c2e2;
-}
-.zebra table.zebra-hover > tbody > tr:hover:nth-child(2n+1) {
-  background-color: #ced8f2;
-}
-table.zebra-big > tbody > tr,
-table.zebra-big-hover > tbody > tr {
-  background-color: #e2e2e2;
-}
-table.zebra-big > tbody:nth-child(2n+1) > tr,
-table.zebra-big-hover > tbody:nth-child(2n+1) > tr {
-  background-color: #f2f2f2;
-}
-table.zebra-big-hover > tbody > tr:hover {
-  background-color: #b7c2e2;
-}
-table.zebra-big-hover > tbody:nth-child(2n+1) > tr:hover {
-  background-color: #ced8f2;
-}
-table.zebra-horizontal > tbody > tr > td {
-  background-color: #e2e2e2;
-}
-table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
-  background-color: #f2f2f2;
-}
 /* --- table.collapsable ---------------------------------------------------- */
 .collapsable .header-row > td {
   border-bottom: 0;
@@ -795,7 +728,7 @@ table.default > tbody > tr > td.dragHandle {
 table.default > tbody > tr:last-child > td {
   border-bottom: 1px solid #1e3e70;
 }
-table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
+table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
   background-color: rgba(105, 118, 127, 0.2);
 }
 table.default > tfoot > tr > td {

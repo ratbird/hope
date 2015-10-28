@@ -114,62 +114,6 @@ td.tree-elbow-line, td.tree-elbow-end {
     }
 }
 
-/* Zebra styles for tables */
-tr.hover_odd {
-    background-color: #eeeeee;
-    &:hover { background-color: #ced8f2; }
-}
-tr.hover_even {
-    background-color: #f8f8f8;
-    &:hover { background-color: #b7c2e2; }
-}
-
-.table_row_odd { background-color: #eeeeee; }
-.table_row_even { background-color: #f8f8f8; }
-
-
-table.zebra, table.zebra-hover { // bg color alternates with tr
-    > tbody > tr {
-        background-color: @alternating-color-odd;
-        &:nth-child(2n+1) { background-color: @alternating-color-even; }
-
-        .zebra &{ // Don't insert a blank between & and { as it would lead to a wrong rule; seems to be a bug in lessc
-            background-color: @content-color-20;
-            &:nth-child(2n+1) { background-color: #f3f5f8; }
-        }
-    }
-}
-table.zebra-hover {
-    > tbody > tr:hover {
-        background-color: @alternating-highlight-color-odd;
-        &:nth-child(2n+1) { background-color: @alternating-highlight-color-even; }
-
-        .zebra &{ // See above
-            background-color: #b7c2e2;
-            &:nth-child(2n+1) { background-color: #ced8f2; }
-        }
-    }
-}
-table.zebra-big, table.zebra-big-hover { // bg color alternates with tbody
-    > tbody {
-        > tr { background-color: @alternating-color-odd; }
-        &:nth-child(2n+1) > tr { background-color: @alternating-color-even; }
-    }
-}
-table.zebra-big-hover {
-    > tbody {
-        > tr:hover { background-color: @alternating-highlight-color-odd; }
-        &:nth-child(2n+1) > tr:hover { background-color: @alternating-highlight-color-even; }
-    }
-}
-
-table.zebra-horizontal > tbody > tr > td {
-    background-color: @alternating-color-odd;
-    &:nth-child(2n+1) {
-        background-color: @alternating-color-even;
-    }
-}
-
 /* --- table.collapsable ---------------------------------------------------- */
 // TODO: This is pretty hard to understand and should be replaced with an easier,
 // better structured solution
@@ -482,7 +426,7 @@ table.default {
         }
     }
     // Hover effect
-    &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
+    &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
         background-color: fadeout(@light-gray-color, 80%);
     }
     > tfoot {

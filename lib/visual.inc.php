@@ -310,7 +310,8 @@ function formatLinks($text, $nl2br=TRUE){
  * @return string        HTML code computed by applying markup-rules.
  */
 function wikiReady($text, $trim=TRUE){
-    return Markup::apply(new WikiFormat(), $text, $trim);
+    return sprintf(FORMATTED_CONTENT_WRAPPER,
+                   Markup::apply(new WikiFormat(), $text, $trim));
 }
 
 /**

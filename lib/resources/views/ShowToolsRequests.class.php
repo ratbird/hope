@@ -415,7 +415,7 @@ class ShowToolsRequests
                                 print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                 if ($request_resource_id) {
                                     if ($request_resource_id == $val["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
+                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $request_resource_id .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$request_resource_id], $val["events_count"], $val["overlap_events_count"][$request_resource_id], $val["termin_ids"]);
@@ -502,7 +502,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
+                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $key .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
@@ -582,7 +582,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
+                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $key .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
@@ -669,7 +669,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/blue/accept.png', tooltip2(_('Dieser Raum ist augenblicklich gebucht')));
+                                        print Assets::img('icons/16/blue/accept.png', tooltip2(_('Dieser Raum ist augenblicklich gebucht'), TRUE));
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                         print $overlap_status["html"];

@@ -6226,6 +6226,9 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel {
   padding-right: 23px;
 }
+.ui-dialog .ui-dialog-buttonpane .ui-button:last-child {
+  margin-right: 0;
+}
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept:before {
   background-image: url("../images/icons/blue/accept.svg");
   -webkit-background-size: 16px 16px;

@@ -1,6 +1,9 @@
+//if you like, change this (your brand color)
 @base-color: #28497c;
 
 
+//PLEASE, no changes from here
+@base-grey: #3c454e;
 
 @brand-color-dark: @base-color;
 @brand-color-darker: hsv(hsvhue(@base-color)-0.2, 
@@ -22,13 +25,12 @@
 @alternating-highlight-color-even: #ced8f2;
 @alternating-highlight-color-odd:  #b7c2e2;
 
-@table-header-color: #d1d1d1;
-@table-footer-color: #d1d1d1;
+@table-header-color: @dark-gray-color-20;
+@table-footer-color: @dark-gray-color-20;
 
 @active-color: @red;
 @black: #000000;
 
-//@base-color: #28497c;
 @base-color-80: mix(@base-color, #fff, 80%); // #536d96
 @base-color-60: mix(@base-color, #fff, 60%); // #7e92b0
 @base-color-40: mix(@base-color, #fff, 40%); // #a9b6cb
@@ -40,25 +42,31 @@
 @content-color-40: mix(@content-color, #fff, 40%); // #d0d7e3
 @content-color-20: mix(@content-color, #fff, 20%); // #e7ebf1
 
-@light-gray-color: #69767f;
+@light-gray-color: @dark-gray-color-80;
 @light-gray-color-80: mix(@light-gray-color, #fff, 80%); // #879199
 @light-gray-color-60: mix(@light-gray-color, #fff, 60%); // #a5adb2
 @light-gray-color-40: mix(@light-gray-color, #fff, 40%); // #c3c8cc
 @light-gray-color-20: mix(@light-gray-color, #fff, 20%); // #e1e4e5
 
-@dark-gray-color: #3c454e;
+@dark-gray-color: @base-grey;
 @dark-gray-color-80: mix(@dark-gray-color, #fff, 80%); // #636a71
 @dark-gray-color-60: mix(@dark-gray-color, #fff, 60%); // #8a8f95
 @dark-gray-color-40: mix(@dark-gray-color, #fff, 40%); // #b1b5b8
 @dark-gray-color-20: mix(@dark-gray-color, #fff, 20%); // #d8dadc
 
-@activity-color: #ffdb33;
+@activity-color: @yellow;
 @activity-color-80: mix(@activity-color, #fff, 80%); // #ffca5c
 @activity-color-60: mix(@activity-color, #fff, 60%); // #ffd785
 @activity-color-40: mix(@activity-color, #fff, 40%); // #ffe4ad
 @activity-color-20: mix(@activity-color, #fff, 20%); // #fff2d6
 
-//categories
+//colors. A lot of.
+
+@yellow: #ffbd33;
+@yellow-80: mix(@orange, #fff, 80%); // #ffca5c
+@yellow-60: mix(@orange, #fff, 60%); // #ffd785
+@yellow-40: mix(@orange, #fff, 40%); // #ffe4ad
+@yellow-20: mix(@orange, #fff, 20%); // #fff2d6
 
 @orange: #f26e00;
 @orange-80: mix(@orange, #fff, 80%); // #f58b33

@@ -12,7 +12,7 @@ use AuthUserMd5, DBManager, DBManagerException, PDO;
  * @license GPL 2 or later
  * @since   Stud.IP 3.0
  */
-abstract class Base extends \SimpleOrMap
+abstract class Base extends \SimpleORMap
 {
     /**
      * Each consumer type has to implement a detect feature which

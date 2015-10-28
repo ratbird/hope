@@ -1,7 +1,7 @@
 <? if ($search_string): ?>
 
     <input type="hidden" name="search_string_<?= $name ?>" value="<?= htmlReady($search_string) ?>">
-    <?= Assets::input('icons/16/yellow/arr_2' . $img_dir, tooltip2(_('diesen Eintrag übernehmen')) + array(
+    <?= Assets::input('icons/blue/arr_2down', tooltip2(_('diesen Eintrag übernehmen')) + array(
             'name' => 'send_' . $name,
             'value' => _('übernehmen'),
     )) ?>

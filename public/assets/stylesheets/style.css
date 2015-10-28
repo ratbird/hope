@@ -749,6 +749,10 @@ table.default > caption .actions {
   padding-bottom: 7px;
   padding-left: 0.5em;
 }
+table.default > caption .actions input,
+table.default > caption .actions select {
+  font-size: 0.7em;
+}
 table.default td.actions,
 table.default th.actions {
   float: none;

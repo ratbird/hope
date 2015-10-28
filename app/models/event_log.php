@@ -69,7 +69,7 @@ class EventLog
         }
 
         if (isset($object_id)) {
-            $filter[] = "(:object_id IN (affected_range_id, coaffected_range_id))";
+            $filter[] = "(:object_id IN (affected_range_id, coaffected_range_id, user_id))";
             $parameters[':object_id'] = $object_id;
         }
 

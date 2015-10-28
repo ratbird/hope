@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="view" value="edit_object_properties">
 
-<table class="zebra" border="0" celpadding="2" cellspacing="0" width="99%" align="center">
+<table class="default">
     <colgroup>
         <col width="4%">
         <col>

@@ -9,7 +9,7 @@ $inputs = array(
 ?>
 
 <? if (count($locks) > 0): ?>
-    <table class="default zebra-hover" style="width: 50%;">
+    <table class="default" style="width: 50%;">
         <colgroup>
             <col width="2*">
             <col width="2*">

@@ -4,7 +4,7 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <form method="post" action="<?= URLHelper::getLink('?change_object_perms='. $resObject->getId()) ?>">
 <?= CSRFProtection::tokenTag() ?>
-<table class="zebra" border="0" celpadding="2" cellspacing="0" width="99%" align="center">
+<table class="default">
     <colgroup>
         <col width="4%">
         <col width="20%">

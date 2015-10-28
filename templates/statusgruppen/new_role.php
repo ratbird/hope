@@ -6,7 +6,7 @@
     <td colspan="5" class="blank">
         <form action="<?= URLHelper::getLink('#'. $role_data['id']) ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <table class="default zebra">
+        <table class="default">
             <colgroup>
                 <col width="30%">
                 <col width="70%">

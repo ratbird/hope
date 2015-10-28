@@ -12,7 +12,7 @@ $types = array(
 <form method="post" action="<?= URLHelper::getLink() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="default zebra" style="margin: 0 1%; width: 98%;">
+<table class="default" style="margin: 0 1%; width: 98%;">
     <colgroup>
         <col width="4%">
         <col width="16%">

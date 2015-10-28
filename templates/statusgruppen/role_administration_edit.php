@@ -7,7 +7,7 @@ $group_data = $role->getData();
     <td colspan="5" class="printcontent">
         <form action="<?= URLHelper::getLink('#'. $role->getId()) ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <table class="default zebra">
+        <table class="default">
             <colgroup>
                 <col width="50%">
                 <col width="50%">

@@ -15,7 +15,7 @@ use Studip\Button,
 <input type="hidden" name="change_schedule_repeat_interval" value="<? echo $resAssign->getRepeatInterval() ?>">
 <input type="hidden" name="change_schedule_repeat_quantity" value="<? echo $resAssign->getRepeatQuantity() ?>">
 
-<table class="zebra" border="0" cellpadding="2" cellspacing="0" width="99%" align="center">
+<table class="default">
     <tbody>
         <tr>
             <td colspan="3" align="center">

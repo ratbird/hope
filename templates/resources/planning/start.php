@@ -4,7 +4,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="view" value="edit_request">
 
-<table class="default zebra" style="margin: 0 1%; width: 98%;">
+<table class="default" style="margin: 0 1%; width: 98%;">
     <colgroup>
         <col width="4%">
         <col>

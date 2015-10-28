@@ -352,7 +352,7 @@ class ShowToolsRequests
                     <font size="-1"><b><?=_("angeforderte Belegungszeiten")?>:</b><br><br>
                     <?
                     $dates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
-                    if (count($dates)) {
+                    if ($dates['first_event']) {
                             $i = 1;
                             if(is_array($dates['info']) && sizeof($dates['info']) > 0 ){
                                  foreach ($dates['info'] as $info) {

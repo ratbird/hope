@@ -1,4 +1,4 @@
-<form class="studip-form" action="<?= $controller->url_for('course/wizard/process', $stepnumber, $temp_id) ?>" method="post">
+<form class="default" action="<?= $controller->url_for('course/wizard/process', $stepnumber, $temp_id) ?>" method="post">
     <?= $content ?>
     <footer>
         <input type="hidden" name="step" value="<?= $stepnumber ?>"/>

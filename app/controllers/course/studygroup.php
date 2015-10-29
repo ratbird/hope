@@ -720,11 +720,7 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->groupdescription = $sem->description;
         $this->moderators       = $sem->getMembers('dozent');
         $this->tutors           = $sem->getMembers('tutor');
-        echo "<pre>";
-        var_dump($this->tutors);
-        echo "</pre>";
-        die;
-
+        
         $this->accepted         = $sem->getAdmissionMembers('accepted');
 
 

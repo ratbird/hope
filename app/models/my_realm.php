@@ -814,13 +814,13 @@ class MyRealmModel
                 }
 
                 if ($neue) {
-                    $nav->setImage('icons/20/red/new/persons.png', array('title' => sprintf('%s %s, %s %s', $count, _('TeilnehmerInnen'), $neue, _('neue'))));
+                    $nav->setImage('icons/20/red/new/persons.png', array('title' => sprintf('%s %s, %s %s', $count, _('Teilnehmende'), $neue, _('neue'))));
                     $nav->setBadgeNumber($neue);
                 } else if ($count) {
-                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf('%s %s', $count, _('TeilnehmerInnen'))));
+                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf('%s %s', $count, _('Teilnehmende'))));
                 }
             } else {
-                $nav->setImage('icons/20/grey/persons.png', array('title' => _('TeilnehmerInnen')));
+                $nav->setImage('icons/20/grey/persons.png', array('title' => _('Teilnehmende')));
             }
             return $nav;
         }

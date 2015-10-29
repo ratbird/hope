@@ -46,13 +46,13 @@ class Institute_MembersController extends AuthenticatedController
         // this page is used for administration (if the user has the proper rights)
         // or for just displaying the workers and their roles
         if ($this->admin_view) {
-            PageLayout::setTitle(_("Verwaltung der MitarbeiterInnen"));
+            PageLayout::setTitle(_("Verwaltung von Mitarbeiter/-innen"));
             if (Navigation::hasItem('/admin/institute/faculty')) {
                 Navigation::activateItem('/admin/institute/faculty');
             }
             $GLOBALS['perm']->check("admin");
         } else {
-            PageLayout::setTitle(_("Liste der MitarbeiterInnen"));
+            PageLayout::setTitle(_("Liste der Mitarbeiter/-innen"));
             if (Navigation::hasItem('/course/faculty/view')) {
                 Navigation::activateItem('/course/faculty/view');
             }
@@ -132,7 +132,7 @@ class Institute_MembersController extends AuthenticatedController
             $statement->execute(array($role_id, get_userid($username)));
 
             if ($statement->rowCount() > 0) {
-                PageLayout::postMessage(MessageBox::info(sprintf(_('%s wurde von der Liste der MitarbeiterInnen gelöscht.'),
+                PageLayout::postMessage(MessageBox::info(sprintf(_('%s wurde von der Liste der Mitarbeiter/-innen gelöscht.'),
                                    User::findByUsername($username)->getFullName())));
             }
         }
@@ -152,7 +152,7 @@ class Institute_MembersController extends AuthenticatedController
             $statement->execute(array($del_user_id, $this->inst_id));
 
             if ($statement->rowCount() > 0) {
-                PageLayout::postMessage(MessageBox::info(sprintf(_('%s wurde von der Liste der MitarbeiterInnen gelöscht.'),
+                PageLayout::postMessage(MessageBox::info(sprintf(_('%s wurde von der Liste der Mitarbeiter/-innen gelöscht.'),
                                    User::findByUsername($username)->getFullName())));
             }
 
@@ -370,7 +370,7 @@ class Institute_MembersController extends AuthenticatedController
                     }, $statement->fetchAll(PDO::FETCH_ASSOC)));
                     URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
                     $this->mp = MultiPersonSearch::get("inst_member_add" . $this->inst_id)
-                    ->setLinkText(_("MitarbeiterInnen hinzufügen"))
+                    ->setLinkText(_("Mitarbeiter/-innen hinzufügen"))
                     ->setDefaultSelectedUser($defaultSelectedUser)
                     ->setTitle(_('Personen in die Einrichtung eintragen'))
                     ->setExecuteURL(URLHelper::getLink("dispatch.php/institute/members", array('admin_view' => 1, 'ins_id' => $this->inst_id)))

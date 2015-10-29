@@ -98,7 +98,7 @@ function delete_news($delete_news_array)
                     PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde gelöscht.'), htmlReady($delete_news->getValue('topic')))));
                     if ($delete_news->getValue('user_id') != $GLOBALS['auth']->auth['uid']) {
                         setTempLanguage($delete_news->getValue('user_id'));
-                        $msg = sprintf(_('Ihre Ankündigung "%s" wurde von einer Administratorin oder einem Administrator gelöscht!.'), $delete_news->getValue('topic'), get_fullname() . ' ('.get_username().')'). "\n";
+                        $msg = sprintf(_('Ihre Ankündigung "%s" wurde von der Administration gelöscht!.'), $delete_news->getValue('topic'), get_fullname() . ' ('.get_username().')'). "\n";
                         $msg_object->insert_message($msg, get_username($delete_news->getValue('user_id')) , "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Ankündigung geändert"));
                         restoreLanguage();
                     }

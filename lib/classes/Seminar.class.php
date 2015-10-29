@@ -1683,12 +1683,12 @@ class Seminar
                 // if the room-request has been declined, show the decline-notice placed by the room-administrator
                 if ($room_request == 'declined') {
                     if ($rD->getReplyComment()) {
-                        $this->requestData .= "\nNachricht RaumadministratorIn:\n";
+                        $this->requestData .= "\nNachricht Raumadmin:\n";
                         $this->requestData .= $rD->getReplyComment();
                     }
                 } else {
                     if ($rD->getComment()) {
-                        $this->requestData .= "\nNachricht an den/die RaumadministratorIn:\n";
+                        $this->requestData .= "\nNachricht an Raumadmin:\n";
                         $this->requestData .= $rD->getComment();
                     }
                 }
@@ -2447,7 +2447,7 @@ class Seminar
         if ($GLOBALS['perm']->have_studip_perm('user', $this->getId(), $user_id)) {
             $info['enrolment_allowed'] = true;
             $info['cause'] = 'member';
-            $info['description'] = _("Sie sind als TeilnehmerIn der Veranstaltung eingetragen.");
+            $info['description'] = _("Sie sind für die Veranstaltung angemeldet.");
             return $info;
         }
         $admission_status = $user->admission_applications->findBy('seminar_id', $this->getId())->val('status');

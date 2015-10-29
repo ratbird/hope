@@ -156,7 +156,7 @@
               <label class="caption"><?=_("verbindliche Anmeldung:")?></label>
               <label for="admission_binding">
               <input <?=$is_locked['admission_binding'] ?> id="admission_binding" type="checkbox" <?= ($course->admission_binding == 1 ? "checked" : ""); ?> name="admission_binding"  value="1">
-              <?=_("Anmeldung ist <u>verbindlich</u>. (Teilnehmerinnen und Teilnehmer können sich nicht selbst wieder abmelden.)")?></label>
+              <?=_("Anmeldung ist <u>verbindlich</u>. (Teilnehmenden können sich nicht selbst wieder abmelden.)")?></label>
               <?= Studip\Button::create(_("Anmeldemodus ändern"), 'change_admission_prelim', array('data-dialog' => '')) ?>
     </fieldset>
 </form>

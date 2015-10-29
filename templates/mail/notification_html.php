@@ -9,7 +9,7 @@
   <div style="background-color: white; margin: auto; max-width: 700px; padding: 4px;">
     <?= Assets::img("locale/$lang/LC_PICTURES/mail_header_notification.png") ?>
     <p>
-      <?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in Ihren abonnierten Veranstaltungen.") ?>
+      <?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in belegten Veranstaltungen.") ?>
       <br><br>
       <?= _("Über welche Inhalte und in welchem Format Sie informiert werden wollen, können Sie hier einstellen:") ?>
       <br>

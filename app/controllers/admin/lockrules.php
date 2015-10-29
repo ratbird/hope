@@ -46,7 +46,7 @@ class Admin_LockrulesController extends AuthenticatedController
             $this->lock_rule_permissions = array('tutor','dozent','admin','root');
         }
 
-        $this->rule_type_names = array('sem' => _('Veranstaltung'), 'inst' => _('Einrichtung'), 'user' => _('Nutzer'));
+        $this->rule_type_names = array('sem' => _('Veranstaltung'), 'inst' => _('Einrichtung'), 'user' => _('Person'));
 
         $this->sidebar = Sidebar::Get();
         $this->sidebar->setTitle(_('Sperrebenen'));

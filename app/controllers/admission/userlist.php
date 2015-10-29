@@ -40,7 +40,7 @@ class Admission_UserListController extends AuthenticatedController {
 
         $views = new ViewsWidget();
         $views->setTitle(_('Aktionen'));
-        $views->addLink(_('Nutzerliste anlegen'),$this->url_for('admission/userlist/configure'))->setActive($action == 'configure');
+        $views->addLink(_('Personenliste anlegen'),$this->url_for('admission/userlist/configure'))->setActive($action == 'configure');
         Sidebar::Get()->addWidget($views);
     }
 
@@ -112,7 +112,7 @@ class Admission_UserListController extends AuthenticatedController {
                 $this->flash['user_id'] = Request::get('user_id');
                 $this->flash['user_id_parameter'] = Request::get('user_id_parameter');
                 if (!Request::get('name')) {
-                    $this->flash['error'] = _('Bitte geben Sie einen Namen für die Nutzerliste an.');
+                    $this->flash['error'] = _('Bitte geben Sie einen Namen für die Personenliste an.');
                 }
             }
             $this->redirect($this->url_for('admission/userlist/configure', $userlistId));

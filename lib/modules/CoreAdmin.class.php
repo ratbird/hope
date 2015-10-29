@@ -64,7 +64,7 @@ class CoreAdmin implements StudipModule {
 
                 $item = new AutoNavigation(_('Zusatzangaben'), 'dispatch.php/admin/additional');
                 $item->setImage('icons/blue/add.svg');
-                $item->setDescription(_('Vorlagen zur Erhebung weiterer Angaben von Teilnehmerinnen und Teilnehmern auswählen.'));
+                $item->setDescription(_('Vorlagen zur Erhebung weiterer Angaben von Teilnehmenden auswählen.'));
                 $navigation->addSubNavigation('additional_data', $item);
 
                 if ($GLOBALS['perm']->have_perm($sem_create_perm)) {

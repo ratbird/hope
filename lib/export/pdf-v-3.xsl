@@ -358,7 +358,7 @@ Vorlesungskommentar
 			<xsl:if test="teilnehmerzahl">
 				<xsl:for-each select="teilnehmerzahl">
 					<fo:block>
-						<fo:inline font-weight="bold"><xsl:value-of select="@key"/> TeilnehmerInnenzahl: </fo:inline>
+						<fo:inline font-weight="bold"><xsl:value-of select="@key"/> Anzahl Teilnehmende: </fo:inline>
 						<xsl:value-of select="."/>
 					</fo:block>
 				</xsl:for-each>

@@ -105,7 +105,7 @@ class Admin_DomainController extends AuthenticatedController
         if (count($domain->getUsers()) == 0) {
             $domain->delete();
         } else {
-            $this->message = MessageBox::error(_('Domänen, denen noch Nutzer zugewiesen sind, können nicht gelöscht werden.'));
+            $this->message = MessageBox::error(_('Domänen, denen noch Personen zugewiesen sind, können nicht gelöscht werden.'));
         }
 
         $this->domains = UserDomain::getUserDomains();

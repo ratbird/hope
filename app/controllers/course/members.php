@@ -315,9 +315,9 @@ class Course_MembersController extends AuthenticatedController
         }
 
         if ($countAdded == 1) {
-            $text = _("Es wurde ein/e neue/r Autor/-in hinzugefügt.");
+            $text = _("Es wurde eine neue Person hinzugefügt.");
         } else {
-            $text = sprintf(_("Es wurden %s neue Autoren/-innen hinzugefügt."), $countAdded);
+            $text = sprintf(_("Es wurden %s neue Personen hinzugefügt."), $countAdded);
         }
         PageLayout::postMessage(MessageBox::success($text));
         $this->redirect('course/members/index');
@@ -1524,18 +1524,18 @@ class Course_MembersController extends AuthenticatedController
                                  $this->parseHref($csvExport),
                                  'icons/16/blue/file-office.png');
                 // create csv-export link
-                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen-Liste als rtf-Dokument exportieren'), 'passthrough');
+                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('Teilnehmendenliste als rtf-Dokument exportieren'), 'passthrough');
                 $widget->addLink(_('Teilnehmendenliste als rtf-Dokument exportieren'),
                                  $this->parseHref($rtfExport),
                                  'icons/16/blue/file-text.png');
 
                 if (count($this->awaiting) > 0) {
-                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", $this->waiting_type, _("Warteliste als rtf-Dokument exportieren"), 'passthrough');
+                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", $this->waiting_type, _("Warteliste als Textdokument (.rtf) exportieren"), 'passthrough');
                     $widget->addLink(_('Warteliste als rtf-Dokument exportieren'),
                                      $this->parseHref($awaiting_rtf),
                                      'icons/16/blue/export/file-office.png');
 
-                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", $this->waiting_type, _("Warteliste als csv-Dokument exportieren"), 'passthrough');
+                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", $this->waiting_type, _("Warteliste als Tabellendokument (.csv) exportieren"), 'passthrough');
                     $widget->addLink(_('Warteliste als csv-Dokument exportieren'),
                                      $this->parseHref($awaiting_csv),
                                      'icons/16/blue/export/file-text.png');
@@ -1546,12 +1546,12 @@ class Course_MembersController extends AuthenticatedController
         } else if ($this->is_autor || $this->is_user) {
             // Visibility preferences
             if (!$this->my_visibility['iam_visible']) {
-                $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste nicht sichtbar.');
+                $text = _('Sie sind für andere Teilnehmenden auf der Teilnehmendenliste nicht sichtbar.');
                 $icon = 'icons/16/blue/visibility-visible.png';
                 $modus = 'make_visible';
                 $link_text = _('Klicken Sie hier, um sichtbar zu werden.');
             } else {
-                $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste sichtbar.');
+                $text = _('Sie sind für andere Teilnehmenden auf der Teilnehmendenliste sichtbar.');
                 $icon = 'icons/16/blue/visibility-invisible.png';
                 $modus = 'make_invisible';
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');

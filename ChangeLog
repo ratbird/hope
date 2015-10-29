@@ -216,7 +216,7 @@ http://develop.studip.de/trac/query?milestone=Stud.IP+3.1
 - Mailanhang geht verloren [#4223]
 - StEP00262: Einrichtung eines persönlichen Dateibereichs [#4235]
 - Bibliothek jQuery.metadata aus dem Kern entfernen [#4246]
-- TeilnehmerInnen: Reihenfolge der Infobox-Links ändern [#4281]
+- Teilnehmende: Reihenfolge der Infobox-Links ändern [#4281]
 - Rest-Routen für Blubber [#4307]
 - JS: Checkbox/Select-Helper [data-activates] [#4308]
 - Icons Stud.IP 3.1 [#4311]

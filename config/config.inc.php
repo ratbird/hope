@@ -172,7 +172,7 @@ $UPLOAD_TYPES["personalfiles"] =
 * define presets for the status-groups in courses (refers to the key of the $SEM_CLASS array above)
 * if none is given, the designations of $SEM_STATUS_GROUPS["default"] are used
 */
-$SEM_STATUS_GROUPS["default"] = array ("Lehrende", "Tutor/-innen", "Autor/-innen", "Leser/-innen", "sonstige");    //the default. Don't delete this entry!
+$SEM_STATUS_GROUPS["default"] = array ("Lehrende", "Tutor/-innen", "Studierende", "Leser/-innen", "sonstige");    //the default. Don't delete this entry!
 $SEM_STATUS_GROUPS["2"] = array ("Organisatoren", "Mitglieder", "Ausschuﬂmitglieder", "sonstige");
 $SEM_STATUS_GROUPS["3"] = array ("Moderatoren des Forums","Mitglieder", "sonstige");
 // ...can be continued accordingly

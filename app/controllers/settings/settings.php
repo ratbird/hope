@@ -286,7 +286,7 @@ class Settings_SettingsController extends AuthenticatedController
         if ($this->restricted && count($this->private_messages) > 0) {
             setTempLanguage($this->user->user_id);
 
-            $message = _("Ihre persönliche Seite wurde von einer Administratorin oder einem Administrator verändert.\n "
+            $message = _("Ihre persönliche Seite wurde von Admin verändert.\n "
                         ."Folgende Veränderungen wurden vorgenommen:\n \n")
                         . '- ' . implode("\n- ", $this->private_messages);
             $subject = _('Systemnachricht:') . ' ' . _('Profil verändert');

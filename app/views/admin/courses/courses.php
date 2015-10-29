@@ -201,14 +201,14 @@
             <? endif ?>
             <? if (in_array('members', $view_filter)) : ?>
                 <td style="text-align: center;">
-                    <a title="<?=_('TeilnehmerInnen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
-                        <?= $values["teilnehmer"] ?>
+                    <a title="<?=_('Teilnehmende')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                        <?= $values["Teilnehmende"] ?>
                     </a>
                 </td>
             <? endif ?>
             <? if (in_array('waiting', $view_filter)) : ?>
                 <td style="text-align: center;">
-                    <a title="<?=_('TeilnehmerInnen auf der Warteliste')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                    <a title="<?=_('Teilnehmende auf der Warteliste')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
                         <?= $values["waiting"] ?>
                     </a>
                 </td>

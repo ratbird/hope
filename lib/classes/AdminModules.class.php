@@ -58,8 +58,8 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["schedule"]["msg_activate"] = _("Die Ablaufplanverwaltung kann jederzeit aktiviert werden.");
         $this->registered_modules["schedule"]["msg_deactivate"] = _("Die Ablaufplanverwaltung kann jederzeit deaktiviert werden.");
 
-        $this->registered_modules["participants"]["msg_activate"] = _("Die TeilnehmerInnenverwaltung kann jederzeit aktiviert werden.");
-        $this->registered_modules["participants"]["msg_deactivate"] = _("Die TeilnehmerInnenverwaltung kann jederzeit deaktiviert werden. Bachten Sie, dass Sie dann keine normalen Teilnehmer verwalten können!");
+        $this->registered_modules["participants"]["msg_activate"] = _("Die Teilnehmendenverwaltung kann jederzeit aktiviert werden.");
+        $this->registered_modules["participants"]["msg_deactivate"] = _("Die Teilnehmendenverwaltung kann jederzeit deaktiviert werden. Bachten Sie, dass Sie dann keine normalen Teilnehmer verwalten können!");
 
         $this->registered_modules["personal"]["msg_activate"] = _("Die Personalliste kann jederzeit aktiviert werden.");
         $this->registered_modules["personal"]["msg_deactivate"] = _("Die Personalliste kann jederzeit deaktiviert werden.");
@@ -93,7 +93,7 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["documents_folder_permissions"]['preconditions'] = array('documents');
         $this->registered_modules["documents_folder_permissions"]['metadata'] = array(
                 'summary' => _("Dateiordnerberechtigungen"),
-                'descriptionshort' => _("Vergabe von Rechten für Dateiordner an teilnehmende Studierende (Autor/-innen)"),
+                'descriptionshort' => _("Vergabe von Rechten für Dateiordner an teilnehmende Studierende"),
                 'category' => _("Lehr- und Lernorganisation"),
                 'keywords' => _('Das Recht "Lesen" (r): Dateien können geöffnet und heruntergeladen werden;
                                 Das Recht "Schreiben" (w): Studierende können Dateien hochladen;

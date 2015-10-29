@@ -169,14 +169,14 @@ class Admin_AutoinsertController extends AuthenticatedController
 
                 //messagebox
                 $text = sprintf(
-                        _('Es wurden %u Nutzer von %u möglichen Nutzern in die Veranstaltung %s eingetragen.'), $real_users, count($user_ids), sprintf('<a href="%s">%s</a>', URLHelper::getLink('dispatch.php/course/details/', array('cid' => $seminar->getId())), htmlReady($seminar->getName()))
+                        _('Es wurden %u von %u möglichen Personen in die Veranstaltung %s eingetragen.'), $real_users, count($user_ids), sprintf('<a href="%s">%s</a>', URLHelper::getLink('dispatch.php/course/details/', array('cid' => $seminar->getId())), htmlReady($seminar->getName()))
                 );
                 if ($real_users > 0) {
                     $this->flash['success'] = $text;
                 } else {
                     $this->flash['message'] = $text;
                 }
-                $this->flash['detail'] = array(_('Etwaige Abweichungen der Nutzerzahlen enstehen durch bereits vorhandene Nutzer bzw. wieder ausgetragene Nutzer.'));
+                $this->flash['detail'] = array(_('Etwaige Abweichungen der Personenzahlen enstehen durch bereits vorhandene bzw. wieder ausgetragene Personen.'));
                 $this->redirect('admin/autoinsert/manual');
             }
         }

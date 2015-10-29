@@ -446,7 +446,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 }
             }
             if ($csv == 'download_all_members') {
-                $captions = array(_("Nutzername"), _("Vorname"), _("Nachname"), _("Email"), _("Veranstaltung"), _("Status"));
+                $captions = array(_("Username"), _("Vorname"), _("Nachname"), _("Email"), _("Veranstaltung"), _("Status"));
                 if (count($liste)) {
                     $tmpname = md5(uniqid('tmp'));
                     if (array_to_csv($liste, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
@@ -522,7 +522,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     public function factored_users_action($set_id)
     {
         if (Request::isXhr()) {
-            $this->response->add_header('X-Title', _('Liste der Nutzer'));
+            $this->response->add_header('X-Title', _('Liste der Personen'));
         }
         $courseset = new CourseSet($set_id);
         $factored_users = $courseset->getUserFactorList();

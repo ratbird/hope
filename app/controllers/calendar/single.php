@@ -343,8 +343,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         }, $this->users);
         
         $this->mps = MultiPersonSearch::get('calendar-manage_access')
-                ->setTitle(_('Benutzer hinzufügen'))
-                ->setLinkText(_('Benutzer hinzufügen'))
+                ->setTitle(_('Personhinzufügen'))
+                ->setLinkText(_('Person hinzufügen'))
                 ->setDefaultSelectedUser($all_calendar_users->pluck('user_id'))
                 ->setJSFunctionOnSubmit('STUDIP.CalendarDialog.closeMps')
                 ->setExecuteURL($this->url_for('calendar/single/add_users/'
@@ -383,8 +383,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         }
         if ($added) {
             PageLayout::postMessage(MessageBox::success(sprintf(
-                    ngettext('Ein Benutzer wurde mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
-                            '%s Benutzer wurden mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
+                    ngettext('Eine Person wurde mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
+                            '%s Personen wurden mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
                             $added), $added)));
         }
         
@@ -414,7 +414,7 @@ class Calendar_SingleController extends Calendar_CalendarController
             $this->render_nothing();
         } else {
             PageLayout::postMessage(MessageBox::success(
-                     sprintf(_('Benutzer %s wurde entfernt.', $name))));
+                     sprintf(_('Person %s wurde entfernt.', $name))));
             $this->redirect($this->url_for('calendar/single/manage_access/'
                     . $this->calendar->getRangeId()));
         }

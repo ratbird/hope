@@ -63,8 +63,8 @@
     "icon": "info",
     "text": [
         "Auf dieser Seite können Sie nach Studiengruppen suchen.",
-        "Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten.",
-        "JedeR kann Studiengruppen gründen."
+        "Studiengruppen sind eine einfache Möglichkeit mit anderen zusammenzuarbeiten.",
+        "Jede/-r kann Studiengruppen gründen."
     ]
 },
 {
@@ -72,8 +72,8 @@
     "label": "Informationen",
     "icon": "info",
     "text": [
-        "Hier sehen Sie die TeilnehmerInnen der Studiengruppe.",
-        "TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden."
+        "Hier sehen Sie die Teilnehmenden der Studiengruppe.",
+        "Teilnehmende können je nach Status zu einer Moderatorin oder einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden."
     ]
 },
 {
@@ -81,7 +81,7 @@
     "label": "Informationen",
     "icon": "info",
     "text": [
-        "Wählen Sie 'Offen für alle', wenn beliebige Nutzer der Gruppe ohne Nachfrage beitreten können sollen.",
+        "Wählen Sie 'Offen für alle', wenn alle Personen der Gruppe ohne Nachfrage beitreten können sollen.",
         "'Auf Anfrage' erfordert Ihr Eingreifen: Sie müssen jede einzelne Aufnahmeanfrage annehmen oder ablehnen.",
         "Alle Einstellungen können auch später noch unter dem Reiter 'Admin' geändert werden."
     ]
@@ -91,8 +91,8 @@
     "label": "Informationen",
     "icon": "info",
     "text": [
-        "Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten.",
-        "JedeR kann Studiengruppen gründen."
+        "Studiengruppen sind eine einfache Möglichkeit, mit anderen zusammenzuarbeiten.",
+        "Jeder kann Studiengruppen gründen."
     ]
 },
 
@@ -281,7 +281,7 @@
     "route": "resources.php?view=edit_perms",
     "label": "Informationen",
     "icon": "info",
-    "text": "Verwalten Sie hier AdministratorInnen des Systems, die Rechte über alle Ressourcen erhalten."
+    "text": "Verwalten Sie hier Admins des Systems, die Rechte über alle Ressourcen erhalten."
 },
 {
     "route": "resources.php?view=edit_object_properties",

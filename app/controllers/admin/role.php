@@ -191,7 +191,7 @@ class Admin_RoleController extends AuthenticatedController
                 $this->users = $this->search_user($username);
 
                 if (empty($this->users)) {
-                    $this->error = _('Es wurde kein Benutzer gefunden.');
+                    $this->error = _('Es wurde keine Person gefunden.');
                     $this->username = $username;
                 }
             }
@@ -383,7 +383,7 @@ class Admin_RoleController extends AuthenticatedController
 
         $actions = new ViewsWidget();
         $actions->addLink(_('Rollen verwalten'), $this->url_for('admin/role'))->setActive($action == 'index');
-        $actions->addLink(_('Benutzerzuweisungen bearbeiten'), $this->url_for('admin/role/assign_role'))->setActive($action == 'assign_role');
+        $actions->addLink(_('Personenzuweisungen bearbeiten'), $this->url_for('admin/role/assign_role'))->setActive($action == 'assign_role');
         $actions->addLink(_('Pluginzuweisungen bearbeiten'), $this->url_for('admin/role/assign_plugin_role'))->setActive($action == 'assign_plugin_role');
         $actions->addLink(_('Rollenzuweisungen anzeigen'), $this->url_for('admin/role/show_role'))->setActive($action == 'show_role');
         $sidebar->addWidget($actions);

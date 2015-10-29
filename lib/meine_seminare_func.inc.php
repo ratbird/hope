@@ -637,10 +637,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
                 if ($neue && ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor')))) {
                     $nav->setImage('icons/20/red/new/persons.png', array('title' =>
-                        sprintf(_('%s TeilnehmerInnen, %s neue'), $count, $neue)));
+                        sprintf(_('%s Teilnehmende, %s neue'), $count, $neue)));
                     $nav->setBadgeNumber($neue);
                 } else if ($count) {
-                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
+                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf(_('%s Teilnehmende'), $count)));
                 }
                 $my_obj[$object_id]['participants'] = $nav;
             }
@@ -665,7 +665,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 } else {
                     $nav = new Navigation('participants', 'dispatch.php/course/members/index');
                 }
-                $nav->setImage('icons/20/grey/persons.png', array('title' => _('TeilnehmerInnen')));
+                $nav->setImage('icons/20/grey/persons.png', array('title' => _('Teilnehmende')));
                 $my_obj[$object_id]['participants'] = $nav;
             }
         }

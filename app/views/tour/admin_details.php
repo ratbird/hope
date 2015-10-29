@@ -69,7 +69,7 @@
         </label>
         <select name="tour_audience_type">
         <option value=""></option>
-        <option value="sem"<?=($audience->type == 'sem') ? ' selected' : ''?>><?=_('TeilnehmerIn der Veranstaltung')?></option>
+        <option value="sem"<?=($audience->type == 'sem') ? ' selected' : ''?>><?=_('Teilnehmende der Veranstaltung')?></option>
         <option value="inst"<?=($audience->type == 'inst') ? ' selected' : ''?>><?=_('Mitglied der Einrichtung')?></option>
         <option value="studiengang"<?=($audience->type == 'studiengang') ? ' selected' : ''?>><?=_('Eingeschrieben in Studiengang')?></option>
         <option value="abschluss"<?=($audience->type == 'abschluss') ? ' selected' : ''?>><?=_('Angestrebter Abschluss')?></option>

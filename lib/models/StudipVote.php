@@ -92,7 +92,7 @@ class StudipVote extends SimpleORMap
     public function getCountinfo()
     {
         if ($this->count === 1 && $this->userVoted()) {
-            return _('Sie waren bisher der/die einzige TeilnehmerIn.');
+            return _('Sie waren bisher die einzige Person die teilgenommen hat.');
         }
 
         $template = $this->count === 1

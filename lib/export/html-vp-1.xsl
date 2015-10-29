@@ -366,7 +366,7 @@
 			<xsl:for-each select="teilnehmerzahl">
 				<tr>
 					<td bgcolor="#EEEEEE">
-						<b><xsl:value-of select="@key"/> TeilnehmerInnenzahl: </b>
+						<b><xsl:value-of select="@key"/> Anzahl Teilnehmende: </b>
 					</td>
 					<td bgcolor="#EEEEEE">
 						<xsl:value-of select="."/>

@@ -207,7 +207,7 @@ class EvalShow
           $html .= sprintf (_("Es haben insgesamt <b>%s</b> Personen teilgenommen"), $number);
       else
           $html .= $voted
-          ? sprintf (_("Sie waren der/die einzige TeilnehmerIn"))
+          ? sprintf (_("Sie waren die einzige Person die teilgenommen hat"))
           : sprintf (_("Es hat insgesamt <b>eine</b> Person teilgenommen"));
       }
       else {
@@ -215,7 +215,7 @@ class EvalShow
           $html .= sprintf (_("Es haben bisher <b>%s</b> Personen teilgenommen"), $number);
       else
           $html .= $voted
-          ? sprintf (_("Sie waren bisher der/die einzige TeilnehmerIn"))
+          ? sprintf (_("Sie waren bisher der/die einzige Person die teilgenommen hat"))
           : sprintf (_("Es hat bisher <b>eine</b> Person teilgenommen"));
       }
       /* ---------------------------------------------------------------------- */

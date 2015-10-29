@@ -3,7 +3,7 @@
 ?>
 <?= _("Diese E-Mail wurde automatisch vom Stud.IP-System verschickt. Sie können auf diese Nachricht nicht antworten.") ?>
 
-<?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in Ihren abonnierten Veranstaltungen.") ?>
+<?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in Ihren belegten Veranstaltungen.") ?>
 
 
 <?= _("Über welche Inhalte Sie informiert werden wollen, können Sie hier einstellen:") ?>

@@ -70,8 +70,8 @@ $xslt_files["html-standard-2"]["htm"] = true;
 $xslt_files["html-standard-2"]["html"] = true;
 $xslt_files["html-standard-2"]["veranstaltung"] = true;
 
-$xslt_files["html-teiln"]["name"] = _("TeilnehmerInnenliste");
-$xslt_files["html-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als HTML-Seite. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einem Web-Browser angezeigt werden.");
+$xslt_files["html-teiln"]["name"] = _("Teilnehmendenliste");
+$xslt_files["html-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als HTML-Seite. Es werden die Grunddaten der Teilnehmenden einer einzelnen Veranstaltung in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einem Web-Browser angezeigt werden.");
 $xslt_files["html-teiln"]["file"] = "html-t-1.xsl";
 $xslt_files["html-teiln"]["htm"] = true;
 $xslt_files["html-teiln"]["html"] = true;
@@ -105,7 +105,7 @@ $xslt_files["rtf-kommentar-2"]["file"] = "rtf-v-4.xsl";
 $xslt_files["rtf-kommentar-2"]["rtf"] = true;
 $xslt_files["rtf-kommentar-2"]["veranstaltung"] = true;
 
-$xslt_files["rtf-teiln"]["name"] = _("TeilnehmerInnenliste");
+$xslt_files["rtf-teiln"]["name"] = _("Teilnehmendenliste");
 $xslt_files["rtf-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Personendaten inkl. Studiengänge und Kontingente werden in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-teiln"]["file"] = "rtf-t-1.xsl";
 $xslt_files["rtf-teiln"]["rtf"] = true;
@@ -150,8 +150,8 @@ $xslt_files["pdf-liste"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten 
 $xslt_files["pdf-liste"]["file"] = "pdf-v-3.xsl";
 $xslt_files["pdf-liste"]["fo"] = true;
 
-$xslt_files["csv-teiln"]["name"] = _("TeilnehmerInnenliste");
-$xslt_files["csv-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als CSV-Datei. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in Excel bearbeitet werden.");
+$xslt_files["csv-teiln"]["name"] = _("Teilnehmendenliste");
+$xslt_files["csv-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als CSV-Datei. Es werden die Grunddaten der Personen in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in Excel bearbeitet werden.");
 $xslt_files["csv-teiln"]["file"] = "csv-t-1.xsl";
 $xslt_files["csv-teiln"]["csv"] = true;
 
@@ -160,7 +160,7 @@ $xslt_files["csv-warteliste"]["desc"] = _("Modul zur Ausgabe von Personendaten a
 $xslt_files["csv-warteliste"]["file"] = "csv-t-2.xsl";
 $xslt_files["csv-warteliste"]["csv"] = true;
 
-$xslt_files["csv-gruppen"]["name"] = _("Liste der TeilnehmerInnen mit Gruppen");
+$xslt_files["csv-gruppen"]["name"] = _("Liste der Teilnehmenden mit Gruppen");
 $xslt_files["csv-gruppen"]["desc"] = _("Modul zur Ausgabe von Personendaten mit Gruppenzugehörigkeit als CSV-Datei. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in Excel bearbeitet werden.");
 $xslt_files["csv-gruppen"]["file"] = "csv-t-3.xsl";
 $xslt_files["csv-gruppen"]["csv"] = true;

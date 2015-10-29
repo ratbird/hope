@@ -1534,7 +1534,7 @@ class EvalOverview {
         if (($evalChanged) && ($eval->getAuthorID() != $auth->auth["uid"])) {
 
             $sms = new messaging();
-            $sms->insert_message(sprintf(_("An Ihrer Evaluation \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), $eval->getTitle(), get_username($auth->auth["uid"])), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1");
+            $sms->insert_message(sprintf(_("An Ihrer Evaluation \"%s\" wurden von %s Änderungen vorgenommen."), $eval->getTitle(), get_username($auth->auth["uid"])), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1");
         }
         /* ------------------------------------------------------ end: send SMS */
 

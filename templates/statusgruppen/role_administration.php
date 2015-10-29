@@ -127,11 +127,11 @@
             <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;">
                 <tr>
                     <? if ($seminar_persons) : ?>
-                    <td class="content_seperator">&nbsp;<?= _("VeranstaltungsteilnehmerInnen") ?></td>
+                    <td class="content_seperator">&nbsp;<?= _("Veranstaltungsteilnehmende") ?></td>
                     <td>&nbsp;&nbsp;</td>
                     <? endif; ?>
 
-                    <td class="content_seperator">&nbsp;<?= _("Mitarbeiterliste") ?></td>
+                    <td class="content_seperator">&nbsp;<?= _("Mitarbeiter/-innenliste") ?></td>
                     <td>&nbsp;&nbsp;</td>
                     <td class="content_seperator" nowrap>&nbsp;<?= _("freie Personensuche") ?></td>
                 </tr>

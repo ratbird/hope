@@ -157,7 +157,7 @@ Art der Veranstaltung: <xsl:value-of select="art"/>
 Teilnahme: <xsl:value-of select="teilnehmer"/>
 		</xsl:if>
 		<xsl:if test="teilnehmerzahl">	<xsl:for-each select="teilnehmerzahl"><xsl:text>
-</xsl:text><xsl:value-of select="@key"/> TeilnehmerInnenzahl: <xsl:value-of select="."/>
+</xsl:text><xsl:value-of select="@key"/> Anzahl Teilnehmende: <xsl:value-of select="."/>
 		</xsl:for-each></xsl:if>
 		<xsl:if test="voraussetzung">
 Voraussetzungen: <xsl:value-of select="voraussetzung"/>

@@ -66,7 +66,7 @@
 
                 if ($show) {
                     echo MessageBox::info(_("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen."), array(
-                        _('Um das nachzuholen, gehen Sie unter "TeilnehmerInnen" auf "Zusatzangaben"'),
+                        _('Um das nachzuholen, gehen Sie unter "Teilnehmende" auf "Zusatzangaben"'),
                         _("oder") . ' <a href="' . URLHelper::getLink("dispatch.php/course/members/additional_input") . '"> ' . _("direkt zu den Zusatzangaben") . '</a>'
                     ));
                 }

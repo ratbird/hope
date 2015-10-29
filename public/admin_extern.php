@@ -55,7 +55,7 @@ if (get_config('EXTERN_ENABLE')) {
     include ('lib/include/header.php');   // Output of Stud.IP head
     include ('lib/include/deprecated_tabs_layout.php');
     require_once ('lib/msg.inc.php');
-    parse_window ("error§" . _("Die Verwaltung externer Seiten ist nicht eingebunden. Bitte aktivieren Sie diese in den Systemeinstellungen, oder wenden Sie sich an den oder die SystemadministratorIn."), "§",
+    parse_window ("error§" . _("Die Verwaltung externer Seiten ist nicht eingebunden. Bitte aktivieren Sie diese in den Systemeinstellungen, oder wenden Sie sich an die Systemadministration."), "§",
                 _("Modul \"externe Seiten\" nicht eingebunden"));
 }
 page_close();

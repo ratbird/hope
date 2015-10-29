@@ -114,17 +114,17 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     public function user_configuration_action($give_all = null)
     {
-        PageLayout::setTitle(_('Verwalten von Nutzerkonfigurationen'));
+        PageLayout::setTitle(_('Verwalten von Personenkonfigurationen'));
 
         $user_id = Request::option('user_id');
         if ($user_id) {
             $this->configs   = ConfigurationModel::searchUserConfiguration($user_id);
-            $this->title     = sprintf(_('Vorhandene Konfigurationsparameter für den Nutzer "%s"'),
+            $this->title     = sprintf(_('Vorhandene Konfigurationsparameter für "%s"'),
                                        User::find($user_id)->getFullname());
             $this->linkchunk = 'admin/configuration/edit_user_config/' . $user_id . '?id=';
         } else {
             $this->configs   = ConfigurationModel::searchUserConfiguration(null, true);
-            $this->title     = _('Globale Konfigurationsparameter für alle Nutzer');
+            $this->title     = _('Globale Konfigurationsparameter für alle Personen');
             $this->linkchunk = 'admin/configuration/edit_configuration/?id=';
         }
         $this->has_sections = false;
@@ -210,7 +210,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         $views->addLink(_('Globale Konfiguration'),
                         $this->url_for('admin/configuration/configuration'))
               ->setActive(!$user_section);
-        $views->addLink(_('Nutzerkonfiguration'),
+        $views->addLink(_('Personenkonfiguration'),
                         $this->url_for('admin/configuration/user_configuration'))
               ->setActive($user_section);
         $sidebar->addWidget($views);
@@ -233,7 +233,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         // otherwise)
         if ($user_section) {
             $search = new SearchWidget($this->url_for('admin/configuration/user_configuration'));
-            $search->addNeedle(_('Nutzer suchen'), 'user_id', true,
+            $search->addNeedle(_('Person suchen'), 'user_id', true,
                                new StandardSearch('user_id'),
                                'function () { $(this).closest("form").submit(); }');
         } else {

@@ -30,7 +30,7 @@
                 <? if (Config::get()->ALLOW_DOZENT_VISIBILITY) : ?>
                     <? $infotext .= _("Um die Veranstaltung sichtbar zu machen, wählen Sie den Punkt \"Sichtbarkeit\" im Administrationsbereich der Veranstaltung."); ?>
                 <? else : ?>
-                    <? $infotext .= _("Um die Veranstaltung sichtbar zu machen, wenden Sie sich an eineN der zuständigen AdministratorInnen."); ?>
+                    <? $infotext .= _("Um die Veranstaltung sichtbar zu machen, wenden Sie sich an Admins."); ?>
                 <? endif ?>
                 <?= _("[versteckt]") ?>
                 <?= tooltipicon($infotext) ?>

@@ -12,13 +12,13 @@
 class CoreStudygroupParticipants implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
-        $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/members/index");
+        $navigation = new Navigation(_('Teilnehmende'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/members/index");
         $navigation->setImage('icons/16/grey/persons.png');
         return $navigation;
     }
     
     function getTabNavigation($course_id) {
-        $navigation = new Navigation(_('TeilnehmerInnen'), "dispatch.php/course/studygroup/members/".$course_id);
+        $navigation = new Navigation(_('Teilnehmende'), "dispatch.php/course/studygroup/members/".$course_id);
         $navigation->setImage('icons/16/white/persons.png');
         $navigation->setActiveImage('icons/16/black/persons.png');
         return array('members' => $navigation);

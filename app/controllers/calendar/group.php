@@ -120,7 +120,7 @@ class Calendar_GroupController extends Calendar_CalendarController {
                 . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
                 . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
                 . ") ORDER BY fullname ASC",
-                _('Nutzer suchen'), 'user_id');
+                _('Person suchen'), 'user_id');
             $this->quick_search = QuickSearch::get('user_id', $search_obj)
                     ->fireJSFunctionOnSelect('STUDIP.Messages.add_adressee');
             

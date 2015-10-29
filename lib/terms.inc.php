@@ -64,7 +64,7 @@ function check_terms($userid, $_language_path) {
             <li><?=_("Zugriff auf Ihre Daten von jedem internetfähigen Rechner weltweit,")?></li>
             <li><?=_("Anzeige neuer Mitteilungen oder Dateien seit Ihrem letzten Besuch,")?></li>
             <li><?=_("Ein eigenes Profil im System,")?></li>
-            <li><?=_("die Möglichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?></li>
+            <li><?=_("die Möglichkeit anderen Personen Nachrichten zu schicken oder mit ihnen zu chatten,")?></li>
             <li><?=_("und vieles mehr.")?></li>
         </ul>
         <p><?=_("Mit der Anmeldung werden die nachfolgenden Nutzungsbedingungen akzeptiert:")?></p>

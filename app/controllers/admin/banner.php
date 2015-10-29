@@ -44,7 +44,7 @@ class Admin_BannerController extends AuthenticatedController
             'url'     => _('URL'),
             'seminar' => _('Veranstaltung'),
             'inst'    => _('Einrichtung'),
-            'user'    => _('Benutzer'),
+            'user'    => _('Person'),
             'none'    => _('Kein Verweis'),
         );
 
@@ -156,7 +156,7 @@ class Admin_BannerController extends AuthenticatedController
                 break;
                 case 'user':
                     if (User::findByUsername($target) === null) {
-                        $errors[] = _('Der angegebene Benutzername existiert nicht.');
+                        $errors[] = _('Der angegebene Username existiert nicht.');
                     }
                 break;
                 case 'seminar':

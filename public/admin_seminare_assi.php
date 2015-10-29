@@ -812,7 +812,7 @@ if (($form == 1) && (Request::submitted('jump_next')))
     if (!$_SESSION['sem_create_data']["sem_inst_id"])
     {
         $level=1;
-        $errormsg=$errormsg.sprintf ("error§"._("Da Ihr Account keiner Einrichtung zugeordnet ist, können Sie leider noch keine Veranstaltung anlegen. Bitte wenden Sie sich an den/die zuständigeN AdministratorIn der Einrichtung oder einen der %sAdministratoren%s des Systems!")."§", "<a href=\"".URLHelper::getLink("dispatch.php/siteinfo/show")."\">", "</a>");
+        $errormsg=$errormsg.sprintf ("error§"._("Da Ihr Account keiner Einrichtung zugeordnet ist, können Sie leider noch keine Veranstaltung anlegen. Bitte wenden Sie sich an die Administration der Einrichtung oder die %sAdminstration%s des Systems!")."§", "<a href=\"".URLHelper::getLink("dispatch.php/siteinfo/show")."\">", "</a>");
     }
     if (($_SESSION['sem_create_data']["sem_turnout"] < 1) && ($_SESSION['sem_create_data']["sem_admission"]) && ($_SESSION['sem_create_data']["sem_admission"] != 3))
     {
@@ -1407,7 +1407,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
     //Rechte ueberpruefen
     if (!$perm->have_perm("dozent"))
     {
-        $errormsg .= "error§"._("Sie haben keine Berechtigung Veranstaltungen anzulegen Um eine Veranstaltung anlegen zu können, benötigen Sie mindestens den globalen Status &raquo;Dozent&laquo;. Bitte kontaktieren Sie den/die für Sie zuständigeN AdministratorIn.")."§";
+        $errormsg .= "error§"._("Sie haben keine Berechtigung Veranstaltungen anzulegen Um eine Veranstaltung anlegen zu können, benötigen Sie mindestens den globalen Status &raquo;Dozent&laquo;. Bitte kontaktieren Sie die Administration.")."§";
         $run = FALSE;
     }
     if (!$perm->have_studip_perm("dozent",$_SESSION['sem_create_data']["sem_inst_id"]))
@@ -3483,7 +3483,7 @@ elseif ($level == 5) {
                                 </td>
                                 <td class="<? echo $cssSw->getClass() ?>" colspan=3>
                                     &nbsp;&nbsp;<textarea name="sem_paytxt" cols=58 rows=4><? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_paytxt"])) ?></textarea>
-                                    <?= tooltipIcon(_("Dieser Hinweistext erläutert Ihren TeilnehmerInnen was sie tun müssen, um endgültig für die Veranstaltung zugelassen zu werden. Beschreiben Sie genau, wie Beiträge zu entrichten sind, Leistungen nachgewiesen werden müssen, etc.")) ?>
+                                    <?= tooltipIcon(_("Dieser Hinweistext erläutert, was Personen tun müssen, um endgültig für die Veranstaltung zugelassen zu werden. Beschreiben Sie genau, wie Beiträge zu entrichten sind, Leistungen nachgewiesen werden müssen, etc.")) ?>
                                 </td>
                             </tr>
                         <?

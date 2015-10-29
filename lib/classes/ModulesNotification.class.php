@@ -62,7 +62,7 @@ class ModulesNotification extends Modules {
                 "forum" => array('mes' => TRUE, 'name' =>  _("Forum")),
                 "documents" => array('mes' => TRUE, 'name' => _("Dateiordner")),
                 "schedule" => array('mes' => TRUE, 'name' => _("Ablaufplan")),
-                "participants" => array('mes' => TRUE, 'name' => _("TeilnehmerInnen")),
+                "participants" => array('mes' => TRUE, 'name' => _("Teilnehmende")),
                 "personal" => array('mes' => FALSE, 'name' => _("Personal")),
                 "literature" => array('mes' => TRUE, 'name' => _("Literatur")),
                 "wiki" => array('mes' => TRUE, 'name' => _("Wiki-Web")),
@@ -316,14 +316,14 @@ class ModulesNotification extends Modules {
             case 'participants' :
                 if (in_array($r_data['status'], words('dozent tutor'))) {
                     if ($r_data['new_accepted_participants'] > 1) {
-                        $text = sprintf(_("%s neue vorläufige TeilnehmerInnen, "), $r_data['newparticipants']);
+                        $text = sprintf(_("%s neue vorläufige Teilnehmende, "), $r_data['newparticipants']);
                     } else if ($r_data['new_accepted_participants'] > 0) {
-                        $text = _("1 neuer vorläufiger TeilnehmerIn, ");
+                        $text = _("1 neue Person, ");
                     }
                     if ($r_data['newparticipants'] > 1) {
-                        $text = sprintf(_("%s neue TeilnehmerInnen:"), $r_data['newparticipants']);
+                        $text = sprintf(_("%s neue Personen:"), $r_data['newparticipants']);
                     } else if ($r_data['newparticipants'] > 0) {
-                        $text = _("1 neuer TeilnehmerIn:");
+                        $text = _("1 neue Person:");
                     }
                     if ($sem_class['studygroup_mode']) {
                         $redirect = '&redirect_to=dispatch.php/course/studygroup/members/';

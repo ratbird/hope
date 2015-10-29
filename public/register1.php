@@ -71,7 +71,7 @@ if ($auth->is_authenticated() && $user->id != "nobody") {
         <li><?=_("Zugriff auf Ihre Daten von jedem internetfähigen Rechner weltweit,")?>
         <li><?=_("Anzeige neuer Mitteilungen oder Dateien seit Ihrem letzten Besuch,")?>
         <li><?=_("Eine eigenes Profil im System,")?>
-        <li><?=_("die Möglichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?>
+        <li><?=_("die Möglichkeit anderen Personen Nachrichten zu schicken oder mit ihnen zu chatten,")?>
         <li><?=_("und vieles mehr.")?></li></blockquote><br>
     </ul>
 

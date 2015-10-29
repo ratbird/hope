@@ -184,7 +184,7 @@
 			<xsl:if test="teilnehmerzahl">
 				<xsl:for-each select="teilnehmerzahl">
 				<xsl:text>
-\par\b </xsl:text><xsl:value-of select="@key"/><xsl:text> TeilnehmerInnenzahl: \b0 </xsl:text><xsl:value-of select="."/>
+\par\b </xsl:text><xsl:value-of select="@key"/><xsl:text> Anzahl Teilnehmende: \b0 </xsl:text><xsl:value-of select="."/>
 				</xsl:for-each>
 			</xsl:if>
 			<xsl:if test="voraussetzung">

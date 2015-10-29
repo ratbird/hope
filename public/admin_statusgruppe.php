@@ -153,9 +153,9 @@ function addToStatusgroup($range_id, $statusgruppe_id, $workgroup_mode) {
 
         foreach ($mp->getAddedUsers() as $m) {
             $quickfilters = $mp->getQuickfilterIds();
-            if (in_array($m, $quickfilters[_("VeranstaltungsteilnehmerInnen")])) {
+            if (in_array($m, $quickfilters[_("Veranstaltungsteilnehmende")])) {
                 InsertPersonStatusgruppe ($m, $statusgruppe_id, false);
-            } elseif (in_array($m, $quickfilters[_("MitarbeiterInnen")])) {
+            } elseif (in_array($m, $quickfilters[_("Mitarbeiter/-innen")])) {
                 $writedone = InsertPersonStatusgruppe ($m, $statusgruppe_id, false);
                 if ($writedone) {
                     if ($workgroup_mode == TRUE) {

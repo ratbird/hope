@@ -141,7 +141,7 @@
 
             <? if($has_denoted_fields): ?>
                 <br>
-                * Diese Felder sind nur für Sie und AdministratorInnen sichtbar.<br>
+                * Diese Felder sind nur für Sie und Admins sichtbar.<br>
             <?endif?>
                <br>
             <? if (isset($kings)): ?>

@@ -594,15 +594,15 @@ class RoomRequest extends SimpleORMap
         }
         $requestData[] = '';
 
-        $requestData[] = sprintf(_('Bearbeitung durch den/die RaumadministratorIn: %s'), $this->getStatusExplained());
+        $requestData[] = sprintf(_('Bearbeitung durch: %s'), $this->getStatusExplained());
         $requestData[] = '';
 
         // if the room-request has been declined, show the decline-notice placed by the room-administrator
         if ($this->getClosed() == 3) {
-            $requestData[] = _('Nachricht RaumadministratorIn') . ':';
+            $requestData[] = _('Nachricht Raumadminstration') . ':';
             $requestData[] = $this->getReplyComment();
         } else {
-            $requestData[] = _('Nachricht an den/die RaumadministratorIn') . ':';
+            $requestData[] = _('Nachricht an Raumadministration') . ':';
             $requestData[] = $this->getComment();
         }
         return join("\n", $requestData);

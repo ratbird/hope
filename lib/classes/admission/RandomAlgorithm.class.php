@@ -285,12 +285,12 @@ class RandomAlgorithm extends AdmissionAlgorithm {
             $message_title = sprintf(_('Teilnahme an der Veranstaltung %s'), $seminar->getName());
             if ($seminar->admission_prelim) {
                 if ($seminar->addPreliminaryMember($chosen_one)) {
-                    $message_body = sprintf (_('Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Die endgültige Zulassung zu der Veranstaltung ist noch von weiteren Bedingungen abhängig, die Sie bitte der Veranstaltungsbeschreibung entnehmen.'),
+                    $message_body = sprintf (_('Sie wurden für die Veranstaltung **%s** ausgelost. Die endgültige Zulassung zu der Veranstaltung ist noch von weiteren Bedingungen abhängig, die Sie bitte der Veranstaltungsbeschreibung entnehmen.'),
                             $seminar->getName());
                 }
             } else {
                 if ($seminar->addMember($chosen_one, 'autor')) {
-                    $message_body = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."),
+                    $message_body = sprintf (_("Sie wurden für die  Veranstaltung **%s** ausgelost. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch für die Präsenzveranstaltung zugelassen."),
                             $seminar->getName());
                 }
             }

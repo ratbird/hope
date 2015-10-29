@@ -97,7 +97,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
             } else if ($GLOBALS['perm']->have_perm('admin')) {
                 $action = _("Hinweis:");
-                $infotext = _('Sie sind einE AdministratorIn und können sich daher nicht für Studiengruppen anmelden.');
+                $infotext = _('Sie sind Admin und können sich daher nicht für Studiengruppen anmelden.');
                 $icon = 'icons/16/red/decline.png';
             } else {
                 $action = _("Aktionen:");
@@ -696,7 +696,7 @@ class Course_StudygroupController extends AuthenticatedController {
      */
     function members_action($id, $page = 1)
     {
-        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _("TeilnehmerInnen"));
+        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _("Teilnehmende"));
         Navigation::activateItem('/course/members');
         PageLayout::setHelpKeyword('Basis.StudiengruppenBenutzer');
 

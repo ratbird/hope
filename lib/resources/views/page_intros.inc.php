@@ -317,7 +317,7 @@ switch ($view) {
             : 'resources/openobject_main';
         $helpbar->setVariables(array(
             'type'        => $SessSemName['art_generic'],
-            'member_type' => $SessSemName['class'] === 'sem' ? _('TeilnehmerIn') : _('MitarbeiterIn'),
+            'member_type' => $SessSemName['class'] === 'sem' ? _('Teilnehmende') : _('Mitarbeiter/-in'),
         ));
 
         PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcenübersicht"));

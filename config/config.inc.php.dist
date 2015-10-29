@@ -88,7 +88,7 @@ $DEFAULT_TITLE_FOR_STATUS = array(
     'dozent'   => array(_('Lehrende'), _('Lehrende')),
     'deputy'   => array(_('Vertretung'), _('Vertretungen')),
     'tutor'    => array(_('Tutor/-in'), _('Tutor/-innen')),
-    'autor'    => array(_('Autor/-in'), _('Autor/-innen')),
+    'autor'    => array(_('Studiernde'), _('Studierende')),
     'user'     => array(_('Leser/-in'), _('Leser/-innen')),
     'accepted' => array(_('Vorläufig akzeptierte Person'),
                         _('Vorläufig akzeptierte Personen')));

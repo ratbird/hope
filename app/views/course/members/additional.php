@@ -32,5 +32,5 @@
         </table>
     </form>
 <? else : ?>
-    <?= MessageBox::info(_('Keine Zusatzangaben oder TeilnehmerInnen vorhanden.')) ?>
+    <?= MessageBox::info(_('Keine Zusatzangaben oder Teilnehmende vorhanden.')) ?>
 <? endif ?>

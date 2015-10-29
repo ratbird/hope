@@ -859,7 +859,7 @@ class IndexController extends ForumController
             $this->constraint = ForumEntry::getConstraints($topic_id);
             $this->render_template('index/_abo_link');
         } else {
-            $this->flash['messages'] = array('success' => _('Ihr Abonnement wurde aufgehoben.'));
+            $this->flash['messages'] = array('success' => _('Abonnement aufgehoben.'));
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
         }
     }

@@ -17,7 +17,7 @@
                                 tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten Nutzer/-innen')))?>
                     </a>
             </span>
-            <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
+            <?= _('Vorläufig akzeptierte Teilnehmende') ?>
         </caption>
         <colgroup>
             <? if (!$is_locked) : ?>

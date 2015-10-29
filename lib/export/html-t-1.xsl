@@ -12,7 +12,7 @@
 					<table width="100%" cellpadding="5" cellspacing="2">
 						<tr colspan="5">
 							<td>
-								<h2>TeilnehmerInnenliste</h2>
+								<h2>Teilnehmendenliste</h2>
 							</td>
 						</tr>
 						<tr>

@@ -3,7 +3,7 @@
 ?>
 <table class="table_row_even" cellspacing="0" cellpadding="2" border="0" width="95%">
     <tr>
-        <td>&nbsp;<?= _("VeranstaltungsteilnehmerInnen") ?></td>
+        <td>&nbsp;<?= _("Veranstaltungsteilnehmende") ?></td>
     </tr>
     <tr>
         <td valign="top" align="center">

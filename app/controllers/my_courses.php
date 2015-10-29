@@ -409,7 +409,7 @@ class MyCoursesController extends AuthenticatedController
         if ($GLOBALS['perm']->have_perm('admin')) {
             throw new AccessDeniedException();
         }
-        PageLayout::postMessage(MessageBox::error(_('Das Abonnement ist bindend. Bitte wenden Sie sich an die Lehrenden.')));
+        PageLayout::postMessage(MessageBox::error(_('Die Anmeldung ist verbindlich. Bitte wenden Sie sich an die Lehrenden.')));
         $this->redirect('my_courses/index');
     }
 
@@ -423,7 +423,7 @@ class MyCoursesController extends AuthenticatedController
         $ticket_check    = Seminar_Session::check_ticket(Request::option('studipticket'));
         if (LockRules::Check($course_id, 'participants')) {
             $lockdata = LockRules::getObjectRule($course_id);
-            PageLayout::postMessage(MessageBox::error(sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."),
+            PageLayout::postMessage(MessageBox::error(sprintf(_("Sie können sich nicht von der Veranstaltung <b>%s</b> abmelden."),
                 htmlReady($current_seminar->name))));
             if ($lockdata['description']) PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
             $this->redirect('my_courses/index');
@@ -439,7 +439,7 @@ class MyCoursesController extends AuthenticatedController
 
             if ($current_seminar->admission_binding && Request::get('cmd') != 'suppose_to_kill_admission' && !LockRules::Check($current_seminar->getId(), 'participants')) {
                 PageLayout::postMessage(MessageBox::error(sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt.
-                    Wenn Sie sich austragen wollen, müssen Sie sich an die Lehrende der Veranstaltung wenden."),
+                    Wenn Sie sich abmelden wollen, müssen Sie sich an die Lehrende der Veranstaltung wenden."),
                     htmlReady($current_seminar->name))));
                 $this->redirect('my_courses/index');
                 return;
@@ -453,18 +453,18 @@ class MyCoursesController extends AuthenticatedController
                 $admission_locked   = $current_seminar->isAdmissionLocked();
 
                 if ($admission_enabled || $admission_locked || (int)$current_seminar->admission_prelim == 1) {
-                    $message = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->name);
+                    $message = sprintf(_('Wollen Sie sich von der teilnahmebeschränkten Veranstaltung "%s" wirklich abmelden? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->name);
                 } else if (isset($admission_end_time) && $admission_end_time < time()) {
-                    $message = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->name);
+                    $message = sprintf(_('Wollen Sie sich von der teilnahmebeschränkten Veranstaltung "%s" wirklich abmelden? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->name);
                 } else {
-                    $message = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->name);
+                    $message = sprintf(_('Wollen Sie sich von der Veranstaltung "%s" wirklich abmelden?'), $current_seminar->name);
                 }
                 $this->flash['cmd'] = 'kill';
             } else {
                 if (admission_seminar_user_get_position($GLOBALS['user']->id, $course_id) === false) {
-                    $message = sprintf(_('Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->name);
+                    $message = sprintf(_('Wollen Sie sich von der Anmeldeliste der Veranstaltung "%s" wirklich abmelden?'), $current_seminar->name);
                 } else {
-                    $message = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->name);
+                    $message = sprintf(_('Wollen Sie sich von der Warteliste der Veranstaltung "%s" wirklich abmelden? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->name);
                 }
                 $this->flash['cmd'] = 'kill_admission';
             }
@@ -481,7 +481,7 @@ class MyCoursesController extends AuthenticatedController
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($GLOBALS['user']->id, $course_id));
                 if ($statement->rowCount() == 0) {
-                    PageLayout::postMessage(MessageBox::error(_('In der ausgewählten Veranstaltung wurde der/die gewünschte TeilnehmerIn nicht gefunden und konnte daher nicht ausgetragen werden.')));
+                    PageLayout::postMessage(MessageBox::error(_('In der ausgewählten Veranstaltung wurde die gesuchten Personen nicht gefunden und konnte daher nicht ausgetragen werden.')));
                 } else {
                     // LOGGING
                     StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst ausgetragen');
@@ -494,8 +494,7 @@ class MyCoursesController extends AuthenticatedController
                     // Are successor available
                     update_admission($course_id);
 
-                    PageLayout::postMessage(MessageBox::success(sprintf(_("Das Abonnement der Veranstaltung <b>%s</b> wurde aufgehoben.
-                        Sie sind nun nicht mehr als TeilnehmerIn dieser Veranstaltung im System registriert."),
+                    PageLayout::postMessage(MessageBox::success(sprintf(_("Erfolgreich von Veranstaltung <b>%s</b> abgemeldet."),
                         htmlReady($current_seminar->name))));
                 }
             } else {

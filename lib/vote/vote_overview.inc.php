@@ -379,7 +379,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
         // --> send notification sms
         $sms = new messaging();
             setTempLanguage($vote->getAuthorID());
-            $sms->insert_message(sprintf(_("An %s \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), ($vote->x_instanceof() == INSTANCEOF_TEST
+            $sms->insert_message(sprintf(_("An %s \"%s\" wurden von %s Änderungen vorgenommen."), ($vote->x_instanceof() == INSTANCEOF_TEST
                     ? _("Ihrem Test") : _("Ihrer Umfrage")), $vote->getTitle(),
                     $vote->voteDB->getAuthorRealname($auth->auth["uid"])),
                     $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Vote/Test geändert"));

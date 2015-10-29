@@ -303,7 +303,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
                     if (($sem_preliminary || $affected > 0) && $send_message) {
                         setTempLanguage($row['user_id']);
                         if (!$sem_preliminary) {
-                            $message = sprintf (_('Sie sind als TeilnehmerIn der Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
+                            $message = sprintf (_('Sie sind in die Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch für die Präsenzveranstaltung zugelassen.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                         } else {
                             $message = sprintf (_('Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten, da für Sie ein Platz freigeworden ist.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                         }

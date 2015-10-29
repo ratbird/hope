@@ -64,8 +64,8 @@
     </div>
 <? else : ?>
     <?= PageLayout::postMessage(MessageBox::info(_('Es wurden keine Veranstaltungen gefunden. Mögliche Ursachen:'), array(
-        sprintf(_('Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen können.<br>Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzufügen</b>%s um neue Veranstaltungen aufzunehmen'),'<a href="' . URLHelper::getLink('dispatch.php/search/courses') . '">', '</a>'),
-        _('In dem ausgewählten <b>Semester</b> wurden keine Veranstaltungen abonniert.').'<br>'._('Wählen Sie links im <b>Semesterfilter</b> ein anderes Semester aus')
+        sprintf(_('Sie haben zur Zeit keine Veranstaltungen belegt, an denen Sie teilnehmen können.<br>Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzufügen</b>%s um sich für Veranstaltungen anzumelden.'),'<a href="' . URLHelper::getLink('dispatch.php/search/courses') . '">', '</a>'),
+        _('In dem ausgewählten <b>Semester</b> wurden keine Veranstaltungen belegt.').'<br>'._('Wählen Sie links im <b>Semesterfilter</b> ein anderes Semester aus')
     )))?>
 <? endif ?>
 <? if (count($my_bosses)) : ?>

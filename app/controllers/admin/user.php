@@ -39,7 +39,7 @@ class Admin_UserController extends AuthenticatedController
 
         //PageLayout
         PageLayout::setHelpKeyword("Admins.Benutzerkonten");
-        PageLayout::setTitle(_("Benutzerverwaltung"));
+        PageLayout::setTitle(_("Personenverwaltung"));
 
         //ajax
         if (Request::isXhr()) {
@@ -120,7 +120,7 @@ class Admin_UserController extends AuthenticatedController
             if ($this->users === 0) {
                 PageLayout::postMessage(MessageBox::info(_('Sie haben keine Suchkriterien ausgewählt!')));
             } elseif (count($this->users) < 1 && Request::submitted('search')) {
-                PageLayout::postMessage(MessageBox::info(_('Es wurden keine Benutzer mit diesen Suchkriterien gefunden.')));
+                PageLayout::postMessage(MessageBox::info(_('Es wurden keine Personen mit diesen Suchkriterien gefunden.')));
             } else {
                 $_SESSION['admin']['user']['results'] = true;
             }
@@ -174,7 +174,7 @@ class Admin_UserController extends AuthenticatedController
 
             //check user
             if (empty($user)) {
-                PageLayout::postMessage(MessageBox::error(_('Fehler! Der zu löschende Benutzer ist nicht vorhanden.')));
+                PageLayout::postMessage(MessageBox::error(_('Fehler! Zu löschende Person ist nicht vorhanden.')));
             //antwort ja
             } elseif (!empty($user) && Request::submitted('delete')) {
 
@@ -196,10 +196,10 @@ class Admin_UserController extends AuthenticatedController
                 //delete
                 if ($umanager->deleteUser(Request::option('documents', false))) {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
+                    PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('"%s %s (%s)" wurde erfolgreich gelöscht.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
                 } else {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
+                    PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! "%s %s (%s)" konnte nicht gelöscht werden.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
                 }
 
                 //reavtivate messages
@@ -211,7 +211,7 @@ class Admin_UserController extends AuthenticatedController
             } elseif (!empty($user) && !Request::submitted('back')) {
 
                 $this->flash['delete'] = array(
-                    'question' => sprintf(_('Wollen Sie den Benutzer "%s %s (%s)" wirklich löschen?'), $user['Vorname'], $user['Nachname'], $user['username']),
+                    'question' => sprintf(_('Wollen Sie "%s %s (%s)" wirklich löschen?'), $user['Vorname'], $user['Nachname'], $user['username']),
                     'action' => ($parent != '') ? $this->url_for('admin/user/delete/' . $user_id . '/' . $parent) : $this->url_for('admin/user/delete/' . $user_id),
                 );
             }
@@ -221,7 +221,7 @@ class Admin_UserController extends AuthenticatedController
             $user_ids = Request::getArray('user_ids');
 
             if (count($user_ids) == 0) {
-                 PageLayout::postMessage(MessageBox::error(_('Bitte wählen Sie mindestens einen Benutzer zum Löschen aus.')));
+                 PageLayout::postMessage(MessageBox::error(_('Bitte wählen Sie mindestens eine Person zum Löschen aus.')));
                 $this->redirect('admin/user/'.$parent);
                 return;
             }
@@ -246,10 +246,10 @@ class Admin_UserController extends AuthenticatedController
                     //delete
                     if ($umanager->deleteUser(Request::option('documents', false))) {
                         $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                        PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username'])), $details));
+                        PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('"%s %s (%s)" wurde erfolgreich gelöscht'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username'])), $details));
                     } else {
                         $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                        PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username'])), $details));
+                        PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! "%s %s (%s)" konnte nicht gelöscht werden'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username'])), $details));
                     }
                 }
 
@@ -265,7 +265,7 @@ class Admin_UserController extends AuthenticatedController
                     $users[] = UserModel::getUser($user_id);
                 }
                 $this->flash['delete'] = array(
-                    'question' => _('Wollen Sie folgende Benutzer wirklich löschen?'),
+                    'question' => _('Wollen Sie folgende Personen wirklich löschen?'),
                     'action' => $this->url_for('admin/user/delete'),
                     'users' => $users
                 );
@@ -295,7 +295,7 @@ class Admin_UserController extends AuthenticatedController
             if (Request::option('user')) {
                 $user_id = Request::option('user');
             } else {
-                PageLayout::postMessage(MessageBox::info(_('Sie haben keinen Benutzer ausgewählt!')));
+                PageLayout::postMessage(MessageBox::info(_('Sie haben niemanden ausgewählt!')));
                 //liste wieder anzeigen
                 $this->redirect('admin/user/');
                 return;
@@ -362,7 +362,7 @@ class Admin_UserController extends AuthenticatedController
                 $editUser['auth_user_md5.locked'] = 1;
                 $editUser['auth_user_md5.lock_comment'] = Request::get('locked_comment');
                 $editUser['auth_user_md5.locked_by'] = $auth->auth["uid"];
-                $details[] = _('Der Benutzer wurde gesperrt.');
+                $details[] = _('Person wurde gesperrt.');
             }
 
             //changing studiendaten
@@ -403,7 +403,7 @@ class Admin_UserController extends AuthenticatedController
                 checkExternDefaultForUser($user_id);
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');
             } elseif (Request::option('new_inst') != 'none' && Request::option('new_student_inst') == Request::option('new_inst') && $editPerms[0] != 'root') {
-                $details[] = _('<b>Die Einrichtung wurde nicht hinzugefügt.</b> Sie können keinen Benutzer gleichzeitig als Student und Mitarbeiter einer Einrichtung hinzufügen.');
+                $details[] = _('<b>Die Einrichtung wurde nicht hinzugefügt.</b> Sie können keine Person gleichzeitig als Studierende/-r und als Mitarbeiter/-in einer Einrichtung hinzufügen.');
             }
 
             //change userdomain
@@ -663,9 +663,9 @@ class Admin_UserController extends AuthenticatedController
                             $details[] = sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung \"%s\" geschickt."), $i, $wem, htmlReady($inst_name));
                         }
 
-                        $details[] = sprintf(_("Der Benutzer wurde erfolgreich in die Einrichtung \"%s\" mit dem Status \"%s\" eingetragen."), htmlReady($inst_name), $UserManagement->user_data['auth_user_md5.perms']);
+                        $details[] = sprintf(_("Person wurde erfolgreich in die Einrichtung \"%s\" mit dem Status \"%s\" eingetragen."), htmlReady($inst_name), $UserManagement->user_data['auth_user_md5.perms']);
                     } else {
-                        $details[] = sprintf(_("Der Benutzer konnte nicht in die Einrichtung \"%s\" eingetragen werden."), htmlReady($inst_name));
+                        $details[] = sprintf(_("Person konnte nicht in die Einrichtung \"%s\" eingetragen werden."), htmlReady($inst_name));
                     }
                 }
 
@@ -674,9 +674,9 @@ class Admin_UserController extends AuthenticatedController
                     $domain = new UserDomain(Request::get('select_dom_id'));
                     if ($perm->have_perm('root') || in_array($domain, UserDomain::getUserDomainsForUser($auth->auth["uid"]))) {
                         $domain->addUser($user_id);
-                        $details[] = sprintf(_("Der Benutzer wurde in Nutzerdomäne \"%s\" eingetragen."), htmlReady($domain->getName()));
+                        $details[] = sprintf(_("Person wurde in Nutzerdomäne \"%s\" eingetragen."), htmlReady($domain->getName()));
                     } else {
-                        $details[] = _("Der Benutzer konnte nicht in die Nutzerdomäne eingetragen werden.");
+                        $details[] = _("Person konnte nicht in die Nutzerdomäne eingetragen werden.");
                     }
                     $result = AutoInsert::instance()->saveUser($user_id);
 
@@ -692,12 +692,12 @@ class Admin_UserController extends AuthenticatedController
 
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-                PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde angelegt.'), $details));
+                PageLayout::postMessage(MessageBox::success(_('Person wurde angelegt.'), $details));
                 $this->redirect('admin/user/edit/' . $user_id);
             } else {
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-                PageLayout::postMessage(MessageBox::error(_('Der Benutzer konnte nicht angelegt werden.'), $details));
+                PageLayout::postMessage(MessageBox::error(_('Person konnte nicht angelegt werden.'), $details));
             }
         }
 
@@ -773,10 +773,10 @@ class Admin_UserController extends AuthenticatedController
                     StudipMail::setDefaultTransporter($default_mailer);
                 }
 
-                PageLayout::postMessage(MessageBox::success(_('Die Benutzer wurden migriert.'), $details));
+                PageLayout::postMessage(MessageBox::success(_('Die Personen wurden migriert.'), $details));
                 $this->redirect('admin/user/edit/' . $new_id);
             } else {
-                PageLayout::postMessage(MessageBox::error(_("Bitte wählen Sie zwei gültige Benutzer aus.")));
+                PageLayout::postMessage(MessageBox::error(_("Bitte wählen Sie zwei gültige Personen aus.")));
             }
         }
         $this->user = $user_id ? User::find($user_id) : null;
@@ -811,9 +811,9 @@ class Admin_UserController extends AuthenticatedController
         $db = DBManager::get()->prepare("UPDATE auth_user_md5 SET locked = 0, lock_comment = NULL, locked_by = NULL WHERE user_id = ?");
         $db->execute(array($user_id));
         if ($db->rowCount() == 1) {
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde entsperrt.')));
+            PageLayout::postMessage(MessageBox::success(_('Person wurde entsperrt.')));
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Der Benutzer konnte nicht entsperrt werden.')));
+            PageLayout::postMessage(MessageBox::error(_('Person konnte nicht entsperrt werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -852,7 +852,7 @@ class Admin_UserController extends AuthenticatedController
             UserModel::setInstitute($user_id, $institute_id, $values);
 
             //output
-            PageLayout::postMessage(MessageBox::success(_('Die Einrichtungsdaten des Benutzers wurden geändert.')));
+            PageLayout::postMessage(MessageBox::success(_('Die Einrichtungsdaten der Person wurden geändert.')));
             $this->redirect('admin/user/edit/' . $user_id);
         }
 
@@ -955,21 +955,21 @@ class Admin_UserController extends AuthenticatedController
         $actions = new ActionsWidget();
 
         if (in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
-            $actions->addLink(_('Neuen Benutzer anlegen'),
+            $actions->addLink(_('Neue Person anlegen'),
                               $this->url_for('admin/user/new'),
                               'icons/16/blue/add/person.png')
                     ->asDialog();
         }
-        $actions->addLink(_('Neuen vorläufigen Benutzer anlegen'),
+        $actions->addLink(_('Neuen Personenaccount vorläufig anlegen'),
                           $this->url_for('admin/user/new/prelim'),
                           'icons/16/blue/add/date.png')
                 ->asDialog();
-        $actions->addLink(_('Benutzer zusammenführen'),
+        $actions->addLink(_('Personenaccounts zusammenführen'),
                           $this->url_for('admin/user/migrate/' . (($this->user && is_array($this->user)) ? $this->user['user_id'] : '')),
                           'icons/16/blue/new/persons.png');
 
         $search = new SearchWidget();
-        $search->addNeedle(_('Nutzer suchen'),
+        $search->addNeedle(_('Person suchen'),
                            'user_id',
                            true,
                            new StandardSearch('user_id'),
@@ -993,13 +993,13 @@ class Admin_UserController extends AuthenticatedController
         $user_actions = new ActionsWidget();
         $user_actions->setTitle(sprintf(_('Aktionen für "%s"'), $this->user['username']));
 
-        $user_actions->addLink(_('Nachricht an Benutzer verschicken'),
+        $user_actions->addLink(_('Nachricht an Person verschicken'),
                                URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $this->user['username']),
                                'icons/16/blue/mail.png')
                      ->asDialog();
 
         if ($this->user['locked']) {
-            $user_actions->addLink(_('Benutzer entsperren'),
+            $user_actions->addLink(_('Personenaccount entsperren'),
                                    $this->url_for('admin/user/unlock/' . $this->user['user_id']),
                                    'icons/16/blue/lock-unlocked.png');
         }
@@ -1009,7 +1009,7 @@ class Admin_UserController extends AuthenticatedController
                                        $this->url_for('admin/user/change_password/' . $this->user['user_id']),
                                        'icons/16/blue/key.png');
             }
-            $user_actions->addLink(_('Benutzer löschen'),
+            $user_actions->addLink(_('Person löschen'),
                                    $this->url_for('admin/user/delete/' . $this->user['user_id'] . '/edit'),
                                    'icons/16/blue/trash.png');
         }
@@ -1026,10 +1026,10 @@ class Admin_UserController extends AuthenticatedController
         $views->addLink(_('Zurück zur Übersicht'),
                         $this->url_for('admin/user'))
               ->setActive(false);
-        $views->addLink(_('Benutzer verwalten'),
+        $views->addLink(_('Person verwalten'),
                         $this->url_for('admin/user/edit/' . $this->user['user_id']))
               ->setActive(true);
-        $views->addLink(_('Zum Benutzerprofil'),
+        $views->addLink(_('Zum Profil'),
                         URLHelper::getLink('dispatch.php/profile?username=' . $this->user['username']),
                         'icons/16/blue/person.png');
 
@@ -1038,7 +1038,7 @@ class Admin_UserController extends AuthenticatedController
                             URLHelper::getLink('user_activities.php?username=' . $this->user['username']),
                             'icons/16/blue/vcard.png');
             if (Config::get()->LOG_ENABLE) {
-                $views->addLink(_('Benutzereinträge im Log'),
+                $views->addLink(_('Personeneinträge im Log'),
                                 URLHelper::getLink('dispatch.php/event_log/show?search=' . $this->user['username'] .'&type=user&object_id=' .$this->user['user_id']),
                                 'icons/16/blue/log.png');
             }

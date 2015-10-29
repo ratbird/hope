@@ -295,7 +295,7 @@ input.ui-button {
 }
 .ui-buttonset .ui-button {
   margin-left: 0;
-  margin-right: -0.3em;
+  margin-right: -.3em;
 }
 /* workarounds */
 /* reset extra padding in Firefox, see h5bp.com/l */
@@ -676,8 +676,8 @@ button.ui-button::-moz-focus-inner {
   height: .8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-  top: -0.3em;
-  margin-left: -0.6em;
+  top: -.3em;
+  margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
   top: 0;
@@ -694,9 +694,9 @@ button.ui-button::-moz-focus-inner {
   height: 100px;
 }
 .ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
+  left: -.3em;
   margin-left: 0;
-  margin-bottom: -0.6em;
+  margin-bottom: -.6em;
 }
 .ui-slider-vertical .ui-slider-range {
   left: 0;
@@ -1092,7 +1092,7 @@ input.ui-button {
 }
 .ui-buttonset .ui-button {
   margin-left: 0;
-  margin-right: -0.3em;
+  margin-right: -.3em;
 }
 /* workarounds */
 button.ui-button::-moz-focus-inner {
@@ -1448,8 +1448,8 @@ button.ui-button::-moz-focus-inner {
   height: .8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-  top: -0.3em;
-  margin-left: -0.6em;
+  top: -.3em;
+  margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
   top: 0;
@@ -1466,9 +1466,9 @@ button.ui-button::-moz-focus-inner {
   height: 100px;
 }
 .ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
+  left: -.3em;
   margin-left: 0;
-  margin-bottom: -0.6em;
+  margin-bottom: -.6em;
 }
 .ui-slider-vertical .ui-slider-range {
   left: 0;

@@ -33,7 +33,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -184,14 +184,14 @@ a img {
 /* --- Tabellen ------------------------------------------------------------- */
 table.header,
 .table_header {
-  background-color: #d8dadc;
+  background-color: #e2e3e4;
   border-bottom: 1px solid #575757;
   color: #000;
   padding: 4px;
 }
 .table_header_bold {
   background-color: #899bba;
-  border-color: #1f4071;
+  border-color: #1f4171;
   border-style: solid;
   border-width: 0 0 1px 0;
   color: #FFFFFF;
@@ -479,29 +479,11 @@ tr.sortable th.sortasc {
   background-image: url("../images/dreieck_up.png");
   padding-left: 17px;
 }
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  tr.sortable th.sortasc {
-    background-image: url("../images/dreieck_up@2x.png");
-    -webkit-background-size: 16px 16px;
-    -moz-background-size: 16px 16px;
-    -o-background-size: 16px 16px;
-    background-size: 16px 16px;
-  }
-}
 tr.sortable th.sortdesc {
   background-repeat: no-repeat;
   background-position: left center;
   background-image: url("../images/dreieck_down.png");
   padding-left: 17px;
-}
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  tr.sortable th.sortdesc {
-    background-image: url("../images/dreieck_down@2x.png");
-    -webkit-background-size: 16px 16px;
-    -moz-background-size: 16px 16px;
-    -o-background-size: 16px 16px;
-    background-size: 16px 16px;
-  }
 }
 /* styles for settings tables */
 .settings {
@@ -512,7 +494,7 @@ tr.sortable th.sortdesc {
 .settings thead th,
 .settings tbody th {
   background-color: #899bba;
-  border-color: #1f4071;
+  border-color: #1f4171;
   border-style: solid;
   border-width: 0 0 1px 0;
   color: #FFFFFF;
@@ -563,7 +545,7 @@ tr.sortable th.sortdesc {
 .settings td:first-child[colspan],
 .settings .divider > th,
 .settings .divider > td {
-  background-color: #c9d1e0;
+  background-color: #c9d2e0;
   border-bottom: 1px solid #444;
   border-top: 1px solid #444;
   color: #000;
@@ -581,7 +563,7 @@ tr.sortable th.sortdesc {
   padding-top: 0.5em;
 }
 .settings tfoot td {
-  background: #d8dadc;
+  background: #e2e3e4;
   text-align: center;
 }
 .settings tfoot tr:first-child td {
@@ -708,17 +690,17 @@ table.default > caption header > p {
 table.default > thead > tr > th {
   background-color: #e7ebf1;
   border-bottom: 1px solid rgba(137, 155, 186, 0.2);
-  border-top: 1px solid #1f4071;
+  border-top: 1px solid #1f4171;
   font-size: 1.0em;
 }
 table.default > tbody > tr > th {
   background-color: #e7ebf1;
-  border-top: 1px solid #1f4071;
+  border-top: 1px solid #1f4171;
   border-bottom: 1px solid rgba(137, 155, 186, 0.2);
   text-align: left;
 }
 table.default > tbody > tr > td {
-  border-bottom: 1px solid #d8dadc;
+  border-bottom: 1px solid #e2e3e4;
   transition: background-color 0.3s;
 }
 table.default > tbody > tr > td.dragHandle {
@@ -726,14 +708,14 @@ table.default > tbody > tr > td.dragHandle {
   cursor: move;
 }
 table.default > tbody > tr:last-child > td {
-  border-bottom: 1px solid #1f4071;
+  border-bottom: 1px solid #1f4171;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
   background-color: rgba(99, 106, 113, 0.2);
 }
 table.default > tfoot > tr > td {
   background-color: #e7ebf1;
-  border-top: 1px solid #1f4071;
+  border-top: 1px solid #1f4171;
 }
 table.default .actions {
   float: right;
@@ -744,10 +726,14 @@ table.default .actions svg {
   vertical-align: middle;
 }
 table.default > caption .actions {
-  border-left: 1px solid #1f4071;
+  border-left: 1px solid #1f4171;
   margin-bottom: -5px;
   padding-bottom: 7px;
   padding-left: 0.5em;
+}
+table.default > caption .actions input,
+table.default > caption .actions select {
+  font-size: 0.7em;
 }
 table.default td.actions,
 table.default th.actions {
@@ -771,7 +757,7 @@ table.default > caption .caption-container {
 table.default > caption .caption-content {
   -webkit-flex-grow: 1;
   flex-grow: 1;
-  border-right: 1px solid #1f4071;
+  border-right: 1px solid #1f4171;
   padding-bottom: 5px;
   padding-right: 0.5em;
   margin-right: 0.5em;
@@ -885,7 +871,7 @@ table.withdetails tr.open + tr.details > td {
 }
 table.withdetails tr.open + tr.details > td > .detailscontainer {
   padding: 5px;
-  border: 1px solid #d8dadc;
+  border: 1px solid #e2e3e4;
   margin-top: -1px;
   border-top-color: white;
 }
@@ -913,16 +899,6 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   vertical-align: text-top;
   width: 16px;
 }
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .sortable-table .headerSortUp::after,
-  .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
-    background-image: url("../images/dreieck_down@2x.png");
-    -webkit-background-size: 16px 8px;
-    -moz-background-size: 16px 8px;
-    -o-background-size: 16px 8px;
-    background-size: 16px 8px;
-  }
-}
 .sortable-table .headerSortUp::after,
 .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
   vertical-align: inherit;
@@ -937,16 +913,6 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-image: url("../images/dreieck_up.png");
   vertical-align: text-top;
   width: 16px;
-}
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .sortable-table .headerSortDown::after,
-  .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
-    background-image: url("../images/dreieck_up@2x.png");
-    -webkit-background-size: 16px 8px;
-    -moz-background-size: 16px 8px;
-    -o-background-size: 16px 8px;
-    background-size: 16px 8px;
-  }
 }
 .sortable-table .headerSortDown::after,
 .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
@@ -1080,8 +1046,8 @@ label.required:after {
 .studip_form .submit_wrapper {
   padding: 0;
   margin-left: 0.5ex;
-  background-color: #d8dadc;
-  border-top: 1px solid #1f4071;
+  background-color: #e2e3e4;
+  border-top: 1px solid #1f4171;
   padding-left: 1.5ex;
 }
 .studip_form .studip_input_wrapper {
@@ -1620,7 +1586,7 @@ label.required:after {
 }
 #layout_sidebar {
   background: inherit;
-  border-left: 1px dashed #1f4071;
+  border-left: 1px dashed #1f4171;
   max-width: 250px;
   width: 250px;
   min-width: 250px;
@@ -1650,7 +1616,7 @@ label.required:after {
 }
 #layout_footer {
   background-color: #899bba;
-  border-top: 1px solid #1f4071;
+  border-top: 1px solid #1f4171;
   clear: both;
   color: #fff;
   height: 25px;
@@ -1868,7 +1834,7 @@ label.required:after {
 }
 #barBottomContainer {
   background-color: #899bba;
-  border: 1px #1f4071;
+  border: 1px #1f4171;
   border-bottom-style: solid;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
   height: 24px;
@@ -2196,15 +2162,6 @@ li#notification_container:hover .list {
   width: 168px;
   height: 57px;
 }
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .studip-logo {
-    background-image: url("../images/logos/studip-logo@2x.png");
-    -webkit-background-size: 168px 57px;
-    -moz-background-size: 168px 57px;
-    -o-background-size: 168px 57px;
-    background-size: 168px 57px;
-  }
-}
 #barTopStudip {
   position: absolute;
   bottom: 16px;
@@ -2219,14 +2176,14 @@ li#notification_container:hover .list {
   height: 100px;
 }
 #flex-header {
-  background-color: #284a7d;
-  background-image: -moz-linear-gradient(top, #1f4071, #365a90);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#1f4071), to(#365a90));
-  background-image: -webkit-linear-gradient(top, #1f4071, #365a90);
-  background-image: -o-linear-gradient(top, #1f4071, #365a90);
-  background-image: linear-gradient(to bottom, #1f4071, #365a90);
+  background-color: #284b7d;
+  background-image: -moz-linear-gradient(top, #1f4171, #365a90);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#1f4171), to(#365a90));
+  background-image: -webkit-linear-gradient(top, #1f4171, #365a90);
+  background-image: -o-linear-gradient(top, #1f4171, #365a90);
+  background-image: linear-gradient(to bottom, #1f4171, #365a90);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1f4071', endColorstr='#ff365a90', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1f4171', endColorstr='#ff365a90', GradientType=0);
   position: relative;
 }
 /* --- public course marker ------------------------------------------------ */
@@ -2442,7 +2399,7 @@ td.infoboxrahmen {
   margin-bottom: 9px;
 }
 .sidebar-image:before {
-  border-right: 2px solid #142949;
+  border-right: 2px solid #142a49;
   border-top: 2px solid transparent;
   content: '';
   display: block;
@@ -3885,8 +3842,8 @@ div.clear {
 #tabs li,
 .smiley-tabs li {
   background-color: #899bba;
-  border-right: 1px solid #1f4071;
-  border-bottom: 1px solid #1f4071;
+  border-right: 1px solid #1f4171;
+  border-bottom: 1px solid #1f4171;
 }
 #tabs li:last-child,
 .smiley-tabs li:last-child {
@@ -4304,10 +4261,10 @@ a:hover.calhead {
   background-color: #f7cccc;
 }
 td.weekend {
-  background-color: #e2e2e2;
+  background-color: #e2e3e4;
 }
 td.weekday {
-  background-color: #f2f2f2;
+  background-color: #f5f6f6;
 }
 td.current {
   padding: 2px;
@@ -4332,7 +4289,7 @@ table.calendar-month tr td {
   vertical-align: top;
 }
 td.month {
-  background-color: #e2e2e2;
+  background-color: #e2e3e4;
   padding: 3px;
 }
 td.month div {
@@ -4342,7 +4299,7 @@ td.month div {
   text-overflow: ellipsis;
 }
 td.lightmonth {
-  background-color: #f2f2f2;
+  background-color: #f5f6f6;
   padding: 3px;
 }
 td.lightmonth div {
@@ -4373,12 +4330,12 @@ table.calendar-week {
 }
 .calendar-week tbody tr:hover,
 .calendar-day tbody tr:hover {
-  background-color: rgba(242, 242, 242, 0.6);
+  background-color: rgba(245, 246, 246, 0.6);
 }
 .calendar-week tbody tr td,
 .calendar-day tbody tr td {
   padding: 3px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid #f5f6f6;
 }
 .calendar-day-event-title {
   overflow: hidden;
@@ -4403,7 +4360,7 @@ table.calendar-day tbody tr td.calendar-category1,
 table.calendar-week tbody tr td.calendar-course-category5,
 table.calendar-day tbody tr td.calendar-course-category5 {
   background: linear-gradient(to right, #659c63, #96c895) repeat-x #659c63;
-  border: solid 1px #41643F;
+  border: solid 1px #008512;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4413,7 +4370,7 @@ table.calendar-week tbody tr td.calendar-category1 div:first-child,
 table.calendar-day tbody tr td.calendar-category1 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category5 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category5 div:first-child {
-  background-color: #41643F;
+  background-color: #008512;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category2,
@@ -4421,7 +4378,7 @@ table.calendar-day tbody tr td.calendar-category2,
 table.calendar-week tbody tr td.calendar-course-category1,
 table.calendar-day tbody tr td.calendar-course-category1 {
   background: linear-gradient(to right, #3e4490, #7379a9) repeat-x #3e4490;
-  border: solid 1px #2D2C64;
+  border: solid 1px #682c8b;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4431,7 +4388,7 @@ table.calendar-week tbody tr td.calendar-category2 div:first-child,
 table.calendar-day tbody tr td.calendar-category2 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category1 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category1 div:first-child {
-  background-color: #2D2C64;
+  background-color: #682c8b;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category3,
@@ -4439,7 +4396,7 @@ table.calendar-day tbody tr td.calendar-category3,
 table.calendar-week tbody tr td.calendar-course-category2,
 table.calendar-day tbody tr td.calendar-course-category2 {
   background: linear-gradient(to right, #874293, #ae77b8) repeat-x #874293;
-  border: solid 1px #5C2D64;
+  border: solid 1px #b02e7c;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4449,7 +4406,7 @@ table.calendar-week tbody tr td.calendar-category3 div:first-child,
 table.calendar-day tbody tr td.calendar-category3 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category2 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category2 div:first-child {
-  background-color: #5C2D64;
+  background-color: #b02e7c;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category4,
@@ -4457,7 +4414,7 @@ table.calendar-day tbody tr td.calendar-category4,
 table.calendar-week tbody tr td.calendar-course-category3,
 table.calendar-day tbody tr td.calendar-course-category3 {
   background: linear-gradient(to right, #8fad29, #a3ba50) repeat-x #8fad29;
-  border: solid 1px #526416;
+  border: solid 1px #129c94;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4467,7 +4424,7 @@ table.calendar-week tbody tr td.calendar-category4 div:first-child,
 table.calendar-day tbody tr td.calendar-category4 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category3 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category3 div:first-child {
-  background-color: #526416;
+  background-color: #129c94;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category5,
@@ -4475,7 +4432,7 @@ table.calendar-day tbody tr td.calendar-category5,
 table.calendar-week tbody tr td.calendar-course-category4,
 table.calendar-day tbody tr td.calendar-course-category4 {
   background: linear-gradient(to right, #8e8eb2, #babad4) repeat-x #8e8eb2;
-  border: solid 1px #505064;
+  border: solid 1px #f26e00;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4485,7 +4442,7 @@ table.calendar-week tbody tr td.calendar-category5 div:first-child,
 table.calendar-day tbody tr td.calendar-category5 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category4 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category4 div:first-child {
-  background-color: #505064;
+  background-color: #f26e00;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category6,
@@ -4493,7 +4450,7 @@ table.calendar-day tbody tr td.calendar-category6,
 table.calendar-week tbody tr td.calendar-course-category6,
 table.calendar-day tbody tr td.calendar-course-category6 {
   background: linear-gradient(to right, #904e42, #b5867e) repeat-x #904e42;
-  border: solid 1px #64372C;
+  border: solid 1px #a85d45;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4503,13 +4460,13 @@ table.calendar-week tbody tr td.calendar-category6 div:first-child,
 table.calendar-day tbody tr td.calendar-category6 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category6 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category6 div:first-child {
-  background-color: #64372C;
+  background-color: #a85d45;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category7,
 table.calendar-day tbody tr td.calendar-category7 {
   background: linear-gradient(to right, #ab9448, #c9b988) repeat-x #ab9448;
-  border: solid 1px #64541E;
+  border: solid 1px #6ead10;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4517,13 +4474,13 @@ table.calendar-day tbody tr td.calendar-category7 {
 }
 table.calendar-week tbody tr td.calendar-category7 div:first-child,
 table.calendar-day tbody tr td.calendar-category7 div:first-child {
-  background-color: #64541E;
+  background-color: #6ead10;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category8,
 table.calendar-day tbody tr td.calendar-category8 {
   background: linear-gradient(to right, #6d9441, #9db97c) repeat-x #6d9441;
-  border: solid 1px #48642B;
+  border: solid 1px #d60000;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4531,13 +4488,13 @@ table.calendar-day tbody tr td.calendar-category8 {
 }
 table.calendar-week tbody tr td.calendar-category8 div:first-child,
 table.calendar-day tbody tr td.calendar-category8 div:first-child {
-  background-color: #48642B;
+  background-color: #d60000;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category9,
 table.calendar-day tbody tr td.calendar-category9 {
   background: linear-gradient(to right, #ebc443, #ecd379) repeat-x #ebc443;
-  border: solid 1px #957C29;
+  border: solid 1px #ffbd33;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4545,13 +4502,13 @@ table.calendar-day tbody tr td.calendar-category9 {
 }
 table.calendar-week tbody tr td.calendar-category9 div:first-child,
 table.calendar-day tbody tr td.calendar-category9 div:first-child {
-  background-color: #957C29;
+  background-color: #ffbd33;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category10,
 table.calendar-day tbody tr td.calendar-category10 {
   background: linear-gradient(to right, #db9f63, #e9b583) repeat-x #db9f63;
-  border: solid 1px #956D42;
+  border: solid 1px #66b671;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4559,13 +4516,13 @@ table.calendar-day tbody tr td.calendar-category10 {
 }
 table.calendar-week tbody tr td.calendar-category10 div:first-child,
 table.calendar-day tbody tr td.calendar-category10 div:first-child {
-  background-color: #956D42;
+  background-color: #66b671;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category11,
 table.calendar-day tbody tr td.calendar-category11 {
   background: linear-gradient(to right, #90d070, #a6d98c) repeat-x #90d070;
-  border: solid 1px #66954F;
+  border: solid 1px #a480b9;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4573,13 +4530,13 @@ table.calendar-day tbody tr td.calendar-category11 {
 }
 table.calendar-week tbody tr td.calendar-category11 div:first-child,
 table.calendar-day tbody tr td.calendar-category11 div:first-child {
-  background-color: #66954F;
+  background-color: #a480b9;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category12,
 table.calendar-day tbody tr td.calendar-category12 {
   background: linear-gradient(to right, #418494, #6ca6b2) repeat-x #418494;
-  border: solid 1px #2C5964;
+  border: solid 1px #d082b0;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4587,13 +4544,13 @@ table.calendar-day tbody tr td.calendar-category12 {
 }
 table.calendar-week tbody tr td.calendar-category12 div:first-child,
 table.calendar-day tbody tr td.calendar-category12 div:first-child {
-  background-color: #2C5964;
+  background-color: #d082b0;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category13,
 table.calendar-day tbody tr td.calendar-category13 {
   background: linear-gradient(to right, #c91c0b, #e0665b) repeat-x #c91c0b;
-  border: solid 1px #951408;
+  border: solid 1px #71c4bf;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4601,13 +4558,13 @@ table.calendar-day tbody tr td.calendar-category13 {
 }
 table.calendar-week tbody tr td.calendar-category13 div:first-child,
 table.calendar-day tbody tr td.calendar-category13 div:first-child {
-  background-color: #951408;
+  background-color: #71c4bf;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category14,
 table.calendar-day tbody tr td.calendar-category14 {
   background: linear-gradient(to right, #29ab9f, #5cc4b9) repeat-x #29ab9f;
-  border: solid 1px #18645C;
+  border: solid 1px #f7a866;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4615,7 +4572,7 @@ table.calendar-day tbody tr td.calendar-category14 {
 }
 table.calendar-week tbody tr td.calendar-category14 div:first-child,
 table.calendar-day tbody tr td.calendar-category14 div:first-child {
-  background-color: #18645C;
+  background-color: #f7a866;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category15,
@@ -4623,7 +4580,7 @@ table.calendar-day tbody tr td.calendar-category15,
 table.calendar-week tbody tr td.calendar-course-category7,
 table.calendar-day tbody tr td.calendar-course-category7 {
   background: linear-gradient(to right, #8db3d8, #acc6df) repeat-x #8db3d8;
-  border: solid 1px #627C95;
+  border: solid 1px #cb9e8f;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4633,7 +4590,7 @@ table.calendar-week tbody tr td.calendar-category15 div:first-child,
 table.calendar-day tbody tr td.calendar-category15 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category7 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category7 div:first-child {
-  background-color: #627C95;
+  background-color: #cb9e8f;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-category255,
@@ -4670,55 +4627,55 @@ table.calendar-day tbody tr td.calendar-course-category256 div:first-child {
 }
 a.calendar-event-text1,
 a.Calendar-course-event-text5 {
-  color: #41643F;
+  color: #008512;
 }
 a.calendar-event-text2,
 a.Calendar-course-event-text1 {
-  color: #2D2C64;
+  color: #682c8b;
 }
 a.calendar-event-text3,
 a.Calendar-course-event-text2 {
-  color: #5C2D64;
+  color: #b02e7c;
 }
 a.calendar-event-text4,
 a.Calendar-course-event-text3 {
-  color: #526416;
+  color: #129c94;
 }
 a.calendar-event-text5,
 a.Calendar-course-event-text4 {
-  color: #505064;
+  color: #f26e00;
 }
 a.calendar-event-text6,
 a.Calendar-course-event-text6 {
-  color: #64372C;
+  color: #a85d45;
 }
 a.calendar-event-text7 {
-  color: #64541E;
+  color: #6ead10;
 }
 a.calendar-event-text8 {
-  color: #48642B;
+  color: #d60000;
 }
 a.calendar-event-text9 {
-  color: #957C29;
+  color: #ffbd33;
 }
 a.calendar-event-text10 {
-  color: #956D42;
+  color: #66b671;
 }
 a.calendar-event-text11 {
-  color: #66954F;
+  color: #a480b9;
 }
 a.calendar-event-text12 {
-  color: #2C5964;
+  color: #d082b0;
 }
 a.calendar-event-text13 {
-  color: #951408;
+  color: #71c4bf;
 }
 a.calendar-event-text14 {
-  color: #E0665B;
+  color: #f7a866;
 }
 a.calendar-event-text15,
 a.Calendar-course-event-text7 {
-  color: #627C95;
+  color: #cb9e8f;
 }
 a.calendar-event-text255,
 a.Calendar-course-event-text255 {
@@ -4952,7 +4909,7 @@ table.contact-header td.empty a {
 }
 .cronjobs-edit > table > thead > tr > th {
   background-color: #899bba;
-  border-color: #1f4071;
+  border-color: #1f4171;
   border-style: solid;
   border-width: 0 0 1px 0;
   color: #FFFFFF;
@@ -5762,7 +5719,7 @@ body#wiki #main_content td.printcontent:last-child:not(:first-child) {
   display: none;
 }
 #widget_choices {
-  border-right: 1px dashed #1f4071;
+  border-right: 1px dashed #1f4171;
   margin-right: 25px;
 }
 .start-widgetcontainer {
@@ -5915,7 +5872,7 @@ div.available-widgets .studip-widget {
     width: auto !important;
   }
   .logintable {
-    background: #e2e2e2 !important;
+    background: #e2e3e4 !important;
     margin: 0 auto;
     text-align: center;
     width: auto !important;
@@ -6108,7 +6065,7 @@ div.available-widgets .studip-widget {
   display: none;
 }
 .ui-dialog .ui-dialog-titlebar {
-  background: #1f4071;
+  background: #1f4171;
   border: 0;
   font-size: 1.3em;
   font-weight: normal;
@@ -6116,7 +6073,7 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close {
   width: 32px;
   height: 32px;
-  background: #1f4071;
+  background: #1f4171;
   border: 0;
   line-height: 32px;
   margin-top: -16px;
@@ -6126,7 +6083,7 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close:hover {
   width: 32px;
   height: 32px;
-  background: #1f4071;
+  background: #1f4171;
   border: 0;
   margin-top: -16px;
   padding: 0;
@@ -6220,6 +6177,9 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept,
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel {
   padding-right: 23px;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-button:last-child {
+  margin-right: 0;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept:before {
   background-image: url("../images/icons/blue/accept.svg");
@@ -6774,13 +6734,13 @@ label[for="responsive-toggle"]:before {
 }
 #responsive-navigation {
   background-color: #365a90;
-  background-image: -moz-linear-gradient(left, #1f4071, #365a90);
-  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#1f4071), to(#365a90));
-  background-image: -webkit-linear-gradient(left, #1f4071, #365a90);
-  background-image: -o-linear-gradient(left, #1f4071, #365a90);
-  background-image: linear-gradient(to right, #1f4071, #365a90);
+  background-image: -moz-linear-gradient(left, #1f4171, #365a90);
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#1f4171), to(#365a90));
+  background-image: -webkit-linear-gradient(left, #1f4171, #365a90);
+  background-image: -o-linear-gradient(left, #1f4171, #365a90);
+  background-image: linear-gradient(to right, #1f4171, #365a90);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1f4071', endColorstr='#ff365a90', GradientType=1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1f4171', endColorstr='#ff365a90', GradientType=1);
   -webkit-background-clip: content-box;
   -moz-background-clip: content-box;
   background-clip: content-box;
@@ -6878,7 +6838,7 @@ label[for="responsive-toggle"]:before {
   max-height: 600px;
 }
 #responsive-navigation input:checked + label + ul > li {
-  background-color: rgba(123, 139, 167, 0.6);
+  background-color: rgba(123, 140, 167, 0.6);
 }
 #barBottomright #sidebar-menu {
   cursor: pointer;
@@ -6961,14 +6921,14 @@ label[for="responsive-toggle"]:before {
     transition: right 300ms;
   }
   #layout-sidebar {
-    background-color: #1f4071;
-    background-image: -moz-linear-gradient(left, #365a90, #1f4071);
-    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#365a90), to(#1f4071));
-    background-image: -webkit-linear-gradient(left, #365a90, #1f4071);
-    background-image: -o-linear-gradient(left, #365a90, #1f4071);
-    background-image: linear-gradient(to right, #365a90, #1f4071);
+    background-color: #1f4171;
+    background-image: -moz-linear-gradient(left, #365a90, #1f4171);
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#365a90), to(#1f4171));
+    background-image: -webkit-linear-gradient(left, #365a90, #1f4171);
+    background-image: -o-linear-gradient(left, #365a90, #1f4171);
+    background-image: linear-gradient(to right, #365a90, #1f4171);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff365a90', endColorstr='#ff1f4071', GradientType=1);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff365a90', endColorstr='#ff1f4171', GradientType=1);
     -webkit-background-clip: content-box;
     -moz-background-clip: content-box;
     background-clip: content-box;
@@ -7027,13 +6987,13 @@ html {
 }
 body {
   background-color: #2d5084;
-  background-image: -moz-linear-gradient(top, #365a90, #1f4071);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#365a90), to(#1f4071));
-  background-image: -webkit-linear-gradient(top, #365a90, #1f4071);
-  background-image: -o-linear-gradient(top, #365a90, #1f4071);
-  background-image: linear-gradient(to bottom, #365a90, #1f4071);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff365a90', endColorstr='#ff1f4071', GradientType=0);
-  background-color: #1f4071;
+  background-image: -moz-linear-gradient(top, #365a90, #1f4171);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#365a90), to(#1f4171));
+  background-image: -webkit-linear-gradient(top, #365a90, #1f4171);
+  background-image: -o-linear-gradient(top, #365a90, #1f4171);
+  background-image: linear-gradient(to bottom, #365a90, #1f4171);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff365a90', endColorstr='#ff1f4171', GradientType=0);
+  background-color: #1f4171;
   background-repeat: repeat-x;
   margin: 0;
 }

@@ -83,7 +83,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
             "textlectures" => " " . _("Veranstaltungen"),
             "textgrouping" => _("Gruppierung:") . " ",
             "textnogroups" => _("keine Studienbereiche eingetragen"),
-            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("Lehrende)."|"
+            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("Lehrende")."|"
                     ._("Typ")."|"._("Einrichtung"),
             "wholesite" => "",
             "nameformat" => "",
@@ -139,7 +139,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
         $title = _("Gruppierung:");
         $info = _("Wählen Sie, wie die Veranstaltungen gruppiert werden sollen.");
         $values = array("0", "1", "2", "3", "4");
-        $names = array(_("Semester"), _("Bereich"), _("Lehrende),
+        $names = array(_("Semester"), _("Bereich"), _("Lehrende"),
                 _("Typ"), _("Einrichtung"));
         $table = $edit_form->editOptionGeneric("grouping", $title, $info, $values, $names);
         

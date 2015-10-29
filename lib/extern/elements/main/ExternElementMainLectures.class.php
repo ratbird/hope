@@ -228,7 +228,7 @@ class ExternElementMainLectures extends ExternElementMain {
         $info = _("Geben Sie einen Text ein, der Angezeigt wird, wenn Lehrveranstaltungen vorliegen, die keinem Bereich zugeordnet sind. Nur wirksam in Gruppierung nach Bereich.");
         $table .= $edit_form->editTextfieldGeneric("textnogroups", $title, $info, 40, 150);
         
-        $titles = array(_("Semester"), _("Bereich"), _("Lehrende), _("Typ"), _("Einrichtung"));
+        $titles = array(_("Semester"), _("Bereich"), _("Lehrende"), _("Typ"), _("Einrichtung"));
         $info = _("Geben Sie eine Bezeichnung für die entsprechende Gruppierungsart ein.");
         $table .= $edit_form->editTextfieldGeneric("aliasesgrouping", $titles, $info, 40, 150);
         

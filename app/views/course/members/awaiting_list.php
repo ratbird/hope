@@ -71,7 +71,7 @@
                     <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
                     <?= Avatar::getAvatar($waiting['user_id'], $waiting['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
-                    <?= $waiting['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
+                    <?= $waiting['mkdate'] >= $last_visitdate ? Assets::img('red_star',
                         array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                     </a>

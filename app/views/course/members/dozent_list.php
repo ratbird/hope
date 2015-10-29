@@ -44,7 +44,7 @@
                 <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$dozent['username'])) ?>">
                     <?= Avatar::getAvatar($dozent['user_id'], $dozent['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
-                    <?= $dozent['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
+                    <?= $dozent['mkdate'] >= $last_visitdate ? Assets::img('red_star',
                             array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                 </a>

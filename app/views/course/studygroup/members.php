@@ -39,7 +39,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
                         array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
                     <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star.png', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
+                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
                         : '' ?>
                 </a>
             </td>
@@ -78,7 +78,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
                         array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
                     <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star.png', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
+                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
                         : '' ?>
                 </a>
             </td>
@@ -126,7 +126,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
                         array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
                     <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star.png', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
+                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
                         : '' ?>
                 </a>
             </td>

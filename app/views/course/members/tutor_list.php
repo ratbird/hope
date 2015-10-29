@@ -79,7 +79,7 @@
                     <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$tutor['username'])) ?>">
                     <?= Avatar::getAvatar($tutor['user_id'], $tutor['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
-                    <?= $tutor['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
+                    <?= $tutor['mkdate'] >= $last_visitdate ? Assets::img('red_star',
                         array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                     </a>

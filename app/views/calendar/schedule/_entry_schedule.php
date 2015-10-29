@@ -31,7 +31,7 @@ use Studip\Button, Studip\LinkButton;
     <div id="color_picker">
         <b><?= _("Farbe des Termins") ?>:</b>
         <? foreach ($GLOBALS['PERS_TERMIN_KAT'] as $data) : ?>
-        <span style="background-color: <?= $data['color'] ?>; vertical-align: middle; padding-top: 3px;">
+        <span style="background-color: <?= $data['color'] ?>; vertical-align: middle; padding: 3px">
             <input type="radio" name="entry_color" value="<?= $data['color'] ?>" <?= ($data['color'] == $show_entry['color']) ? 'checked="checked"' : '' ?>>
         </span>
         <? endforeach ?>

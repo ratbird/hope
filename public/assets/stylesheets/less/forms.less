@@ -1,3 +1,124 @@
+form.default {
+
+    input[type=date], input[type=email], input[type=number],
+    input[type=password], input[type=text], input[type=url],
+    textarea, select {
+        .box-sizing(border-box);
+
+        border: 1px solid @light-gray-color-40;
+        color: @dark-gray-color;
+        display: block;
+        max-width: 48em;
+        width: 100%;
+        margin-top: 1ex;
+        padding: 5px;
+        .transition(all 0.3s ease-out);
+
+        &:focus {
+            border-color: @brand-color-dark;
+        }
+
+        &.size-s {
+            max-width: 8em;
+        }
+
+        &.size-m {
+        }
+
+        &.size-l {
+            max-width: 100%;
+        }
+    }
+
+    input[type=date], input[type=number] {
+        max-width: 8em;
+    }
+
+    textarea {
+        min-height: 6em;
+    }
+
+    label {
+        display: block;
+        margin-top: 1ex;
+        max-width: 100%;
+        text-indent: 0.25ex;
+    }
+
+    fieldset {
+        .box-sizing(border-box);
+
+        border: solid 1px @base-color-60;
+        margin: 0 0 10px;
+        padding: 10px;
+        padding-top: 0px;
+        position: relative;
+
+        break-before: column;
+
+        > legend {
+            background-color: @fieldset-header;
+            border: none;
+            color: @brand-color-dark;
+            float: left;
+            font-size: 12pt;
+            font-weight: bold;
+            line-height: 2em;
+            margin: 0 -10px 1em -10px;
+            padding: 0;
+            text-indent: 10px;
+            width: ~'calc(100% + 20px)';
+        }
+
+        > :first-child:not(legend), > legend + * {
+            margin-top: 10px;
+        }
+    }
+
+    .required {
+        font-weight: bold;
+        &:after {
+            content: "*";
+            color: red;
+        }
+    }
+
+    input[type=radio] {
+        margin-right: 10px;
+    }
+
+    footer {
+        background-color: @content-color-20;
+        border-top: 1px solid @brand-color-darker;
+        clear: both;
+        margin-left: 0;
+        padding: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    //Special inputs
+
+    label.file-upload {
+        cursor: pointer;
+        padding-left: 30px;
+        background-image: url('../../../../assets/images/icons/blue/upload.svg');
+        background-repeat: no-repeat;
+        background-position: top left;
+        background-size: 20px 20px;
+        input[type=file] {
+            display: none;
+        }
+        .filename {
+            padding-left: 0.5em;
+            color: @light-gray-color-80;
+        }
+    }
+
+}
+
+
+
 label.required {
     &:after {
         color: red;
@@ -5,126 +126,7 @@ label.required {
         text-align: super;
     }
 }
-.studip_form {
-    .caption {
-        font-weight: bold;
-        color: @brand-color-dark;
-        font-size: 11pt;
-    }
 
-    label {
-        display: block;
-
-        input[type=date], input[type=email], input[type=number],
-        input[type=password], input[type=text], input[type=url],
-        textarea, select {
-           display: block;
-           min-width: 24em;
-        }
-        
-        input[type=number] {
-            min-width: 1ex !important;
-        }
-        textarea {
-            min-height: 6em;
-        }
-    }
-    
-    > fieldset {
-        position: relative;
-        padding-top: 3em;
-        border-color: @fieldset-border;
-        border-style: solid;
-        border-width: 1px;
-        margin-bottom: 10px;
-        
-        > legend {
-            background-color: @fieldset-header;
-            color: @brand-color-dark;
-            position: absolute;
-            top: 0px;
-            padding: 0;
-            margin: 0;
-            border: none;
-            line-height: 2em;
-            width: 100%;
-            left:0px;
-            font-size: 12pt;
-            font-weight: bold;
-            text-indent: 1ex;
-        }
-
-        > label, > div  {
-            text-indent: 0.25ex;
-            padding: 1ex;
-        }
-        > button {
-            margin-left: 1ex;
-        }
-    }
-    fieldset fieldset {
-        border: none;
-        margin: 1ex 0;
-        
-        legend {
-            .caption; // includes .studip_form .caption
-        }
-        label {
-            margin-left: 1ex;
-        }
-    }
-
-    .required {
-        color: red;
-        font-size: 1.2em;
-    }
-
-
-
-    div {
-        input[type=date], input[type=email], input[type=number],
-        input[type=password], input[type=text], input[type=url],
-        textarea, select {
-            display: inline;
-        }
-    }
-    
-    input[type=radio] {
-        margin-right: 1ex;
-    }
-
-    input[type=date], input[type=email], input[type=number],
-    input[type=password], input[type=text], input[type=url],
-    textarea, select {
-        display: block;
-        padding: 5px;
-        border: 1px solid #ccc;
-        color: #333;
-        margin-top:1ex;
-        .transition(all 0.3s ease-out);
-        
-        &:focus {
-            outline: none;
-            border-color: @brand-color-dark;
-        }
-    }
-    
-    select {
-        height: 30px;
-    }
-
-    .submit_wrapper {
-        padding: 0;
-        margin-left: 0.5ex;
-        background-color: @table-footer-color;
-        border-top: 1px solid @brand-color-darker;
-        padding-left: 1.5ex;
-    }
-
-    .studip_input_wrapper {
-        padding: 1ex;
-    }
-}
 .studip-checkbox {
     opacity: 0;
     position: absolute;

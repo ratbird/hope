@@ -43,5 +43,27 @@ STUDIP.Forms = {
                 this.input.attr('aria-invalid', 'true');
             });
         });
+
+        jQuery(document).on("change", "form.default label.file-upload input[type=file]", function (ev) {
+            var selected_file = ev.target.files[0];
+            if (jQuery(this).closest("label").find(".filename").length) {
+                var filename = jQuery(this).closest("label").find(".filename");
+            } else {
+                var filename = jQuery('<span class="filename"/>');
+                jQuery(this).closest("label").append(filename);
+            }
+            filename.text(selected_file.name + " " + Math.ceil(selected_file.size / 1024) + "KB");
+        });
+        jQuery(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
+            var maxlength = jQuery(this).attr("maxlength");
+            var length = jQuery(this).val().length;
+            if (jQuery(this).next().is(".maxlength")) {
+                var indicator = jQuery(this).next();
+            } else {
+                var indicator = jQuery('<div class="maxlength"/>');
+                jQuery(this).after(indicator);
+            }
+            indicator.text(maxlength - length);
+        }).find("form.default input[maxlength]").trigger("keyup");
     }
 };

@@ -372,7 +372,7 @@ class AdminCourseFilter
         if (!$only_count) {
             $query .= " GROUP BY seminare.Seminar_id ORDER BY ".$this->settings['query']['orderby'].($this->settings['query']['orderby'] !== "seminare.name" ? ", seminare.name" : "");
         }
-        
+
         return $query;
     }
 

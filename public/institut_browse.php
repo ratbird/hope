@@ -58,6 +58,7 @@ if (Request::option('cmd')=="suche"){
     }
     if (Request::get('search_user') && strlen(Request::get('search_user')) > 1){
         $view->params[0] = "%" . Request::quoted('search_user') . "%";
+        $view->params[1] = "%" . Request::quoted('search_user') . "%";
         $rs = $view->get_query("view:TREE_SEARCH_USER");
         while($rs->next_record()){
             $found_items[] = htmlReady($the_tree->tree->getItemPath($rs->f("item_id")));

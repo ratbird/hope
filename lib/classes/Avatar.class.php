@@ -204,7 +204,7 @@ class Avatar {
             $this->username = htmlReady(get_username($this->user_id));
         }
 
-        return sprintf('avatar-%s user-%s', $size, $this->username);
+        return sprintf('avatar-%s user-%s'.($this->is_customized() ? '' : ' recolor'), $size, $this->username);
     }
 
 

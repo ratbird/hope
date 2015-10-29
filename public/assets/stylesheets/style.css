@@ -711,7 +711,7 @@ table.default > tbody > tr:last-child > td {
   border-bottom: 1px solid #1f4171;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td:not(.nohover) {
-  background-color: rgba(99, 106, 113, 0.2);
+  background-color: rgba(109, 116, 122, 0.2);
 }
 table.default > tfoot > tr > td {
   background-color: #e7ebf1;
@@ -837,7 +837,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child > a {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(99, 106, 113, 0.2);
+  background-color: rgba(109, 116, 122, 0.2);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/blue/arr_1down.svg");
@@ -1398,7 +1398,7 @@ label.required:after {
   position: relative;
 }
 .css-tree ul:before {
-  border-left: 1px solid #82888e;
+  border-left: 1px solid #8a8f95;
   content: '';
   display: block;
   position: absolute;
@@ -1421,7 +1421,7 @@ label.required:after {
   height: 0;
   width: 8px;
   position: absolute;
-  border-top: 1px solid #82888e;
+  border-top: 1px solid #8a8f95;
   left: 0;
   top: 8px;
 }
@@ -2340,7 +2340,7 @@ li#notification_container:hover .list {
   width: 100%;
 }
 table.infobox td {
-  background-color: #e0e1e3;
+  background-color: #e2e3e4;
   text-align: left;
 }
 table.infobox td.infobox-img {
@@ -2378,7 +2378,7 @@ td.infoboxrahmen {
   position: relative;
 }
 .sidebar:before {
-  border-right: 2px solid #a1a6aa;
+  border-right: 2px solid #a7abaf;
   border-top: 2px solid transparent;
   border-bottom: 2px solid transparent;
   content: '';
@@ -2894,7 +2894,7 @@ select.sidebar-selectlist {
 }
 .helpbar .helpbar-widgets a:hover,
 .helpbar .helpbar-widgets a:active {
-  color: #c1c3c6;
+  color: #c5c7ca;
   text-decoration: underline;
 }
 .helpbar .helpbar-widgets > li {
@@ -3107,7 +3107,7 @@ section.contentbox article footer h1 {
 }
 section.contentbox article footer article.comment {
   border: 0;
-  border-top: 1px solid #c1c3c6;
+  border-top: 1px solid #c5c7ca;
   max-width: 1260px;
   margin: auto;
   margin-bottom: 4px;
@@ -3119,7 +3119,7 @@ section.contentbox article footer article.comment h1 {
 section.contentbox article footer article.comment time {
   float: right;
   font-size: 0.8em;
-  color: #c1c3c6;
+  color: #c5c7ca;
 }
 section.contentbox article.open > p,
 section.contentbox article.open > section,
@@ -3353,7 +3353,7 @@ button.button[disabled] {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e0e1e3;
+  background: #e2e3e4;
   cursor: default;
   opacity: 0.65;
 }
@@ -4232,21 +4232,21 @@ a.lightsday {
 .precol1w {
   font-size: 12pt;
   font-weight: bold;
-  color: #636a71;
+  color: #6d747a;
   text-align: center;
   vertical-align: top;
 }
 .precol2w {
   font-size: 8pt;
   font-weight: bold;
-  color: #636a71;
+  color: #6d747a;
   text-align: center;
 }
 td.calhead,
 div.calhead {
   font-size: 18pt;
   font-weight: bold;
-  color: #636a71;
+  color: #6d747a;
   text-align: center;
 }
 a:link.calhead {
@@ -4597,8 +4597,8 @@ table.calendar-week tbody tr td.calendar-category255,
 table.calendar-day tbody tr td.calendar-category255,
 table.calendar-week tbody tr td.calendar-course-category255,
 table.calendar-day tbody tr td.calendar-course-category255 {
-  background: linear-gradient(to right, #a1a6aa, #c1c3c6) repeat-x #a1a6aa;
-  border: solid 1px #a1a6aa;
+  background: linear-gradient(to right, #a7abaf, #c5c7ca) repeat-x #a7abaf;
+  border: solid 1px #a7abaf;
   vertical-align: top;
   font-size: 11px;
   color: #fff;
@@ -4608,7 +4608,7 @@ table.calendar-week tbody tr td.calendar-category255 div:first-child,
 table.calendar-day tbody tr td.calendar-category255 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category255 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category255 div:first-child {
-  background-color: #a1a6aa;
+  background-color: #a7abaf;
   overflow: hidden;
 }
 table.calendar-week tbody tr td.calendar-course-category256,
@@ -4679,7 +4679,7 @@ a.Calendar-course-event-text7 {
 }
 a.calendar-event-text255,
 a.Calendar-course-event-text255 {
-  color: #a1a6aa;
+  color: #a7abaf;
 }
 .calendar-tooltip {
   display: none;
@@ -5032,7 +5032,7 @@ table.contact-header td.empty a {
   margin-bottom: 0;
 }
 .documents.dragging [data-file]:not([data-folder]) {
-  background-color: #c1c3c6;
+  background-color: #c5c7ca;
   opacity: 0.6;
 }
 .documents [data-folder].dropping {
@@ -5164,7 +5164,7 @@ div.index_container div.index_main nav div.login_link a {
 }
 div.index_container div.index_main nav div.login_link a p {
   font-size: 0.5em;
-  color: #636a71;
+  color: #6d747a;
 }
 /* --- news --------------------------------------------------- */
 #news_dialog_content {
@@ -6166,7 +6166,7 @@ div.available-widgets .studip-widget {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e0e1e3;
+  background: #e2e3e4;
   cursor: default;
   opacity: 0.65;
 }
@@ -6258,7 +6258,7 @@ div.available-widgets .studip-widget {
   bottom: 0;
 }
 .modal-overlay-local {
-  background-color: rgba(99, 106, 113, 0.5);
+  background-color: rgba(109, 116, 122, 0.5);
   position: absolute;
 }
 .modal-overlay-ajax {
@@ -7512,7 +7512,7 @@ div.info {
   cursor: auto;
 }
 .length-hint {
-  color: #636a71;
+  color: #6d747a;
 }
 .length-hint:before {
   content: '(';

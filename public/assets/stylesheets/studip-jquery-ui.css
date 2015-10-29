@@ -1583,9 +1583,9 @@ button.ui-button::-moz-focus-inner {
   position: absolute;
   z-index: 9999;
   max-width: 300px;
-  -webkit-box-shadow: 0 0 5px #a1a6aa;
-  -moz-box-shadow: 0 0 5px #a1a6aa;
-  box-shadow: 0 0 5px #a1a6aa;
+  -webkit-box-shadow: 0 0 5px #a7abaf;
+  -moz-box-shadow: 0 0 5px #a7abaf;
+  box-shadow: 0 0 5px #a7abaf;
 }
 /* Fades and background-images don't work well together in IE6, drop the image */
 * html .ui-tooltip {
@@ -1611,7 +1611,7 @@ body .ui-tooltip {
   font-size: 1em;
 }
 .ui-widget-content {
-  border: 1px solid #a1a6aa;
+  border: 1px solid #a7abaf;
   background: #ffffff url(../images/vendor/jquery-ui/ui-bg_inset-hard_100_fcfdfd_1x100.png) 50% bottom repeat-x;
   color: #3c454e;
 }
@@ -1633,7 +1633,7 @@ body .ui-tooltip {
 .ui-menu-item .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  background: #e0e1e3;
+  background: #e2e3e4;
   border: 1px solid #d8dadc;
   color: #000;
   font-weight: bold;
@@ -1673,7 +1673,7 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
   background: #ffffff;
-  border: 1px solid #a1a6aa;
+  border: 1px solid #a7abaf;
   color: #000;
   font-weight: bold;
 }
@@ -2333,14 +2333,14 @@ body .ui-tooltip {
 }
 /* Overlays */
 .ui-widget-overlay {
-  background: #a1a6aa url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+  background: #a7abaf url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: .3;
   filter: alpha(opacity=30);
 }
 .ui-widget-shadow {
   margin: -8px 0 0 -8px;
   padding: 8px;
-  background: #a1a6aa url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+  background: #a7abaf url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: .3;
   filter: alpha(opacity=30);
   -moz-border-radius: 8px;
@@ -2433,8 +2433,8 @@ body .ui-tooltip {
   background: #e7ebf1;
   border-radius: 0;
   border: none;
-  border-top: 1px solid #e0e1e3;
-  border-bottom: 1px solid #e0e1e3;
+  border-top: 1px solid #e2e3e4;
+  border-bottom: 1px solid #e2e3e4;
   color: #000;
   font-size: 10pt;
   margin: 0;
@@ -2446,7 +2446,7 @@ body .ui-tooltip {
   margin: 0;
   padding: 0;
   border: 0;
-  border-bottom: 1px solid #e0e1e3;
+  border-bottom: 1px solid #e2e3e4;
 }
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
@@ -2753,7 +2753,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  border-color: #c1c3c6;
+  border-color: #c5c7ca;
   position: relative;
 }
 .ms-container .ms-optgroup-label {

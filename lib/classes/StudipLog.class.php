@@ -255,6 +255,8 @@ class StudipLog
 
         $users = User::findBySQL("Nachname LIKE CONCAT('%', :needle, '%')
                      OR Vorname LIKE CONCAT('%', :needle, '%')
+                     OR CONCAT(Nachname, ', ', Vorname) LIKE CONCAT('%', :needle, '%')
+                     OR CONCAT(Vorname, ' ', Nachname) LIKE CONCAT('%', :needle, '%')
                      OR username LIKE CONCAT('%', :needle, '%')",
                 array(':needle' => $needle));
         foreach ($users as $user) {

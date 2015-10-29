@@ -69,8 +69,8 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                             <?= Assets::img('icons/blue/accept', tooltip2(_('Eintragen'))) ?>
                         </a>
 
-                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p['username']) ?>">
-                            <?= Assets::img('icons/blue/trash', tooltip2(_('Ablehnen'))) ?>
+                        <a data-confirm="<?=_('Wollen Sie die Mitgliedschaft wirklich ablehnen?')?>" href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p['username']) ?>">
+                            <?= Assets::img('icons/blue/decline', tooltip2(_('Wollen Sie die Mitgliedschaft wirklich ablehnen?'))) ?>
                         </a>
                     </td>
                 </tr>
@@ -110,7 +110,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     </td>
                     <td class="actions">
                         <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user=' . $p['username']) ?>">
-                            <?= Assets::img('icons/blue/trash', tooltip2(_('Verschickte Einladungen löschen'))) ?>
+                            <?= Assets::img('icons/blue/decline', tooltip2(_('Verschickte Einladungen löschen'))) ?>
                         </a>
                     </td>
                 </tr>

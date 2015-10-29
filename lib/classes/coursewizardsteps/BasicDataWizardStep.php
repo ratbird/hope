@@ -393,6 +393,7 @@ class BasicDataWizardStep implements CourseWizardStep
         } else {
             $search = 'user';
         }
+
         $psearch = new PermissionSearch($search,
             sprintf(_("%s hinzufügen"), get_title_for_status('dozent', 1, $course_type)),
             'user_id',

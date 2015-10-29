@@ -1,69 +1,81 @@
-/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
-/*global window, $, jQuery, _ */
+/*jslint browser: true, white: true, undef: true, nomen: true, plusplus: true, bitwise: true, newcap: true, indent: 4, unparam: true */
+/*global jQuery, STUDIP */
 
 /* ------------------------------------------------------------------------
  * Forms
  * ------------------------------------------------------------------------ */
 
-STUDIP.Forms = {
-    initialize : function () {
-        jQuery("input[required],textarea[required]").attr('aria-required', true);
-        jQuery("input[pattern][title],textarea[pattern][title]").each(function () {
-            jQuery(this).data('message', jQuery(this).attr('title'));
-        });
+(function ($, STUDIP) {
+    'use strict';
 
-        //localized messages
-        jQuery.tools.validator.localize('de', {
-            '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
-            ':radio'     : 'Bitte wählen Sie einen Wert aus.'.toLocaleString(),
-            ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
-            ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
-            ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
-            '[max]'      : 'Der eingegebene Wert darf nicht größer als $1 sein'.toLocaleString(),
-            '[min]'      : 'Der eingegebene Wert darf nicht kleiner als $1 sein'.toLocaleString(),
-            '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
-        });
-
-        jQuery('form').validator({
-            position   : 'bottom left',
-            offset     : [8, 0],
-            message    : '<div><div class="arrow"/></div>',
-            lang       : 'de',
-            inputEvent : 'change'
-        });
-
-        jQuery('form').bind("onBeforeValidate", function () {
-            jQuery("input").each(function () {
-                jQuery(this).removeAttr('aria-invalid');
+    STUDIP.Forms = {
+        initialize : function () {
+            $("input[required],textarea[required]").attr('aria-required', true);
+            $("input[pattern][title],textarea[pattern][title]").each(function () {
+                $(this).data('message', $(this).attr('title'));
             });
-        });
 
-        jQuery('form').bind("onFail", function (e, errors) {
-            jQuery.each(errors, function () {
-                this.input.attr('aria-invalid', 'true');
+            //localized messages
+            $.tools.validator.localize('de', {
+                '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+                ':radio'     : 'Bitte wählen Sie einen Wert aus.'.toLocaleString(),
+                ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
+                ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
+                ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
+                '[max]'      : 'Der eingegebene Wert darf nicht größer als $1 sein'.toLocaleString(),
+                '[min]'      : 'Der eingegebene Wert darf nicht kleiner als $1 sein'.toLocaleString(),
+                '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
             });
-        });
 
-        jQuery(document).on("change", "form.default label.file-upload input[type=file]", function (ev) {
-            var selected_file = ev.target.files[0];
-            if (jQuery(this).closest("label").find(".filename").length) {
-                var filename = jQuery(this).closest("label").find(".filename");
-            } else {
-                var filename = jQuery('<span class="filename"/>');
-                jQuery(this).closest("label").append(filename);
-            }
-            filename.text(selected_file.name + " " + Math.ceil(selected_file.size / 1024) + "KB");
-        });
-        jQuery(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
-            var maxlength = jQuery(this).attr("maxlength");
-            var length = jQuery(this).val().length;
-            if (jQuery(this).next().is(".maxlength")) {
-                var indicator = jQuery(this).next();
-            } else {
-                var indicator = jQuery('<div class="maxlength"/>');
-                jQuery(this).after(indicator);
-            }
-            indicator.text(maxlength - length);
-        }).find("form.default input[maxlength]").trigger("keyup");
-    }
-};
+            $('form').validator({
+                position   : 'bottom left',
+                offset     : [8, 0],
+                message    : '<div><div class="arrow"/></div>',
+                lang       : 'de',
+                inputEvent : 'change'
+            });
+
+            $('form').bind("onBeforeValidate", function () {
+                $("input").each(function () {
+                    $(this).removeAttr('aria-invalid');
+                });
+            });
+
+            $('form').bind("onFail", function (e, errors) {
+                $.each(errors, function () {
+                    this.input.attr('aria-invalid', 'true');
+                });
+            });
+
+            $(document).on("change", "form.default label.file-upload input[type=file]", function (ev) {
+                var selected_file = ev.target.files[0],
+                    filename;
+                if ($(this).closest("label").find(".filename").length) {
+                    filename = $(this).closest("label").find(".filename");
+                } else {
+                    filename = $('<span class="filename"/>');
+                    $(this).closest("label").append(filename);
+                }
+                filename.text(selected_file.name + " " + Math.ceil(selected_file.size / 1024) + "KB");
+            });
+            $(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
+                var maxlength = $(this).attr("maxlength"),
+                    length = $(this).val().length,
+                    indicator;
+                if ($(this).next().is(".maxlength")) {
+                    indicator = $(this).next();
+                } else {
+                    indicator = $('<div class="maxlength"/>');
+                    $(this).after(indicator);
+                }
+                indicator.text(maxlength - length);
+            }).find("form.default input[maxlength]").trigger("keyup");
+
+            $(document).on('click', 'form.default fieldset.collapsable legend,form.default.collapsable fieldset legend', function () {
+                $(this).closest('fieldset').toggleClass('collapsed');
+            });
+        }
+    };
+    
+}(jQuery, STUDIP));
+

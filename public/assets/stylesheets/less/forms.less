@@ -105,12 +105,13 @@ form.default {
     //Special inputs
 
     label.file-upload {
-        cursor: pointer;
-        padding-left: 30px;
-        background-image: url('../../../../assets/images/icons/blue/upload.svg');
+        .retina-background-icon('blue/upload.svg');
+
         background-repeat: no-repeat;
         background-position: top left;
         background-size: 20px 20px;
+        cursor: pointer;
+        padding-left: 30px;
         input[type=file] {
             display: none;
         }
@@ -120,6 +121,27 @@ form.default {
         }
     }
 
+    .js &.collapsable fieldset, fieldset.collapsable {
+        legend {
+            .box-sizing(border-box);
+            .retina-background-icon('blue/arr_1down.svg', 20);
+            background-position: 6px center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            padding-left: 20px;
+        }
+
+        &.collapsed {
+            legend {
+                .retina-background-icon('blue/arr_1right.svg', 20);
+                margin-bottom: 0;
+            }
+            padding-bottom: 0;
+            *:not(legend) {
+                display: none;
+            }
+        }
+    } 
 }
 
 .studip-checkbox {

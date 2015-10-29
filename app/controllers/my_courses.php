@@ -164,6 +164,7 @@ class MyCoursesController extends AuthenticatedController
 
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/seminar-sidebar.png');
+        $this->setSemesterWidget($sem);
         $setting_widget = new ActionsWidget();
 
         if ($new_contents) {
@@ -190,7 +191,6 @@ class MyCoursesController extends AuthenticatedController
 
         $setting_widget->addLink(_('Veranstaltung hinzufügen'), URLHelper::getLink('dispatch.php/search/courses'),'icons/16/blue/seminar.png');
         $sidebar->addWidget($setting_widget);
-        $this->setSemesterWidget($sem);
         $this->setGroupingSelector($this->group_field);
     }
 

@@ -47,7 +47,7 @@ if ($messages["error"] != "") {
             <?=_("Rollen-Template für die persönliche Kategorie:")?>
             </td>
             <td><input size="20" value="<?=$user_role_template_name ?>" name="role_template_name" type="text">
-            &nbsp; <?=Assets::img('icons/16/grey/info-circle.png', tooltip(_("Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\")."), TRUE, TRUE))?>
+            &nbsp; <?=Assets::img('icons/16/grey/info-circle.png', tooltip(_("Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von Lehrenden verwendet werden soll (z.B. \"Author\")."), TRUE, TRUE))?>
             </td>
         </tr>
         <tr>

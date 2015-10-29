@@ -69,7 +69,7 @@
 						<tr>
 							<td width="20%" bgcolor="#006699">
 								<b>
-									<font color="#FFFFFF">DozentIn</font>
+									<font color="#FFFFFF">Lehrende</font>
 									</b>
 								</td>
 								<td width="35%" bgcolor="#006699">

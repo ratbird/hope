@@ -266,7 +266,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $num_moved = 0;
                     foreach ($removed_applicants as $applicant) {
                         setTempLanguage($applicant->user_id);
-                        $message_body = sprintf(_('Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden.'),  $this->course->name);
+                        $message_body = sprintf(_('Die Warteliste der Veranstaltung **%s** wurde deaktiviert, Sie sind damit __nicht__ zugelassen worden.'),  $this->course->name);
                         $message_title = sprintf(_("Statusänderung %s"), $this->course->name);
                         messaging::sendSystemMessage($applicant->user_id, $message_title, $message_body);
                         restoreLanguage();
@@ -350,7 +350,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $num_moved = 0;
                     foreach ($this->course->admission_applicants->findBy('status', 'awaiting') as $applicant) {
                         setTempLanguage($applicant->user_id);
-                        $message_body = sprintf(_('Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden.'),  $this->course->name);
+                        $message_body = sprintf(_('Die Warteliste der Veranstaltung **%s** wurde deaktiviert, Sie sind damit __nicht__ zugelassen worden.'),  $this->course->name);
                         $message_title = sprintf(_("Statusänderung %s"), $this->course->name);
                         messaging::sendSystemMessage($applicant->user_id, $message_title, $message_body);
                         restoreLanguage();

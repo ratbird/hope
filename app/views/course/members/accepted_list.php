@@ -14,7 +14,7 @@
                                 'default_subject' => $subject))
                     ?>" data-dialog>
                         <?= Assets::img('icons/16/blue/inbox.png',
-                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten NutzerInnen')))?>
+                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten Nutzer/-innen')))?>
                     </a>
             </span>
             <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>

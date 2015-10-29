@@ -85,13 +85,13 @@ $UNI_INFO = "Kontakt:\nStud.IP Crew c/o data-quest Suchi & Berg GmbH\nFriedlände
 
 // define default names for status groups
 $DEFAULT_TITLE_FOR_STATUS = array(
-    'dozent'   => array(_('DozentIn'), _('DozentInnen')),
+    'dozent'   => array(_('Lehrende'), _('Lehrende')),
     'deputy'   => array(_('Vertretung'), _('Vertretungen')),
-    'tutor'    => array(_('TutorIn'), _('TutorInnen')),
-    'autor'    => array(_('AutorIn'), _('AutorInnen')),
-    'user'     => array(_('LeserIn'), _('LeserInnen')),
-    'accepted' => array(_('Vorläufig akzeptierte TeilnehmerIn'),
-                        _('Vorläufig akzeptierte TeilnehmerInnen')));
+    'tutor'    => array(_('Tutor/-in'), _('Tutor/-innen')),
+    'autor'    => array(_('Studierende'), _('Studierende')),
+    'user'     => array(_('Leser/-in'), _('Leser/-innen')),
+    'accepted' => array(_('Vorläufig akzeptierte Person'),
+                        _('Vorläufig akzeptierte Personen')));
 
 
 /*
@@ -172,7 +172,7 @@ $UPLOAD_TYPES["personalfiles"] =
 * define presets for the status-groups in courses (refers to the key of the $SEM_CLASS array above)
 * if none is given, the designations of $SEM_STATUS_GROUPS["default"] are used
 */
-$SEM_STATUS_GROUPS["default"] = array ("DozentInnen", "TutorInnen", "AutorInnen", "LeserInnen", "sonstige");    //the default. Don't delete this entry!
+$SEM_STATUS_GROUPS["default"] = array ("Lehrende", "Tutor/-innen", "Autor/-innen", "Leser/-innen", "sonstige");    //the default. Don't delete this entry!
 $SEM_STATUS_GROUPS["2"] = array ("Projektleitung", "Koordination", "Forschung", "Verwaltung", "sonstige");
 $SEM_STATUS_GROUPS["3"] = array ("Organisatoren", "Mitglieder", "Ausschu&szlig;mitglieder", "sonstige");
 $SEM_STATUS_GROUPS["4"] = array ("Moderatoren des Forums","Mitglieder", "sonstige");
@@ -198,9 +198,9 @@ $INST_TYPE[8]=array("name"=>_("Arbeitsgruppe"));
 * if none is given, the designations of $INST_STATUS_GROUPS["default"] are used
 */
 
-$INST_STATUS_GROUPS["default"] = array ("DirektorIn", "HochschullehrerIn", "Lehrbeauftragte", "Zweitmitglied", "wiss. Hilfskraft","wiss. MitarbeiterIn",
-                                    "stud. Hilfskraft", "Frauenbeauftragte", "Internetbeauftragte(r)", "StudentIn", "techn. MitarbeiterIn", "Sekretariat / Verwaltung",
-                                    "stud. VertreterIn");
+$INST_STATUS_GROUPS["default"] = array ("Direktor/-in", "Lehrende", "Lehrbeauftragte", "Zweitmitglied", "wiss. Hilfskraft","wiss. Mitarbeiter/-in",
+                                    "stud. Hilfskraft", "Frauenbeauftragte", "Internetbeauftragte(r)", "Studierende", "techn. Mitarbeiter/-in", "Sekretariat / Verwaltung",
+                                    "stud. Vertreter/-in");
 // ...can be continued accordingly
 
 

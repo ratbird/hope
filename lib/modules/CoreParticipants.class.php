@@ -85,8 +85,8 @@ class CoreParticipants implements StudipModule {
                 'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'displayname' => _('TeilnehmerInnen'),
             'keywords' => _('Rundmail an einzelne, mehrere oder alle Teilnehmenden;
-                            Gruppierung nach Lehrenden, TutorInnen und teilnehmenden Studierenden (AutorInnen);
-                            Aufnahme neuer teilnehmender Studierender (AutorInnen) und TutorInnen;
+                            Gruppierung nach Lehrenden, Tutor/-in und teilnehmenden Studierenden (Autor/-innen);
+                            Aufnahme neuer teilnehmender Studierender (Autor/-innen) und Tutor/-innen;
                             Import einer Teilnehmendenliste;
                             Export der Teilnehmendenliste;
                             Einrichten von Gruppen;

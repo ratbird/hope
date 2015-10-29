@@ -593,9 +593,9 @@ class Admin_CoursesController extends AuthenticatedController
             'name'        => _('Name'),
             'type'        => _('Veranstaltungstyp'),
             'room_time'   => _('Raum/Zeit'),
-            'teachers'    => _('DozentIn'),
-            'members'     => _('TeilnehmerInnen'),
-            'waiting'     => _('TeilnehmerInnen auf Warteliste'),
+            'teachers'    => _('Lehrende'),
+            'members'     => _('Teilnehmende'),
+            'waiting'     => _('Personen auf Warteliste'),
             'preliminary' => _('Vorläufige Anmeldungen'),
             'contents'    => _('Inhalt')
         );
@@ -684,7 +684,7 @@ class Admin_CoursesController extends AuthenticatedController
                     );
 
                     $seminars[$seminar_id]['teacher_search'] = MultiPersonSearch::get("add_member_dozent" . $seminar_id)
-                        ->setTitle(_('Mehrere DozentInnen hinzufügen'))
+                        ->setTitle(_('Mehrere Lehrende hinzufügen'))
                         ->setSearchObject($dozentUserSearch)
                         ->setDefaultSelectedUser(array_keys($dozenten))
                         ->setDataDialogStatus(Request::isXhr())

@@ -1886,7 +1886,7 @@ class Seminar
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($s_id));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->createMessage(sprintf(_("%s VeranstaltungsteilnehmerInnen, DozentInnen oder TutorInnen archiviert."), $db_ar));
+            $this->createMessage(sprintf(_("%s Teilnehmende und Lehrende archiviert."), $db_ar));
         }
 
         // Alle Benutzer aus Wartelisten rauswerfen

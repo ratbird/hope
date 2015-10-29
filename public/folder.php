@@ -940,7 +940,7 @@ if ($question) {
 
     if ($folder_system_data["cmd"]=="all") {
         print "<p class=\"info\">";
-        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen möchten, wählen Sie bitte die Ordneransicht und öffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]);
+        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Um eine neue Datei hoch zu laden, wählen Sie bitte links die Ordneransicht."), $SessSemName["art_generic"]);
         print "</p>";
     }
 

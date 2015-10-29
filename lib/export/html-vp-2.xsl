@@ -258,7 +258,7 @@
 		</xsl:if>
 		<tr>
 			<td>
-				<b>DozentIn: </b>
+				<b>Lehrende: </b>
 			</td>
 			<td>
 				<xsl:for-each select="dozenten/dozent">

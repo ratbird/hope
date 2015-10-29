@@ -118,7 +118,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                             <span class="actions">
                                 <?
                                 $mps_dozent = MultiPersonSearch::get("add_member_dozent" . $course_id)
-                                    ->setTitle(_('Mehrere DozentInnen hinzufügen'))
+                                    ->setTitle(_('Mehrere Lehrende hinzufügen'))
                                     ->setSearchObject($dozentUserSearch)
                                     ->setDefaultSelectedUser(array_keys($dozenten))
                                     ->setDataDialogStatus(Request::isXhr())
@@ -178,7 +178,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                             <? $num++; endforeach ?>
                     <? else : ?>
                         <tr>
-                            <td colspan="6" style="text-align: center"><?= _('Keine DozentInnen eingetragen') ?></td>
+                            <td colspan="6" style="text-align: center"><?= _('Keine Lehrenden eingetragen') ?></td>
                         </tr>
                     <? endif ?>
                     </tbody>
@@ -249,7 +249,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                             <span class="actions">
                         <?
                         $mps_tutor = MultiPersonSearch::get("add_member_tutor" . $course_id)
-                            ->setTitle(_('Mehrere TutorInnen hinzufügen'))
+                            ->setTitle(_('Mehrere Tutor/-innen hinzufügen'))
                             ->setSearchObject($tutorUserSearch)
                             ->setDefaultSelectedUser(array_keys($tutoren))
                             ->setDataDialogStatus(Request::isXhr())
@@ -307,7 +307,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                             <? $num++; endforeach ?>
                     <? else : ?>
                         <tr>
-                            <td colspan="4" style="text-align: center"><?= _('Keine TutorInnen eingetragen') ?></td>
+                            <td colspan="4" style="text-align: center"><?= _('Keine Tutor/-innen eingetragen') ?></td>
                         </tr>
                     <? endif ?>
                     </tbody>

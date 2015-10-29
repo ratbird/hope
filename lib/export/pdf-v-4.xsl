@@ -268,7 +268,7 @@ MitarbeiterInnenliste
 				</fo:block>
 			</xsl:if>
 			<fo:block text-align="justify" font-size="12pt">
-				<fo:inline font-weight="bold">DozentIn: </fo:inline>
+				<fo:inline font-weight="bold">Lehrende: </fo:inline>
 				<xsl:for-each select="dozenten/dozent">
 					<xsl:if test="position() &gt; 1">
 						<xsl:text>, </xsl:text>

@@ -66,7 +66,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
             "order" => "|0|1|2|3|4|5|6|7",
             "visible" => "|0|1|0|1|1|1|1|1",
             "aliases" => "|"._("Veranstaltungsnummer")."|"._("Titel")."|"._("Untertitel")."|"._("Status")
-                    ."|"._("Ort")."|"._("Veranstaltungsart")."|"._("Zeiten")."|"._("DozentIn"),
+                    ."|"._("Ort")."|"._("Veranstaltungsart")."|"._("Zeiten")."|"._("Lehrende"),
             "width" => "|0%|15%|0%|10%|15%|20%|25%|15%",
             "widthpp" => "",
             "grouping" => "3",
@@ -83,7 +83,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
             "textlectures" => " " . _("Veranstaltungen"),
             "textgrouping" => _("Gruppierung:") . " ",
             "textnogroups" => _("keine Studienbereiche eingetragen"),
-            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("DozentIn")."|"
+            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("Lehrende)."|"
                     ._("Typ")."|"._("Einrichtung"),
             "wholesite" => "",
             "nameformat" => "",
@@ -139,7 +139,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
         $title = _("Gruppierung:");
         $info = _("Wählen Sie, wie die Veranstaltungen gruppiert werden sollen.");
         $values = array("0", "1", "2", "3", "4");
-        $names = array(_("Semester"), _("Bereich"), _("DozentIn"),
+        $names = array(_("Semester"), _("Bereich"), _("Lehrende),
                 _("Typ"), _("Einrichtung"));
         $table = $edit_form->editOptionGeneric("grouping", $title, $info, $values, $names);
         
@@ -240,7 +240,7 @@ class ExternElementMainLecturestable extends ExternElementMain {
         $info = _("Geben Sie einen Text ein, der Angezeigt wird, wenn Lehrveranstaltungen vorliegen, die keinem Bereich zugeordnet sind. Nur wirksam in Gruppierung nach Bereich.");
         $table .= $edit_form->editTextfieldGeneric("textnogroups", $title, $info, 40, 150);
         
-        $titles = array(_("Semester"), _("Bereich"), _("DozentIn"), _("Typ"), _("Einrichtung"));
+        $titles = array(_("Semester"), _("Bereich"), _("Lehrende"), _("Typ"), _("Einrichtung"));
         $info = _("Geben Sie eine Bezeichnung für die entsprechende Gruppierungsart ein.");
         $table .= $edit_form->editTextfieldGeneric("aliasesgrouping", $titles, $info, 40, 150);
         

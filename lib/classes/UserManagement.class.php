@@ -818,7 +818,7 @@ class UserManagement
         }
 
         if ($active_count) {
-            $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gelöscht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
+            $this->msg .= sprintf("error§" . _("<em>%s</em> ist Lehrkraft in %s aktiven Veranstaltungen und kann daher nicht gelöscht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
             return FALSE;
 
         //founder of studygroup?

@@ -236,7 +236,7 @@ class Course_BasicdataController extends AuthenticatedController
 
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
-            'title' => _("Teilnehmer/-innen"),
+            'title' => _("Teilnehmde"),
             'name' => "course_participants",
             'type' => 'textarea',
             'value' => $data['participants'],
@@ -322,7 +322,7 @@ class Course_BasicdataController extends AuthenticatedController
         if ($this->deputies_enabled) {
             if (isDeputy($user->id, $this->course_id)) {
                 $newstatus = 'dozent';
-                $text = _('Dozent/-in werden');
+                $text = _('Lehrende werden');
             } else if (in_array($user->id, array_keys($this->dozenten)) && sizeof($this->dozenten) > 1) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');

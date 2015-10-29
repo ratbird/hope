@@ -87,36 +87,36 @@ $xslt_files["rtf-standard"]["person"] = true;
 $xslt_files["rtf-standard"]["veranstaltung"] = true;
 
 $xslt_files["rtf-liste"]["name"] = _("Übersicht");
-$xslt_files["rtf-liste"]["desc"] = _("Modul zur Ausgabe von Personen- oder Veranstaltungsdaten als RTF-Datei. Es werden nur die Grunddaten in eine Tabelle geschrieben (DozentInnen, Titel, Status, Termin und Raum bzw.Name, Telefon, Sprechzeiten, Raum, E-Mail). Ein Deckblatt wird automatisch erzeugt. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-liste"]["desc"] = _("Modul zur Ausgabe von Personen- oder Veranstaltungsdaten als RTF-Datei. Es werden nur die Grunddaten in eine Tabelle geschrieben (Lehrende, Titel, Status, Termin und Raum bzw.Name, Telefon, Sprechzeiten, Raum, E-Mail). Ein Deckblatt wird automatisch erzeugt. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-liste"]["file"] = "rtf-vp-2.xsl";
 $xslt_files["rtf-liste"]["rtf"] = true;
 $xslt_files["rtf-liste"]["person"] = true;
 $xslt_files["rtf-liste"]["veranstaltung"] = true;
 
 $xslt_files["rtf-kommentar"]["name"] = _("Vorlesungskommentar");
-$xslt_files["rtf-kommentar"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungskommentar im Rich-Text-Format. Der Kommentar enthält die Veranstaltungs-Details-Daten. Es wird automatisch ein Deckblatt generiert. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-kommentar"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungskommentar im Rich-Text-Format. Der Kommentar enthält die Veranstaltungsdetails. Es wird automatisch ein Deckblatt generiert. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-kommentar"]["file"] = "rtf-vp-3.xsl";
 $xslt_files["rtf-kommentar"]["rtf"] = true;
 $xslt_files["rtf-kommentar"]["veranstaltung"] = true;
 
 $xslt_files["rtf-kommentar-2"]["name"] = _("Vorlesungskommentar mit Veranstaltungsnummern");
-$xslt_files["rtf-kommentar-2"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungskommentar im Rich-Text-Format. Der Kommentar enthält die Veranstaltungs-Details-Daten. Es wird automatisch ein Deckblatt generiert. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-kommentar-2"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungskommentar im Rich-Text-Format. Der Kommentar enthält die Veranstaltungs-Details. Es wird automatisch ein Deckblatt generiert. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-kommentar-2"]["file"] = "rtf-v-4.xsl";
 $xslt_files["rtf-kommentar-2"]["rtf"] = true;
 $xslt_files["rtf-kommentar-2"]["veranstaltung"] = true;
 
 $xslt_files["rtf-teiln"]["name"] = _("TeilnehmerInnenliste");
-$xslt_files["rtf-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-teiln"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Personendaten inkl. Studiengänge und Kontingente werden in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-teiln"]["file"] = "rtf-t-1.xsl";
 $xslt_files["rtf-teiln"]["rtf"] = true;
 
 $xslt_files["rtf-gruppen"]["name"] = _("Liste der Guppen und Funktionen");
-$xslt_files["rtf-gruppen"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-gruppen"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Personendaten werden in eine Tabelle geschrieben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-gruppen"]["file"] = "rtf-t-2.xsl";
 $xslt_files["rtf-gruppen"]["rtf"] = true;
 
 $xslt_files["rtf-warteliste"]["name"] = _("Warteliste");
-$xslt_files["rtf-warteliste"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Es werden die Grunddaten der Personen auf der Warteliste einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
+$xslt_files["rtf-warteliste"]["desc"] = _("Modul zur Ausgabe von Personendaten als RTF-Datei. Personen der Warteliste einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studiengänge ausgegeben. Die Ausgabe-Datei kann in einer Textverarbeitung bearbeitet werden.");
 $xslt_files["rtf-warteliste"]["file"] = "rtf-t-3.xsl";
 $xslt_files["rtf-warteliste"]["rtf"] = true;
 
@@ -146,7 +146,7 @@ $xslt_files["pdf-staff"]["fo"] = true;
 $xslt_files["pdf-staff"]["person"] = true;
 
 $xslt_files["pdf-liste"]["name"] = _("Vorlesungsverzeichnis");
-$xslt_files["pdf-liste"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungsverzeichnis im Adobe PDF-Format. Die Grunddaten der Veranstaltungen (DozentInnen, Titel, Status, erster Termin und Raum) werden in einer Tabelle angezeigt. Es wird automatisch ein Deckblatt und ein Inhaltsverzeichnis generiert. Die Datei kann mit dem Acrobat Reader gelesen werden.");
+$xslt_files["pdf-liste"]["desc"] = _("Modul zur Ausgabe von Veranstaltungsdaten als Vorlesungsverzeichnis im Adobe PDF-Format. Die Grunddaten der Veranstaltungen (Lehrende, Titel, Status, erster Termin und Raum) werden in einer Tabelle angezeigt. Es wird automatisch ein Deckblatt und ein Inhaltsverzeichnis generiert. Die Datei kann mit dem Acrobat Reader gelesen werden.");
 $xslt_files["pdf-liste"]["file"] = "pdf-v-3.xsl";
 $xslt_files["pdf-liste"]["fo"] = true;
 

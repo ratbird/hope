@@ -178,7 +178,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "<b>" . _("Rollen-Template für die persönliche Kategorie: ") . "</b>";
         echo "</td><td>";
         echo "<input type=\"text\" size=\"20\" border=0 value=\"" . ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type) . "\" name=\"role_template_name\">&nbsp;";
-        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\").')));
+        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von Lehrenden verwendet werden soll (z.B. \"Author\").')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo " (ID " . $this->user_role_template_id;
         echo ")";

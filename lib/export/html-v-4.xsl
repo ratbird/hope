@@ -155,7 +155,7 @@
 		</xsl:if>
 		<tr>
 			<td bgcolor="#EEEEEE">
-				<b>DozentIn: </b>
+				<b>Lehrende: </b>
 			</td>
 			<td bgcolor="#EEEEEE">
 				<xsl:for-each select="dozenten/dozent">

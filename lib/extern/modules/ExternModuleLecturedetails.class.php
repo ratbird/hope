@@ -68,7 +68,7 @@ class ExternModuleLecturedetails extends ExternModule {
         $this->args = array('seminar_id');
         $this->field_names = array(
                 _("Untertitel"),
-                _("DozentIn"),
+                _("Lehrende"),
                 _("Veranstaltungsart"),
                 _("Veranstaltungstyp"),
                 _("Beschreibung"),

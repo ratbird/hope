@@ -93,14 +93,14 @@
             <th><?= _('Raum/Zeit') ?></th>
         <? endif ?>
         <? if (in_array('teachers', $view_filter)) : ?>
-            <th><?= _('DozentIn') ?></th>
+            <th><?= _('Lehrende') ?></th>
         <? endif ?>
         <? if (in_array('members', $view_filter)) : ?>
             <th <?= ($sortby == 'teilnehmer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=
                 URLHelper::getLink('', array('sortby'   => 'teilnehmer',
                                              'sortFlag' => strtolower($sortFlag))) ?>">
-                    <abbr title="<?= _('Teilnehmer/-innen') ?>">
+                    <abbr title="<?= _('Teilnehmende') ?>">
                         <?= _('TN') ?>
                     </abbr>
                 </a>

@@ -26,8 +26,8 @@ $infobox['content'][] = array(
         array(
             'text' => _("Hier können Sie festlegen, dass Sie die ".
                 "Veranstaltung aus der Sicht einer Person sehen wollen, ".
-                "die nicht Dozent/-in ist und somit überprüfen, wie ".
-                "für Ihre Teilnehmer/-innen die Veranstaltung aussieht."),
+                "die nicht Lehrende ist und somit überprüfen, wie ".
+                "für Ihre Teilnehmende die Veranstaltung aussieht."),
             "icon" => "icons/16/black/info.png"
          )
      )
@@ -57,17 +57,17 @@ header('Location: '.$controller->url_for('course/change_view/set?cid='.Request::
             <?= Button::create(_('Übernehmen'), 'set_seminar_view', array('title' => _('Ansicht der Veranstaltung zurücksetzen'))) ?>
             <br/>
             <?= _('Wenn Sie hier eine Berechtigungsstufe auswählen, werden Sie '.
-                'die Veranstaltung genauso sehen, wie es eine/e Teilnehmer/-in '.
-                'mit dieser Berechtigung tut.'); ?>
+                'die Veranstaltung genauso sehen wie Teilnehmende'.
+                'mit dieser Berechtigung.'); ?>
             <br/><br/>
-            <?= _('Ihre gewohnte Ansicht als Dozent/-in können Sie auf dieser '.
+            <?= _('Ihre gewohnte Ansicht können Sie auf dieser '.
                 'Seite wieder einstellen.'); ?>
         <?php } else { ?>
-            <?= _('Veranstaltung wieder auf die normale Ansicht für Dozent/-innen zurücksetzen:') ?>
+            <?= _('Veranstaltung wieder auf die normale Ansicht für zurücksetzen:') ?>
             <input type="hidden" name="cid" value="<?= Request::get('cid'); ?>"/>
             <?= Button::create(_('Übernehmen'), 'set_seminar_view') ?>
             <br/><br/>
-            <?= _('Durch Klick auf "übernehmen" sehen Sie die Veranstaltung wieder als Dozent/-in.'); ?>
+            <?= _('Durch Klick auf "übernehmen" sehen Sie die Veranstaltung wieder aus Lehrendensicht.'); ?>
         <?php } ?>
         </form>
         </div>

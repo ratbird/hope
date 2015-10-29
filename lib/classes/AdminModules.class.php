@@ -93,7 +93,7 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["documents_folder_permissions"]['preconditions'] = array('documents');
         $this->registered_modules["documents_folder_permissions"]['metadata'] = array(
                 'summary' => _("Dateiordnerberechtigungen"),
-                'descriptionshort' => _("Vergabe von Rechten für Dateiordner an teilnehmende Studierende (AutorInnen)"),
+                'descriptionshort' => _("Vergabe von Rechten für Dateiordner an teilnehmende Studierende (Autor/-innen)"),
                 'category' => _("Lehr- und Lernorganisation"),
                 'keywords' => _('Das Recht "Lesen" (r): Dateien können geöffnet und heruntergeladen werden;
                                 Das Recht "Schreiben" (w): Studierende können Dateien hochladen;

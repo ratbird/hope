@@ -560,19 +560,19 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         if (!in_array($filter, words('awaiting claiming'))) {
             if (!$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['workgroup_mode']) {
                 $gruppe = array(
-                    'dozent'   => _('DozentInnen'),
-                    'tutor'    => _('TutorInnen'),
-                    'autor'    => _('AutorInnen'),
-                    'user'     => _('LeserInnen'),
-                    'accepted' => _('Vorläufig akzeptierte TeilnehmerInnen')
+                    'dozent'   => _('Lehrende'),
+                    'tutor'    => _('Tutor/-innen'),
+                    'autor'    => _('Studierende'),
+                    'user'     => _('Leser/-innen'),
+                    'accepted' => _('Vorläufig akzeptierte Personen')
                 );
             } else {
                 $gruppe = array(
-                    'dozent'   => _('LeiterInnen'),
+                    'dozent'   => _('Leitung'),
                     'tutor'    => _('Mitglieder'),
-                    'autor'    => _('AutorInnen'),
-                    'user'     => _('LeserInnen'),
-                    'accepted' => _('Vorläufig akzeptierte TeilnehmerInnen')
+                    'autor'    => _('Autor/-innen'),
+                    'user'     => _('Leser/-innen'),
+                    'accepted' => _('Vorläufig akzeptierte Personen')
                 );
             }
         } else {

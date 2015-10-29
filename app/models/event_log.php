@@ -31,7 +31,7 @@ class EventLog
         return array(
             'course'    => _('Veranstaltung'),
             'institute' => _('Einrichtung'),
-            'user'      => _('BenutzerIn'),
+            'user'      => _('Nutzer/-in'),
             'resource'  => _('Ressource'),
             'other'     => _('Sonstige (von Aktion abhängig)')
         );

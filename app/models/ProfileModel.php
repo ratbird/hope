@@ -262,22 +262,22 @@ class ProfileModel
                 return _('alle');
                 break;
             case 'root':
-                return _('SystemadministratorInnen');
+                return _('Systemadministrator/-innen');
                 break;
             case 'admin':
-                return _('AdministratorInnen');
+                return _('Administrator/-innen');
                 break;
             case 'dozent':
-                return _('DozentInnen');
+                return _('Lehrenden');
                 break;
             case 'tutor':
-                return _('TutorInnen');
+                return _('Tutor/-innen');
                 break;
             case 'autor':
                 return _('Studierenden');
                 break;
             case 'user':
-                return _('NutzerInnen');
+                return _('Nutzer/-innen');
                 break;
         }
         return '';

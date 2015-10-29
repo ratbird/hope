@@ -409,7 +409,7 @@ class MyCoursesController extends AuthenticatedController
         if ($GLOBALS['perm']->have_perm('admin')) {
             throw new AccessDeniedException();
         }
-        PageLayout::postMessage(MessageBox::error(_('Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten.')));
+        PageLayout::postMessage(MessageBox::error(_('Das Abonnement ist bindend. Bitte wenden Sie sich an die Lehrenden.')));
         $this->redirect('my_courses/index');
     }
 
@@ -439,7 +439,7 @@ class MyCoursesController extends AuthenticatedController
 
             if ($current_seminar->admission_binding && Request::get('cmd') != 'suppose_to_kill_admission' && !LockRules::Check($current_seminar->getId(), 'participants')) {
                 PageLayout::postMessage(MessageBox::error(sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt.
-                    Wenn Sie sich austragen wollen, müssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."),
+                    Wenn Sie sich austragen wollen, müssen Sie sich an die Lehrende der Veranstaltung wenden."),
                     htmlReady($current_seminar->name))));
                 $this->redirect('my_courses/index');
                 return;

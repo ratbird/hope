@@ -68,7 +68,7 @@ class ExternModuleLecturestable extends ExternModule {
                 _("Ort"),
                 _("Art"),
                 _("Zeiten"),
-                _("DozentIn")
+                _("Lehrende")
         );
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
     }

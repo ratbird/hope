@@ -89,7 +89,7 @@
 
             <? elseif ($values["binding"]) : ?>
                 <a href="<?= $controller->url_for('my_courses/decline_binding') ?>">
-                    <?= Assets::img('icons/20/grey/decline/door-leave.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
+                    <?= Assets::img('icons/20/grey/decline/door-leave.png', tooltip2(_("Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden."))) ?>
                 </a>
             <?
             else : ?>

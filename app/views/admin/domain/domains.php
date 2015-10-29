@@ -10,7 +10,7 @@
     <?= _('ID') ?>
   </th>
   <th style="width: 15%;">
-    <?= _('NutzerInnen') ?>
+    <?= _('Nutzer/-innen') ?>
   </th>
   <th class="aktions" style="width: 10%;">
     <?= _('Aktionen') ?>

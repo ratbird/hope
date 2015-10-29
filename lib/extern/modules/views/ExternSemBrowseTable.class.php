@@ -55,7 +55,7 @@ class ExternSemBrowseTable extends SemBrowse {
         
         $this->group_by_fields = array( array('name' => _("Semester"), 'group_field' => 'sem_number'),
                                         array('name' => _("Bereich"), 'group_field' => 'bereich'),
-                                        array('name' => _("DozentIn"), 'group_field' => 'fullname', 'unique_field' => 'username'),
+                                        array('name' => _("Lehrende"), 'group_field' => 'fullname', 'unique_field' => 'username'),
                                         array('name' => _("Typ"), 'group_field' => 'status'),
                                         array('name' => _("Einrichtung"), 'group_field' => 'Institut', 'unique_field' => 'Institut_id'));
 

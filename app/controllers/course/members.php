@@ -67,7 +67,7 @@ class Course_MembersController extends AuthenticatedController
 
 
         // Layoutsettings
-        PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("TeilnehmerInnen")));
+        PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("Teilnehmende")));
         PageLayout::addScript('members.js');
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
@@ -88,8 +88,8 @@ class Course_MembersController extends AuthenticatedController
             'autor' => get_title_for_status('autor', 2),
             'user' => get_title_for_status('user', 2),
             'accepted' => get_title_for_status('accepted', 2),
-            'awaiting' => _("Wartende NutzerInnen"),
-            'claiming' => _("Wartende NutzerInnen")
+            'awaiting' => _("Wartende Personen"),
+            'claiming' => _("Wartende Personen")
         );
 
         // StatusGroups for the view
@@ -315,9 +315,9 @@ class Course_MembersController extends AuthenticatedController
         }
 
         if ($countAdded == 1) {
-            $text = _("Es wurde ein/e neue/r AutorIn hinzugefügt.");
+            $text = _("Es wurde ein/e neue/r Autor/-in hinzugefügt.");
         } else {
-            $text = sprintf(_("Es wurden %s neue AutorenInnen hinzugefügt."), $countAdded);
+            $text = sprintf(_("Es wurden %s neue Autoren/-innen hinzugefügt."), $countAdded);
         }
         PageLayout::postMessage(MessageBox::success($text));
         $this->redirect('course/members/index');
@@ -331,7 +331,7 @@ class Course_MembersController extends AuthenticatedController
     {
         // Security Check
         if (!$this->is_dozent) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht bereichtig, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         // load MultiPersonSearch object
@@ -361,7 +361,7 @@ class Course_MembersController extends AuthenticatedController
     {
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         // load MultiPersonSearch object
@@ -678,7 +678,7 @@ class Course_MembersController extends AuthenticatedController
                             $csv_count_insert++;
                             setTempLanguage($this->user_id);
 
-                            $message = sprintf(_('Sie wurden als TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
+                            $message = sprintf(_('Sie wurden in die Veranstaltung **%s** eingetragen.'), $this->course_title);
 
                             restoreLanguage();
                             $messaging->insert_message($message, $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'), _('Eintragung in Veranstaltung')), TRUE);
@@ -703,11 +703,9 @@ class Course_MembersController extends AuthenticatedController
                         $csv_count_insert++;
                         setTempLanguage($this->user_id);
                         if ($GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$_SESSION['SessSemName']['art_num']]['class']]['workgroup_mode']) {
-                            $message = sprintf(_('Sie wurden von einem/r LeiterIn oder AdministratorIn als
-                                TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
+                            $message = sprintf(_('Sie wurden manuell in die Veranstaltung **%s** eingetragen.'), $this->course_title);
                         } else {
-                            $message = sprintf(_('Sie wurden vom einem/r DozentIn oder AdministratorIn als
-                                TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
+                            $message = sprintf(_('Sie wurden manuell in die Veranstaltung **%s** eingetragen.'), $this->course_title);
                         }
                         restoreLanguage();
                         $messaging->insert_message($message, $selected_user, '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'), _('Eintragung in Veranstaltung')), TRUE);
@@ -720,23 +718,23 @@ class Course_MembersController extends AuthenticatedController
 
         // no results
         if (!sizeof($csv_lines) && !sizeof($selected_users)) {
-            PageLayout::postMessage(MessageBox::error(_("Keine NutzerIn gefunden!")));
+            PageLayout::postMessage(MessageBox::error(_("Niemanden gefunden!")));
         }
 
         if ($csv_count_insert) {
-            PageLayout::postMessage(MessageBox::success(sprintf(_('%s NutzerInnen als AutorIn in die Veranstaltung
+            PageLayout::postMessage(MessageBox::success(sprintf(_('%s Personen in die Veranstaltung
                 eingetragen!'), $csv_count_insert)));
         }
 
         if ($csv_count_present) {
-            PageLayout::postMessage(MessageBox::info(sprintf(_('%s NutzerInnen waren bereits in der Veranstaltung
+            PageLayout::postMessage(MessageBox::info(sprintf(_('%s Personen waren bereits in der Veranstaltung
                 eingetragen!'), $csv_count_present)));
         }
 
         // redirect to manual assignment
         if ($csv_mult_founds) {
-            PageLayout::postMessage(MessageBox::info(sprintf(_('%s NutzerInnen konnten <b>nicht eindeutig</b>
-                zugeordnet werden! Nehmen Sie die Zuordnung manuell vor.'), $csv_count_multiple)));
+            PageLayout::postMessage(MessageBox::info(sprintf(_('%s Personen konnten <b>nicht eindeutig</b>
+                zugeordnet werden! Nehmen Sie die Zuordnung bitte manuell vor.'), $csv_count_multiple)));
             $this->flash['csv_mult_founds'] = $csv_mult_founds;
             $this->redirect('course/members/csv_manual_assignment');
             return;
@@ -746,7 +744,7 @@ class Course_MembersController extends AuthenticatedController
         }
 
         if ($csv_count_contingent_full) {
-            PageLayout::postMessage(MessageBox::error(sprintf(_('%s NutzerInnen konnten <b>nicht</b> zugeordnet werden,
+            PageLayout::postMessage(MessageBox::error(sprintf(_('%s Personen konnten <b>nicht</b> zugeordnet werden,
                 da das ausgewählte Kontingent keine freien Plätze hat.'), $csv_count_contingent_full)));
         }
 
@@ -763,7 +761,7 @@ class Course_MembersController extends AuthenticatedController
         global $perm;
         // Security. If user not autor, then redirect to index
         if (!$perm->have_studip_perm('tutor', $this->course_id)) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         if (empty($this->flash['csv_mult_founds'])) {
@@ -780,8 +778,8 @@ class Course_MembersController extends AuthenticatedController
         global $perm;
         // Security. If user not autor, then redirect to index
         if ($perm->have_studip_perm('tutor', $this->course_id)) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie sind nicht berechtigt
+                auf diesen Teil des Systems zuzugreifen');
         }
 
         // Check for visibile mode
@@ -812,7 +810,7 @@ class Course_MembersController extends AuthenticatedController
     public function edit_tutor_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
         CSRFProtection::verifyUnsafeRequest();
 
@@ -847,7 +845,7 @@ class Course_MembersController extends AuthenticatedController
     public function edit_autor_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
         CSRFProtection::verifyUnsafeRequest();
 
@@ -894,8 +892,8 @@ class Course_MembersController extends AuthenticatedController
     public function edit_user_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie sind nicht berechtigt,
+                auf diesen Teil des Systems zuzugreifen');
         }
         CSRFProtection::verifyUnsafeRequest();
 
@@ -941,7 +939,7 @@ class Course_MembersController extends AuthenticatedController
     public function edit_awaiting_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
         CSRFProtection::verifyUnsafeRequest();
 
@@ -1055,7 +1053,7 @@ class Course_MembersController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::error($message));
             }
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Sie haben keine Nutzer zum Hochstufen ausgewählt.')));
+            PageLayout::postMessage(MessageBox::error(_('Sie haben niemanden zum Hochstufen ausgewählt.')));
         }
 
         $this->redirect('course/members/index');
@@ -1071,8 +1069,8 @@ class Course_MembersController extends AuthenticatedController
     public function cancel_subscription_action($cmd, $status, $user_id = null)
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie sind nicht berechtigt,
+                auf diesen Teil des Systems zuzugreifen');
         }
 
         if (!Request::submitted('no')) {
@@ -1133,12 +1131,12 @@ class Course_MembersController extends AuthenticatedController
 
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie sind nicht berechtigt, auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         if ($this->is_tutor && $perm->have_studip_perm('tutor', $this->course_id) && $next_status != 'autor' && !$perm->have_studip_perm('dozent', $this->course_id)) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie sind nicht berechtigt,
+                auf diesen Teil des Systems zuzugreifen');
         }
 
         // create a usable array
@@ -1521,13 +1519,13 @@ class Course_MembersController extends AuthenticatedController
                 $widget = new ExportWidget();
 
                 // create csv-export link
-                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('TeilnehmerInnen-Liste als csv-Dokument exportieren'), 'passthrough');
-                $widget->addLink(_('TeilnehmerInnen-Liste als csv-Dokument exportieren'),
+                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('Teilnehmendenliste als csv-Dokument exportieren'), 'passthrough');
+                $widget->addLink(_('Teilnehmendenliste als CSV-Dokument exportieren'),
                                  $this->parseHref($csvExport),
                                  'icons/16/blue/file-office.png');
                 // create csv-export link
                 $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen-Liste als rtf-Dokument exportieren'), 'passthrough');
-                $widget->addLink(_('TeilnehmerInnen-Liste als rtf-Dokument exportieren'),
+                $widget->addLink(_('Teilnehmendenliste als rtf-Dokument exportieren'),
                                  $this->parseHref($rtfExport),
                                  'icons/16/blue/file-text.png');
 

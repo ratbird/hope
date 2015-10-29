@@ -107,9 +107,9 @@
     <fieldset>
         <legend><?= _("Beschränkte Teilnehmeranzahl")?></legend>
         <div>
-            <?=_("Bitte geben Sie hier an, wieviele Teilnehmer maximal für die Veranstaltung vorgesehen sind, und ob eine Warteliste erstellt werden soll, falls die Anmeldungen die maximale Teilnehmeranzahl überschreiten."); ?>
+            <?=_("Bitte geben Sie hier an, wieviele Personen maximal für die Veranstaltung vorgesehen sind, und ob eine Warteliste erstellt werden soll, falls die Zahl der Anmeldungen die maximale Personenzahl überschreitet."); ?>
         </div>
-        <label class="caption"><?=_("max. Teilnehmeranzahl:")?></label>
+        <label class="caption"><?=_("max. Anzahl:")?></label>
         <label for="admission_turnout">
         <input type="text" name="admission_turnout" id="admission_turnout" style="display:inline" value="<?= $course->admission_turnout ?>" >
         <?= sprintf(_("(%s freie Plätze)"), $course->getFreeSeats()) ?></label>
@@ -156,7 +156,7 @@
               <label class="caption"><?=_("verbindliche Anmeldung:")?></label>
               <label for="admission_binding">
               <input <?=$is_locked['admission_binding'] ?> id="admission_binding" type="checkbox" <?= ($course->admission_binding == 1 ? "checked" : ""); ?> name="admission_binding"  value="1">
-              <?=_("Anmeldung ist <u>verbindlich</u>. (Teilnehmer können sich nicht austragen.)")?></label>
+              <?=_("Anmeldung ist <u>verbindlich</u>. (Teilnehmerinnen und Teilnehmer können sich nicht selbst wieder abmelden.)")?></label>
               <?= Studip\Button::create(_("Anmeldemodus ändern"), 'change_admission_prelim', array('data-dialog' => '')) ?>
     </fieldset>
 </form>
@@ -165,21 +165,21 @@
 <form class="studip_form" action="<?= $controller->link_for('/change_free_access') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
     <fieldset>
-        <legend><?= _("freier Zugriff")?></legend>
+        <legend><?= _("Freier Zugriff")?></legend>
         <div>
-        <?= _("Legen Sie hier fest, ob nicht angemeldete Nutzer Zugriff haben sollen."); ?>
+        <?= _("Sollen Personen Zugriff auf die Veranstaltung haben, die nicht in Stud.IP angemeldet sind?"); ?>
         </div>
         <div style="display: inline-block;padding:1ex;width:50%">
         <label class="caption"><?= _("Lesezugriff") ?></label>
         <label for="lesezugriff">
         <input <?=$is_locked['read_level'] ?> id="lesezugriff" type="checkbox" <?= ($course->lesezugriff == 0 ? "checked" : ""); ?> name="read_level"  value="1">
-        <?= _("Lesezugriff für nicht angemeldete Nutzer erlauben") ?></label>
+        <?= _("Lesezugriff für nicht angemeldete Personen erlauben") ?></label>
         </div>
         <div style="display: inline-block;padding:1ex;">
         <label class="caption"><?= _("Schreibzugriff") ?></label>
         <label for="schreibzugriff">
         <input <?=$is_locked['write_level'] ?> id="schreibzugriff" type="checkbox" <?= ($course->schreibzugriff == 0 ? "checked" : ""); ?> name="write_level"  value="1">
-        <?= _("Schreibzugriff für nicht angemeldete Nutzer erlauben") ?></label>
+        <?= _("Schreibzugriff für nicht angemeldete Personen erlauben") ?></label>
         </div>
         <?= Studip\Button::create(_("Freien Zugriff ändern"), 'change_free_access') ?>
     </fieldset>

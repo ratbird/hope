@@ -183,7 +183,7 @@ $the_tree->showSemTree();
     <td><span style="font-size:10pt"><?=_("Kommentar:")?></span></td><td style="font-size:10pt"><?=$search_obj->getSearchField("comment")?></td>
     </tr>
     <tr>
-    <td><span style="font-size:10pt"><?=_("DozentIn:")?></span></td><td style="font-size:10pt"><?=$search_obj->getSearchField("lecturer")?></td>
+    <td><span style="font-size:10pt"><?=_("Lehrende:")?></span></td><td style="font-size:10pt"><?=$search_obj->getSearchField("lecturer")?></td>
     </tr>
     <tr>
     <td><span style="font-size:10pt"><?=_("Bereich:")?></span></td><td style="font-size:10pt"><?=$search_obj->getSearchField("scope")?></td>

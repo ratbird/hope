@@ -91,7 +91,7 @@
 </section>
 <section class="required" for="lecturer_id_parameter">
     <label for="lecturer_id_2">
-        <?= _('Dozent/-innen') ?>
+        <?= _('Lehrende') ?>
     </label>
     <div id="wizard-lecturersearch">
         <?= $lsearch ?>

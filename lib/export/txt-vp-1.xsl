@@ -133,7 +133,7 @@
 		<xsl:if test="untertitel">
 				Untertitel: <xsl:value-of select="untertitel"/>
 		</xsl:if>
-				DozentIn: <xsl:for-each select="dozenten/dozent">
+				Lehrende: <xsl:for-each select="dozenten/dozent">
 					<xsl:if test="position() &gt; 1">
 						<xsl:text>, </xsl:text>
 					</xsl:if>

@@ -176,7 +176,7 @@
 				<xsl:text>\par </xsl:text>
 			</xsl:if>
 			<xsl:text>
-\b DozentIn: \b0 </xsl:text><xsl:for-each select="dozenten/dozent">
+\b Lehrende: \b0 </xsl:text><xsl:for-each select="dozenten/dozent">
 				<xsl:if test="position() &gt; 1">
 					<xsl:text>, </xsl:text>
 				</xsl:if>

@@ -74,7 +74,7 @@ class ExternElementMainTemplateLectures extends ExternElementMain {
             "repeatheadrow" => "",
             "semclasses" => "|1",
             "textnogroups" => _("keine Studienbereiche eingetragen"),
-            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("DozentIn")."|"
+            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("Lehrende")."|"
                     ._("Typ")."|"._("Einrichtung"),
             "nameformat" => "",
             "language" => "",
@@ -118,7 +118,7 @@ class ExternElementMainTemplateLectures extends ExternElementMain {
         $title = _("Gruppierung:");
         $info = _("Wählen Sie, wie die Veranstaltungen gruppiert werden sollen.");
         $values = array("0", "1", "2", "3", "4");
-        $names = array(_("Semester"), _("Bereich"), _("DozentIn"),
+        $names = array(_("Semester"), _("Bereich"), _("Lehrende"),
                 _("Typ"), _("Einrichtung"));
         $table = $edit_form->editOptionGeneric("grouping", $title, $info, $values, $names);
         
@@ -199,7 +199,7 @@ class ExternElementMainTemplateLectures extends ExternElementMain {
         $info = _("Geben Sie einen Text ein, der Angezeigt wird, wenn Lehrveranstaltungen vorliegen, die keinem Bereich zugeordnet sind. Nur wirksam in Gruppierung nach Bereich.");
         $table = $edit_form->editTextfieldGeneric("textnogroups", $title, $info, 40, 150);
         
-        $titles = array(_("Semester"), _("Bereich"), _("DozentIn"), _("Typ"), _("Einrichtung"));
+        $titles = array(_("Semester"), _("Bereich"), _("Lehrende"), _("Typ"), _("Einrichtung"));
         $info = _("Geben Sie eine Bezeichnung für die entsprechende Gruppierungsart ein.");
         $table .= $edit_form->editTextfieldGeneric("aliasesgrouping", $titles, $info, 40, 150);
         

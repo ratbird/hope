@@ -227,14 +227,14 @@ class MembersModel
 
         if ($admission_user) {
             if ($cmd == "add_user") {
-                $msg = MessageBox::success(sprintf(_('NutzerIn %s wurde in die Veranstaltung mit dem Status
+                $msg = MessageBox::success(sprintf(_('%s wurde in die Veranstaltung mit dem Status
                     <b>%s</b> eingetragen.'), $fullname, $status));
             } else {
                 if (!$accepted) {
-                    $msg = MessageBox::success(sprintf(_('NutzerIn %s wurde aus der Anmelde bzw. Warteliste
+                    $msg = MessageBox::success(sprintf(_('%s wurde aus der Anmelde bzw. Warteliste
                         mit dem Status <b>%s</b> in die Veranstaltung eingetragen.'), $fullname, $status));
                 } else {
-                    $msg = MessageBox::success(sprintf(_('NutzerIn %s wurde mit dem Status <b>%s</b>
+                    $msg = MessageBox::success(sprintf(_('%s wurde mit dem Status <b>%s</b>
                         endg?ltig akzeptiert und damit in die Veranstaltung aufgenommen.'), $fullname, $status));
                 }
             }

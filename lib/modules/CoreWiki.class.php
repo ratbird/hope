@@ -116,7 +116,7 @@ class CoreWiki implements StudipModule {
         return array(
             'summary' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
             'description' => _('Im Wiki-Web oder kurz "Wiki" können '.
-                'verschiedene AutorInnen gemeinsam Texte, Konzepte und andere '.
+                'verschiedene Autor/-innen gemeinsam Texte, Konzepte und andere '.
                 'schriftliche Arbeiten erstellen und gestalten, dies '.
                 'allerdings nicht gleichzeitig. Texte können individuell '.
                 'bearbeitet und die Änderungen gespeichert werden. Das '.
@@ -135,7 +135,7 @@ class CoreWiki implements StudipModule {
                             Löschfunktion für die aktuellste Seiten-Version;
                             Keine gleichzeitige Bearbeitung desselben Textes möglich, nur nacheinander'),
             'descriptionshort' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
-            'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene AutorInnen gemeinsam Texte, '.
+            'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene Autor/-innen gemeinsam Texte, '.
                                     'Konzepte und andere schriftliche Arbeiten erstellen und gestalten. Dies '.
                                     'allerdings nicht gleichzeitig. Texte können individuell bearbeitet und '.
                                     'gespeichert werden. Das Besondere im Wiki ist, dass Studierende und Lehrende '.

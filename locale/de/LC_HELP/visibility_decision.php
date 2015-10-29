@@ -70,8 +70,8 @@ anderen zugänglich sind.</p>
 <td width="50%" valign="top">
 <p><b>Ich möchte unsichtbar sein und nehme Einschränkungen in der Nutzung in Kauf.</b>
 <p>Ich nehme damit zur Kenntnis, dass meine persönlichen Daten wie in den <a href="<?= URLHelper::getLink('datenschutz.php') ?>" class="link-intern" target="_blank">Erläuterungen zum Datenschutz</a>
-beschrieben und begründet dennoch AdministratorInnen und in Teilen den
-DozentInnen meiner Veranstaltungen zugänglich sind.
+beschrieben und begründet dennoch Administrator/-innen und, in Teilen, den
+Lehrenden meiner Veranstaltungen zugänglich sind.
 </tr>
 <tr>
     <td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=no&vis_cmd=apply')?>"><?= Assets::img('aus.png') ?><br>unsichtbar werden</a></td>

@@ -1438,7 +1438,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
 
     if ($perm->have_perm("admin") && empty($_SESSION['sem_create_data']["sem_doz"]))
     {
-        $errormsg .= "error§"._("Bitte geben Sie wenigstens eine Dozentin oder einen Dozenten für die Veranstaltung an!")."§";
+        $errormsg .= "error§"._("Bitte geben Sie mindestens eine Lehrkraft für die Veranstaltung an!")."§";
         $run = FALSE;
     }
 

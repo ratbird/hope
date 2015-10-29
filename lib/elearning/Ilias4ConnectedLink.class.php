@@ -96,19 +96,19 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
             }
             $output .= "<input type=\"RADIO\" name=\"write_permission\" value=\"none\" checked>";
             $output .= _("Keine Schreibrechte") . "&nbsp;";
-            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Nur der/die BesitzerIn des Lernmoduls hat Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen.')));
+            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Nur der/die BesitzerIn des Lernmoduls hat Schreibzugriff für Inhalte und Struktur des Lernmoduls. Tutor/-innen und Lehrende können die Verknüpfung zur Veranstaltung wieder löschen.')));
             $output .= "<br>";
             $output .= "<input type=\"RADIO\" name=\"write_permission\" value=\"dozent\">";
-            $output .= _("Mit Schreibrechten für alle DozentInnen dieser Veranstaltung") . "&nbsp;";
-            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('DozentInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen.')));
+            $output .= _("Mit Schreibrechten für alle Lehrenden dieser Veranstaltung") . "&nbsp;";
+            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Lehrende haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. Tutor/-innen und Lehrende können die Verknüpfung zur Veranstaltung wieder löschen.')));
             $output .= "<br>";
             $output .= "<input type=\"RADIO\" name=\"write_permission\" value=\"tutor\">";
-            $output .= _("Mit Schreibrechten für alle DozentInnen und TutorInnen dieser Veranstaltung") . "&nbsp;";
-            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('DozentInnen und TutorInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen.')));
+            $output .= _("Mit Schreibrechten für alle Lehrenden und Tutor/-innen dieser Veranstaltung") . "&nbsp;";
+            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Lehrende und Tutor/-innen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. Tutor/-innen und Lehrende können die Verknüpfung zur Veranstaltung wieder löschen.')));
             $output .= "<br>";
             $output .= "<input type=\"RADIO\" name=\"write_permission\" value=\"autor\">";
-            $output .= _("Mit Schreibrechten für alle TeilnehmerInnen dieser Veranstaltung") . "&nbsp;";
-            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('DozentInnen, TutorInnen und TeilnehmerInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen.')));
+            $output .= _("Mit Schreibrechten für alle Personen dieser Veranstaltung") . "&nbsp;";
+            $output .= Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Lehrende, Tutor/-innen und Teilnehmer/-innen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. Tutor/-innen und Lehrende können die Verknüpfung zur Veranstaltung wieder löschen.')));
             $output .= "</div>";
             $output .= "</div><br>" . Button::create(_('Hinzufügen'), 'add') . "<br>";
         } else {

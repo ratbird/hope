@@ -135,7 +135,7 @@ $search = new SearchWidget(URLHelper::getLink('?'));
 $search->addNeedle(_('Nachrichten durchsuchen'), 'search', true);
 $search->addFilter(_('Betreff'), 'search_subject');
 $search->addFilter(_('Inhalt'), 'search_content');
-$search->addFilter(_('AutorIn'), 'search_autor');
+$search->addFilter(_('Autor/-in'), 'search_autor');
 $sidebar->addWidget($search);
 
 $folderwidget = new ViewsWidget();

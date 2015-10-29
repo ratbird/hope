@@ -615,9 +615,9 @@ class Institute_MembersController extends AuthenticatedController
             } elseif ($this->show == 'status') {
                 $inst_permissions = array(
                     'admin'  => _('Admin'),
-                    'dozent' => _('DozentIn'),
-                    'tutor'  => _('TutorIn'),
-                    'autor'  => _('AutorIn')
+                    'dozent' => _('Lehrende'),
+                    'tutor'  => _('Tutor/-in'),
+                    'autor'  => _('Studierende')
                 );
 
                 $query = "SELECT {$GLOBALS['_fullname_sql']['full_rev']} AS fullname,

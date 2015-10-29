@@ -86,7 +86,7 @@ else if ($secret == $hash) {
                       Damit dürfen Sie in den meisten Veranstaltungen schreiben, für die Sie sich anmelden.');
         $details = array();
         $details[] = _('Einige Veranstaltungen erfordern allerdings bei der Anmeldung die Eingabe eines Passwortes.
-                        Dieses Passwort erfahren Sie von der Dozentin oder dem Dozenten der Veranstaltung.');
+                        Dieses Passwort erfahren Sie von den Lehrenden der Veranstaltung.');
         $message = MessageBox::success($success, $details);
 
         // Auto-Inserts

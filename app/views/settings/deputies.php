@@ -66,5 +66,5 @@ use Studip\Button, Studip\LinkButton;
         </table>
     </form>
 <? else: ?>
-    <?= MessageBox::info(_('Sie haben noch niemanden als Ihre Standard-Dozierendenvertretung eingetragen. Benutzen Sie obige Personensuche, um dies zu tun.')); ?>
+    <?= MessageBox::info(_('Sie haben noch niemanden als Ihre Standardvertretung eingetragen. Benutzen Sie obige Personensuche, um dies zu tun.')); ?>
 <? endif; ?>

@@ -307,7 +307,7 @@
                     <p><?= formatReady($course->admission_prelim_txt) ?></p>
                 <? else : ?>
                         <p><?=
-                            _("NutzerInnen, die sich für diese Veranstaltung eintragen möchten,
+                            _("Nutzer/-innen, die sich für diese Veranstaltung eintragen möchten,
                     erhalten nähere Hinweise und können sich dann noch gegen eine Teilnahme entscheiden.")?>
                         </p>
                 <? endif ?>

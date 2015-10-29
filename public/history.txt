@@ -53,7 +53,7 @@ __17.01.2012 v 2.2__
 - Labels für Dozenten und Tutoren einer Veranstaltung
 - Mehrsprachige u. mehrere Veranstalltungstitel
 - Verwendung von underscore.js
-- Teilnehmeransicht in Veranstaltungen für Dozent/-innen
+- Teilnehmeransicht in Veranstaltungen für Lehrende
 - Erweiterung des Kalenders um optionale Gruppenkalender-Funktionen
 
 __23.07.2011 v 2.1__
@@ -119,7 +119,7 @@ __16.11.2009 v 1.10__
 - Interne Nachrichten an Mitarbeitergruppen einer Einrichtung
 - Urheberrecht und Stud.IP
 - Studentische Arbeitsgruppen ("Studiengruppen")
-- Abweichende Bezeichnung für "DozentIn" und "TutorIn"
+- Abweichende Bezeichnung für "Lehrende" und "Tutor/-innen"
 
 __01.04.2009 v 1.9__
 - Editierbares Impressum

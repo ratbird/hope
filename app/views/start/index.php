@@ -4,9 +4,9 @@
     <? elseif ($GLOBALS['perm']->have_perm('admin')) : ?>
         <?= _("Startseite für AdministratorInnen bei Stud.IP")?>
     <? elseif ($GLOBALS['perm']->have_perm('dozent')) :?>
-        <?= _("Startseite für DozentInnen bei Stud.IP")?>
+        <?= _("Startseite für Lehrende")?>
     <? else : ?>
-        <?= _("Ihre persönliche Startseite bei Stud.IP")?>
+        <?= _("Ihre persönliche Startseite")?>
     <? endif ?>
 </h1>
 

@@ -64,7 +64,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
         $this->field_names = array
         (
                 _("Untertitel"),
-                _("DozentIn"),
+                _("Lehrende"),
                 _("Veranstaltungsart"),
                 _("Veranstaltungstyp"),
                 _("Beschreibung"),

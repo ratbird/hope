@@ -62,7 +62,7 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
             'time' => '1',
             'lecturer' => '1',
             'semclasses' => '|1',
-            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("DozentIn")."|"
+            "aliasesgrouping" => "|"._("Semester")."|"._("Bereich")."|"._("Lehrende")."|"
                     ._("Typ")."|"._("Einrichtung"),
             "nameformat" => '',
             "language" => '',
@@ -120,7 +120,7 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         $title = _("Gruppierung:");
         $info = _("Wählen Sie, wie die Veranstaltungen gruppiert werden sollen.");
         $values = array('0', '1', '2', '3', '4');
-        $names = array(_("Semester"), _("Bereich"), _("DozentIn"),
+        $names = array(_("Semester"), _("Bereich"), _("Lehrende),
                 _("Typ"), _("Einrichtung"));
         $table .= $edit_form->editOptionGeneric('grouping', $title, $info, $values, $names);
         
@@ -234,7 +234,7 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         
         $headline = $edit_form->editHeadline(_("Textersetzungen"));
         
-        $titles = array(_("Semester"), _("Bereich"), _("DozentIn"), _("Typ"), _("Einrichtung"));
+        $titles = array(_("Semester"), _("Bereich"), _("Lehrende"), _("Typ"), _("Einrichtung"));
         $info = _("Geben Sie eine Bezeichnung für die entsprechende Gruppierungsart ein.");
         $table = $edit_form->editTextfieldGeneric('aliasesgrouping', $titles, $info, 40, 150);
         

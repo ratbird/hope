@@ -1283,7 +1283,7 @@ function getShowPageInfobox($keyword, $latest_version)
     if (count($versions) >= 1) {
         $widget->addLink(_('Textänderungen anzeigen'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=diff'));
-        $widget->addLink(_('Text mit AutorInnenzuordnung anzeigen'),
+        $widget->addLink(_('Text mit Autor/-innenzuordnung anzeigen'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=combodiff'));
     }
     $sidebar->addWidget($widget);
@@ -1361,7 +1361,7 @@ function getDiffPageInfobox($keyword) {
         $widget->addLink(_('Textänderungen anzeigen'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=diff'))
                ->setActive(Request::option('view') === 'diff');
-        $widget->addLink(_('Text mit AutorInnenzuordnung anzeigen'),
+        $widget->addLink(_('Text mit Autor/-innenzuordnung anzeigen'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=combodiff'))
                ->setActive(Request::option('view') === 'combodiff');
     }
@@ -1682,7 +1682,7 @@ function showComboDiff($keyword, $db=NULL) {
     }
     echo "<tr><td class=\"table_row_even\" colspan=2>";
     echo "<p><font size=-1>&nbsp;<br>";
-    echo _("Legende der AutorInnenfarben:");
+    echo _("Legende der Autor/-innenfarben:");
     echo "<table cellpadding=6 cellspacing=6>$content</table>\n";
     echo "</p>";
     echo "<table cellpadding=0 cellspacing=0 width=\"100%\">";

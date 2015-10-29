@@ -13,21 +13,12 @@ use Studip\Button, Studip\LinkButton;
 
 $dialog_attr = Request::isXhr() ? ' data-dialog="size=50%"' : '';
 
-$width_column1    = 20;
-$width_namecolumn = 60;
-
 $message_types = array('msg' => "success", 'error' => "error", 'info' => "info");
 ?>
 
 <? if (is_array($flash['msg'])) foreach ($flash['msg'] as $msg) : ?>
     <?= MessageBox::$message_types[$msg[0]]($msg[1]) ?>
 <? endforeach ?>
-
-<style>
-    #leiterinnen_tabelle > tbody > tr > td {
-        vertical-align: top;
-    }
-</style>
 
 <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set', $course_id) ?>" <?= $dialog_attr ?> class="default">
     <?= CSRFProtection::tokenTag() ?>
@@ -76,7 +67,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
             <em class="required"></em>
         <? endif; ?>
         <? if ($inst['type'] === 'select' && !$inst['choices'][$inst['value']]): ?>
-             <?= htmlReady(get_object_name($inst['value'], "inst")['name']) ?>
+             <?= htmlReady(get_object_name($inst['value'], 'inst')['name']) ?>
         <? else: ?>
             <?= $this->render_partial('course/basicdata/_input', array('input' => $inst)) ?>
         <? endif; ?>

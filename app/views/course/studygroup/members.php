@@ -21,7 +21,6 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     <colgroup>
         <col width="40">
         <col>
-        <col width="30">
     </colgroup>
     <caption>
         <?= _('GruppengründerIn') ?>
@@ -30,7 +29,6 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     <tr>
         <th data-sort="false"></th>
         <th data-sort="text"><?= _('Name') ?></th>
-        <th data-sort="false"><?= _('Aktionen') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -49,14 +47,6 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
                     <?= htmlReady($m['fullname']) ?>
                 </a>
-            </td>
-            <td class="actions">
-                <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent')
-                       || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)
-                ) : ?>
-
-                    <?= $this->render_partial('course/studygroup/_members_options.php', compact('m')) ?>
-                <? endif ?>
             </td>
         </tr>
     <? endforeach ?>

@@ -141,6 +141,7 @@ class StudipSemSearchHelper {
             $view->params[1] = "%".trim($this->params['lecturer'])."%";
             $view->params[2] = "%".trim($this->params['lecturer'])."%";
             $view->params[3] = "%".trim($this->params['lecturer'])."%";
+            $view->params[4] = "%".trim($this->params['lecturer'])."%";
             $result = $view->get_query("view:SEM_SEARCH_LECTURER");
 
             $lecturers = array();

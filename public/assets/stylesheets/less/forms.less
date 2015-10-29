@@ -7,11 +7,9 @@ form.default {
 
         border: 1px solid @light-gray-color-40;
         color: @dark-gray-color;
-        display: block;
         max-width: 48em;
-        width: 100%;
-        margin-top: 1ex;
         padding: 5px;
+        width: 100%;
         .transition(all 0.3s ease-out);
 
         &:focus {
@@ -43,6 +41,13 @@ form.default {
         margin-top: 1ex;
         max-width: 100%;
         text-indent: 0.25ex;
+
+        input[type=date], input[type=email], input[type=number],
+        input[type=password], input[type=text], input[type=url],
+        textarea, select {
+            display: block;
+            margin-top: 1ex;
+        }
     }
 
     fieldset {
@@ -115,16 +120,6 @@ form.default {
         }
     }
 
-}
-
-
-
-label.required {
-    &:after {
-        color: red;
-        content: '*';
-        text-align: super;
-    }
 }
 
 .studip-checkbox {

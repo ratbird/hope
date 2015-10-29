@@ -465,7 +465,11 @@ class StudygroupModel
                . "LEFT JOIN auth_user_md5 USING (user_id) "
                . "LEFT JOIN user_info USING (user_id) "
                . "WHERE Seminar_id = ? "
-               . "ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC  LIMIT ". $lower_bound .",". $elements_per_page;
+               . "ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC";
+
+        if($elements_per_page != 'all') {
+            $query .= " LIMIT " . $lower_bound . "," . $elements_per_page;
+        }
 
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute( array($sem_id) );

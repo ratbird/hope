@@ -58,18 +58,19 @@
                 }
                 filename.text(selected_file.name + " " + Math.ceil(selected_file.size / 1024) + "KB");
             });
-            $(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
-                var maxlength = $(this).attr("maxlength"),
-                    length = $(this).val().length,
-                    indicator;
-                if ($(this).next().is(".maxlength")) {
-                    indicator = $(this).next();
-                } else {
-                    indicator = $('<div class="maxlength"/>');
-                    $(this).after(indicator);
-                }
-                indicator.text(maxlength - length);
-            }).find("form.default input[maxlength]").trigger("keyup");
+
+            // $(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
+            //     var maxlength = $(this).attr("maxlength"),
+            //         length = $(this).val().length,
+            //         indicator;
+            //     if ($(this).next().is(".maxlength")) {
+            //         indicator = $(this).next();
+            //     } else {
+            //         indicator = $('<div class="maxlength"/>');
+            //         $(this).after(indicator);
+            //     }
+            //     indicator.text(maxlength - length);
+            // }).find("form.default input[maxlength]").trigger("keyup");
 
             $(document).on('click', 'form.default fieldset.collapsable legend,form.default.collapsable fieldset legend', function () {
                 $(this).closest('fieldset').toggleClass('collapsed');

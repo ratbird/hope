@@ -11,6 +11,8 @@ use Studip\Button, Studip\LinkButton;
  * the License, or (at your option) any later version.
  */
 
+$dialog_attr = Request::isXhr() ? ' data-dialog="size=50%"' : '';
+
 $width_column1    = 20;
 $width_namecolumn = 60;
 
@@ -21,357 +23,308 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
     <?= MessageBox::$message_types[$msg[0]]($msg[1]) ?>
 <? endforeach ?>
 
-<div style="min-width: 600px">
+<style>
+    #leiterinnen_tabelle > tbody > tr > td {
+        vertical-align: top;
+    }
+</style>
 
-    <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set', $course_id) ?>" <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?>>
-        <?= CSRFProtection::tokenTag() ?>
-        <div style="text-align:center" id="settings" class="table_row_even">
+<form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set', $course_id) ?>" <?= $dialog_attr ?> class="default">
+    <?= CSRFProtection::tokenTag() ?>
+    <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 
-            <h2 id="bd_basicsettings" class="table_row_odd"><?= _("Grundeinstellungen") ?></h2>
+    <fieldset>
+        <legend><?= _('Grundeinstellungen') ?></legend>
 
-            <div>
-                <table width="100%">
-                    <?php
-                    if (!$attributes) {
-                        ?>
-                        <tr>
-                            <td colspan="2"><?= _("Fehlende Datenzeilen") ?></td>
-                        </tr>
-                    <?php
-                    } else {
-                        foreach ($attributes as $attribute) : ?>
-                            <tr>
-                                <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
-                                    <?= $attribute['title'] ?>
-                                    <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
-                                </td>
-                                <td style="text-align: left" width="<?= 100 - $width_column1 ?>%"><?=
-                                    $this->render_partial("course/basicdata/_input", array('input' => $attribute))
-                                    ?></td>
-                            </tr>
-                        <? endforeach;
-                    }
-                    ?>
-                    <tr>
-                        <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;"><?= _('Erstellt') ?>
-                            :
-                        </td>
-                        <td style="text-align: left"><?= htmlReady($mkstring) ?></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;"><?= _('Letzte Änderung') ?>
-                            :
-                        </td>
-                        <td style="text-align: left"><?= htmlReady($chstring) ?></td>
-                    </tr>
-                </table>
-            </div>
+<? if (!$attributes): ?>
+        <?= MessageBox::info(_('Fehlende Datenzeilen')) ?>
+<? else: ?>
+    <? foreach ($attributes as $attribute): ?>
+        <label>
+            <?= htmlReady($attribute['title']) ?>
+        <? if ($attribute['must']): ?>
+            <em class="required"></em>
+        <? endif; ?>
+            <?= $this->render_partial("course/basicdata/_input", array('input' => $attribute)) ?>
+        </label>
+    <? endforeach; ?>
+<? endif; ?>
 
-            <h2 id="bd_inst" class="table_row_odd"><?= _("Einrichtungen") ?></h2>
+        <label>
+            <?= _('Erstellt') ?>
+            <br>
+            <?= htmlReady($mkstring) ?>
+        </label>
 
-            <div>
-                <table width="100%">
-                    <?php
-                    if (!$institutional) {
-                        ?>
-                        <tr>
-                            <td colspan="2"><?= _("Fehlende Datenzeilen") ?></td>
-                        </tr>
-                    <?php
-                    } else {
-                        foreach ($institutional as $inst) : ?>
-                            <tr>
-                                <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
-                                    <?= $inst['title'] ?>
-                                    <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
-                                </td>
-                                <td style="text-align: left" width="<?= 100 - $width_column1 ?>%"><?
-                                    if ($inst['type'] !== "select" || $inst['choices'][$inst['value']]) {
-                                        echo $this->render_partial("course/basicdata/_input", array('input' => $inst));
-                                    } else {
-                                        $name = get_object_name($inst['value'], "inst");
-                                        echo htmlReady($name['name']);
-                                    }
-                                    ?></td>
-                            </tr>
-                        <? endforeach;
-                    }
-                    ?>
-                </table>
-            </div>
+        <label>
+            <?= _('Letzte Änderung') ?>
+            <br>
+            <?= htmlReady($chstring) ?>
+        </label>
+    </fieldset>
 
-            <h2 id="bd_personal" class="table_row_odd"><?= _("Personal") ?></h2>
+    <fieldset>
+        <legend><?= _('Einrichtungen') ?></legend>
 
-            <div>
+<? if (!$institutional): ?>
+        <?= MessageBox::info(_('Fehlende Datenzeilen')) ?>
+<? else: ?>
+    <? foreach ($institutional as $inst): ?>
+        <label>
+            <?= htmlReady($inst['title']) ?>
+        <? if ($inst['must']): ?>
+            <em class="required"></em>
+        <? endif; ?>
+        <? if ($inst['type'] === 'select' && !$inst['choices'][$inst['value']]): ?>
+             <?= htmlReady(get_object_name($inst['value'], "inst")['name']) ?>
+        <? else: ?>
+            <?= $this->render_partial('course/basicdata/_input', array('input' => $inst)) ?>
+        <? endif; ?>
+        </label>
+    <? endforeach; ?>
+<? endif; ?>
+    </fieldset>
 
-                <style>
-                    #leiterinnen_tabelle > tbody > tr > td {
-                        vertical-align: top;
-                    }
-                </style>
+    <fieldset>
+        <legend><?= _('Personal') ?></legend>
 
-                <table class="default" id="leiterinnen_tabelle">
-                    <caption>
-                        <?= $dozenten_title ?>
+        <table class="default" id="leiterinnen_tabelle">
+            <caption>
+                <?= htmlReady($dozenten_title) ?>
 
-                        <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                            <span class="actions">
-                                <?
-                                $mps_dozent = MultiPersonSearch::get("add_member_dozent" . $course_id)
-                                    ->setTitle(_('Mehrere Lehrende hinzufügen'))
-                                    ->setSearchObject($dozentUserSearch)
-                                    ->setDefaultSelectedUser(array_keys($dozenten))
-                                    ->setDataDialogStatus(Request::isXhr())
-                                    ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
-                                    ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id));
-                                echo $mps_dozent->render();
-
-                                ?>
-                                </span>
-                        <? endif ?>
-
-                    </caption>
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th><?= _('Name') ?></th>
-                        <th><?= _('Funktion') ?></th>
-                        <th><?= _('Aktion') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <? if (count($dozenten) > 0) : ?>
-                        <? $num = 0;
-                        foreach ($dozenten as $dozent) : ?>
-                            <tr>
-                                <td>
-                                    <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $dozent['username'])) ?>">
-                                        <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
-                                    </a>
-                                </td>
-                                <td>
-                                    <?= get_fullname($dozent["user_id"], 'full_rev', true) . " (" . $dozent["username"] . ")" ?>
-                                </td>
-                                <td>
-                                    <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                                        <input value="<?= htmlReady($dozent["label"]) ?>" type="text" name="label[<?= htmlReady($dozent["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
-                                    <? else : ?>
-                                        <?= $dozent["label"] ? htmlReady($dozent["label"]) : '' ?>
-                                    <? endif ?>
-                                </td>
-                                <td style="text-align: right">
-                                    <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                                        <? if ($num > 0) : ?>
-                                            <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent["user_id"], "dozent") ?>">
-                                                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
-                                        <? endif;
-                                        if ($num < count($dozenten) - 1) : ?>
-                                            <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $dozent["user_id"], "dozent") ?>">
-                                                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
-                                        <? endif; ?>
-                                        <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
-                                            <?= Assets::img("icons/16/blue/trash.png") ?>
-                                        </a>
-                                    <? endif ?>
-                                </td>
-                            </tr>
-                            <? $num++; endforeach ?>
-                    <? else : ?>
-                        <tr>
-                            <td colspan="6" style="text-align: center"><?= _('Keine Lehrenden eingetragen') ?></td>
-                        </tr>
-                    <? endif ?>
-                    </tbody>
-                </table>
-
-
-                <? if ($deputies_enabled && ($perm_dozent || count($deputies))) : ?>
-                    <!-- Stellvertreter -->
-                    <table class="default">
-                        <caption>
-                            <?= $deputy_title ?>
-                            <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                                <span class="actions">
-                                <?
-                                $mps_deputy = MultiPersonSearch::get("add_member_deputy" . $course_id)
-                                    ->setTitle(_('Mehrere Vertretungen hinzufügen'))
-                                    ->setSearchObject($deputySearch)
-                                    ->setDefaultSelectedUser(array_keys($deputies))
-                                    ->setDataDialogStatus(Request::isXhr())
-                                    ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
-                                    ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id . '/deputy'));
-                                echo $mps_deputy->render();
-                                ?>
-                            </span>
-                            <? endif ?>
-                        </caption>
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th><?= _('Name') ?></th>
-                            <th></th>
-                            <th><?= _('Aktion') ?></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <? if (count($deputies) > 0) : ?>
-                            <? foreach ($deputies as $deputy) : ?>
-                                <tr>
-                                    <td>
-                                        <?= Avatar::getAvatar($deputy["user_id"], $deputy["username"])->getImageTag(Avatar::SMALL) ?>
-                                    </td>
-                                    <td>
-                                        <?= get_fullname($deputy["user_id"], 'full_rev', true) . " (" . $deputy["username"] . ", " . _("Status") . ": " . $deputy['perms'] . ")" ?>
-                                    </td>
-                                    <td></td>
-                                    <td style="text-align: right">
-                                        <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                                            <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
-                                                <?= Assets::img("icons/16/blue/trash.png") ?>
-                                            </a>
-                                        <? endif ?>
-                                    </td>
-                                </tr>
-                            <? endforeach ?>
-                        <? else : ?>
-                            <tr>
-                                <td colspan="4" style="text-align: center"><?= _('Keine Vertretung eingetragen') ?></td>
-                            </tr>
-                        <? endif ?>
-                    </table>
-                <? endif ?>
-
-                <!-- Tutoren -->
-                <table class="default">
-                    <caption>
-                        <?= $tutor_title ?>
-                        <? if ($perm_dozent && !$tutor_is_locked) : ?>
-                            <span class="actions">
-                        <?
-                        $mps_tutor = MultiPersonSearch::get("add_member_tutor" . $course_id)
-                            ->setTitle(_('Mehrere Tutor/-innen hinzufügen'))
-                            ->setSearchObject($tutorUserSearch)
-                            ->setDefaultSelectedUser(array_keys($tutoren))
+            <? if ($perm_dozent && !$dozent_is_locked): ?>
+                <span class="actions">
+                    <?= MultiPersonSearch::get('add_member_dozent' . $course_id)
+                            ->setTitle(_('Mehrere DozentInnen hinzufügen'))
+                            ->setSearchObject($dozentUserSearch)
+                            ->setDefaultSelectedUser(array_keys($dozenten))
                             ->setDataDialogStatus(Request::isXhr())
                             ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
-                            ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $course_id . '/tutor'));
-                        echo $mps_tutor->render();
-                        ?>
+                            ->setExecuteURL($controller->url_for('course/basicdata/add_member/' . $course_id))
+                            ->render() ?>
                     </span>
-                        <? endif ?>
-                    </caption>
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th><?= _('Name') ?></th>
-                        <th><?= _('Funktion') ?></th>
-                        <th><?= _('Aktion') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <? if (count($tutoren) > 0) : ?>
-                        <? $num = 0;
-                        foreach ($tutoren as $tutor) : ?>
-                            <tr>
-                                <td>
-                                    <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $tutor['username'])) ?>">
-                                        <?= Avatar::getAvatar($tutor["user_id"], $tutor['username'])->getImageTag(Avatar::SMALL) ?>
-                                    </a>
-                                </td>
-                                <td>
-                                    <?= get_fullname($tutor["user_id"], 'full_rev', true) . " (" . $tutor["username"] . ")" ?>
-                                </td>
-                                <td>
-                                    <? if ($perm_dozent && !$tutor_is_locked) : ?>
-                                        <input value="<?= htmlReady($tutor["label"]) ?>" type="text" name="label[<?= htmlReady($tutor["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
-                                    <? else : ?>
-                                        <?= $tutor["label"] ? htmlReady($tutor["label"]) : '' ?>
-                                    <? endif ?>
-                                </td>
-                                <td style="text-align: right">
-                                    <? if ($perm_dozent && !$tutor_is_locked) : ?>
-                                        <? if ($num > 0) : ?>
-                                            <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?>href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor["user_id"], "tutor") ?>">
-                                                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
-                                        <? endif;
-                                        if ($num < count($tutoren) - 1) : ?>
-                                            <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $tutor["user_id"], "tutor") ?>">
-                                                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
-                                        <? endif; ?>
-                                        <a <?= Request::isXhr() ? 'data-dialog="size=50%"' : '' ?> href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
-                                            <?= Assets::img("icons/16/blue/trash.png") ?>
-                                        </a>
-                                    <? endif ?>
-                                </td>
-                            </tr>
-                            <? $num++; endforeach ?>
+            <? endif; ?>
+            </caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><?= _('Name') ?></th>
+                    <th><?= _('Funktion') ?></th>
+                    <th class="actions"><?= _('Aktion') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+        <? if (count($dozenten) === 0): ?>
+                <tr>
+                    <td colspan="4" style="text-align: center">
+                        <?= _('Keine DozentInnen eingetragen') ?>
+                    </td>
+                </tr>
+        <? else: ?>
+            <? foreach (array_values($dozenten) as $num => $dozent) : ?>
+                <tr>
+                    <td>
+                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $dozent['username']) ?>">
+                            <?= Avatar::getAvatar($dozent['user_id'], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?= get_fullname($dozent['user_id'], 'full_rev', true) . ' (' . $dozent['username'] . ')' ?>
+                    </td>
+                    <td>
+                    <? if ($perm_dozent && !$dozent_is_locked): ?>
+                        <input value="<?= htmlReady($dozent['label']) ?>" type="text" name="label[<?= htmlReady($dozent['user_id']) ?>]" title="<?= _('Die Funktion, die die Person in der Veranstaltung erfüllt.') ?>">
                     <? else : ?>
-                        <tr>
-                            <td colspan="4" style="text-align: center"><?= _('Keine Tutor/-innen eingetragen') ?></td>
-                        </tr>
+                        <?= htmlReady($dozent['label']) ?>
                     <? endif ?>
-                    </tbody>
-                </table>
+                    </td>
+                    <td class="actions">
+                <? if ($perm_dozent && !$dozent_is_locked): ?>
+                    <? if ($num > 0) : ?>
+                        <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent['user_id'], 'dozent') ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/yellow/arr_2up.svg', array('class' => 'middle')) ?>
+                        </a>
+                    <? endif; ?>
+                    <? if ($num < count($dozenten) - 1): ?>
+                        <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $dozent['user_id'], 'dozent') ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/yellow/arr_2down.svg', array('class' => 'middle')) ?>
+                        </a>
+                    <? endif; ?>
+                        <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent['user_id']) ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/blue/trash.svg') ?>
+                        </a>
+                <? endif; ?>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        <? endif; ?>
+            </tbody>
+        </table>
 
-                <script>
-                    STUDIP.MultiPersonSearch.init();
-                </script>
-            </div>
+    <!-- Stellvertreter -->
+    <? if ($deputies_enabled && ($perm_dozent || count($deputies) > 0)): ?>
+        <table class="default">
+            <caption>
+                <?= htmlReady($deputy_title) ?>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
+                <span class="actions">
+                    <?= MultiPersonSearch::get('add_member_deputy' . $course_id)
+                            ->setTitle(_('Mehrere Vertretungen hinzufügen'))
+                            ->setSearchObject($deputySearch)
+                            ->setDefaultSelectedUser(array_keys($deputies))
+                            ->setDataDialogStatus(Request::isXhr())
+                            ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
+                            ->setExecuteURL($controller->url_for('course/basicdata/add_member/' . $course_id . '/deputy'))
+                            ->render() ?>
+                </span>
+            <? endif; ?>
+            </caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><?= _('Name') ?></th>
+                    <th></th>
+                    <th class="actions"><?= _('Aktion') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+        <? if (count($deputies) === 0): ?>
+            <tr>
+                <td colspan="4" style="text-align: center">
+                    <?= _('Keine Vertretung eingetragen') ?>
+                </td>
+            </tr>
+        <? else: ?>
+            <? foreach ($deputies as $deputy) : ?>
+                <tr>
+                    <td>
+                        <?= Avatar::getAvatar($deputy['user_id'], $deputy['username'])->getImageTag(Avatar::SMALL) ?>
+                    </td>
+                    <td>
+                        <?= get_fullname($deputy['user_id'], 'full_rev', true) ?>
+                        (<?= $deputy['username']  ?>,
+                         <?= _('Status') ?>:
+                         <?= $deputy['perms'] ?>)
+                    </td>
+                    <td></td>
+                    <td class="actions">
+                    <? if ($perm_dozent && !$dozent_is_locked): ?>
+                        <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/blue/trash.svg') ?>
+                        </a>
+                    <? endif; ?>
+                    </td>
+                </tr>
+            <? endforeach ?>
+        <? endif ?>
+            </tbody>
+        </table>
+    <? endif ?>
 
+        <!-- Tutoren -->
+        <table class="default">
+            <caption>
+                <?= htmlReady($tutor_title) ?>
+            <? if ($perm_dozent && !$tutor_is_locked): ?>
+                <span class="actions">
+                <?= MultiPersonSearch::get('add_member_tutor' . $course_id)
+                        ->setTitle(_('Mehrere TutorInnen hinzufügen'))
+                        ->setSearchObject($tutorUserSearch)
+                        ->setDefaultSelectedUser(array_keys($tutoren))
+                        ->setDataDialogStatus(Request::isXhr())
+                        ->setJSFunctionOnSubmit(Request::isXhr() ? 'jQuery(this).closest(".ui-dialog-content").dialog("close");' : false)
+                        ->setExecuteURL($controller->url_for('course/basicdata/add_member/' . $course_id . '/tutor'))
+                        ->render() ?>
+                </span>
+            <? endif; ?>
+            </caption>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><?= _('Name') ?></th>
+                    <th><?= _('Funktion') ?></th>
+                    <th class="actions"><?= _('Aktion') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+        <? if (count($tutoren) === 0): ?>
+                <tr>
+                    <td colspan="4" style="text-align: center">
+                        <?= _('Keine TutorInnen eingetragen') ?>
+                    </td>
+                </tr>
+        <? else: ?>
+            <? foreach ($tutoren as $num => $tutor): ?>
+                <tr>
+                    <td>
+                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']) ?>">
+                            <?= Avatar::getAvatar($tutor['user_id'], $tutor['username'])->getImageTag(Avatar::SMALL) ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?= get_fullname($tutor['user_id'], 'full_rev', true) . ' (' . $tutor['username'] . ')' ?>
+                    </td>
+                    <td>
+                    <? if ($perm_dozent && !$tutor_is_locked): ?>
+                        <input value="<?= htmlReady($tutor['label']) ?>" type="text" name="label[<?= htmlReady($tutor['user_id']) ?>]" title="<?= _('Die Funktion, die die Person in der Veranstaltung erfüllt.') ?>">
+                    <? else: ?>
+                        <?= htmlReady($tutor['label']) ?>
+                    <? endif; ?>
+                    </td>
+                    <td class="actions">
+                <? if ($perm_dozent && !$tutor_is_locked): ?>
+                    <? if ($num > 0) : ?>
+                        <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor['user_id'], 'tutor') ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/yellow/arr_2up.svg', array('class' => 'middle')) ?>
+                        </a>
+                    <? endif; ?>
+                    <? if ($num < count($tutoren) - 1) : ?>
+                        <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $tutor['user_id'], 'tutor') ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/yellow/arr_2down.svg', array('class' => 'middle')) ?>
+                        </a>
+                    <? endif; ?>
+                        <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor['user_id']) ?>" <?= $dialog_attr ?>>
+                            <?= Assets::img('icons/blue/trash.svg') ?>
+                        </a>
+                <? endif; ?>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        <? endif; ?>
+            </tbody>
+        </table>
 
-            <h2 id="bd_description" class="table_row_odd"><?= _("Beschreibungen") ?></h2>
+    </fieldset>
 
-            <div>
-                <table style="width: 100%">
-                    <?php
-                    if (!$descriptions) {
-                        ?>
-                        <tr>
-                            <td colspan="2"><?= _("Fehlende Datenzeilen") ?></td>
-                        </tr>
-                    <?php
-                    } else {
-                        foreach ($descriptions as $description) : ?>
-                            <tr>
-                                <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
-                                    <?= $description['title'] ?>
-                                    <?= $description['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
-                                </td>
-                                <td style="text-align: left; width: <?= 100 - $width_column1 ?>%"><?=
-                                    $this->render_partial("course/basicdata/_input", array('input' => $description))
-                                    ?></td>
-                            </tr>
-                        <? endforeach;
-                    }
-                    ?>
-                </table>
-            </div>
+    <fieldset>
+        <legend><?= _('Beschreibungen') ?></legend>
 
-        </div>
+<? if (!$descriptions): ?>
+        <?= MessageBox::info(_('Fehlende Datenzeilen')) ?>
+<? else: ?>
+    <? foreach ($descriptions as $description): ?>
+        <label>
+            <?= $description['title'] ?>
+        <? if ($description['must']): ?>
+            <em class="required"></em>
+        <? endif; ?>
+            <?= $this->render_partial('course/basicdata/_input', array('input' => $description)) ?>
+        </label>
+    <? endforeach; ?>
+<? endif; ?>
+    </fieldset>
 
-        <div style="text-align:center; padding: 15px" data-dialog-button>
-            <div class="button-group">
-                <?= Button::create(_('Übernehmen')) ?>
-                <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
-            </div>
-        </div>
-    </form>
-    <script>
-        jQuery("#settings").accordion({
-            <?= $flash['open'] ? "active: '#".$flash['open']."',\n" : "" ?>
-            collapsible: true,
-            autoHeight: false,
-            heightStyle: "content",
-            change: function (event, ui) {
-                jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
-            }
-        });
-        jQuery(function () {
-            jQuery("input[name^=label]").autocomplete({
-                source: <?=
-        json_encode(preg_split("/[\s,;]+/", studip_utf8encode(Config::get()->getValue("PROPOSED_TEACHER_LABELS")), -1, PREG_SPLIT_NO_EMPTY));
-        ?>
-            });
-        });
-    </script>
-</div>
+    <footer data-dialog-button>
+        <?= Button::create(_('Übernehmen')) ?>
+    </footer>
+</form>
+
+<script>
+jQuery(function ($) {
+    $('input[name^=label]').autocomplete({
+        source: <?=
+json_encode(preg_split('/[\s,;]+/', studip_utf8encode(Config::get()->PROPOSED_TEACHER_LABELS), -1, PREG_SPLIT_NO_EMPTY));
+?>
+    });
+});
+</script>

@@ -68,15 +68,15 @@ class ScheduleView {
         //the categories configuration (color's and bg-image)
         $this->categories = array(
             "0" => array("bg-picture"   => Assets::image_path('calendar/category3_small.jpg'),
-                         "border-color" => "#5C2D64"),  // is now obsolete
+                         "border-color" => "#b02e7c"),  // is now obsolete
             "1" => array("bg-picture"   => Assets::image_path('calendar/category5_small.jpg'),
-                         "border-color" => "#505064"),
+                         "border-color" => "#f26e00"),
             "2" => array("bg-picture"   => Assets::image_path('calendar/category9_small.jpg'),
-                         "border-color" => "#957C29"),
+                         "border-color" => "#ffbd33"),
             "3" => array("bg-picture"   => Assets::image_path('calendar/category11_small.jpg'),
-                         "border-color" => "#66954F"),
+                         "border-color" => "#a480b9"),
             "4" => array("bg-picture"   => Assets::image_path('calendar/category13_small.jpg'),
-                         "border-color" => "#951408"));
+                         "border-color" => "#70c3bf"));
     }
 
     function addEvent($column, $name, $start_time, $end_time, $link='', $add_info='', $category=0) {

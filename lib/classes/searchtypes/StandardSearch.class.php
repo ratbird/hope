@@ -90,6 +90,7 @@ class StandardSearch extends SQLSearch
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR CONCAT(auth_user_md5.Nachname, \" \", auth_user_md5.Vorname) LIKE :input " .
+                            "OR CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input) AND " . get_vis_query() .
                         " ORDER BY Vorname, Nachname";
             case "user_id":
@@ -98,6 +99,7 @@ class StandardSearch extends SQLSearch
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR CONCAT(auth_user_md5.Nachname, \" \", auth_user_md5.Vorname) LIKE :input " .
+                            "OR CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input) AND " . get_vis_query() .
                         " ORDER BY Vorname, Nachname";
             case "Seminar_id":

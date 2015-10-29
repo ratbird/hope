@@ -32,7 +32,9 @@
             . "username LIKE :input OR Vorname LIKE :input "
             . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
             . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
-            . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
+            . "OR CONCAT(Nachname,', ',Vorname) LIKE :input "
+            . "OR Nachname LIKE :input OR "
+            . "OR Vorname LIKE :input"
             . " ORDER BY fullname ASC",
             _("Nutzer suchen"), "user_id");
         $mps = MultiPersonSearch::get("add_adressees")

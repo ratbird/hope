@@ -90,19 +90,28 @@ while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
 
 //List of Seminars
 if (!$perm->have_perm('admin')) {
+    $all_semes = array_reverse(SemesterData::GetSemesterArray());
+
+
     $query = "SELECT Seminar_id, Name
               FROM seminar_user
               LEFT JOIN seminare USING (Seminar_id)
               WHERE user_id = ? AND (seminare.modules & 8) {$exclude_sem}
-              ORDER BY Name";
+                AND (start_time <= ? AND (? <= (start_time + duration_time) OR duration_time = -1))
+              ORDER BY start_time DESC";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($user->id));
+    foreach($all_semes as $sem) {
+        if(!$sem['semester_id']) {
+            continue;
+        }
+        $statement->execute(array($user->id, $sem['beginn'], $sem['beginn']));
 
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $courses[] = array(
-            'id'   => $row['Seminar_id'],
-            'name' => my_substr($row['Name'], 0, 40)
-        );
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $courses[$sem['name']][] = array(
+                'id'   => $row['Seminar_id'],
+                'name' => my_substr($row['Name'], 0, 40)
+            );
+        }
     }
 }
 
@@ -119,7 +128,7 @@ $search_object = new SQLSearch("SELECT username, CONCAT(Vorname, ' ', Nachname, 
                                 " CONCAT(Nachname, ' ', Vorname) LIKE :input OR".
                                 " CONCAT(Nachname, ', ', Vorname) LIKE :input)".
                                " HAVING visible = 1".
-                               " ORDER BY Nachname, Vorname", _('Nutzer suchen'), 'username');
+                               " ORDER BY Nachname, Vorname", _('Personen suchen'), 'username');
 
 $template->set_attribute('search_object', $search_object);
 

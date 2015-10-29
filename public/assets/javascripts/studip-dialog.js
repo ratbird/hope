@@ -471,7 +471,7 @@
             // Create 'close' button
             if (!dialog_options.buttons.hasOwnProperty('cancel')) {
                 dialog_options.buttons.cancel = {
-                    text: 'Schlieﬂen'.toLocaleString()
+                    text: 'Abbrechen'.toLocaleString()
                 };
             }
             dialog_options.buttons.cancel.click = function () {

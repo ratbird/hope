@@ -41,6 +41,7 @@ class Course_StudygroupController extends AuthenticatedController {
             }
             PageLayout::setTitle(_("Studiengruppe bearbeiten"));
             PageLayout::setHelpKeyword('Basis.Studiengruppen');
+            PageLayout::addSqueezePackage('tablesorter');
         } else {
             throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }

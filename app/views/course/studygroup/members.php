@@ -17,7 +17,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 
 
-<table class="default">
+<table class="default sortable-table">
     <colgroup>
         <col width="40">
         <col>
@@ -28,9 +28,9 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     </caption>
     <thead>
     <tr>
-        <th></th>
-        <th><?= _('Name') ?></th>
-        <th><?= _('Aktionen') ?></th>
+        <th data-sort="false"></th>
+        <th data-sort="text"><?= _('Name') ?></th>
+        <th data-sort="false"><?= _('Aktionen') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -64,7 +64,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 </table>
 
 
-<table class="default">
+<table class="default sortable-table">
     <colgroup>
         <col width="40">
         <col>
@@ -75,9 +75,9 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     </caption>
     <thead>
     <tr>
-        <th></th>
-        <th><?= _('Name') ?></th>
-        <th><?= _('Aktion') ?></th>
+        <th data-sort="false"></th>
+        <th data-sort="text"><?= _('Name') ?></th>
+        <th data-sort="false"><?= _('Aktionen') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -112,7 +112,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 
 
 
-<table class="default">
+<table class="default sortable-table">
     <colgroup>
         <col width="40">
         <col>
@@ -124,8 +124,8 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     <thead>
     <tr>
         <th></th>
-        <th><?= _('Name') ?></th>
-        <th><?= _('Aktion') ?></th>
+        <th data-sort="text"><?= _('Name') ?></th>
+        <th data-sort="false"><?= _('Aktion') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -162,7 +162,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 
 <? if ($rechte) : ?>
     <? if (count($accepted) > 0) : ?>
-        <table class="default">
+        <table class="default sortable-table">
             <caption><?= _('Offene Mitgliedsanträge') ?></caption>
             <colgroup>
                 <col width="40">
@@ -170,11 +170,11 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <col width="80">
             </colgroup>
             <tr>
-                <th></th>
-                <th>
+                <th data-sort="false" ></th>
+                <th data-sort="text" >
                     <?= _('Name') ?>
                 </th>
-                <th>
+                <th data-sort="false" >
                     <?= _('Aktionen') ?>
                 </th>
             </tr>
@@ -206,7 +206,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
     <? endif; ?>
 
     <? if (count($invitedMembers) > 0) : ?>
-        <table class="default">
+        <table class="default sortable-table">
             <caption><?= _('Verschickte Einladungen') ?></caption>
             <colgroup>
                 <col width="40">
@@ -214,11 +214,11 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <col width="80">
             </colgroup>
             <tr>
-                <th></th>
-                <th>
+                <th data-sort="false"></th>
+                <th data-sort="text">
                     <?= _('Name') ?>
                 </th>
-                <th>
+                <th data-sort="false" >
                     <?= _('Aktionen') ?>
                 </th>
             </tr>

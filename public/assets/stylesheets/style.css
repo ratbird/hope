@@ -913,7 +913,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
-  height: 8px;
+  height: 16px;
   margin-left: 0;
   background-image: url("../images/dreieck_down.png");
   vertical-align: text-top;
@@ -923,10 +923,10 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   .sortable-table .headerSortUp::after,
   .sortable-table .tablesorter-headerDesc .tablesorter-header-inner::after {
     background-image: url("../images/dreieck_down@2x.png");
-    -webkit-background-size: 16px 8px;
-    -moz-background-size: 16px 8px;
-    -o-background-size: 16px 8px;
-    background-size: 16px 8px;
+    -webkit-background-size: 16px 16px;
+    -moz-background-size: 16px 16px;
+    -o-background-size: 16px 16px;
+    background-size: 16px 16px;
   }
 }
 .sortable-table .headerSortUp::after,
@@ -938,7 +938,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
-  height: 8px;
+  height: 16px;
   margin-left: 0;
   background-image: url("../images/dreieck_up.png");
   vertical-align: text-top;
@@ -948,10 +948,10 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   .sortable-table .headerSortDown::after,
   .sortable-table .tablesorter-headerAsc .tablesorter-header-inner::after {
     background-image: url("../images/dreieck_up@2x.png");
-    -webkit-background-size: 16px 8px;
-    -moz-background-size: 16px 8px;
-    -o-background-size: 16px 8px;
-    background-size: 16px 8px;
+    -webkit-background-size: 16px 16px;
+    -moz-background-size: 16px 16px;
+    -o-background-size: 16px 16px;
+    background-size: 16px 16px;
   }
 }
 .sortable-table .headerSortDown::after,

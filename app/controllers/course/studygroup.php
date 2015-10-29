@@ -712,27 +712,25 @@ class Course_StudygroupController extends AuthenticatedController {
 
         if($this->page < 1 || $this->page > ceil($this->anzahl/get_config('ENTRIES_PER_PAGE'))) $this->page = 1;
 
+        $cmembers = StudygroupModel::getMembers($id, $this->lower_bound, 'all');
         $this->lower_bound      = ($this->page - 1) * get_config('ENTRIES_PER_PAGE');
-        $this->cmembers         = StudygroupModel::getMembers($id, $this->lower_bound, 'all');
+        $this->cmembers         = $cmembers;
         $this->groupname        = $sem->name;
         $this->sem_id           = $id;
         $this->groupdescription = $sem->description;
         $this->moderators       = $sem->getMembers('dozent');
         $this->tutors           = $sem->getMembers('tutor');
+        echo "<pre>";
+        var_dump($this->tutors);
+        echo "</pre>";
+        die;
+
         $this->accepted         = $sem->getAdmissionMembers('accepted');
 
 
+        $this->cmembers = array_diff_key($cmembers, $this->moderators);
+        $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
 
-        foreach($this->cmembers as $index => $m) {
-            if(isset($this->moderators[$m['user_id']])) {
-                unset($this->cmembers[$index]);
-            }
-
-            if(isset($this->tutors[$m['user_id']])) {
-                unset($this->cmembers[$index]);
-            }
-        }
-        $this->cmembers = array_values($this->cmembers);
         usort($this->cmembers, array('StudygroupModel','compare_status'));
 
         $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
@@ -748,17 +746,14 @@ class Course_StudygroupController extends AuthenticatedController {
                                          . "ORDER BY fullname ASC",
             _("Nutzer suchen"), "user_id");
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
-        
-        foreach ($this->cmembers as $m) {
-            $defaultSelectedUser[] = $m['user_id'];
-        }
+
+
 
         if ($this->rechte) {
             $actions = new ActionsWidget();
-            
             $mp = MultiPersonSearch::get('studygroup_invite_' . $id)
                 ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
-                ->setDefaultSelectedUser($defaultSelectedUser)
+                ->setDefaultSelectedUser(array_keys($this->cmembers))
                 ->setLinkIconPath("")
                 ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
                 ->setExecuteURL($this->url_for('course/studygroup/execute_invite/' . $id))
@@ -769,14 +764,14 @@ class Course_StudygroupController extends AuthenticatedController {
 
             $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
             $actions->addElement($element);
-            
+
             $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),
                 $this->url_for('course/studygroup/message/' . $id),
                 'icons/16/blue/mail.png');
 
             Sidebar::get()->addWidget($actions);
         }
-        
+
         $this->invitedMembers = StudygroupModel::getInvitations($id);
     }
 
@@ -1058,14 +1053,13 @@ class Course_StudygroupController extends AuthenticatedController {
 
     function message_action($id)
     {
-        $sem         = Seminar::GetInstance($id);
-        $source      = 'dispatch.php/course/studygroup/members/' . $id;
-        if (studip_strlen($sem->getName()) > 32) //cut subject if to long
-            $subject = sprintf(_("[Studiengruppe: %s...]"),studip_substr($sem->getName(), 0, 30));
+        $sem         = Course::find($id);
+        if (studip_strlen($sem->getFullname()) > 32) //cut subject if to long
+            $subject = sprintf(_("[Studiengruppe: %s...]"),studip_substr($sem->getFullname(), 0, 30));
         else
-            $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
+            $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getFullname());
 
-        $this->redirect(URLHelper::getURL('dispatch.php/messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all')));
+        $this->redirect($this->url_for('messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all')));
     }
 
 

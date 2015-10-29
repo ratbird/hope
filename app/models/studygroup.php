@@ -30,10 +30,11 @@ class StudygroupModel
 
         // get standard-plugins (suitable for seminars)
         $plugin_manager = PluginManager::getInstance();
-        $plugins = $plugin_manager->getPlugins('StandardPlugin');     // get all globally enabled plugins
+        $plugins        = $plugin_manager->getPlugins('StandardPlugin');     // get all globally enabled plugins
         foreach ($plugins as $plugin) {
             $modules[get_class($plugin)] = $plugin->getPluginName();
         }
+
         return $modules;
     }
 
@@ -68,10 +69,11 @@ class StudygroupModel
         $enabled = array();
 
         $plugin_manager = PluginManager::getInstance();
-        $plugins = $plugin_manager->getPlugins('StandardPlugin');     // get all globally enabled plugins
+        $plugins        = $plugin_manager->getPlugins('StandardPlugin');     // get all globally enabled plugins
         foreach ($plugins as $plugin) {
             $enabled[get_class($plugin)] = $plugin->isActivated($id);
         }
+
         return $enabled;
     }
 
@@ -85,7 +87,7 @@ class StudygroupModel
         $institutes = array();
 
         // Prepare institutes statement
-        $query = "SELECT Institut_id, Name
+        $query               = "SELECT Institut_id, Name
                   FROM Institute
                   WHERE fakultaets_id = ? AND fakultaets_id != Institut_id
                   ORDER BY Name";
@@ -93,12 +95,12 @@ class StudygroupModel
 
         // get faculties
         $stmt = DBManager::get()->query("SELECT Name, Institut_id, 1 AS is_fak,'admin' AS inst_perms "
-              . "FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
+                                        . "FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $institutes[$data['Institut_id']] = array (
-                    'name' => $data['Name'],
-                    'childs' => array()
-                    );
+            $institutes[$data['Institut_id']] = array(
+                'name'   => $data['Name'],
+                'childs' => array()
+            );
             // institutes for faculties
             $institute_statement->execute(array($data['Institut_id']));
             while ($data2 = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
@@ -120,7 +122,7 @@ class StudygroupModel
      */
     function accept_user($username, $sem_id)
     {
-        $query = "SELECT user_id
+        $query     = "SELECT user_id
                   FROM admission_seminar_user AS asu
                   LEFT JOIN auth_user_md5 AS au USING (user_id)
                   WHERE au.username = ? AND asu.seminar_id = ?";
@@ -129,14 +131,14 @@ class StudygroupModel
         if ($data = $statement->fetch()) {
             $accept_user_id = $data['user_id'];
 
-            $query = "INSERT INTO seminar_user
+            $query     = "INSERT INTO seminar_user
                         (user_id, seminar_id, status, position, gruppe,
                          notification, mkdate, comment, visible)
                       VALUES (?, ?, 'autor', 0, 8, 0, UNIX_TIMESTAMP(), '', 'yes')";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($accept_user_id, $sem_id));
 
-            $query = "DELETE FROM admission_seminar_user
+            $query     = "DELETE FROM admission_seminar_user
                       WHERE user_id = ? AND seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($accept_user_id, $sem_id));
@@ -153,7 +155,7 @@ class StudygroupModel
      */
     function deny_user($username, $sem_id)
     {
-        $query = "DELETE FROM admission_seminar_user
+        $query     = "DELETE FROM admission_seminar_user
                   WHERE user_id = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
@@ -173,7 +175,7 @@ class StudygroupModel
      */
     function promote_user($username, $sem_id, $perm)
     {
-        $query = "UPDATE seminar_user
+        $query     = "UPDATE seminar_user
                   SET status = ?
                   WHERE Seminar_id = ? AND user_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -194,7 +196,7 @@ class StudygroupModel
      */
     function remove_user($username, $sem_id)
     {
-        $query = "DELETE FROM seminar_user
+        $query     = "DELETE FROM seminar_user
                   WHERE Seminar_id = ? AND user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
@@ -229,6 +231,7 @@ class StudygroupModel
 
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
+
         return $statement->fetchColumn();
     }
 
@@ -282,7 +285,7 @@ class StudygroupModel
             }
             $parameters = array($status);
 
-            if(!empty($search)) {
+            if (!empty($search)) {
                 $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
                 $parameters[] = $search;
             }
@@ -299,11 +302,11 @@ class StudygroupModel
             }
             $parameters = array($status);
 
-            if(!empty($search)) {
+            if (!empty($search)) {
                 $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
                 $parameters[] = $search;
             }
-            $sql     .= " ORDER BY aum.Nachname ". $sort_order;
+            $sql .= " ORDER BY aum.Nachname " . $sort_order;
         } else if ($sort == 'ismember_asc' || $sort == 'ismember_desc') {
             $sql = "SELECT s.*,
                           (SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = ? AND su.Seminar_id = s.Seminar_id ) AS ismember
@@ -316,18 +319,18 @@ class StudygroupModel
                 $GLOBALS['user']->id,
                 $status,
             );
-            if(!empty($search)) {
+            if (!empty($search)) {
                 $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
                 $parameters[] = $search;
             }
-            $sql  .= " ORDER BY `ismember`". $sort_order;
+            $sql .= " ORDER BY `ismember`" . $sort_order;
         } else if ($sort == 'access_asc') {
             $sql .= " ORDER BY admission_prelim ASC";
         } else if ($sort == 'access_desc') {
             $sql .= " ORDER BY admission_prelim DESC";
         }
 
-        $sql .= ', name ASC LIMIT '. (int)$lower_bound .','. (int)$elements_per_page;
+        $sql .= ', name ASC LIMIT ' . (int)$lower_bound . ',' . (int)$elements_per_page;
 
         $statement = DBManager::get()->prepare($sql);
         $statement->execute($parameters);
@@ -388,10 +391,11 @@ class StudygroupModel
      */
     function isMember($userid, $semid)
     {
-        $sql  = "SELECT 1 FROM `seminar_user` WHERE Seminar_id = ? AND user_id = ?";
+        $sql = "SELECT 1 FROM `seminar_user` WHERE Seminar_id = ? AND user_id = ?";
 
         $stmt = DBManager::get()->prepare($sql);
         $stmt->execute(array($semid, $userid));
+
         return (bool)$stmt->fetchColumn();
     }
 
@@ -406,7 +410,7 @@ class StudygroupModel
     function addFounder($username, $sem_id)
     {
         $stmt = DBManager::get()->prepare("INSERT IGNORE INTO seminar_user "
-              . "(Seminar_id, user_id, status) VALUES (?, ?, 'dozent')");
+                                          . "(Seminar_id, user_id, status) VALUES (?, ?, 'dozent')");
         $stmt->execute(array($sem_id, get_userid($username)));
     }
 
@@ -421,7 +425,7 @@ class StudygroupModel
     function removeFounder($username, $sem_id)
     {
         $stmt = DBManager::get()->prepare("DELETE FROM seminar_user "
-              . "WHERE Seminar_id = ? AND user_id = ?");
+                                          . "WHERE Seminar_id = ? AND user_id = ?");
         $stmt->execute(array($sem_id, get_userid($username)));
     }
 
@@ -434,10 +438,10 @@ class StudygroupModel
      */
     function getFounders($sem_id)
     {
-        $query = "SELECT username, perms, ". $GLOBALS['_fullname_sql']['full_rev'] ." as fullname FROM seminar_user "
-               . "LEFT JOIN auth_user_md5 USING (user_id) "
-               . "LEFT JOIN user_info USING (user_id) "
-               . "WHERE Seminar_id = ? AND status = 'dozent'";
+        $query = "SELECT username, perms, " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname FROM seminar_user "
+                 . "LEFT JOIN auth_user_md5 USING (user_id) "
+                 . "LEFT JOIN user_info USING (user_id) "
+                 . "WHERE Seminar_id = ? AND status = 'dozent'";
 
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($sem_id));
@@ -460,21 +464,18 @@ class StudygroupModel
             $elements_per_page = get_config('ENTRIES_PER_PAGE');
         }
 
-        $query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev']
-               . " as fullname, seminar_user.mkdate FROM seminar_user "
-               . "LEFT JOIN auth_user_md5 USING (user_id) "
-               . "LEFT JOIN user_info USING (user_id) "
-               . "WHERE Seminar_id = ? "
-               . "ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC";
+        $query = "SELECT user_id ,username ,perms, seminar_user.status, " . $GLOBALS['_fullname_sql']['full_rev']
+                 . " as fullname, seminar_user.mkdate FROM seminar_user "
+                 . "LEFT JOIN auth_user_md5 USING (user_id) "
+                 . "LEFT JOIN user_info USING (user_id) "
+                 . "WHERE Seminar_id = ? "
+                 . "ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC";
 
-        if($elements_per_page != 'all') {
+        if ($elements_per_page != 'all') {
             $query .= " LIMIT " . $lower_bound . "," . $elements_per_page;
         }
 
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute( array($sem_id) );
-
-        return $stmt->fetchAll();
+        return DBManager::get()->fetchGrouped($query, array($sem_id));
     }
     
     /**
@@ -488,7 +489,7 @@ class StudygroupModel
     function inviteMember($user_id, $sem_id)
     {
         $stmt = DBManager::get()->prepare("REPLACE INTO studygroup_invitations "
-              . "(sem_id, user_id, mkdate) VALUES (?, ?, ?)");
+                                          . "(sem_id, user_id, mkdate) VALUES (?, ?, ?)");
         $stmt->execute(array($sem_id, $user_id, time()));
     }
     
@@ -502,7 +503,7 @@ class StudygroupModel
      */
     function cancelInvitation($username, $sem_id)
     {
-        $query = "DELETE FROM studygroup_invitations
+        $query     = "DELETE FROM studygroup_invitations
                   WHERE sem_id = ? AND user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
@@ -520,12 +521,12 @@ class StudygroupModel
      */
     function getInvitations($sem_id)
     {
-        $query = "SELECT username,user_id, ". $GLOBALS['_fullname_sql']['full_rev']
-               . " as fullname, studygroup_invitations.mkdate FROM studygroup_invitations "
-               . "LEFT JOIN auth_user_md5 USING (user_id) "
-               . "LEFT JOIN user_info USING (user_id) "
-               . "WHERE studygroup_invitations.sem_id = ? "
-               . "ORDER BY studygroup_invitations.mkdate ASC";
+        $query = "SELECT username,user_id, " . $GLOBALS['_fullname_sql']['full_rev']
+                 . " as fullname, studygroup_invitations.mkdate FROM studygroup_invitations "
+                 . "LEFT JOIN auth_user_md5 USING (user_id) "
+                 . "LEFT JOIN user_info USING (user_id) "
+                 . "WHERE studygroup_invitations.sem_id = ? "
+                 . "ORDER BY studygroup_invitations.mkdate ASC";
 
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($sem_id));
@@ -544,7 +545,7 @@ class StudygroupModel
     function isInvited($user_id, $sem_id)
     {
         $query = "SELECT count(*) as count FROM studygroup_invitations "
-               . "WHERE user_id = ? AND sem_id = ?";
+                 . "WHERE user_id = ? AND sem_id = ?";
 
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($user_id, $sem_id));
@@ -567,12 +568,10 @@ class StudygroupModel
         elseif ($a['status'] == 'dozent') {
             if ($b['status'] == 'tutor') return -1;
             elseif ($b['status'] == 'autor') return -1;
-        }
-        elseif ($a['status'] == 'tutor') {
+        } elseif ($a['status'] == 'tutor') {
             if ($b['status'] == 'dozent') return +1;
             elseif ($b['status'] == 'autor') return -1;
-        }
-        elseif ($a['status'] == 'autor') {
+        } elseif ($a['status'] == 'autor') {
             if ($b['status'] == 'tutor') return +1;
             elseif ($b['status'] == 'dozent') return +1;
         }
@@ -587,7 +586,7 @@ class StudygroupModel
      */
     function isStudygroup($sem_id)
     {
-        $sql = "SELECT *
+        $sql  = "SELECT *
                 FROM seminare
                 WHERE Seminar_id = ? AND status IN (?)";
         $stmt = DBManager::get()->prepare($sql);
@@ -595,6 +594,7 @@ class StudygroupModel
             $sem_id,
             studygroup_sem_types()
         ));
+
         return $stmt->fetch();
     }
 
@@ -603,8 +603,8 @@ class StudygroupModel
      * of a studygroup will be automatically sent while calling this function.
      * The note contains the user's name and a direct link to the member page of the studygroup.
      *
-     * @param string    $sem_id    id of a seminar / studygroup
-     * @param strimg    $user_id   id of the applicant
+     * @param string $sem_id id of a seminar / studygroup
+     * @param strimg $user_id id of the applicant
      *
      * @return int                 number of recipients
      */
@@ -616,24 +616,25 @@ class StudygroupModel
         $recipients = array();
         $msging     = new Messaging();
 
-        foreach(array_merge($dozenten, $tutors) as $uid => $user) {
+        foreach (array_merge($dozenten, $tutors) as $uid => $user) {
             $recipients[] = $user['username'];
         }
 
         if (studip_strlen($sem->getName()) > 32) //cut subject if to long
-            $subject = sprintf(_("[Studiengruppe: %s...]"),studip_substr($sem->getName(), 0, 30));
+            $subject = sprintf(_("[Studiengruppe: %s...]"), studip_substr($sem->getName(), 0, 30));
         else
-            $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
+            $subject = sprintf(_("[Studiengruppe: %s]"), $sem->getName());
         
         if (StudygroupModel::isInvited($user_id, $sem_id)) {
-            $subject .= " " ._("Einladung akzeptiert");
-            $message  = sprintf(_("%s hat die Einladung zur Studiengruppe %s akzeptiert. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
-                    get_fullname($user_id), $sem->getName(), URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => $sem->id)));
+            $subject .= " " . _("Einladung akzeptiert");
+            $message = sprintf(_("%s hat die Einladung zur Studiengruppe %s akzeptiert. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
+                get_fullname($user_id), $sem->getName(), URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP'] . "dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => $sem->id)));
         } else {
-            $subject .= " " ._("Neuer Mitgliedsantrag");
-            $message  = sprintf(_("%s möchte der Studiengruppe %s beitreten. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
-                    get_fullname($user_id), $sem->getName(), URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => $sem->id)));
+            $subject .= " " . _("Neuer Mitgliedsantrag");
+            $message = sprintf(_("%s möchte der Studiengruppe %s beitreten. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
+                get_fullname($user_id), $sem->getName(), URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP'] . "dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => $sem->id)));
         }
-        return $msging->insert_message($message, $recipients,"____%system%____", '', '', '', '', $subject);
+
+        return $msging->insert_message($message, $recipients, "____%system%____", '', '', '', '', $subject);
     }
 }

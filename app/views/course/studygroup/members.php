@@ -16,137 +16,20 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 
+<? if (!empty($moderators)) : ?>
+    <?= $this->render_partial('course/studygroup/_members_list.php',
+        array('title' =>  _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true))?>
+<? endif ?>
 
-<table class="default sortable-table">
-    <colgroup>
-        <col width="40">
-        <col>
-    </colgroup>
-    <caption>
-        <?= _('GruppengründerIn') ?>
-    </caption>
-    <thead>
-    <tr>
-        <th data-sort="false"></th>
-        <th data-sort="text"><?= _('Name') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <? foreach ($moderators as $m) : ?>
-        <tr>
-            <td>
-                <a style="position: relative" href="<?= $controller->url_for('profile', array('username' => $m['username']))?>">
-                    <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
-                        array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
-                    <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
-                        : '' ?>
-                </a>
-            </td>
-            <td>
-                <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
-                    <?= htmlReady($m['fullname']) ?>
-                </a>
-            </td>
-        </tr>
-    <? endforeach ?>
-    </tbody>
-</table>
+<? if (!empty($tutors)) : ?>
+    <?= $this->render_partial('course/studygroup/_members_list.php',
+        array('title' =>  _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors))?>
+<? endif ?>
 
-
-<table class="default sortable-table">
-    <colgroup>
-        <col width="40">
-        <col>
-        <col width="30">
-    </colgroup>
-    <caption>
-        <?= _('ModeratorIn') ?>
-    </caption>
-    <thead>
-    <tr>
-        <th data-sort="false"></th>
-        <th data-sort="text"><?= _('Name') ?></th>
-        <th data-sort="false"><?= _('Aktionen') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <? foreach ($tutors as $m) : ?>
-        <tr>
-            <td>
-                <a style="position: relative" href="<?= $controller->url_for('profile', array('username' => $m['username']))?>">
-                    <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
-                        array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
-                    <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
-                        : '' ?>
-                </a>
-            </td>
-            <td>
-                <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
-                    <?= htmlReady($m['fullname']) ?>
-                </a>
-            </td>
-            <td class="actions">
-                <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent')
-                       || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)
-                ) : ?>
-
-                    <?= $this->render_partial('course/studygroup/_members_options.php', compact('m')) ?>
-                <? endif ?>
-            </td>
-        </tr>
-    <? endforeach ?>
-    </tbody>
-</table>
-
-
-
-<table class="default sortable-table">
-    <colgroup>
-        <col width="40">
-        <col>
-        <col width="30">
-    </colgroup>
-    <caption>
-        <?= _('Mitglieder') ?>
-    </caption>
-    <thead>
-    <tr>
-        <th></th>
-        <th data-sort="text"><?= _('Name') ?></th>
-        <th data-sort="false"><?= _('Aktion') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <? foreach ($cmembers as $m) : ?>
-        <tr>
-            <td>
-                <a style="position: relative" href="<?= $controller->url_for('profile', array('username' => $m['username']))?>">
-                    <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::SMALL,
-                        array('style' => 'margin-right: 5px', 'title' => htmlReady($m['fullname']))) ?>
-                    <?= ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
-                        ? Assets::img('red_star', array('style' => 'position: absolute; margin: 0px 0px 0px -15px'))
-                        : '' ?>
-                </a>
-            </td>
-            <td>
-                <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
-                    <?= htmlReady($m['fullname']) ?>
-                </a>
-            </td>
-            <td class="actions">
-                <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent')
-                       || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)
-                ) : ?>
-
-                    <?= $this->render_partial('course/studygroup/_members_options.php', compact('m')) ?>
-                <? endif ?>
-            </td>
-        </tr>
-    <? endforeach ?>
-    </tbody>
-</table>
+<? if (!empty($cmembers)) : ?>
+    <?= $this->render_partial('course/studygroup/_members_list.php',
+        array('title' =>  _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers))?>
+<? endif ?>
 
 
 
@@ -160,16 +43,16 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <col width="80">
             </colgroup>
             <tr>
-                <th data-sort="false" ></th>
-                <th data-sort="text" >
+                <th data-sort="false"></th>
+                <th data-sort="text">
                     <?= _('Name') ?>
                 </th>
-                <th data-sort="false" >
+                <th data-sort="false">
                     <?= _('Aktionen') ?>
                 </th>
             </tr>
 
-            <? foreach($accepted as $p) : ?>
+            <? foreach ($accepted as $p) : ?>
                 <tr>
                     <td>
                         <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
@@ -182,12 +65,12 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                         </a>
                     </td>
                     <td class="actions">
-                        <a href="<?=$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username'])?>">
-                            <?= Assets::img('icons/blue/accept', tooltip2(_('Eintragen')))?>
+                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user=' . $p['username']) ?>">
+                            <?= Assets::img('icons/blue/accept', tooltip2(_('Eintragen'))) ?>
                         </a>
 
-                        <a href="<?=$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username'])?>">
-                            <?= Assets::img('icons/blue/trash', tooltip2(_('Ablehnen')))?>
+                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p['username']) ?>">
+                            <?= Assets::img('icons/blue/trash', tooltip2(_('Ablehnen'))) ?>
                         </a>
                     </td>
                 </tr>
@@ -208,12 +91,12 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <th data-sort="text">
                     <?= _('Name') ?>
                 </th>
-                <th data-sort="false" >
+                <th data-sort="false">
                     <?= _('Aktionen') ?>
                 </th>
             </tr>
 
-            <? foreach($invitedMembers as $p) : ?>
+            <? foreach ($invitedMembers as $p) : ?>
                 <tr>
                     <td>
                         <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
@@ -226,8 +109,8 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                         </a>
                     </td>
                     <td class="actions">
-                        <a href="<?=$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user='.$p['username'])?>">
-                            <?= Assets::img('icons/blue/trash', tooltip2(_('Verschickte Einladungen löschen')))?>
+                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user=' . $p['username']) ?>">
+                            <?= Assets::img('icons/blue/trash', tooltip2(_('Verschickte Einladungen löschen'))) ?>
                         </a>
                     </td>
                 </tr>

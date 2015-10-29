@@ -3,19 +3,23 @@
 
 
 //PLEASE, no changes from here
-@base-gray: #3c454e; // #3c454e
+//@base-gray: #3c454e; // #3c454e
+//calculated base gray
+@base-gray: hsv(hsvhue(@base-color),
+hsvsaturation(#3c454e),
+hsvvalue(#3c454e));
 
 @brand-color-dark: @base-color;
-@brand-color-darker: hsv(hsvhue(@base-color)-0.2, 
-    (hsvsaturation(@base-color)+4.5%), 
+@brand-color-darker: hsv(hsvhue(@base-color)-0.2,
+    (hsvsaturation(@base-color)+4.5%),
     (hsvvalue(@base-color)-4.7)); // #1f3f70;
-	
-@brand-color-light: hsv(hsvhue(@base-color), 
-    (hsvsaturation(@base-color)-5.5%), 
+
+@brand-color-light: hsv(hsvhue(@base-color),
+    (hsvsaturation(@base-color)-5.5%),
     (hsvvalue(@base-color)+7.5)); // #36598f;
 
-@brand-color-lighter: hsv(hsvhue(@base-color)+2.3, 
-    (hsvsaturation(@base-color)-41.8%), 
+@brand-color-lighter: hsv(hsvhue(@base-color)+2.3,
+    (hsvsaturation(@base-color)-41.8%),
     (hsvvalue(@base-color)+23.9)); // #899ab9;
 
 @public_course_bgcolor: @red;
@@ -120,3 +124,8 @@
 
 @fieldset-header: @content-color-20;
 @fieldset-border: @base-color-20;
+
+// contrast colors
+@contrast-content-white: contrast(@content-color, #ffffff, #000000, 67%);
+@contrast-content-gray: contrast(@content-color, @dark-gray-color, #000000 , 67%);
+@contrast-content-hovergray: contrast(@content-color, @dark-gray-color-10, @dark-gray-color);

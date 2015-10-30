@@ -1583,9 +1583,9 @@ button.ui-button::-moz-focus-inner {
   position: absolute;
   z-index: 9999;
   max-width: 300px;
-  -webkit-box-shadow: 0 0 5px #a7aaaf;
-  -moz-box-shadow: 0 0 5px #a7aaaf;
-  box-shadow: 0 0 5px #a7aaaf;
+  -webkit-box-shadow: 0 0 5px #adb0a8;
+  -moz-box-shadow: 0 0 5px #adb0a8;
+  box-shadow: 0 0 5px #adb0a8;
 }
 /* Fades and background-images don't work well together in IE6, drop the image */
 * html .ui-tooltip {
@@ -1611,16 +1611,16 @@ body .ui-tooltip {
   font-size: 1em;
 }
 .ui-widget-content {
-  border: 1px solid #a7aaaf;
+  border: 1px solid #adb0a8;
   background: #ffffff url(../images/vendor/jquery-ui/ui-bg_inset-hard_100_fcfdfd_1x100.png) 50% bottom repeat-x;
-  color: #3c434e;
+  color: #484f3d;
 }
 .ui-widget-content a {
-  color: #3c434e;
+  color: #484f3d;
 }
 .ui-widget-header {
-  border: 1px solid #899ab9;
-  background: #7e92b0 url(../images/vendor/jquery-ui/ui-bg_gloss-wave_55_5c9ccc_500x100.png) 50% 50% repeat-x;
+  border: 1px solid #b8ea77;
+  background: #a8ce70 url(../images/vendor/jquery-ui/ui-bg_gloss-wave_55_5c9ccc_500x100.png) 50% 50% repeat-x;
   color: #ffffff;
   font-weight: bold;
 }
@@ -1633,8 +1633,8 @@ body .ui-tooltip {
 .ui-menu-item .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  background: #e2e3e4;
-  border: 1px solid #d8d9dc;
+  background: #e4e5e2;
+  border: 1px solid #dadcd8;
   color: #000;
   font-weight: bold;
 }
@@ -1652,8 +1652,8 @@ body .ui-tooltip {
 .ui-menu-item .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-  background: #28497c;
-  border: 1px solid #8a8e95;
+  background: #6ead10;
+  border: 1px solid #91958b;
   color: #fff;
   font-weight: bold;
 }
@@ -1673,7 +1673,7 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
   background: #ffffff;
-  border: 1px solid #a7aaaf;
+  border: 1px solid #adb0a8;
   color: #000;
   font-weight: bold;
 }
@@ -1690,12 +1690,12 @@ body .ui-tooltip {
 .ui-widget-header .ui-state-highlight {
   border: 1px solid #ffbd33;
   background: #ffd785 url(../images/vendor/jquery-ui/ui-bg_flat_55_fbec88_40x100.png) 50% 50% repeat-x;
-  color: #3c434e;
+  color: #484f3d;
 }
 .ui-state-highlight a,
 .ui-widget-content .ui-state-highlight a,
 .ui-widget-header .ui-state-highlight a {
-  color: #3c434e;
+  color: #484f3d;
 }
 .ui-state-error,
 .ui-widget-content .ui-state-error,
@@ -2333,14 +2333,14 @@ body .ui-tooltip {
 }
 /* Overlays */
 .ui-widget-overlay {
-  background: #a7aaaf url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+  background: #adb0a8 url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: .3;
   filter: alpha(opacity=30);
 }
 .ui-widget-shadow {
   margin: -8px 0 0 -8px;
   padding: 8px;
-  background: #a7aaaf url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+  background: #adb0a8 url(../images/vendor/jquery-ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: .3;
   filter: alpha(opacity=30);
   -moz-border-radius: 8px;
@@ -2370,7 +2370,7 @@ body .ui-tooltip {
   background: #fff;
 }
 .ui-widget-header {
-  background-color: #899ab9;
+  background-color: #b8ea77;
   background-image: none;
 }
 .ui-widget_columnl {
@@ -2387,7 +2387,7 @@ body .ui-tooltip {
   padding: 2%;
 }
 .ui-widget_head {
-  background-color: #899ab9;
+  background-color: #b8ea77;
   color: white;
   font-size: 1.3em;
   line-height: 30px;
@@ -2420,7 +2420,7 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-  background-color: #899ab9;
+  background-color: #b8ea77;
   color: white;
 }
 .ui-datepicker-header .ui-icon {
@@ -2430,11 +2430,11 @@ body .ui-tooltip {
 .ui-accordion .ui-accordion-header .ui-state-default,
 .ui-accordion .ui-accordion-header .ui-state-active,
 .ui-accordion .ui-accordion-header .ui-state-hover {
-  background: #e7ebf1;
+  background: #f1fbe4;
   border-radius: 0;
   border: none;
-  border-top: 1px solid #e2e3e4;
-  border-bottom: 1px solid #e2e3e4;
+  border-top: 1px solid #e4e5e2;
+  border-bottom: 1px solid #e4e5e2;
   color: #000;
   font-size: 10pt;
   margin: 0;
@@ -2446,7 +2446,7 @@ body .ui-tooltip {
   margin: 0;
   padding: 0;
   border: 0;
-  border-bottom: 1px solid #e2e3e4;
+  border-bottom: 1px solid #e4e5e2;
 }
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
@@ -2457,7 +2457,7 @@ body .ui-tooltip {
   background-image: none;
 }
 .ui-datepicker-calendar .ui-state-active {
-  color: #36598f;
+  color: #7fc11c;
 }
 .ui-datepicker-calendar .ui-state-active.ui-state-hover {
   color: white;
@@ -2633,7 +2633,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 .ms-container .ms-selectable,
 .ms-container .ms-selection {
-  color: #3c434e;
+  color: #484f3d;
   width: 47%;
 }
 .ms-container .ms-selectable li.ms-elem-selectable,
@@ -2641,8 +2641,8 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selectable li.ms-elem-selection,
 .ms-container .ms-selection li.ms-elem-selection {
   background: #fff;
-  border-bottom-color: #e7ebf1;
-  color: #3c434e;
+  border-bottom-color: #f1fbe4;
+  color: #484f3d;
   padding: 2px;
 }
 .ms-container .ms-selectable li,
@@ -2670,13 +2670,13 @@ textarea.ui-resizable-handle.ui-resizable-s {
 .ms-container .ms-selection li.ms-hover,
 .ms-container .ms-selectable li:hover,
 .ms-container .ms-selection li:hover {
-  background: #28497c;
+  background: #6ead10;
   color: #fff;
 }
 .ms-container .ms-selectable li.disabled,
 .ms-container .ms-selection li.disabled {
-  background-color: #e7ebf1;
-  color: #3c434e;
+  background-color: #f1fbe4;
+  color: #484f3d;
   cursor: not-allowed;
 }
 .ms-container .ms-selectable li[style*="background-image"],
@@ -2714,7 +2714,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   visibility: hidden;
 }
 .ms-container .ms-selectable li:not(.disabled):hover {
-  background-color: #28497c;
+  background-color: #6ead10;
 }
 .ms-container .ms-selectable li:not(.disabled):hover::after {
   visibility: visible;
@@ -2744,7 +2744,7 @@ textarea.ui-resizable-handle.ui-resizable-s {
   visibility: hidden;
 }
 .ms-container .ms-selection li:hover {
-  background-color: #28497c;
+  background-color: #6ead10;
 }
 .ms-container .ms-selection li:hover::before {
   visibility: visible;
@@ -2753,9 +2753,9 @@ textarea.ui-resizable-handle.ui-resizable-s {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  border-color: #c5c7ca;
+  border-color: #c8cac5;
   position: relative;
 }
 .ms-container .ms-optgroup-label {
-  color: #8a8e95;
+  color: #91958b;
 }

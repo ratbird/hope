@@ -1,5 +1,5 @@
 //if you like, change this (your brand color)
-@base-color: #28497c; // #28497c
+@base-color: @green; // #28497c
 
 
 //PLEASE, no changes from here
@@ -28,7 +28,17 @@ hsvvalue(#3c454e));
 @table-footer-color: @dark-gray-color-15;
 
 @active-color: @red;
+/* This code calculates another activity color in case you dont wanna stick with red
+
+@active-color: hsv((hsvhue(@red) - hsvhue(@base-color) + hsvhue(@origin-base-color)),
+hsvsaturation(@red),
+hsvvalue(@red));
+*/
+
 @black: #000000;
+
+// Default studip base color
+@origin-base-color: #28497c; // #28497c
 
 @base-color-80: mix(@base-color, #fff, 80%); // #536d96
 @base-color-60: mix(@base-color, #fff, 60%); // #7e92b0

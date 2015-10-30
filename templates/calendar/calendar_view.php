@@ -9,7 +9,6 @@ list($start_hour, $end_hour) = $calendar_view->getRange();
 
 $cell_height = $calendar_view->getHeight() + 2;
 $cell_steps = $cell_height / 60;
-$cell_width = floor (100 / sizeof($calendar_view->getColumns()));
 ?>
 
 <script>
@@ -79,13 +78,12 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
 <!-- the view -->
 <div id="schedule">
 
-<table id="schedule_data" style="width: 100%;" cellspacing="0" cellpadding="0">
+<table id="schedule_data" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <td style="width: 40px;">
-            </td>
+            <td></td>
             <? foreach ($calendar_view->getColumns() as $column) : ?>
-            <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px; width: <?= $cell_width ?>%">
+            <td>
             <? if ($column->getURL()): ?>
                 <a href="<?= URLHelper::getLink($column->getURL()) ?>">
             <? endif; ?>
@@ -98,8 +96,8 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
         </tr>
     </thead>
     <tbody>
-        <tr height="1">
-            <td style="width: 40px;">
+        <tr>
+            <td>
             </td>
             <td colspan="7" style="padding: 0px">
                 <!-- the lines separating the hours and half-hours -->
@@ -113,7 +111,7 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
             </td>
         </tr>
         <tr>
-            <td style="text-align: right; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px;">
+            <td>
                 <!-- the hours for the time-table -->
                 <? for ($i = $start_hour; $i <= $end_hour; $i++) : ?>
                 <div class="schedule_hours"><?= ($i < 10) ? '0'.$i : $i ?>:00</div>

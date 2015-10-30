@@ -2,11 +2,9 @@
 <form method="post" name="edit" action="<?= $controller->url_for('institute/basicdata/store/' . $i_view) ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
 
-    <header>
-        <h2><?= _('Verwaltung der Einrichtungsgrunddaten') ?></h2>
-    </header>
-
     <fieldset>
+        <legend><?= _('Verwaltung der Einrichtungsgrunddaten') ?></legend>
+
         <label>
             <?= _('Name') ?>
 

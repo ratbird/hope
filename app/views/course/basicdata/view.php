@@ -20,7 +20,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
     <?= MessageBox::$message_types[$msg[0]]($msg[1]) ?>
 <? endforeach ?>
 
-<form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set', $course_id) ?>" <?= $dialog_attr ?> class="default">
+<form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set', $course_id) ?>" <?= $dialog_attr ?> class="default collapsable">
     <?= CSRFProtection::tokenTag() ?>
     <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 
@@ -54,7 +54,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
         </label>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="collapsed">
         <legend><?= _('Einrichtungen') ?></legend>
 
 <? if (!$institutional): ?>
@@ -67,7 +67,8 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
             <em class="required"></em>
         <? endif; ?>
         <? if ($inst['type'] === 'select' && !$inst['choices'][$inst['value']]): ?>
-             <?= htmlReady(get_object_name($inst['value'], 'inst')['name']) ?>
+            <? $name = get_object_name($inst['value'], 'inst'); ?>
+             <?= htmlReady($name['name']) ?>
         <? else: ?>
             <?= $this->render_partial('course/basicdata/_input', array('input' => $inst)) ?>
         <? endif; ?>
@@ -76,17 +77,17 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
 <? endif; ?>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="collapsed">
         <legend><?= _('Personal') ?></legend>
 
-        <table class="default" id="leiterinnen_tabelle">
+        <table class="default">
             <caption>
                 <?= htmlReady($dozenten_title) ?>
 
             <? if ($perm_dozent && !$dozent_is_locked): ?>
                 <span class="actions">
                     <?= MultiPersonSearch::get('add_member_dozent' . $course_id)
-                            ->setTitle(_('Mehrere DozentInnen hinzufügen'))
+                            ->setTitle(_('Mehrere Lehrende hinzufügen'))
                             ->setSearchObject($dozentUserSearch)
                             ->setDefaultSelectedUser(array_keys($dozenten))
                             ->setDataDialogStatus(Request::isXhr())
@@ -284,10 +285,9 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
         <? endif; ?>
             </tbody>
         </table>
-
     </fieldset>
 
-    <fieldset>
+    <fieldset class="collapsed">
         <legend><?= _('Beschreibungen') ?></legend>
 
 <? if (!$descriptions): ?>

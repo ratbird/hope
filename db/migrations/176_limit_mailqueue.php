@@ -26,8 +26,6 @@ class LimitMailqueue extends Migration
 
     function down()
     {
-        DBManager::get()->query("DROP TABLE IF EXISTS `cronjobs_tasks`, `cronjobs_schedules`, `cronjobs_logs`");
-
         DBManager::get()->query("DELETE FROM config WHERE field IN ('MAILQUEUE_SEND_LIMIT')");
     }
 }

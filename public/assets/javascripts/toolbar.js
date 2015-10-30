@@ -102,7 +102,10 @@
             });
 
             // Attach toolbar to the specified element
-            wrap = $('<div class="editor_toolbar"/>').css('width', width);
+            wrap = $('<div class="editor_toolbar"/>').css({
+                width: width,
+                display: $element.css('display')
+            });
             $element.css('width', '100%').wrap(wrap).before(toolbar);
         }
     };

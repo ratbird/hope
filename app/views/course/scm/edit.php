@@ -21,7 +21,7 @@ use Studip\Button,
             <input required id="tab_name" type="text" name="tab_name"
                    value="<?= htmlReady($scm->tab_name) ?>"
                    placeholder="<?= _('Titel der Informationsseite') ?>"
-                   data-length-hint maxlength="20">
+                   maxlength="20">
         </label>
 
         <label>

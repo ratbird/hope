@@ -7,19 +7,17 @@ $email_restriction = Config::get()->EMAIL_DOMAIN_RESTRICTION;
 ?>
 <script type="text/javascript" language="javaScript">
 jQuery(document).ready(function() {
-    STUDIP.register = {
-        re_username: <?= $validator->username_regular_expression ?>,
-        re_name: <?= $validator->name_regular_expression ?>,
-        re_email: <?= trim($email_restriction)
-                      ? $validator->email_regular_expression_restricted_part
-                      : $validator->email_regular_expression ?>
-    };
+    STUDIP.register.re_username = <?= $validator->username_regular_expression ?>;
+    STUDIP.register.re_name = <?= $validator->name_regular_expression ?>;
+    STUDIP.register.re_email = <?= trim($email_restriction)
+        ? $validator->email_regular_expression_restricted_part
+        : $validator->email_regular_expression ?>;
 });
 </script>
 
-<?if (isset($username)): ?>
+<? if (isset($username)): ?>
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
-<?endif;?>
+<? endif; ?>
 
 <h1><?= _('Stud.IP - Registrierung') ?></h1>
 
@@ -39,7 +37,7 @@ jQuery(document).ready(function() {
                    onchange="STUDIP.register.checkusername()"
                    value="<?= htmlReady($username) ?>"
                    autofocus
-                   required size="32" maxlength="63"
+                   required maxlength="63"
                    autocapitalize="off" autocorrect="off">
         </label>
 
@@ -48,7 +46,7 @@ jQuery(document).ready(function() {
             <em class="required"></em>
             <input type="password" name="password" id="password"
                    onchange="STUDIP.register.checkpassword()"
-                   required size="32" maxlength="31">
+                   required maxlength="31">
         </label>
 
         <label for="password2">
@@ -56,11 +54,13 @@ jQuery(document).ready(function() {
             <em class="required"></em>
             <input type="password" name="password2" id="password2"
                    onchange="STUDIP.register.checkpassword2()"
-                   required size="32" maxlength="31">
+                   required maxlength="31">
         </label>
 
         <label for="title_front">
             <?= _('Titel') ?>
+        </label>
+        <section class="hgroup size-m">
             <select name="title_chooser_front" onchange="document.login.title_front.value=document.login.title_chooser_front.options[document.login.title_chooser_front.selectedIndex].text;" class="size-s">
             <? foreach ($GLOBALS['TITLE_FRONT_TEMPLATE'] as $template): ?>
                 <option <? if ($template === $title_front) echo 'selected'; ?>>
@@ -71,12 +71,13 @@ jQuery(document).ready(function() {
 
             <input type="text" name="title_front" id="title_front"
                    value="<?= htmlReady($title_front) ?>"
-                   size="32" maxlength="63">
-        </label>
+                   maxlength="63">
+        </section>
 
         <label for="title_rear">
             <?= _('Titel nachgestellt') ?>
-
+        </label>
+        <section class="hgroup size-m">
             <select name="title_chooser_rear" onChange="document.login.title_rear.value=document.login.title_chooser_rear.options[document.login.title_chooser_rear.selectedIndex].text;" class="size-s">
             <? foreach ($GLOBALS['TITLE_REAR_TEMPLATE'] as $template): ?>
                 <option <? if ($template === $title_rear) echo 'selected'; ?>>
@@ -87,8 +88,8 @@ jQuery(document).ready(function() {
 
             <input type="text" name="title_rear" id="title_rear"
                    value="<?= htmlReady($title_rear) ?>"
-                   size="32" maxlength="63">
-        </label>
+                   maxlength="63">
+        </section>
 
         <label for="first_name">
             <?= _('Vorname') ?>
@@ -96,7 +97,7 @@ jQuery(document).ready(function() {
             <input type="text" name="Vorname" id="first_name"
                    onchange="STUDIP.register.checkVorname()"
                    value="<?= htmlReady($Vorname) ?>"
-                   required size="32" maxlength="63">
+                   required maxlength="63">
         </label>
 
         <label for="last_name">
@@ -105,14 +106,14 @@ jQuery(document).ready(function() {
             <input type="text" name="Nachname" id="last_name"
                    onchange="STUDIP.register.checkNachname()"
                    value="<?= htmlReady($Nachname) ?>"
-                   required size="32" maxlength="63">
+                   required maxlength="63">
         </label>
 
-        <section class="display-row">
-            <label for="gender">
-                <?= _('Geschlecht') ?>
-            </label>
+        <label for="gender">
+            <?= _('Geschlecht') ?>
+        </label>
 
+        <section class="hgroup">
             <label>
                 <input type="radio" <? if (!$geschlecht) echo 'checked' ?> name="geschlecht" value="0">
                 <?= _("unbekannt") ?>
@@ -131,31 +132,35 @@ jQuery(document).ready(function() {
 
         <label for="email">
             <?= _('E-Mail') ?>
-
-        <? if (trim($email_restriction)): ?>
-            <input name="Email" id="email"
+        <? if (!trim($email_restriction)): ?>
+            <input type="email" name="Email" id="email"
                    onchange="STUDIP.register.checkEmail()"
-                   value="<?= htmlReady(isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '') ?>"
-                   required size="20" maxlength="63" class="size-m">
-            <select name="emaildomain" class="size-m">
+                   value="<?= htmlReady(trim($Email)) ?>"
+                   required maxlength="63">
+        <? endif; ?>
+        </label>
+
+    <? if (trim($email_restriction)): ?>
+        <section class="hgroup size-m">
+            <input type="text" name="Email" id="email"
+                   onchange="STUDIP.register.checkEmail()"
+                   value="<?= htmlReady(preg_replace('/@.*$/', '', trim($Email ?: ''))) ?>"
+                   required maxlength="63">
+            <select name="emaildomain">
             <? foreach (explode(',', $email_restriction) as $domain): ?>
                 <option value="<?= trim($email_restriction_part) ?>"
-                        <? if (trim($email_restriction_part) == Request::get('emaildomain')) echo 'selected'; ?>>
+                        <? if (trim($domain) == Request::get('emaildomain')) echo 'selected'; ?>>
                     @<?= trim($domain) ?>
                 </option>
             <? endforeach; ?>
             </select>
-        <? else: ?>
-            <input type="email" name="Email" id="email"
-                   onchange="STUDIP.register.checkEmail()"
-                   value="<?= htmlReady(trim($Email)) ?>"
-                   required size="32" maxlength="63">
-        <? endif; ?>
-        </label>
+        </section>
+    <? endif; ?>
     </fieldset>
     
     <footer>
         <?= Button::createAccept(_('Registrieren'))?>
-        <?= LinkButton::createCancel(_('Registrierung abbrechen'), 'index.php?cancel_login=1')?>
+        <?= LinkButton::createCancel(_('Registrierung abbrechen'),
+                                     URLHelper::getLink('index.php?cancel_login=1')) ?>
     </footer>
 </form>

@@ -50,9 +50,10 @@ use Studip\Button, Studip\LinkButton;
             <input name="nachname" type="text" value="<?= htmlReady($user['nachname']) ?>">
         </label>
 
-        <label>
+        <label for="inactive">
             <?= _('inaktiv') ?>
-
+        </label>
+        <section class="hgroup size-m">
             <select name="inaktiv" class="size-s">
             <? foreach(array('<=' => '>=', '=' => '=', '>' => '<', 'nie' =>_('nie')) as $i => $one): ?>
                 <option value="<?= htmlready($i) ?>" <? if ($user['inaktiv'] === $i) echo 'selected'; ?>>
@@ -60,11 +61,13 @@ use Studip\Button, Studip\LinkButton;
                 </option>
             <? endforeach; ?>
             </select>
-        </label>
-        
-        <label>
-            <input name="inaktiv_tage" type="text" value="<?= htmlReady($user['inaktiv_tage']) ?>" size="10"> <?= _('Tage') ?>
-        </label>
+
+            <label>
+                <input name="inaktiv_tage" type="number" id="inactive"
+                       value="<?= htmlReady($user['inaktiv_tage']) ?>">
+                <?= _('Tage') ?>
+            </label>
+        </section>
 
     </fieldset>
 
@@ -106,18 +109,20 @@ use Studip\Button, Studip\LinkButton;
             <?= htmlReady($datafield->getName()) ?>
 
         <? if ($datafield->getType() === 'bool'): ?>
-            <label>
-                <input type="radio" name="<?= $datafield->getID() ?>" value="" <? if (strlen($user[$datafield->getID()]) === 0) echo 'checked'; ?>>
-                <?= _('egal') ?>
-            </label>
-            <label>
-                <input type="radio" name="<?= $datafield->getID()?>" value="1" <? if ($user[$datafield->getID()] === '1') echo 'checked'; ?>>
-                <?= _('ja') ?>
-            </label>
-            <label>
-                <input type="radio" name="<?= $datafield->getID()?>" value="0" <? if ($user[$datafield->getID()] === '0') echo 'checked'; ?>>
-                <?= _('nein') ?>
-            </label>
+            <section class="hgroup size-m">
+                <label>
+                    <input type="radio" name="<?= $datafield->getID() ?>" value="" <? if (strlen($user[$datafield->getID()]) === 0) echo 'checked'; ?>>
+                    <?= _('egal') ?>
+                </label>
+                <label>
+                    <input type="radio" name="<?= $datafield->getID()?>" value="1" <? if ($user[$datafield->getID()] === '1') echo 'checked'; ?>>
+                    <?= _('ja') ?>
+                </label>
+                <label>
+                    <input type="radio" name="<?= $datafield->getID()?>" value="0" <? if ($user[$datafield->getID()] === '0') echo 'checked'; ?>>
+                    <?= _('nein') ?>
+                </label>
+            </section>
         <? elseif ($datafield->getType() === 'selectbox' || $datafield->getType() === 'radio') : ?>
             <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
             <select name="<?= $datafield->getID()?>">

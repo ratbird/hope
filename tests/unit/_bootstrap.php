@@ -22,7 +22,7 @@
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
-if (version_compare(phpversion(), '5.5', '>=')) {
+if (version_compare(phpversion(), '5.4', '>=')) {
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 }
 

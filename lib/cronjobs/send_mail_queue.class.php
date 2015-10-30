@@ -40,6 +40,6 @@ class SendMailQueueJob extends CronJob
      */
     public function execute($last_result, $parameters = array())
     {
-        MailQueueEntry::sendAll();
+        MailQueueEntry::sendAll(Config::get()->MAILQUEUE_SEND_LIMIT);
     }
 }

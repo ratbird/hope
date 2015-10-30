@@ -59,24 +59,47 @@
                 filename.text(selected_file.name + " " + Math.ceil(selected_file.size / 1024) + "KB");
             });
 
-            // $(document).on("keyup dialog-open", "form.default input[maxlength]", function () {
-            //     var maxlength = $(this).attr("maxlength"),
-            //         length = $(this).val().length,
-            //         indicator;
-            //     if ($(this).next().is(".maxlength")) {
-            //         indicator = $(this).next();
-            //     } else {
-            //         indicator = $('<div class="maxlength"/>');
-            //         $(this).after(indicator);
-            //     }
-            //     indicator.text(maxlength - length);
-            // }).find("form.default input[maxlength]").trigger("keyup");
-
-            $(document).on('click', 'form.default fieldset.collapsable legend,form.default.collapsable fieldset legend', function () {
-                $(this).closest('fieldset').toggleClass('collapsed');
-            });
         }
     };
-    
+
+    // Allow fieldsets to collapse
+    $(document).on('click', 'form.default fieldset.collapsable legend,form.default.collapsable fieldset legend', function () {
+        $(this).closest('fieldset').toggleClass('collapsed');
+    });
+
+    // Display a visible hint that indicates how many characters the user may
+    // input if the element has a maxlength restriction.
+    $(document).on('focus', 'form.default input[maxlength]', function () {
+        var counter = $(this).data('maxlength-counter'),
+            width   = $(this).outerWidth(true),
+            wrap;
+        if (counter === undefined) {
+            wrap = $('<div class="length-hint-wrapper">').width(width);
+            $(this).wrap(wrap);
+
+            counter = $('<div class="length-hint">').hide();
+            counter.text('Zeichen verbleibend: '.toLocaleString());
+            counter.width(width);
+
+            counter.append('<span class="length-hint-counter">');
+            counter.insertAfter(this);
+
+            $(this).data('maxlength-counter', counter);
+            window.setTimeout(function () {
+                $(this).focus();
+            }.bind(this), 0);
+        }
+        counter.finish().show('blind', {direction: 'up'}, 300);
+    }).on('blur', 'form.default input[maxlength]', function () {
+        var counter = $(this).data('maxlength-counter');
+        counter.finish().hide('blind', {direction: 'up'}, 300);
+    }).on('focus propertychange keyup', 'form.default input[maxlength]', function () {
+        var counter = $(this).data('maxlength-counter'),
+            count   = $(this).val().length,
+            max     = parseInt($(this).attr('maxlength'), 10);
+
+        counter.find('.length-hint-counter').text(max - count);
+    });
+
 }(jQuery, STUDIP));
 

@@ -97,41 +97,6 @@
         last_element = event.target;
     });
 
-    // Display a visible hint that indicates how many characters the user has
-    // already input into a text field or how many remaining characters he may
-    // input if the element has a maxlength restriction.
-    // By providing a css selector in the "data-length-hint" attribute you
-    // are able to specify a custom element for the character display. If none
-    // is provided or the selector does not point to a valid element, the
-    // display element is created next to the attributed element.
-    $(document).on('focus propertychange keyup', '[data-length-hint]', function () {
-        var selector = $(this).data().lengthHint,
-            counter  = $(selector),
-            count    = $(this).val().length,
-            max      = parseInt($(this).attr('maxlength'), 10),
-            element,
-            message;
-
-        if (max) {
-            count = max - count;
-        }
-
-        if (counter.length === 0) {
-            counter =  $(this).next('.length-hint').find('.length-hint-counter');
-        }
-
-        if (counter.length === 0) {
-            message = max
-                    ? "Zeichen verbleibend: ".toLocaleString()
-                    : "Eingegebene Zeichen: ".toLocaleString();
-            element = $('<span class="length-hint">').text(message);
-            counter = $('<span class="length-hint-counter">');
-            element.append(counter).insertAfter(this);
-        }
-
-        counter.text(count);
-    });
-
     // Lets the user confirm a specific action (submit or click event).
     function confirmation_handler(event) {
         if (!event.isDefaultPrevented()) {

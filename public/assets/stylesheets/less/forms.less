@@ -31,7 +31,7 @@ form.default {
         }
     }
 
-    input[type=date], input[type=number] {
+    input[type=date], input[type=time], input[type=number] {
         max-width: @max-width-s;
     }
 
@@ -127,6 +127,7 @@ form.default {
     // Group elements in a row
     .hgroup {
         .flex();
+        .flex-align-items(flex-start);
         max-width: @max-width-m;
 
         &.size-s {
@@ -136,7 +137,7 @@ form.default {
             max-width: @max-width-l;
         }
 
-        * {
+        > * {
             .box-sizing(border-box);
             .flex-item(1, 0);
 
@@ -181,6 +182,21 @@ form.default {
             *:not(legend) {
                 display: none;
             }
+        }
+    }
+
+    // Length hint display for input[maxlength]
+    .length-hint {
+        color: @light-gray-color;
+        text-align: right;
+    }
+    .length-hint-wrapper {
+        .flex();
+        .flex-wrap(wrap);
+
+        > * {
+            .box-sizing(border-box);
+            .flex-item(1, 0, 100%);
         }
     }
 }

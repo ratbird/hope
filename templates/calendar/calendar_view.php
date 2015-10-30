@@ -99,7 +99,7 @@ $cell_steps = $cell_height / 60;
         <tr>
             <td>
             </td>
-            <td colspan="7" style="padding: 0px">
+            <td colspan="<?= sizeof($calendar_view->getColumns()) ?>" style="padding: 0px">
                 <!-- the lines separating the hours and half-hours -->
                 <div style="position: relative">
                     <div style="position: absolute; width: 100%;">

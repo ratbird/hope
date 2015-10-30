@@ -12,6 +12,10 @@ jQuery(document).ready(function() {
     STUDIP.register.re_email = <?= trim($email_restriction)
         ? $validator->email_regular_expression_restricted_part
         : $validator->email_regular_expression ?>;
+
+    $('form[name=login]').submit(function () {
+        return STUDIP.register.checkdata();
+    }).data('validator').destroy();
 });
 </script>
 
@@ -21,7 +25,7 @@ jQuery(document).ready(function() {
 
 <h1><?= _('Stud.IP - Registrierung') ?></h1>
 
-<form name="login" action="<?= URLHelper::getLink() ?>" method="post" onsubmit="return STUDIP.register.checkdata();" class="default">
+<form name="login" action="<?= URLHelper::getLink() ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="login_ticket" value="<?= Seminar_Session::get_ticket() ?>">
 
@@ -61,7 +65,7 @@ jQuery(document).ready(function() {
             <?= _('Titel') ?>
         </label>
         <section class="hgroup size-m">
-            <select name="title_chooser_front" onchange="document.login.title_front.value=document.login.title_chooser_front.options[document.login.title_chooser_front.selectedIndex].text;" class="size-s">
+            <select name="title_chooser_front" data-copy-to="#title_front" class="size-s">
             <? foreach ($GLOBALS['TITLE_FRONT_TEMPLATE'] as $template): ?>
                 <option <? if ($template === $title_front) echo 'selected'; ?>>
                     <?= htmlReady($template) ?>
@@ -78,7 +82,7 @@ jQuery(document).ready(function() {
             <?= _('Titel nachgestellt') ?>
         </label>
         <section class="hgroup size-m">
-            <select name="title_chooser_rear" onChange="document.login.title_rear.value=document.login.title_chooser_rear.options[document.login.title_chooser_rear.selectedIndex].text;" class="size-s">
+            <select name="title_chooser_rear" data-copy-to="#title_rear" class="size-s">
             <? foreach ($GLOBALS['TITLE_REAR_TEMPLATE'] as $template): ?>
                 <option <? if ($template === $title_rear) echo 'selected'; ?>>
                     <?= htmlReady($template) ?>
@@ -157,7 +161,7 @@ jQuery(document).ready(function() {
         </section>
     <? endif; ?>
     </fieldset>
-    
+
     <footer>
         <?= Button::createAccept(_('Registrieren'))?>
         <?= LinkButton::createCancel(_('Registrierung abbrechen'),

@@ -7,7 +7,7 @@ STUDIP.register = {
     re_name: null,
             
     clearErrors: function (field) {
-        jQuery('input[name=' + field + ']').parent().find('div').remove();
+        jQuery('input[name=' + field + ']').parent().find('div.error').remove();
     },
 
     addError: function (field, error) {
@@ -17,20 +17,20 @@ STUDIP.register = {
     
     checkusername: function () {
         STUDIP.register.clearErrors('username');
-        
-        var checked = true;
+
         if (jQuery('input[name=username]').val().length < 4) {
             STUDIP.register.addError('username', "Der Benutzername ist zu kurz, er sollte mindestens 4 Zeichen lang sein.".toLocaleString());
             document.login.username.focus();
-            checked = false;
+            return false;
         }
         
         if (STUDIP.register.re_username.test(jQuery('input[name=username]').val()) === false) {
             STUDIP.register.addError('username', "Der Benutzername enthält unzulässige Zeichen, er darf keine Sonderzeichen oder Leerzeichen enthalten.".toLocaleString());
             document.login.username.focus();
-            checked = false;
+            return false;
         }
-        return checked;
+
+        return true;
     },
 
     checkpassword: function () {

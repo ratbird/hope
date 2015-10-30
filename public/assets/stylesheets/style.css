@@ -1102,6 +1102,52 @@ form.default label.file-upload .filename {
   padding-left: 0.5em;
   color: #8a8e95;
 }
+form.default .hgroup {
+  max-width: 48em;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+}
+form.default .hgroup.size-s {
+  max-width: 8em;
+}
+form.default .hgroup.size-l {
+  max-width: 100%;
+}
+form.default .hgroup * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  -moz-box-flex: 1;
+  flex: 1 0 auto;
+}
+form.default .hgroup *:not(:first-child) {
+  margin-left: 3px;
+}
+form.default .hgroup *:not(:last-child) {
+  margin-right: 3px;
+}
+form.default .hgroup label {
+  margin-top: 0;
+}
+form.default .hgroup input[type=date],
+form.default .hgroup input[type=email],
+form.default .hgroup input[type=number],
+form.default .hgroup input[type=password],
+form.default .hgroup input[type=text],
+form.default .hgroup input[type=url],
+form.default .hgroup textarea,
+form.default .hgroup select {
+  display: inline-block;
+  margin-top: 0;
+  width: auto;
+}
 .js form.default.collapsable fieldset legend,
 form.default fieldset.collapsable legend {
   -webkit-box-sizing: border-box;

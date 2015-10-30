@@ -1,4 +1,7 @@
 form.default {
+    @max-width-s: 8em;
+    @max-width-m: 48em;
+    @max-width-l: 100%;
 
     input[type=date], input[type=email], input[type=number],
     input[type=password], input[type=text], input[type=url],
@@ -7,7 +10,7 @@ form.default {
 
         border: 1px solid @light-gray-color-40;
         color: @dark-gray-color;
-        max-width: 48em;
+        max-width: @max-width-m;
         padding: 5px;
         width: 100%;
         .transition(all 0.3s ease-out);
@@ -17,19 +20,19 @@ form.default {
         }
 
         &.size-s {
-            max-width: 8em;
+            max-width: @max-width-s;
         }
 
         &.size-m {
         }
 
         &.size-l {
-            max-width: 100%;
+            max-width: @max-width-l;
         }
     }
 
     input[type=date], input[type=number] {
-        max-width: 8em;
+        max-width: @max-width-s;
     }
 
     textarea {
@@ -121,6 +124,44 @@ form.default {
         }
     }
 
+    // Group elements in a row
+    .hgroup {
+        .flex();
+        max-width: @max-width-m;
+
+        &.size-s {
+            max-width: @max-width-s;
+        }
+        &.size-l {
+            max-width: @max-width-l;
+        }
+
+        * {
+            .box-sizing(border-box);
+            .flex-item(1, 0);
+
+            &:not(:first-child) {
+                margin-left: 3px;
+            }
+            &:not(:last-child) {
+                margin-right: 3px;
+            }
+        }
+
+        label {
+            margin-top: 0;
+        }
+
+        input[type=date], input[type=email], input[type=number],
+        input[type=password], input[type=text], input[type=url],
+        textarea, select {
+            display: inline-block;
+            margin-top: 0;
+            width: auto;
+        }
+    }
+
+    // Collapsable fieldsets
     .js &.collapsable fieldset, fieldset.collapsable {
         legend {
             .box-sizing(border-box);
@@ -141,7 +182,7 @@ form.default {
                 display: none;
             }
         }
-    } 
+    }
 }
 
 .studip-checkbox {

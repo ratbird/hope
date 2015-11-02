@@ -35,8 +35,7 @@ class Settings_CalendarController extends Settings_SettingsController
 
         PageLayout::setHelpKeyword('Basis.MyStudIPTerminkalender');
         PageLayout::setTitle(_('Einstellungen des Terminkalenders anpassen'));
-        Navigation::activateItem('/links/settings/calendar_new');
-        PageLayout::setTabNavigation('/links/settings');
+        Navigation::activateItem('/settings/calendar_new');
         SkipLinks::addIndex(_('Einstellungen des Terminkalenders anpassen'), 'main_content', 100);
     }
 

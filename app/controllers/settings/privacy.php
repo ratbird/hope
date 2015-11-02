@@ -30,9 +30,8 @@ class Settings_PrivacyController extends Settings_SettingsController
 
         PageLayout::setHelpKeyword('Basis.MyStudIPPrivacy');
         PageLayout::setTitle(_('Privatsphäre'));
-        PageLayout::setTabNavigation('/links/settings');
 
-        Navigation::activateItem('/links/settings/privacy');
+        Navigation::activateItem('/settings/privacy');
 
         SkipLinks::addIndex(_('Privatsphäre'), 'layout_content', 100);
     }

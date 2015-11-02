@@ -83,12 +83,10 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('resources', $navigation);
         }
 
-        // quick links
-        $links = new Navigation('Links');
-
         // settings
         if (is_object($user) && $perm->have_perm('autor')) {
             $navigation = new Navigation(_('Einstellungen'));
+            $navigation->setImage('icons/lightblue/radiobutton-unchecked.svg', array('title' => _('Persönliche Einstellungen')));
 
             $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'dispatch.php/settings/general'));
             $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'dispatch.php/settings/privacy'));
@@ -110,8 +108,11 @@ class StudipNavigation extends Navigation
                 $navigation->addSubNavigation('api', new Navigation(_('API-Berechtigungen'), 'dispatch.php/api/authorizations'));
             }
 
-            $links->addSubNavigation('settings', $navigation);
+            $this->addSubNavigation('settings', $navigation);
         }
+
+        // quick links
+        $links = new Navigation('Links');
 
         // login / logout
         if (is_object($user) && $user->id != 'nobody') {

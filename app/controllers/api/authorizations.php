@@ -19,8 +19,7 @@ class Api_AuthorizationsController extends AuthenticatedController
         $layout = $GLOBALS['template_factory']->open('layouts/base');
         $this->set_layout($layout);
 
-        Navigation::activateItem('/links/settings/api');
-        PageLayout::setTabNavigation('/links/settings');
+        Navigation::activateItem('/settings/api');
         PageLayout::setTitle(_('Applikationen'));
 
         $this->types = array(

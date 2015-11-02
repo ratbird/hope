@@ -29,8 +29,7 @@ class Settings_GeneralController extends Settings_SettingsController
         parent::before_filter($action, $args);
 
         PageLayout::setTitle(_('Allgemeine Einstellungen anpassen'));
-        PageLayout::setTabNavigation('/links/settings');
-        Navigation::activateItem('/links/settings/general');
+        Navigation::activateItem('/settings/general');
         SkipLinks::addIndex(_('Allgemeine Einstellungen anpassen'), 'layout_content', 100);
     }
 

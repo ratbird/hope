@@ -27,157 +27,133 @@ $cal_step_weeks = array(
 );
 ?>
 
-<form method="post" action="<?= $controller->url_for('settings/calendar/store') ?>">
+<form method="post" action="<?= $controller->url_for('settings/calendar/store') ?>" class="default">
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="default" id="main_content">
-    <colgroup>
-        <col width="50%">
-        <col width="50%">
-    </colgroup>
-    <caption><?= _('Einstellungen des Terminkalenders anpassen') ?></caption>
-    <tbody>
-        <tr>
-            <th colspan="2"><?= _('Allgemeine Optionen') ?></th>
-        </tr>
-        <tr>
-            <td>
-                <label for="cal_view"><?= _('Startansicht anpassen') ?></label>
-            </td>
-            <td>
-                <select name="cal_view" id="cal_view" size="1">
+    <fieldset>
+        <legend>
+            <?= _('Einstellungen des Terminkalenders') ?>
+        </legend>
+
+        <label>
+            <?= _('Startansicht') ?>
+            <select name="cal_view" id="cal_view" size="1">
                 <? foreach ($cal_views as $index => $label): ?>
                     <option value="<?= $index ?>" <? if ($view == $index) echo 'selected'; ?>>
                         <?= $label ?>
                     </option>
                 <? endforeach; ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label><?= _('Wochenansicht anpassen') ?></label>
-            </td>
-            <td>
-                <label>
-                    <input type="radio" name="cal_type_week" value="LONG"
-                           <? if ($type_week == 'LONG') echo 'checked'; ?>>
+            </select>
+        </label>
+
+        <label>
+            <?= _('Wochenansicht') ?>
+            <select name="cal_type_week">
+                <option value="LONG"<?= $type_week == 'LONG' ? ' selected' : "" ?>>
                     <?= _('7 Tage-Woche') ?>
+                </option>
+                <option value="SHORT"<?= $type_week == 'SHORT' ? ' selected' : "" ?>>
+                    <?= _('5 Tage-Woche') ?>
+                </option>
+            </select>
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <?= _('Einzelterminkalender') ?>
+        </legend>
+
+        <div>
+            <?= _('Zeitraum der Tages- und Wochenansicht') ?>
+            <section class="hgroup">
+                <label>
+                    <?= _("Von") ?>
+                    <select name="cal_start" aria-label="<?= _('Startzeit der Tages- und Wochenansicht') ?>" class="size-s">
+                        <? for ($i = 0; $i < 24; $i += 1): ?>
+                            <option value="<?= $i ?>" <? if ($start == $i) echo 'selected'; ?>>
+                                <?= sprintf('%02u:00', $i) ?>
+                            </option>
+                        <? endfor; ?>
+                    </select>
+                    <?= _("Uhr") ?>
                 </label>
-                <br>
 
                 <label>
-                    <input type="radio" name="cal_type_week" value="SHORT"
-                           <? if ($type_week == 'SHORT') echo 'checked'; ?>>
-                    <?= _('5 Tage-Woche') ?>
+                    <?= _("Bis") ?>
+                    <select name="cal_end" aria-label="<?= _('Endzeit der Tages- und Wochenansicht') ?>" class="size-s">
+                        <? for ($i = 0; $i < 24; $i += 1): ?>
+                            <option value="<?= $i ?>" <? if ($end == $i) echo 'selected'; ?>>
+                                <?= sprintf('%02u:00', $i) ?>
+                            </option>
+                        <? endfor; ?>
+                    </select>
+                    <?= _("Uhr") ?>.
                 </label>
-            </td>
-        </tr>
-<? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
-    </tbody>
-    <tbody>
-        <tr>
-            <th colspan="2"><?= _('Einzelterminkalender') ?></th>
-        </tr>
-<? endif ?>
-        <tr>
-            <td>
-                <label><?= _('Zeitraum der Tages- und Wochenansicht') ?></label>
-            </td>
-            <td>
-                <select name="cal_start" aria-label="<?= _('Startzeit der Tages- und Wochenansicht') ?>">
-                <? for ($i = 0; $i < 24; $i += 1): ?>
-                    <option value="<?= $i ?>" <? if ($start == $i) echo 'selected'; ?>>
-                        <?= sprintf('%02u:00', $i) ?>
-                    </option>
-                <? endfor; ?>
-                </select>
-                <?= _('Uhr bis') ?>
-                <select name="cal_end" aria-label="<?= _('Endzeit der Tages- und Wochenansicht') ?>">
-                <? for ($i = 0; $i < 24; $i += 1): ?>
-                    <option value="<?= $i ?>" <? if ($end == $i) echo 'selected'; ?>>
-                        <?= sprintf('%02u:00', $i) ?>
-                    </option>
-                <? endfor; ?>
-                </select>
-                <?= _('Uhr.') ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="cal_step_day"><?= _('Zeitintervall der Tagesansicht') ?></label>
-            </td>
-            <td>
-                <select name="cal_step_day" for="cal_step_day">
+            </section>
+        </div>
+
+        <label>
+            <?= _('Zeitintervall der Tagesansicht') ?>
+            <select name="cal_step_day" for="cal_step_day">
                 <? foreach ($cal_step_days as $index => $label): ?>
                     <option value="<?= $index ?>" <? if ($step_day == $index) echo 'selected'; ?>>
                         <?= $label ?>
                     </option>
                 <? endforeach; ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="cal_step_week"><?= _('Zeitintervall der Wochenansicht') ?></label>
-            </td>
-            <td>
-                <select name="cal_step_week" id="cal_step_week">
+            </select>
+        </label>
+
+        <label>
+            <?= _('Zeitintervall der Wochenansicht') ?>
+            <select name="cal_step_week" id="cal_step_week">
                 <? foreach ($cal_step_weeks as $index => $label): ?>
                     <option value="<?= $index ?>" <? if ($step_week == $index) echo 'selected'; ?>>
                         <?= $label ?>
                     </option>
                 <? endforeach; ?>
-                </select>
-            </td>
-        </tr>
-<? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
-    </tbody>
-    <tbody>
-        <tr>
-            <th colspan="2"><?= _('Gruppenterminkalender') ?></th>
-        </tr>
-        <tr>
-            <td>
-                <label for="cal_step_day_group"><?= _("Zeitintervall der Tagesansicht"); ?></label>
-            </td>
-            <td>
+            </select>
+        </label>
+
+    </fieldset>
+
+    <? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
+        <fieldset>
+            <legend>
+                <?= _('Gruppenterminkalender') ?>
+            </legend>
+
+            <label>
+                <?= _("Zeitintervall der Tagesansicht") ?>
                 <select name="cal_step_day_group" id="cal_step_day_group">
-                <? foreach ($cal_step_days as $index => $label): ?>
-                    <option value="<?= $index ?>" <? if ($step_day_group == $index) echo 'selected'; ?>>
-                        <?= $label ?>
-                    </option>
-                <? endforeach; ?>
+                    <? foreach ($cal_step_days as $index => $label): ?>
+                        <option value="<?= $index ?>" <? if ($step_day_group == $index) echo 'selected'; ?>>
+                            <?= $label ?>
+                        </option>
+                    <? endforeach; ?>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="cal_step_week_group"><?= _('Zeitintervall der Wochenansicht') ?></label>
-            </td>
-            <td>
+            </label>
+
+            <label>
+                <?= _('Zeitintervall der Wochenansicht') ?>
                 <select name="cal_step_week_group" id="cal_step_week_group">
-                <? foreach ($cal_step_weeks as $index => $label): ?>
-                    <option value="<?= $index ?>" <? if ($step_week_group == $index) echo 'selected'; ?>>
-                        <?= $label ?>
-                    </option>
-                <? endforeach; ?>
+                    <? foreach ($cal_step_weeks as $index => $label): ?>
+                        <option value="<?= $index ?>" <? if ($step_week_group == $index) echo 'selected'; ?>>
+                            <?= $label ?>
+                        </option>
+                    <? endforeach; ?>
                 </select>
-            </td>
-        </tr>
-<? endif; ?>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="2">
-            <? if (Request::option('atime')): ?>
-                <input type="hidden" name="atime" value="<?= Request::option('atime') ?>">
-            <? endif ?>
-                <input type="hidden" name="view" value="calendar">
-                <?= Button::createAccept(_('Übernehmen'), array('title' => _('Änderungen übernehmen'))) ?>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+            </label>
+
+        </fieldset>
+    <? endif ?>
+
+    <footer>
+        <? if (Request::option('atime')): ?>
+            <input type="hidden" name="atime" value="<?= Request::option('atime') ?>">
+        <? endif ?>
+        <input type="hidden" name="view" value="calendar">
+        <?= Button::createAccept(_('Übernehmen'), array('title' => _('Änderungen übernehmen'))) ?>
+    </footer>
 </form>

@@ -42,8 +42,7 @@ class Settings_NotificationController extends Settings_SettingsController
 
         PageLayout::setHelpKeyword('Basis.MyStudIPBenachrichtigung');
         PageLayout::setTitle(_('Benachrichtigung über neue Inhalte anpassen'));
-        PageLayout::setTabNavigation('/links/settings');
-        Navigation::activateItem('/links/settings/notification');
+        Navigation::activateItem('/settings/notification');
         SkipLinks::addIndex(_('Benachrichtigung über neue Inhalte anpassen'), 'layout_content', 100);
 
         Sidebar::get()->setImage('sidebar/seminar-sidebar.png');

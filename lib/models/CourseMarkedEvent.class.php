@@ -9,20 +9,20 @@
  * @copyright   2015 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  */
 
 class CourseMarkedEvent extends CourseEvent
 {
-    
+
     protected static function configure($config= array())
     {
         parent::configure($config);
     }
-    
+
     /**
      * Returns all CourseMarkedEvents in the given time range for the given range_id.
-     * 
+     *
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
@@ -32,7 +32,7 @@ class CourseMarkedEvent extends CourseEvent
     {
         $stmt = DBManager::get()->prepare('SELECT DISTINCT termine.* FROM schedule_seminare '
                 . 'INNER JOIN termine ON seminar_id = range_id '
-                . 'WHERE user_id = :user_id '
+                . 'WHERE user_id = :user_id AND schedule_seminare.metadate_id = \'\' '
                 . 'AND date BETWEEN :start AND :end '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
@@ -50,12 +50,12 @@ class CourseMarkedEvent extends CourseEvent
         }
         return $event_collection;
     }
-    
+
     public function getPermission($user_id = null)
     {
         return Event::PERMISSION_READABLE;
     }
-    
+
     /**
      * Returns the title of this event.
      * The title of a course event is the name of the course or if a topic is
@@ -68,10 +68,10 @@ class CourseMarkedEvent extends CourseEvent
     {
         $title = $this->course->name;
         $title .= ' ' . _('(vorgemerkt)');
-        
+
         return $title;
     }
-    
+
     /**
      * Returns the index of the category.
      * If the user has no permission, 255 is returned.
@@ -85,10 +85,10 @@ class CourseMarkedEvent extends CourseEvent
     {
         return 256;
     }
-    
+
     public function getDescription()
     {
         return '';
     }
-    
+
 }

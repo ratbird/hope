@@ -199,6 +199,19 @@ form.default {
             .flex-item(1, 0, 100%);
         }
     }
+
+    // Display small forms as inline
+    &.inline {
+        label {
+            display: inline;
+            max-width: inherit;
+            vertical-align: middle;
+            width: auto;
+        }
+        input, textarea, select, button {
+            display: inline-block;;
+        }
+    }
 }
 
 .studip-checkbox {

@@ -717,7 +717,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         $cmembers = StudygroupModel::getMembers($id, $this->lower_bound, $this->view == 'list' ? 'all' : Config::get()->ENTRIES_PER_PAGE);
         $this->cmembers         = $cmembers;
-        uasort($this->cmembers, array('StudygroupModel','compare_status'));
+        uasort($this->cmembers, 'StudygroupModel::compare_status');
 
         $this->groupname        = $sem->name;
         $this->sem_id           = $id;

@@ -15,9 +15,9 @@
                     <div>
                          <?= htmlReady($m['fullname']) ?>
                         <? if (isset($moderators[$user_id])) : ?>
-                            <em><?= _("GruppengründerIn") ?></em>
+                            <p><em><?= _("GruppengründerIn") ?></em></p>
                         <? elseif (isset($tutors[$user_id])) : ?>
-                            <em><?= _("ModeratorIn") ?></em>
+                            <p><em><?= _("ModeratorIn") ?></em></p>
                         <? endif ?>
                     </div>
                 </a>

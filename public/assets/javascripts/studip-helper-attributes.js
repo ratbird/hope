@@ -100,9 +100,10 @@
     // Lets the user confirm a specific action (submit or click event).
     function confirmation_handler(event) {
         if (!event.isDefaultPrevented()) {
-            var question = $(event.target).data().confirm
-                        || $(event.target).attr('title')
-                        || $(event.target).find('[title]:first').attr('title')
+            var element = $(event.target).closest('[data-confirm]'),
+                question = element.data().confirm
+                        || element.attr('title')
+                        || element.find('[title]:first').attr('title')
                         || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
             return window.confirm(question);
         }

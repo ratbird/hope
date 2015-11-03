@@ -1,13 +1,9 @@
 <?
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
-
 ?>
-<?= $this->render_partial('admin/role/status_message') ?>
 
-<h3>
-    <?= _('Rollenverwaltung für Plugins') ?>
-</h3>
+<h3><?= _('Rollenverwaltung für Plugins') ?></h3>
 
 <form action="<?= $controller->url_for('admin/role/assign_plugin_role') ?>" style="margin-bottom: 1em;" method="POST">
     <?= CSRFProtection::tokenTag() ?>

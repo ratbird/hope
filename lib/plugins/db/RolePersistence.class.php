@@ -142,8 +142,7 @@ class RolePersistence
         // save it to the database first
         if ($role->getRoleid() <> UNKNOWN_ROLE_ID) {
             $roleid = self::saveRole($role);
-        }
-        else {
+        } else {
             $roleid = $role->getRoleid();
         }
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_user ".

@@ -1,9 +1,7 @@
 <?
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
-
 ?>
-<?= $this->render_partial('admin/role/status_message') ?>
 
 <? if ($delete_role): ?>
     <?= $GLOBALS['template_factory']->render('shared/question',
@@ -51,15 +49,3 @@ use Studip\Button, Studip\LinkButton;
     <? endforeach ?>
 </tbody>
 </table>
-
-<h3>
-    <?= _('Neue Rolle anlegen') ?>
-</h3>
-
-<form action="<?= $controller->url_for('admin/role/create_role') ?>" method="POST">
-    <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
-    Name: <input type="text" name="name" size="25" value="">
-    <?= Button::create(_('Anlegen'), 'createrolebtn', array('title' => _('Rolle anlegen')))?>
-</form>
-

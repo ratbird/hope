@@ -39,7 +39,6 @@ class Course_WizardController extends AuthenticatedController
         $this->sidebar->setImage('sidebar/seminar-sidebar.png');
         $this->sidebar->setTitle(_('Neue Veranstaltung anlegen'));
         $this->steps = CourseWizardStepRegistry::findBySQL("`enabled`=1 ORDER BY `number`");
-        StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'].'/lib/classes/coursewizardsteps');
         // Special handling for studygroups.
         if (Request::int('studygroup')) {
             $this->flash['studygroup'] = true;
@@ -116,6 +115,7 @@ class Course_WizardController extends AuthenticatedController
             }
         // The "create" button was clicked -> create course.
         } else if (Request::submitted('create')) {
+            $_SESSION['coursewizard'][$this->temp_id]['copy_basic_data'] = Request::submitted('copy_basic_data');
             if ($this->getValues()) {
                 if ($this->course = $this->createCourse()) {
                     // A studygroup has been created.
@@ -180,6 +180,9 @@ class Course_WizardController extends AuthenticatedController
     {
         $this->stepnumber = $stepnumber;
         $this->temp_id = $temp_id;
+        if (isset($_SESSION['coursewizard'][$this->temp_id]['source_id'])) {
+            $this->source_course = Course::find($_SESSION['coursewizard'][$this->temp_id]['source_id']);
+        }
     }
 
     /**
@@ -194,7 +197,13 @@ class Course_WizardController extends AuthenticatedController
         $stepNumber = Request::int('step');
         $method = Request::get('method');
         $parameters = Request::getArray('parameter');
-        $this->result = call_user_func_array(array($this->getStep($stepNumber), $method), $parameters);
+        $result = call_user_func_array(array($this->getStep($stepNumber), $method), $parameters);
+        if (is_array($result) || is_object($result)) {
+            $this->render_json($result);
+        } else {
+            $this->render_text($result);
+        }
+
     }
 
     public function forward_action($step_number, $temp_id)
@@ -210,15 +219,20 @@ class Course_WizardController extends AuthenticatedController
      * Copy an existing course.
      */
     public function copy_action($id) {
+        if (!$GLOBALS['perm']->have_studip_perm('dozent', $id)
+            || LockRules::Check($id, 'seminar_copy')) {
+            throw new AccessDeniedException(_("Sie dürfen diese Veranstaltung nicht kopieren"));
+        }
         $course = Course::find($id);
         $values = array();
         for ($i = 0 ; $i < sizeof($this->steps) ; $i++) {
             $step = $this->getStep($i);
             $values = $step->copy($course, $values);
         }
+        $values['source_id'] = $course->id;
         $this->initialize();
         $_SESSION['coursewizard'][$this->temp_id] = $values;
-        $this->redirect($this->url_for('course/wizard/step', 0, $this->temp_id));
+        $this->redirect($this->url_for('course/wizard/step/0/' . $this->temp_id, array('cid' => '')));
     }
 
     /**

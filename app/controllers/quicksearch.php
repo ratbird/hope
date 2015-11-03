@@ -30,7 +30,7 @@ class QuicksearchController extends AuthenticatedController
     {
         try {
             $needle    = Request::get('request');
-            $form_data = Request::getArray('form_data');
+            $form_data = iterator_to_array(Request::getInstance());
 
             $this->search = QuickSearch::getFromSession($query_id);
             $results      = $this->getResults($needle, $form_data);

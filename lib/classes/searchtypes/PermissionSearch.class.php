@@ -62,7 +62,12 @@ class PermissionSearch extends SQLSearch {
         if ($offset || $limit != PHP_INT_MAX) {
             $sql .= sprintf(' LIMIT %d, %d', $offset, $limit);
         }
-        foreach ($this->presets + $contextual_data as $name => $value) {
+        if (is_callable($this->presets, true)) {
+            $presets = call_user_func($this->presets, $this, $contextual_data);
+        } else {
+            $presets = $this->presets + $contextual_data;
+        }
+        foreach ($presets as $name => $value) {
             if ($name !== "input" && strpos($sql, ":".$name) !== false) {
                 if (is_array($value)) {
                     if (count($value)) {

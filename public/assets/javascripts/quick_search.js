@@ -54,31 +54,32 @@ STUDIP.QuickSearch = {
                 },
                 source: function (input, add) {
                     //get the variables that should be sent:
-                    var send_vars = {
-                        form_data: STUDIP.QuickSearch.formToJSON('#' + name),
-                        request: input.term
-                    };
+                    var send_vars = jQuery('#' + name).closest('form').serializeArray();
+                    send_vars.push({
+                        name: 'request',
+                        value: input.term
+                    });
+
                     jQuery.ajax({
                         url: url,
                         type: "post",
-                        dataType: "json",
                         data: send_vars
                     }).done(function (data) {
                         var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
                         //an array of possible selections
-                        
+
                         if (!data.length) {
                             add([{value: '', label: 'Kein Ergebnis gefunden.'.toLocaleString(), disabled: true}]);
                             return;
                         }
-                        
+
                         var suggestions = _.map(data, function (val) {
                             //adding a label and a hidden item_id - don't use "value":
                             var label_text = val.item_name;
                             if (val.item_description !== undefined) {
                                 label_text += "<br>" + val.item_description
                             }
-                            
+
                             return {
                                 //what is displayed in the drop down box
                                 label: label_text,
@@ -102,7 +103,7 @@ STUDIP.QuickSearch = {
                     if (ui.item.disabled) {
                         return;
                     }
-                    
+
                     //inserts the ID of the selected item in the hidden input:
                     jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
                     //and execute a special function defined before by the programmer:
@@ -115,7 +116,7 @@ STUDIP.QuickSearch = {
                     }
                 }
             });
-            
+
             if (jQuery("#" + name + "_frame").length) {
                 // trigger search on button click
                 $( '#' + name + '_frame input[type="submit"]').click(function(e) {

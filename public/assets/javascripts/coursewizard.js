@@ -34,7 +34,6 @@ STUDIP.CourseWizard = {
             wrapper.append(trash);
             $('#wizard-participating').append(wrapper);
         }
-        STUDIP.CourseWizard.getLecturerSearch();
     },
 
     /**
@@ -50,42 +49,9 @@ STUDIP.CourseWizard = {
         if (grandparent.children('div').length == 0) {
             grandparent.children('div.description').addClass('hidden-js');
         }
-        STUDIP.CourseWizard.getLecturerSearch();
         return false;
     },
 
-    /**
-     * Fetches a quicksearch input form via AJAX. This is necessary as the
-     * required QuickSearch needs an institute ID which is not known in
-     * advance and is provided by JS here.
-     */
-    getLecturerSearch: function()
-    {
-        var params = 'step=' + $('input[name="step"]').val() +
-            '&method=getSearch' +
-            '&parameter[coursetype]=' + $('select#wizard-coursetype option:selected').val();
-        params += '&parameter[inst][]=' + $('select#wizard-home-institute option:selected').val();
-        $('input[name^="participating["]').each(function () {
-            params += '&parameter[inst][]=' + $(this).attr('id');
-        });
-        $('input[name^="lecturers["]').each(function () {
-            params += '&parameter[lecturers][]=' + $(this).attr('id');
-        });
-        var target = $('div#wizard-lecturersearch');
-        var oldSearch = target.html();
-        $.ajax(
-            $('select#wizard-home-institute').data('ajax-url'),
-            {
-                data: params,
-                success: function (data, status, xhr) {
-                    target.html(data);
-                },
-                error: function (xhr, status, error) {
-                    alert(error);
-                }
-            }
-        );
-    },
 
     /**
      * Adds a new person to the course.
@@ -143,6 +109,11 @@ STUDIP.CourseWizard = {
     addDeputy: function(id, name)
     {
         STUDIP.CourseWizard.addPerson(id, name, 'deputies', 'deputy', 'wizard-deputies', 'lecturers');
+    },
+
+    addTutor: function(id, name)
+    {
+        STUDIP.CourseWizard.addPerson(id, name, 'tutors', 'tutor', 'wizard-tutors', 'lecturers');
     },
 
     /**

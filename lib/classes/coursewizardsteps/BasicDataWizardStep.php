@@ -162,10 +162,7 @@ class BasicDataWizardStep implements CourseWizardStep
             $values['deputies'] = array();
         }
 
-        // Quicksearch for lecturers.
-        $tpl->set_attribute('lsearch', $this->getSearch($values['coursetype'],
-            array_merge(array($values['institute']), array_keys($values['participating'])),
-            array_keys($values['lecturers'])));
+
 
         // Quicksearch for deputies if applicable.
         if ($deputies) {
@@ -187,6 +184,17 @@ class BasicDataWizardStep implements CourseWizardStep
                 ->fireJSFunctionOnSelect('STUDIP.CourseWizard.addDeputy')
                 ->render());
         }
+
+        if (!$values['tutors']) {
+            $values['tutors'] = array();
+        }
+
+        list($lsearch, $tsearch)  = array_values($this->getSearch($values['coursetype'],
+            array_merge(array($values['institute']), array_keys($values['participating'])),
+            array_keys($values['lecturers']), array_keys($values['tutors'])));
+        // Quicksearch for lecturers.
+        $tpl->set_attribute('lsearch', $lsearch);
+        $tpl->set_attribute('tsearch', $tsearch);
         $tpl->set_attribute('values', $values);
         return $tpl->render();
     }
@@ -233,6 +241,17 @@ class BasicDataWizardStep implements CourseWizardStep
         if ($remove = array_keys(Request::getArray('remove_deputy'))) {
             $remove = $remove[0];
             unset($values['deputies'][$remove]);
+        }
+        // Add a tutor.
+        if (Request::submitted('add_tutor') && Request::option('tutor_id')) {
+            $values['tutors'][Request::option('tutor_id')] = true;
+            unset($values['tutor_id']);
+            unset($values['tutor_id_parameter']);
+        }
+        // Remove a tutor.
+        if ($remove = array_keys(Request::getArray('remove_tutor'))) {
+            $remove = $remove[0];
+            unset($values['tutors'][$remove]);
         }
         return $values;
     }
@@ -292,35 +311,35 @@ class BasicDataWizardStep implements CourseWizardStep
     public function storeValues($course, $values)
     {
         // We only need our own stored values here.
+        if (@$values['copy_basic_data'] === true) {
+            $source = Course::find($values['source_id']);
+        }
         $values = $values[__CLASS__];
+        $seminar = new Seminar($course);
+        $semclass = $seminar->getSemClass();
+
+        if (isset($source)) {
+            $course->setData($source->toArray('untertitel ort sonstiges art teilnehmer vorrausetzungen lernorga leistungsnachweis ects admission_turnout modules'));
+            foreach ($source->datafields as $one) {
+                $df = $one->getTypedDatafield();
+                if ($df->isEditable()) {
+                    $course->datafields->findOneBy('datafield_id', $one->datafield_id)->content = $one->content;
+                }
+            }
+        }
+
         $course->status = $values['coursetype'];
         $course->start_time = $values['start_time'];
         $course->duration_time = 0;
         $course->name = $values['name'];
         $course->veranstaltungsnummer = $values['number'];
+        $course->beschreibung = $values['description'];
         $course->institut_id = $values['institute'];
-        $course->visible = 0;
-        $lecturers = array_map(function($l) use ($course)
-        {
-            return CourseMember::create(array(
-                'Seminar_id' => $course->id,
-                'user_id' => $l,
-                'status' => 'dozent',
-                'position' => 0,
-                'gruppe' => 0,
-                'notification' => 0,
-                'comment' => '',
-                'visible' => 'yes',
-                'label' => '',
-                'bind_calendar' => 1
-            ));
-        }, array_keys($values['lecturers']));
-        $course->members = SimpleORMapCollection::createFromArray($lecturers);
-        if (Config::get()->DEPUTIES_ENABLE && $values['deputies']) {
-            foreach ($values['deputies'] as $d => $assigned) {
-                addDeputy($d, $course->id);
-            }
-        }
+        $course->visible = $semclass['visible'];
+        $course->admission_prelim = $semclass['admission_prelim_default'];
+        $course->lesezugriff = $semclass['default_read_level'] ?: 1;
+        $course->schreibzugriff = $semclass['default_write_level'] ?: 1;
+
         // Studygroups: access and description.
         if (in_array($values['coursetype'], studygroup_sem_types())) {
             $course->visible = 1;
@@ -337,9 +356,25 @@ class BasicDataWizardStep implements CourseWizardStep
                     $course->admission_prelim_txt = Config::get()->STUDYGROUP_ACCEPTANCE_TEXT;
                     break;
             }
-            $course->beschreibung = $values['description'];
         }
         if ($course->store()) {
+            StudipLog::log('SEM_CREATE', $course->id, null, 'Veranstaltung mit Assistent angelegt');
+            $seminar->setInstitutes(array_keys($values['participating']));
+            foreach (array_keys($values['lecturers']) as $user_id) {
+                $seminar->addMember($user_id, 'dozent');
+            }
+            foreach (array_keys($values['tutors']) as $user_id) {
+                $seminar->addMember($user_id, 'tutor');
+            }
+            if (Config::get()->DEPUTIES_ENABLE && $values['deputies']) {
+                foreach ($values['deputies'] as $d => $assigned) {
+                    addDeputy($d, $course->id);
+                }
+            }
+            if ($semclass['admission_type_default'] == 3) {
+                $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
+                CourseSet::addCourseToSet($course_set_id, $course->id);
+            }
             return $course;
         } else {
             return false;
@@ -371,13 +406,16 @@ class BasicDataWizardStep implements CourseWizardStep
             'start_time' => $course->start_time,
             'name' => $course->name,
             'number' => $course->veranstaltungsnummer,
-            'institute' => $course->institut_id
+            'institute' => $course->institut_id,
+            'description' => $course->beschreibung
         );
-        $lecturers = array_map(function($l) {
-                return $l->user_id;
-            },
-            $course->getMembersWithStatus('dozent'));
+        $lecturers = $course->members->findBy('status', 'dozent')->pluck('user_id');
         $data['lecturers'] = array_flip($lecturers);
+        $tutors = $course->members->findBy('status', 'tutor')->pluck('user_id');
+        $data['tutors'] = array_flip($tutors);
+        $participating = $course->institutes->pluck('institut_id');
+        $data['participating'] = array_flip($participating);
+        unset($data['participating'][$course->institut_id]);
         if (Config::get()->DEPUTIES_ENABLE) {
             $deputies = getDeputies($course->id);
             $data['deputies'] = array_keys($deputies);
@@ -386,27 +424,50 @@ class BasicDataWizardStep implements CourseWizardStep
         return $values;
     }
 
-    public function getSearch($course_type, $institute_ids, $exclude_users = array())
+    public function getSearch($course_type, $institute_ids, $exclude_lecturers = array(),$exclude_tutors = array())
     {
-        if (SeminarCategories::getByTypeId($course_type)->only_inst_user){
+        if (SeminarCategories::getByTypeId($course_type)->only_inst_user) {
             $search = 'user_inst';
         } else {
             $search = 'user';
         }
-
         $psearch = new PermissionSearch($search,
             sprintf(_("%s hinzufügen"), get_title_for_status('dozent', 1, $course_type)),
             'user_id',
-            array('permission' => 'dozent',
-                'exclude_user' => $exclude_users ?: array(),
-                'institute' => $institute_ids
-            )
+            __CLASS__ . '::lsearchHelper'
         );
-        $qsearch = QuickSearch::get('lecturer_id', $psearch)
+        $lsearch = QuickSearch::get('lecturer_id', $psearch)
             ->withButton(array('search_button_name' => 'search_lecturer', 'reset_button_name' => 'reset_lsearch'))
             ->fireJSFunctionOnSelect('STUDIP.CourseWizard.addLecturer')
             ->render();
-        return $qsearch;
+
+        $tutor_psearch = new PermissionSearch($search,
+            sprintf(_("%s hinzufügen"), get_title_for_status('tutor', 1, $course_type)),
+            'user_id',
+            __CLASS__ . '::tsearchHelper'
+        );
+        $tsearch = QuickSearch::get('tutor_id', $tutor_psearch)
+            ->withButton(array('search_button_name' => 'search_tutor', 'reset_button_name' => 'reset_tsearch'))
+            ->fireJSFunctionOnSelect('STUDIP.CourseWizard.addTutor')
+            ->render();
+
+        return compact('lsearch', 'tsearch');
+    }
+
+    public static function tsearchHelper($psearch, $context)
+    {
+        $ret['permission'] = array('tutor', 'dozent');
+        $ret['exclude_user'] = array_keys((array)$context['tutors']);
+        $ret['institute'] = array_merge(array($context['institute']), array_keys((array)$context['participating']));
+        return $ret;
+    }
+
+    public static function lsearchHelper($psearch, $context)
+    {
+        $ret['permission'] = 'dozent';
+        $ret['exclude_user'] = array_keys((array)$context['lecturers']);
+        $ret['institute'] = array_merge(array($context['institute']), array_keys((array)$context['participating']));
+        return $ret;
     }
 
 }

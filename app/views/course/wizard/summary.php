@@ -10,6 +10,13 @@
             'Sie weitere Daten hinzufügen können.')) ?>
     <?php endif ?>
     <div style="clear: both; padding-top: 25px;">
+        <? if ($source_course) : ?>
+            <label>
+            <input type="checkbox" checked name="copy_basic_data" value="1">
+            <?=sprintf(_("Alle Grunddaten der Ursprungsveranstaltung (%s) kopieren"),
+                '<a data-dialog href="' . URLHelper::getLink('dispatch.php/course/details', array('sem_id' => $source_course->id)) . '">' . htmlReady($source_course->getFullname()) . '</a>')?>
+            </label>
+        <? endif ?>
         <input type="hidden" name="step" value="<?= $stepnumber ?>"/>
         <?php if ($dialog) : ?>
         <input type="hidden" name="dialog" value="1"/>

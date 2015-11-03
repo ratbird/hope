@@ -32,8 +32,6 @@ class LESSCompiler
      */
     private function __construct()
     {
-        ILess\Autoloader::register();
-
         $this->parser = new ILess\Parser([
             'strictMath' => true,
         ]);

@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
+namespace ILess;
+
 /**
  * Debug information
  *
  * @package ILess
- * @subpackage debug
  */
-class ILess_DebugInfo
+final class DebugInfo
 {
     /**
      * Comment format
@@ -91,10 +92,10 @@ class ILess_DebugInfo
      */
     public function getAsMediaQuery()
     {
-        return strtr(self::$mediaQueryFormat, array(
+        return strtr(self::$mediaQueryFormat, [
             '%file%' => self::escapeFilenameForMediaQuery(sprintf('file://%s', $this->filename)),
-            '%line%' => $this->lineNumber
-        ));
+            '%line%' => $this->lineNumber,
+        ]);
     }
 
     /**
@@ -110,7 +111,7 @@ class ILess_DebugInfo
             $match = '\/';
         }
 
-        return '\\' . $match;
+        return '\\'.$match;
     }
 
     /**
@@ -122,7 +123,7 @@ class ILess_DebugInfo
     public static function escapeFilenameForMediaQuery($filename)
     {
         return preg_replace_callback('/([\.|:|\/|(\\\\)])/',
-                array('self', 'replaceCallback'), $filename);
+            ['ILess\DebugInfo', 'replaceCallback'], $filename);
     }
 
 }

@@ -7,9 +7,9 @@ STYLES = public/assets/stylesheets
 JAVA   = $(shell which java)
 
 ifneq ($(wildcard $(JLESSC)),)
-	LESSC = $(JLESSC)
+	LESSC = $(JLESSC) -sm=on
 else
-	LESSC = $(PLESSC)
+	LESSC = $(PLESSC) -sm=on
 endif
 
 ifneq ($(wildcard $(CODECEPT_VENDOR)),)

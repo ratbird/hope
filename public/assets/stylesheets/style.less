@@ -556,9 +556,9 @@ div.info { padding-left: 1%; }
 // calculate difference in images and apply filter
 .recolor() {
     filter:
-    hue-rotate(unit(hsvhue(@base-color)-hsvhue(#28497c), deg))
-    saturate(100 + hsvsaturation(@base-color)-hsvsaturation(#28497c))
-    brightness(100 + hsvvalue(@base-color)-hsvvalue(#28497c));
+    hue-rotate(unit((hsvhue(@base-color) - hsvhue(#28497c)), deg))
+    saturate((100 + hsvsaturation(@base-color)-hsvsaturation(#28497c)))
+    brightness((100 + hsvvalue(@base-color)-hsvvalue(#28497c)));
 }
 
 .recolor-reset() {

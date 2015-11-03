@@ -190,32 +190,7 @@ abstract class StudIPPlugin {
                        . substr($filename, 0, -5) . '.css';
 
             if (!file_exists($css_file) || (filemtime($css_file) < filemtime($less_file))) {
-                $less  = '';
-                // Load mixins and change relative to absolute filenames 
-                foreach (file($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/mixins.less') as $mixin) {
-                    if (!preg_match('/@import(.*?) "(.*)";/', $mixin, $match)) {
-                        continue;
-                    }
-                    $less .= sprintf('@import%s "%s";' . "\n", 
-                                     $match[1],
-                                     $GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/assets/stylesheets/' . $match[2]);
-                }
-                // Add adjusted image paths
-                $less .= sprintf('@image-path: "%s";', Assets::url('images')) . "\n";
-                $less .= '@icon-path: "@{image-path}/icons/16";' . "\n";
-                // Add actual less styles
-                $less .= file_get_contents($less_file);
-
-                // Compile them
-                require_once 'vendor/mishal-iless/lib/ILess/Autoloader.php';
-                ILess_Autoloader::register();
-                $parser = new ILess_Parser();
-                $parser->setVariables(array(
-                    'image-path' => '"' . Assets::url('images') . '"',
-                ));
-                $parser->parseString($less);
-                $css = $parser->getCSS();
-                file_put_contents($css_file, $css);
+                file_put_contents($css_file, LESSCompiler::getInstance()->compile($less_file));
             }
             $filename  = substr($filename, 0, -5) . '.css';
         }

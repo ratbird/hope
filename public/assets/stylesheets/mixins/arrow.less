@@ -19,7 +19,7 @@
     }
 
     .pseudo(@width, @color) {
-        border: @width solid fadeout(@color, 100%);
+        border: (@width) solid fadeout(@color, 100%);
         content: "";
         height: 0;
         width: 0;
@@ -33,12 +33,12 @@
         border-bottom-color: @color;
         bottom: 100%;
         left: 50%;
-        margin-left: -@width;
+        margin-left: (-@width);
     }
     .top(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .top-pseudo(@width, @color); }
-        margin-top: @margin;
+        margin-top: (@margin);
     }
     .top(@width, @color) {
         #arrow > .top(@width, @color, @width);
@@ -57,12 +57,12 @@
         border-left-color: @color;
         left: 100%;
         top: 50%;
-        margin-top: -@width;
+        margin-top: (-@width);
     }
     .right(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .right-pseudo(@width, @color); }
-        margin-right: @margin;
+        margin-right: (@margin);
     }
     .right(@width, @color) {
         #arrow > .right(@width, @color, @width);
@@ -81,12 +81,12 @@
         border-top-color: @color;
         top: 100%;
         left: 50%;
-        margin-left: -@width;
+        margin-left: (-@width);
     }
     .bottom(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .bottom-pseudo(@width, @color); }
-        margin-bottom: @margin;
+        margin-bottom: (@margin);
     }
     .bottom(@width, @color) {
         #arrow > .bottom(@width, @color, @width);
@@ -105,12 +105,12 @@
         border-right-color: @color;
         right: 100%;
         top: 50%;
-        margin-top: -@width;
+        margin-top: -(@width);
     }
     .left(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .left-pseudo(@width, @color); }
-        margin-left: @margin;
+        margin-left: (@margin);
     }
     .left(@width, @color) {
         #arrow > .left(@width, @color, @width);

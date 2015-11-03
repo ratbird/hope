@@ -6,21 +6,21 @@
 //@base-gray: #3c454e; // #3c454e
 //calculated base gray
 @base-gray: hsv(hsvhue(@base-color),
-hsvsaturation(#3c454e),
-hsvvalue(#3c454e));
+                hsvsaturation(#3c454e),
+                hsvvalue(#3c454e));
 
 @brand-color-dark: @base-color;
-@brand-color-darker: hsv(hsvhue(@base-color)-0.2,
-    (hsvsaturation(@base-color)+4.5%),
-    (hsvvalue(@base-color)-4.7)); // #1f3f70;
+@brand-color-darker: hsv((hsvhue(@base-color) - 0.2),
+                         (hsvsaturation(@base-color) + 4.5%),
+                         (hsvvalue(@base-color) - 4.7)); // #1f3f70;
 
 @brand-color-light: hsv(hsvhue(@base-color),
-    (hsvsaturation(@base-color)-5.5%),
-    (hsvvalue(@base-color)+7.5)); // #36598f;
+                        (hsvsaturation(@base-color) - 5.5%),
+                        (hsvvalue(@base-color) + 7.5)); // #36598f;
 
-@brand-color-lighter: hsv(hsvhue(@base-color)+2.3,
-    (hsvsaturation(@base-color)-41.8%),
-    (hsvvalue(@base-color)+23.9)); // #899ab9;
+@brand-color-lighter: hsv((hsvhue(@base-color) + 2.3),
+                          (hsvsaturation(@base-color) - 41.8%),
+                          (hsvvalue(@base-color) + 23.9)); // #899ab9;
 
 @public_course_bgcolor: @red;
 

@@ -7,35 +7,37 @@
  * file that was distributed with this source code.
  */
 
+namespace ILess;
+
+use InvalidArgumentException;
+
 /**
  * Configurable
  *
  * @package ILess
- * @subpackage Core
  */
-abstract class ILess_Configurable
+abstract class Configurable
 {
     /**
      * Array of options
      *
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Array of default options
      *
      * @var array
      */
-    protected $defaultOptions = array();
+    protected $defaultOptions = [];
 
     /**
      * Constructor
      *
      * @param array $options
-     * @return void
      */
-    public function __construct($options = array())
+    public function __construct($options = [])
     {
         $this->setOptions($options);
         $this->setup();
@@ -50,16 +52,17 @@ abstract class ILess_Configurable
      * @throws InvalidArgumentException
      * @param array|object $options
      *
-     * @return ILess_Configurable
+     * @return Configurable
      */
     public function setOptions($options)
     {
         // first convert to array if needed
         if (!is_array($options)) {
-            if (is_object($options) && is_callable(array($options, 'toArray'))) {
+            if (is_object($options) && is_callable([$options, 'toArray'])) {
                 $options = $options->toArray();
             } else {
-                throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method', get_class($this)));
+                throw new InvalidArgumentException(sprintf('Options for "%s" must be an array or a object with ->toArray() method',
+                    get_class($this)));
             }
         }
 
@@ -130,7 +133,7 @@ abstract class ILess_Configurable
      *
      * @param string $name
      * @param mixed $value
-     * @return ILess_Configurable
+     * @return Configurable
      */
     public function setOption($name, $value)
     {
@@ -153,7 +156,7 @@ abstract class ILess_Configurable
      * Adds options. Overrides options already set with the same name.
      *
      * @param array $options Array of options
-     * @return ILess_Configurable
+     * @return Configurable
      */
     public function addOptions(array $options)
     {

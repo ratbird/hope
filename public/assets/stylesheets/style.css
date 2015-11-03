@@ -34,7 +34,7 @@ body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #000000;
+  color: #000;
 }
 input,
 button,
@@ -648,15 +648,15 @@ table.tree td.blank {
   border: 0;
 }
 table.tree td.in-between {
-  background: #ffffff url("../images/tree-line.gif") center repeat-y;
+  background: #fff url("../images/tree-line.gif") center repeat-y;
   border: 0;
 }
 table.tree td.leaf {
-  background: #ffffff url("../images/tree-leaf.gif") center no-repeat;
+  background: #fff url("../images/tree-leaf.gif") center no-repeat;
   border: 0;
 }
 table.tree td.end {
-  background: #ffffff url("../images/tree-end.gif") center no-repeat;
+  background: #fff url("../images/tree-end.gif") center no-repeat;
   border: 0;
 }
 table.tree .centered {
@@ -1934,7 +1934,7 @@ form.default.inline button {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-bottom-color: #eeeeee;
+  border-bottom-color: #eee;
   bottom: 100%;
   left: 50%;
   margin-left: -10px;
@@ -3470,21 +3470,21 @@ div.messagebox_details {
   overflow: hidden;
 }
 div.messagebox_info {
-  color: #000000;
+  color: #000;
   background-color: white;
   background-image: url("../images/messagebox/info.png");
   background-size: 32px 32px;
   border-color: #28497c;
 }
 div.messagebox_success {
-  color: #000000;
+  color: #000;
   background-color: white;
   background-image: url("../images/messagebox/success.png");
   background-size: 32px 32px;
   border-color: #00962d;
 }
 div.messagebox_error {
-  color: #000000;
+  color: #000;
   background-color: white;
   background-image: url("../images/messagebox/error.png");
   background-size: 32px 32px;
@@ -3879,7 +3879,7 @@ div.clear {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
   top: 100%;
   left: 50%;
   margin-left: -9px;
@@ -3891,7 +3891,7 @@ div.clear {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #dddddd;
+  border-top-color: #ddd;
   top: 100%;
   left: 50%;
   margin-left: -8px;
@@ -3973,7 +3973,7 @@ div.clear {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
   top: 100%;
   left: 50%;
   margin-left: -9px;
@@ -3985,7 +3985,7 @@ div.clear {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-top-color: #dddddd;
+  border-top-color: #ddd;
   top: 100%;
   left: 50%;
   margin-left: -8px;
@@ -4039,11 +4039,11 @@ div.clear {
 }
 .js .drag-and-drop.hovered {
   background-color: #fff8e0;
-  background-image: -moz-linear-gradient(top, #ffffee, #ffeecc);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffee), to(#ffeecc));
-  background-image: -webkit-linear-gradient(top, #ffffee, #ffeecc);
-  background-image: -o-linear-gradient(top, #ffffee, #ffeecc);
-  background-image: linear-gradient(to bottom, #ffffee, #ffeecc);
+  background-image: -moz-linear-gradient(top, #ffe, #fec);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffe), to(#fec));
+  background-image: -webkit-linear-gradient(top, #ffe, #fec);
+  background-image: -o-linear-gradient(top, #ffe, #fec);
+  background-image: linear-gradient(to bottom, #ffe, #fec);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffee', endColorstr='#ffffeecc', GradientType=0);
   border-radius: 1em;
@@ -4309,7 +4309,7 @@ table.calendar-week tbody tr td.calendar-category1,
 table.calendar-day tbody tr td.calendar-category1,
 table.calendar-week tbody tr td.calendar-course-category5,
 table.calendar-day tbody tr td.calendar-course-category5 {
-  background: linear-gradient(to right, #659c63, #96c895) repeat-x #659c63;
+  background: linear-gradient(to right, #659C63, #96C895) repeat-x #659C63;
   border: solid 1px #008512;
   vertical-align: top;
   font-size: 11px;
@@ -4327,7 +4327,7 @@ table.calendar-week tbody tr td.calendar-category2,
 table.calendar-day tbody tr td.calendar-category2,
 table.calendar-week tbody tr td.calendar-course-category1,
 table.calendar-day tbody tr td.calendar-course-category1 {
-  background: linear-gradient(to right, #3e4490, #7379a9) repeat-x #3e4490;
+  background: linear-gradient(to right, #3E4490, #7379A9) repeat-x #3E4490;
   border: solid 1px #682c8b;
   vertical-align: top;
   font-size: 11px;
@@ -4345,7 +4345,7 @@ table.calendar-week tbody tr td.calendar-category3,
 table.calendar-day tbody tr td.calendar-category3,
 table.calendar-week tbody tr td.calendar-course-category2,
 table.calendar-day tbody tr td.calendar-course-category2 {
-  background: linear-gradient(to right, #874293, #ae77b8) repeat-x #874293;
+  background: linear-gradient(to right, #874293, #AE77B8) repeat-x #874293;
   border: solid 1px #b02e7c;
   vertical-align: top;
   font-size: 11px;
@@ -4363,7 +4363,7 @@ table.calendar-week tbody tr td.calendar-category4,
 table.calendar-day tbody tr td.calendar-category4,
 table.calendar-week tbody tr td.calendar-course-category3,
 table.calendar-day tbody tr td.calendar-course-category3 {
-  background: linear-gradient(to right, #8fad29, #a3ba50) repeat-x #8fad29;
+  background: linear-gradient(to right, #8FAD29, #A3BA50) repeat-x #8FAD29;
   border: solid 1px #129c94;
   vertical-align: top;
   font-size: 11px;
@@ -4381,7 +4381,7 @@ table.calendar-week tbody tr td.calendar-category5,
 table.calendar-day tbody tr td.calendar-category5,
 table.calendar-week tbody tr td.calendar-course-category4,
 table.calendar-day tbody tr td.calendar-course-category4 {
-  background: linear-gradient(to right, #8e8eb2, #babad4) repeat-x #8e8eb2;
+  background: linear-gradient(to right, #8E8EB2, #BABAD4) repeat-x #8E8EB2;
   border: solid 1px #f26e00;
   vertical-align: top;
   font-size: 11px;
@@ -4399,7 +4399,7 @@ table.calendar-week tbody tr td.calendar-category6,
 table.calendar-day tbody tr td.calendar-category6,
 table.calendar-week tbody tr td.calendar-course-category6,
 table.calendar-day tbody tr td.calendar-course-category6 {
-  background: linear-gradient(to right, #904e42, #b5867e) repeat-x #904e42;
+  background: linear-gradient(to right, #904E42, #B5867E) repeat-x #904E42;
   border: solid 1px #a85d45;
   vertical-align: top;
   font-size: 11px;
@@ -4415,7 +4415,7 @@ table.calendar-day tbody tr td.calendar-course-category6 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category7,
 table.calendar-day tbody tr td.calendar-category7 {
-  background: linear-gradient(to right, #ab9448, #c9b988) repeat-x #ab9448;
+  background: linear-gradient(to right, #AB9448, #C9B988) repeat-x #AB9448;
   border: solid 1px #6ead10;
   vertical-align: top;
   font-size: 11px;
@@ -4429,7 +4429,7 @@ table.calendar-day tbody tr td.calendar-category7 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category8,
 table.calendar-day tbody tr td.calendar-category8 {
-  background: linear-gradient(to right, #6d9441, #9db97c) repeat-x #6d9441;
+  background: linear-gradient(to right, #6D9441, #9DB97C) repeat-x #6D9441;
   border: solid 1px #d60000;
   vertical-align: top;
   font-size: 11px;
@@ -4443,7 +4443,7 @@ table.calendar-day tbody tr td.calendar-category8 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category9,
 table.calendar-day tbody tr td.calendar-category9 {
-  background: linear-gradient(to right, #ebc443, #ecd379) repeat-x #ebc443;
+  background: linear-gradient(to right, #EBC443, #ECD379) repeat-x #EBC443;
   border: solid 1px #ffbd33;
   vertical-align: top;
   font-size: 11px;
@@ -4457,7 +4457,7 @@ table.calendar-day tbody tr td.calendar-category9 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category10,
 table.calendar-day tbody tr td.calendar-category10 {
-  background: linear-gradient(to right, #db9f63, #e9b583) repeat-x #db9f63;
+  background: linear-gradient(to right, #DB9F63, #E9B583) repeat-x #DB9F63;
   border: solid 1px #66b671;
   vertical-align: top;
   font-size: 11px;
@@ -4471,7 +4471,7 @@ table.calendar-day tbody tr td.calendar-category10 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category11,
 table.calendar-day tbody tr td.calendar-category11 {
-  background: linear-gradient(to right, #90d070, #a6d98c) repeat-x #90d070;
+  background: linear-gradient(to right, #90D070, #A6D98C) repeat-x #90D070;
   border: solid 1px #a480b9;
   vertical-align: top;
   font-size: 11px;
@@ -4485,7 +4485,7 @@ table.calendar-day tbody tr td.calendar-category11 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category12,
 table.calendar-day tbody tr td.calendar-category12 {
-  background: linear-gradient(to right, #418494, #6ca6b2) repeat-x #418494;
+  background: linear-gradient(to right, #418494, #6CA6B2) repeat-x #418494;
   border: solid 1px #d082b0;
   vertical-align: top;
   font-size: 11px;
@@ -4499,7 +4499,7 @@ table.calendar-day tbody tr td.calendar-category12 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category13,
 table.calendar-day tbody tr td.calendar-category13 {
-  background: linear-gradient(to right, #c91c0b, #e0665b) repeat-x #c91c0b;
+  background: linear-gradient(to right, #C91C0B, #E0665B) repeat-x #C91C0B;
   border: solid 1px #71c4bf;
   vertical-align: top;
   font-size: 11px;
@@ -4513,7 +4513,7 @@ table.calendar-day tbody tr td.calendar-category13 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-category14,
 table.calendar-day tbody tr td.calendar-category14 {
-  background: linear-gradient(to right, #29ab9f, #5cc4b9) repeat-x #29ab9f;
+  background: linear-gradient(to right, #29AB9F, #5CC4B9) repeat-x #29AB9F;
   border: solid 1px #f7a866;
   vertical-align: top;
   font-size: 11px;
@@ -4529,7 +4529,7 @@ table.calendar-week tbody tr td.calendar-category15,
 table.calendar-day tbody tr td.calendar-category15,
 table.calendar-week tbody tr td.calendar-course-category7,
 table.calendar-day tbody tr td.calendar-course-category7 {
-  background: linear-gradient(to right, #8db3d8, #acc6df) repeat-x #8db3d8;
+  background: linear-gradient(to right, #8DB3D8, #ACC6DF) repeat-x #8DB3D8;
   border: solid 1px #cb9e8f;
   vertical-align: top;
   font-size: 11px;
@@ -4563,7 +4563,7 @@ table.calendar-day tbody tr td.calendar-course-category255 div:first-child {
 }
 table.calendar-week tbody tr td.calendar-course-category256,
 table.calendar-day tbody tr td.calendar-course-category256 {
-  background: linear-gradient(to right, #3e4490, #7379a9) repeat-x #3e4490;
+  background: linear-gradient(to right, #3E4490, #7379A9) repeat-x #3E4490;
   border: solid 1px #2D2C64;
   vertical-align: top;
   font-size: 11px;
@@ -4636,7 +4636,7 @@ a.Calendar-course-event-text255 {
   font-size: 0.8em;
 }
 .calendar-group-events {
-  background: linear-gradient(to right, #8e8eb2, #babad4) repeat-x #8e8eb2;
+  background: linear-gradient(to right, #8E8EB2, #BABAD4) repeat-x #8E8EB2;
   border: solid 1px #505064;
 }
 #exc-dates {
@@ -6550,9 +6550,9 @@ div#studyareas {
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
-  -webkit-box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888888;
-  -moz-box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888888;
-  box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888888;
+  -webkit-box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888;
+  -moz-box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888;
+  box-shadow: 0 -1px 4px rgba(214, 0, 0, 0.1), 0 2px 5px #888;
 }
 .smiley-picker .navigation {
   border-collapse: collapse;
@@ -7165,7 +7165,7 @@ label[for="responsive-toggle"]:before {
 .studip-form input[type="time"].size-xs,
 .studip-form input[type="tel"].size-xs,
 .studip-form input[type="url"].size-xs {
-  width: calc(9%);
+  width: calc(10% - 1px);
 }
 .studip-form input[type="text"].size-s,
 .studip-form input[type="number"].size-s,
@@ -7178,7 +7178,7 @@ label[for="responsive-toggle"]:before {
 .studip-form input[type="time"].size-s,
 .studip-form input[type="tel"].size-s,
 .studip-form input[type="url"].size-s {
-  width: calc(24%);
+  width: calc(25% - 1px);
 }
 .studip-form input[type="text"],
 .studip-form input[type="number"],
@@ -7202,7 +7202,7 @@ label[for="responsive-toggle"]:before {
 .studip-form input[type="time"].size-m,
 .studip-form input[type="tel"].size-m,
 .studip-form input[type="url"].size-m {
-  width: calc(49%);
+  width: calc(50% - 1px);
 }
 .studip-form input[type="text"].size-l,
 .studip-form input[type="number"].size-l,
@@ -7215,7 +7215,7 @@ label[for="responsive-toggle"]:before {
 .studip-form input[type="time"].size-l,
 .studip-form input[type="tel"].size-l,
 .studip-form input[type="url"].size-l {
-  width: calc(74%);
+  width: calc(75% - 1px);
 }
 .studip-form input[type="text"].size-xl,
 .studip-form input[type="number"].size-xl,
@@ -7228,7 +7228,7 @@ label[for="responsive-toggle"]:before {
 .studip-form input[type="time"].size-xl,
 .studip-form input[type="tel"].size-xl,
 .studip-form input[type="url"].size-xl {
-  width: calc(99%);
+  width: calc(100% - 1px);
 }
 .studip-form select,
 .studip-form textarea,
@@ -7621,7 +7621,7 @@ img.plugin_preview {
   color: #000;
 }
 .boxed-grid img {
-  height: calc(80%);
+  height: calc(100% - 20px);
   position: absolute;
   top: 10px;
   right: 10px;

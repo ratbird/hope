@@ -7,7 +7,9 @@
  * file that was distributed with this source code.
  */
 
-class ILess_Test_CLI extends ILess_CLI
+use ILess\CLI;
+
+class Test_CLI extends CLI
 {
     public function parseArguments($args)
     {
@@ -18,23 +20,28 @@ class ILess_Test_CLI extends ILess_CLI
     {
         return parent::isSilent();
     }
+
+    protected function detectColors()
+    {
+        return false;
+    }
 }
 
 /**
- * CLI
+ * ILess\CLI
  *
  * @package ILess
  * @subpackage test
- * @covers ILess_CLI
+ * @covers CLI
  */
-class ILess_CLITest extends ILess_Test_TestCase
+class CLITest extends Test_TestCase
 {
     /**
      * @covers isValid
      */
     public function testIsValid()
     {
-        $cli = new ILess_CLI(array());
+        $cli = new CLI([]);
         $this->assertEquals(false, $cli->isValid());
     }
 
@@ -43,9 +50,9 @@ class ILess_CLITest extends ILess_Test_TestCase
      */
     public function testGetScriptName()
     {
-        $cli = new ILess_CLI(array(
+        $cli = new CLI([
             'foobar.php', 'arg1', 'arg2', 'arg3'
-        ));
+        ]);
         $this->assertEquals($cli->getScriptName(), 'foobar.php');
     }
 
@@ -55,34 +62,34 @@ class ILess_CLITest extends ILess_Test_TestCase
      */
     public function testParseArguments($arguments, $expected)
     {
-        $cli = new ILess_Test_CLI(array(
+        $cli = new Test_CLI([
             'foobar.php', 'arg1', 'arg2', 'arg3'
-        ));
+        ]);
         $this->assertSame($expected, $cli->parseArguments($arguments));
     }
 
     public function getDataForParseArgumentsTest()
     {
-        return array(
-            array(
+        return [
+            [
                 // to test:
-                array('a.less', 'b.css', '--source-map', '--compress', '-x'),
+                ['a.less', 'b.css', '--source-map', '--compress', '-x'],
                 // expected:
-                array('arguments' => array('a.less', 'b.css'), 'flags' => array('x'), 'options' => array('source-map' => true, 'compress' => true))
-            ),
-            array(
+                ['arguments' => ['a.less', 'b.css'], 'flags' => ['x'], 'options' => ['source-map' => true, 'compress' => true]]
+            ],
+            [
                 // to test:
-                array('--source-map=foobar.map', '--compress=false', '-x', 'a.less', 'b.css'),
+                ['--source-map=foobar.map', '--compress=false', '-x', 'a.less', 'b.css'],
                 // expected:
-                array('arguments' => array('a.less', 'b.css'), 'flags' => array('x'), 'options' => array('source-map' => 'foobar.map', 'compress' => false))
-            ),
-            array(
+                ['arguments' => ['a.less', 'b.css'], 'flags' => ['x'], 'options' => ['source-map' => 'foobar.map', 'compress' => false]]
+            ],
+            [
                 // to test:
-                array('-', '-x'), // read from stdin
+                ['-', '-x'], // read from stdin
                 // expected:
-                array('arguments' => array('-'), 'flags' => array('x'), 'options' => array())
-            )
-        );
+                ['arguments' => ['-'], 'flags' => ['x'], 'options' => []]
+            ]
+        ];
     }
 
     /**
@@ -91,34 +98,34 @@ class ILess_CLITest extends ILess_Test_TestCase
      */
     public function testIsSilent($arguments, $expected)
     {
-        $cli = new ILess_Test_CLI($arguments);
+        $cli = new Test_CLI($arguments);
         $this->assertSame($expected, $cli->isSilent());
     }
 
     public function getDataForIsSilentTest()
     {
-        return array(
-            array(
+        return [
+            [
                 // to test:
-                array('foobar.php', 'a.less', 'b.css', '--source-map', '--compress', '-x'),
+                ['foobar.php', 'a.less', 'b.css', '--source-map', '--compress', '-x'],
                 // expected:
                 false
-            ),
-            array(
+            ],
+            [
                 // to test:
                 // -s flag present
-                array('foobar.php', '--source-map=foobar.map', '--compress=false', '-s', 'a.less', 'b.css'),
+                ['foobar.php', '--source-map=foobar.map', '--compress=false', '-s', 'a.less', 'b.css'],
                 // expected:
                 true
-            ),
-            array(
+            ],
+            [
                 // to test:
                 // --compress option present
-                array('foobar.php', '--compress=true', '--silent'),
+                ['foobar.php', '--compress=true', '--silent'],
                 // expected:
                 true
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -126,8 +133,55 @@ class ILess_CLITest extends ILess_Test_TestCase
      */
     public function testGetUsage()
     {
-        $cli = new ILess_Test_CLI(array('foobar.php'));
+        $cli = new Test_CLI(['foobar.php']);
         $this->assertContains('usage: foobar.php', $cli->getUsage());
     }
 
+    public function testSetupFileInDirectory()
+    {
+        $cli = new Test_CLI(['iless.php', __DIR__ . '/Parser/_fixtures/cli/less/test.less']);
+        $expected = file_get_contents(__DIR__ . '/Parser/_fixtures/cli/css/test.css');
+
+        $cwd = getcwd();
+
+        $this->assertEquals(true, $cli->isValid());
+
+        // change dir
+        chdir(__DIR__ . '/Parser/_fixtures/cli/less');
+
+        ob_start();
+        $cli->run();
+        $result = ob_get_clean();
+
+        chdir($cwd);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testSetupFileSpecifiedAsArgumentThrowsException()
+    {
+        $cli = new Test_CLI(['iless.php', __DIR__ . '/Parser/_fixtures/cli/less/test.less', '--setup-file=invalid']);
+        $this->assertEquals(true, $cli->isValid());
+
+        ob_start();
+        $errorCode = $cli->run();
+        $result = ob_get_clean();
+
+        $this->assertEquals(1, $errorCode);
+        $this->assertContains('could not be loaded.', $result);
+    }
+
+    public function testSetupFileSpecifiedAsArgument()
+    {
+        $cli = new Test_CLI(['iless.php', __DIR__ . '/Parser/_fixtures/cli/less/test.less', '--setup-file=' . __DIR__ . '/Parser/_fixtures/cli/less/setup.php']);
+        $expected = file_get_contents(__DIR__ . '/Parser/_fixtures/cli/css/test2.css');
+
+        $this->assertEquals(true, $cli->isValid());
+
+        ob_start();
+        $cli->run();
+        $result = ob_get_clean();
+
+        $this->assertEquals($expected, $result);
+    }
 }

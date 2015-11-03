@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
+namespace ILess;
+
 /**
  * File information
  *
  * @package ILess
- * @subpackage parser
  */
-class ILess_FileInfo
+final class FileInfo implements \Serializable
 {
     /**
      * Full resolved filename of current file
@@ -60,19 +61,40 @@ class ILess_FileInfo
     /**
      * The imported file
      *
-     * @var ILess_ImportedFile
+     * @var ImportedFile
      */
     public $importedFile;
 
     /**
      * Constructor
      *
-     * @param string $path
+     * @param array $info
      */
-    public function __construct(array $info = array())
+    public function __construct(array $info = [])
     {
         foreach ($info as $property => $value) {
+            if (!property_exists($this, $property)) {
+                throw new \InvalidArgumentException(sprintf('Invalid property %s', $property));
+            }
             $this->$property = $value;
+        }
+    }
+
+    public function serialize()
+    {
+        $vars = get_object_vars($this);
+
+        unset($vars['reference']);
+        unset($vars['rootPath']);
+
+        return serialize($vars);
+    }
+
+    public function unserialize($serialized)
+    {
+        $unserialized = unserialize($serialized);
+        foreach ($unserialized as $var => $val) {
+            $this->$var = $val;
         }
     }
 

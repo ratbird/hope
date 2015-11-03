@@ -293,6 +293,7 @@ jQuery(function () {
 
     jQuery("#messages > tbody > tr").draggable({
         //cursor: "move",
+        distance: 10,
         cursorAt: {left: 28, top: 15},
         helper: function () {
             var title = jQuery(this).find('.title').text().trim();

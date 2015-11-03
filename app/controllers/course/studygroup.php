@@ -726,6 +726,11 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->tutors           = $sem->getMembers('tutor');
         $this->accepted         = $sem->getAdmissionMembers('accepted');
 
+        if($this->view == 'list') {
+            $this->cmembers = array_diff_key($cmembers, $this->moderators);
+            $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
+        }
+
         $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
                                          . "FROM auth_user_md5 "
                                          . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "

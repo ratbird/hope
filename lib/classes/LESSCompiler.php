@@ -1,6 +1,4 @@
 <?php
-require_once 'vendor/mishal-iless/lib/ILess/Autoloader.php';
-
 /**
  * Wrapper class for the less compilation.
  * Currently uses ILess by mishal <https://github.com/mishal/iless>.

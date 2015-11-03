@@ -10,8 +10,6 @@ class LESSCompiler
 {
     const CACHE_KEY = '/less-compiler/prefix';
 
-    private static $instance = null;
-
     /**
      * Returns an instance of the compiler.
      *
@@ -19,16 +17,13 @@ class LESSCompiler
      */
     public static function getInstance()
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        return new self();
     }
 
     private $parser;
 
     /**
-     * Private constructor to enable a singleton pattern.
+     * Private constructor.
      */
     private function __construct()
     {
@@ -87,7 +82,7 @@ class LESSCompiler
                     continue;
                 }
 
-                $core_file = $GLOBALS['ABSOLUTE_PATH_STUDIP'] . '/assets/stylesheets/' . $match[2];
+                $core_file = $GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/' . $match[2];
                 $prefix .= sprintf('@import%s "%s";' . "\n", $match[1], $core_file);
             }
 

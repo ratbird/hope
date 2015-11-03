@@ -741,8 +741,8 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
 
         $views = new ViewsWidget();
-        $views->addLink(_('Galerie'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'gallery')))->setActive(Request::get('view') == 'gallery');
-        $views->addLink(_('Liste'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'list')))->setActive(Request::get('view') == 'list');
+        $views->addLink(_('Galerie'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'gallery')))->setActive($this->view == 'gallery');
+        $views->addLink(_('Liste'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'list')))->setActive($this->view == 'list');
 
         Sidebar::get()->addWidget($views);
 

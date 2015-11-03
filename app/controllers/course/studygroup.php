@@ -705,29 +705,26 @@ class Course_StudygroupController extends AuthenticatedController {
 
         object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($id, 'participants');
-
+        $this->view = Request::get('view', 'gallery');
         $sem          = new Seminar($id);
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);
 
-        if($this->page < 1 || $this->page > ceil($this->anzahl/get_config('ENTRIES_PER_PAGE'))) $this->page = 1;
+        if($this->page < 1 || $this->page > ceil($this->anzahl/Config::get()->ENTRIES_PER_PAGE)){
+            $this->page = 1;
+        }
+        $this->lower_bound      = ($this->page - 1) * Config::get()->ENTRIES_PER_PAGE;
 
-        $cmembers = StudygroupModel::getMembers($id, $this->lower_bound, 'all');
-        $this->lower_bound      = ($this->page - 1) * get_config('ENTRIES_PER_PAGE');
+        $cmembers = StudygroupModel::getMembers($id, $this->lower_bound, $this->view == 'list' ? 'all' : Config::get()->ENTRIES_PER_PAGE);
         $this->cmembers         = $cmembers;
+        uasort($this->cmembers, array('StudygroupModel','compare_status'));
+
         $this->groupname        = $sem->name;
         $this->sem_id           = $id;
         $this->groupdescription = $sem->description;
         $this->moderators       = $sem->getMembers('dozent');
         $this->tutors           = $sem->getMembers('tutor');
-        
         $this->accepted         = $sem->getAdmissionMembers('accepted');
-
-
-        $this->cmembers = array_diff_key($cmembers, $this->moderators);
-        $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
-
-        usort($this->cmembers, array('StudygroupModel','compare_status'));
 
         $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
                                          . "FROM auth_user_md5 "
@@ -743,6 +740,11 @@ class Course_StudygroupController extends AuthenticatedController {
             _("Nutzer suchen"), "user_id");
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
 
+        $views = new ViewsWidget();
+        $views->addLink(_('Galerie'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'gallery')))->setActive(Request::get('view') == 'gallery');
+        $views->addLink(_('Liste'),$this->url_for('course/studygroup/members/' . $id, array('view' => 'list')))->setActive(Request::get('view') == 'list');
+
+        Sidebar::get()->addWidget($views);
 
 
         if ($this->rechte) {

@@ -1,7 +1,4 @@
 <?
-# Lifter010: TODO
-use Studip\Button, Studip\LinkButton;
-
 if (isset($flash['question']) && isset($flash['candidate'])) {
     $dialog = $GLOBALS['template_factory']->open('shared/question');
     echo $this->render_partial($dialog, array(
@@ -14,26 +11,29 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
 }
 ?>
 
-<?= $this->render_partial("course/studygroup/_feedback") ?>
+<?= $this->render_partial("course/studygroup/_feedback", compact('anzahl', 'page', 'sem_id')) ?>
 
-<? if (!empty($moderators)) : ?>
-    <?= $this->render_partial('course/studygroup/_members_list.php',
-        array('title' =>  _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true))?>
-<? endif ?>
+<? if($view == 'list') : ?>
+    <? if (!empty($moderators)) : ?>
+        <?= $this->render_partial('course/studygroup/_members_list.php',
+            array('title' =>  _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true))?>
+    <? endif ?>
 
-<? if (!empty($tutors)) : ?>
-    <?= $this->render_partial('course/studygroup/_members_list.php',
-        array('title' =>  _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors))?>
-<? endif ?>
+    <? if (!empty($tutors)) : ?>
+        <?= $this->render_partial('course/studygroup/_members_list.php',
+            array('title' =>  _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors))?>
+    <? endif ?>
 
-<? if (!empty($cmembers)) : ?>
-    <?= $this->render_partial('course/studygroup/_members_list.php',
-        array('title' =>  _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers))?>
-<? endif ?>
+    <? if (!empty($cmembers)) : ?>
+        <?= $this->render_partial('course/studygroup/_members_list.php',
+            array('title' =>  _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers))?>
+    <? endif ?>
+<? else : ?>
+    <?= $this->render_partial('course/studygroup/gallery.php')?>
+<? endif?>
 
 
-
-<? if ($rechte) : ?>
+<? if ($rechte && $view == 'list') : ?>
     <? if (count($accepted) > 0) : ?>
         <table class="default sortable-table">
             <caption><?= _('Offene Mitgliedsanträge') ?></caption>

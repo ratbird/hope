@@ -18,18 +18,18 @@ class GarbageCollectorJob extends CronJob
 
     public static function getDescription()
     {
-        return _('Entfernt endgültig gelöschte Nachrichten, nicht zugehörige Dateianhänge und abgelaufene Ankündigungen');
+        return _('Entfernt endgültig gelöschte Nachrichten, nicht zugehörige Dateianhänge, abgelaufene Ankündigungen und veraltete Plugin-Assets');
     }
 
     public static function getParameters()
     {
         return array(
-                'verbose' => array(
-                        'type'        => 'boolean',
-                        'default'     => false,
-                        'status'      => 'optional',
-                        'description' => _('Sollen Ausgaben erzeugt werden (sind später im Log des Cronjobs sichtbar)'),
-                ),
+            'verbose' => array(
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'status'      => 'optional',
+                    'description' => _('Sollen Ausgaben erzeugt werden (sind später im Log des Cronjobs sichtbar)'),
+            ),
         );
     }
 
@@ -66,5 +66,8 @@ class GarbageCollectorJob extends CronJob
         }
 
         PersonalNotifications::doGarbageCollect();
+
+        // Remove old plugin assets
+        PluginAsset::deleteBySQL('chdate < ?', array(time() - PluginAsset::CACHE_DURATION));
     }
 }

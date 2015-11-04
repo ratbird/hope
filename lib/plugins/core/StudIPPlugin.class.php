@@ -181,19 +181,29 @@ abstract class StudIPPlugin {
      */
     protected function addStylesheet($filename)
     {
-        if (substr($filename, -5) === '.less') {
-            $less_file = $GLOBALS['ABSOLUTE_PATH_STUDIP']
-                       . $this->getPluginPath() . '/'
-                       . $filename;
-            $css_file  = $GLOBALS['ABSOLUTE_PATH_STUDIP']
-                       . $this->getPluginPath() . '/'
-                       . substr($filename, 0, -5) . '.css';
-
-            if (!file_exists($css_file) || (filemtime($css_file) < filemtime($less_file))) {
-                file_put_contents($css_file, LESSCompiler::getInstance()->compile($less_file));
-            }
-            $filename  = substr($filename, 0, -5) . '.css';
+        if (substr($filename, -5) !== '.less') {
+            $url = $this->getPluginURL() . '/' . $filename;
+            PageLayout::addStylesheet($url);
+            return;
         }
-        PageLayout::addStylesheet($this->getPluginURL() . '/' . $filename);
+
+        $metadata = $this->getMetadata();
+
+        $less_file = $GLOBALS['ABSOLUTE_PATH_STUDIP']
+                   . $this->getPluginPath() . '/'
+                   . $filename;
+
+        $compiler = Assets\Compiler::getInstance();
+        $compiler->setMetaData(array(
+            'plugin_id'      => $this->getPluginId(),
+            'plugin_version' => $metadata['version'],
+        ));
+        $css_file = $compiler->compileLESS($less_file);
+
+        PageLayout::addHeadElement('link', [
+            'rel'  => 'stylesheet',
+            'href' => $css_file->getDownloadLink(),
+            'type' => 'text/css',
+        ]);
     }
 }

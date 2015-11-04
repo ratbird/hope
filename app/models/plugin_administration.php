@@ -202,6 +202,7 @@ class PluginAdministration
 
         // delete database if needed
         $this->deleteDBSchema($plugindir, $manifest);
+        PluginAsset::deleteBySQL('plugin_id = ?', array($plugin['id']));
 
         rmdirr($plugindir);
     }

@@ -53,7 +53,7 @@
     <label for="wizard-home-institute">
         <?= _('Heimateinrichtung') ?>
     </label>
-    <select name="institute" id="wizard-home-institute" onchange="STUDIP.CourseWizard.getLecturerSearch()"
+    <select name="institute" id="wizard-home-institute"
             data-ajax-url="<?= URLHelper::getLink('dispatch.php/course/wizard/ajax') ?>">
         <?php
         $fak_id = '';

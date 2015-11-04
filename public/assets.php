@@ -12,34 +12,7 @@
  * @since   Stud.IP 3.4
  */
 
-// Set base path
-$STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/..');
-
-// Set include paths
-set_include_path(
-    $STUDIP_BASE_PATH
-    . PATH_SEPARATOR . $STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'config'
-    . PATH_SEPARATOR . get_include_path()
-);
-
-// Setup autoloading
-require 'lib/classes/StudipAutoloader.php';
-StudipAutoloader::register();
-StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/classes');
-StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/files');
-StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/less', 'LESS');
-StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/lib/models');
-
-StudipFileloader::load('config_local.inc.php', $GLOBALS, compact('STUDIP_BASE_PATH'));
-require_once 'lib/functions.php';
-
-// set default pdo connection
-DBManager::getInstance()
-    ->setConnection('studip',
-        'mysql:host=' . $GLOBALS['DB_STUDIP_HOST'] .
-        ';dbname=' . $GLOBALS['DB_STUDIP_DATABASE'],
-        $GLOBALS['DB_STUDIP_USER'],
-        $GLOBALS['DB_STUDIP_PASSWORD']);
+require_once '../lib/bootstrap.php';
 
 // Obtain request information
 $uri = ltrim($_SERVER['PATH_INFO'], '/');
@@ -51,7 +24,7 @@ $response = new RESTAPI\Response();
 // Create response
 if (!$type || !$id) {
     // Invalid call
-    $response->status = 40;
+    $response->status = 400;
 } elseif ($type !== 'css') {
     // Invalid type
     $response->status = 501;
@@ -78,9 +51,11 @@ if (!$type || !$id) {
             $response['Content-Disposition'] = 'inline;filename="' . $model->filename . '"';
 
             // Store cache information
-            $response['Last-Modified'] = gmdate('D, d M Y H:i:s', $model->chdate) . ' GMT';
-            $response['Expires']       = gmdate('D, d M Y H:i:s', $model->chdate + 
-PluginAsset::CACHE_DURATION) . ' GMT';
+            if (Studip\ENV !== 'development') {
+                $response['Last-Modified'] = gmdate('D, d M Y H:i:s', $model->chdate) . ' GMT';
+                $response['Expires']       = gmdate('D, d M Y H:i:s', $model->chdate + 
+    PluginAsset::CACHE_DURATION) . ' GMT';
+            }
         }
     }
 }

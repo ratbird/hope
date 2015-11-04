@@ -17,6 +17,7 @@
 class Course_BasicdataController extends AuthenticatedController
 {
     public $msg = array();
+    protected $utf8decode_xhr = true;
 
     /**
      * Zeigt die Grunddaten an. Man beachte, dass eventuell zuvor eine andere

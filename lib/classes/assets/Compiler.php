@@ -6,6 +6,7 @@ use RuntimeException;
 use Assets;
 use StudipCacheFactory;
 
+use ILess\Autoloader;
 use ILess\Parser;
 
 /**
@@ -108,6 +109,8 @@ class Compiler
      */
     private function getLESSParser()
     {
+        Autoloader::register(); 
+
         $parser = new Parser([
             'strictMath' => true,
         ]);

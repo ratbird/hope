@@ -2681,11 +2681,11 @@ textarea.ui-resizable-handle.ui-resizable-s {
 }
 .ms-container .ms-selectable li[style*="background-image"],
 .ms-container .ms-selection li[style*="background-image"] {
-  min-height: 2 * 2px + 32px + 2 * 2px;
+  min-height: 40px;
   background-repeat: no-repeat;
   background-size: 32px;
   background-position: 4px center;
-  padding-left: 2px + 32px + 2 * 2px;
+  padding-left: 38px;
 }
 .ms-container .ms-selectable li[style*="background-image"].ms-elem-selection,
 .ms-container .ms-selection li[style*="background-image"].ms-elem-selection {
@@ -2739,8 +2739,8 @@ textarea.ui-resizable-handle.ui-resizable-s {
   -ms-flex: 0 1 auto;
   -moz-box-flex: 0;
   flex: 0 1 auto;
-  margin-left: -(32px + 2 * 2px);
-  margin-right: 32px + 2 * 2px;
+  margin-left: -36px;
+  margin-right: 36px;
   visibility: hidden;
 }
 .ms-container .ms-selection li:hover {

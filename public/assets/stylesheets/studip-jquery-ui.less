@@ -48,12 +48,12 @@
               cursor: not-allowed;
             }
             &[style*="background-image"] {
-                min-height: 2 * @element-padding + @avatar-size + 2 * @avatar-border;
+                min-height: (2 * @element-padding + @avatar-size + 2 * @avatar-border);
 
                 background-repeat: no-repeat;
                 background-size: @avatar-size;
                 background-position: (@element-padding + @avatar-border) center;
-                padding-left: @element-padding + @avatar-size + 2 * @avatar-border;
+                padding-left: (@element-padding + @avatar-size + 2 * @avatar-border);
 
                 &.ms-elem-selection {
                     background-position: (@element-padding + @avatar-border + @icon-size) center;
@@ -80,8 +80,8 @@
         .icon-before('white/arr_1left.png', @icon-size);
         &::before {
             .flex-item(0, 1);
-            margin-left: -(@avatar-size + 2 * @avatar-border);
-            margin-right: @avatar-size + 2 * @avatar-border;
+            margin-left: (-@avatar-size - 2 * @avatar-border);
+            margin-right: (@avatar-size + 2 * @avatar-border);
             visibility: hidden;
         }
         &:hover {

@@ -498,6 +498,58 @@ class PageLayout
     }
 
     /**
+     * Convenience method: Post a success message box.
+     *
+     * @param String $message       Success message to diplay
+     * @param Array  $details       Additional details (optional)
+     * @param bool   $close_details Show the details closed (optional,
+     *                              defaults to false)
+     */
+    public static function postSuccess($message, $details = array(), $close_details = false)
+    {
+        self::postMessage(MessageBox::success($message, $details, $close_details));
+    }
+
+    /**
+     * Convenience method: Post an error message box.
+     *
+     * @param String $message       Error message to diplay
+     * @param Array  $details       Additional details (optional)
+     * @param bool   $close_details Show the details closed (optional,
+     *                              defaults to false)
+     */
+    public static function postError($message, $details = array(), $close_details = false)
+    {
+        self::postMessage(MessageBox::error($message, $details, $close_details));
+    }
+
+    /**
+     * Convenience method: Post an info message box.
+     *
+     * @param String $message       Info message to diplay
+     * @param Array  $details       Additional details (optional)
+     * @param bool   $close_details Show the details closed (optional,
+     *                              defaults to false)
+     */
+    public static function postInfo($message, $details = array(), $close_details = false)
+    {
+        self::postMessage(MessageBox::info($message, $details, $close_details));
+    }
+
+    /**
+     * Convenience method: Post an exception message box.
+     *
+     * @param String $message       Exception message to diplay
+     * @param Array  $details       Additional details (optional)
+     * @param bool   $close_details Show the details closed (optional,
+     *                              defaults to false)
+     */
+    public static function postException($message, $details = array(), $close_details = false)
+    {
+        self::postMessage(MessageBox::exception($message, $details, $close_details));
+    }
+
+    /**
      * Clears all messages pending for display.
      */
     public static function clearMessages()

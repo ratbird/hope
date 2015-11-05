@@ -32,7 +32,7 @@ class CourseMarkedEvent extends CourseEvent
     {
         $stmt = DBManager::get()->prepare('SELECT DISTINCT termine.* FROM schedule_seminare '
                 . 'INNER JOIN termine ON seminar_id = range_id '
-                . 'WHERE user_id = :user_id AND schedule_seminare.metadate_id = \'\' '
+                . 'WHERE user_id = :user_id AND schedule_seminare.visible = 1 '
                 . 'AND date BETWEEN :start AND :end '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(

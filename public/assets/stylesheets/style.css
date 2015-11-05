@@ -5075,8 +5075,8 @@ h3.eval {
 }
 div.index_container {
   width: 750px;
-  padding-top: 15px;
-  margin: 0  auto;
+  padding-top: 30px;
+  margin: 0 auto;
 }
 div.index_container div.index_main {
   background: url('../images/startseite.jpg') no-repeat left top;
@@ -7468,9 +7468,6 @@ div.selectbox fieldset {
   vertical-align: text-top !important;
 }
 /* --- index.php anpassungen an den boxen zur vereinheitlichung ------------- */
-div.index_container {
-  margin: 0;
-}
 table.index_box {
   border-collapse: collapse;
   margin-bottom: 1em;

@@ -187,23 +187,47 @@ abstract class StudIPPlugin {
             return;
         }
 
-        $metadata = $this->getMetadata();
-
+        // Create absolute path to less file
         $less_file = $GLOBALS['ABSOLUTE_PATH_STUDIP']
                    . $this->getPluginPath() . '/'
                    . $filename;
 
-        $compiler = Assets\Compiler::getInstance();
-        $compiler->setMetaData(array(
-            'plugin_id'      => $this->getPluginId(),
+        // Fail if file does not exist
+        if (!file_exists($less_file)) {
+            throw new Exception('Could not locate LESS file "' . $filename . '"');
+        }
+
+        // Get plugin version from metadata
+        $metadata = $this->getMetadata();
+        $plugin_version = $metadata['version'];
+
+        // Get plugin id (or parent plugin id if any)
+        $plugin_id = $this->plugin_info['depends'] ?: $this->getPluginId();
+
+        // Get asset file from storage
+        $asset = Assets\Storage::getFactory()->createCSSFile($less_file, array(
+            'plugin_id'      => $this->plugin_info['depends'] ?: $this->getPluginId(),
             'plugin_version' => $metadata['version'],
         ));
-        $css_file = $compiler->compileLESS($less_file);
 
-        PageLayout::addHeadElement('link', [
-            'rel'  => 'stylesheet',
-            'href' => $css_file->getDownloadLink(),
-            'type' => 'text/css',
-        ]);
+        // Compile asset if neccessary
+        if ($asset->isNew()) {
+            $less = file_get_contents($less_file);
+            $css  = Assets\Compiler::compileLESS($less);
+
+            $asset->setContent($css);
+        }
+
+        // Include asset in page by reference or directly
+        $download_uri = $asset->getDownloadLink();
+        if ($download_uri === false) {
+            PageLayout::addStyle($asset->getContent());
+        } else {
+            PageLayout::addHeadElement('link', [
+                'rel'  => 'stylesheet',
+                'href' => $download_uri,
+                'type' => 'text/css',
+            ]);
+        }
     }
 }

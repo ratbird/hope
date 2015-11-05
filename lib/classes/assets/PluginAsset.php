@@ -83,7 +83,7 @@ class PluginAsset implements Asset
         if (Studip\ENV === 'development') {
             $link .= '#' . $this->model->filename;
         }
-        return URLHelper::getLink($link, true);
+        return URLHelper::getLink($link, array(), true);
     }
 
     /**

@@ -34,8 +34,7 @@ class Compiler
      */
     public static function compileLESS($less, $variables = array())
     {
-        $less  = self::getLESSPrefix() . $less;
-        $less .= file_get_contents($filename);
+        $less = self::getLESSPrefix() . $less;
 
         $variables['image_path'] = '"' . Assets::url('images') . '"';
 

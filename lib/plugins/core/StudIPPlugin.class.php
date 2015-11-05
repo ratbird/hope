@@ -213,7 +213,9 @@ abstract class StudIPPlugin {
         // Compile asset if neccessary
         if ($asset->isNew()) {
             $less = file_get_contents($less_file);
-            $css  = Assets\Compiler::compileLESS($less);
+            $css  = Assets\Compiler::compileLESS($less, array(
+                'plugin-path' => $this->getPluginURL(),
+            ));
 
             $asset->setContent($css);
         }

@@ -90,7 +90,7 @@
                             <label><?= $entry->getName() ?>:</label>
                         </td>
                         <td>
-                        <? if ($locked): ?>
+                        <? if (!$entry->structure->editAllowed($GLOBALS['user']->perms) || $locked): ?>
                             <?= $entry->getDisplayValue() ?>
                         <? else: ?>
                             <?= $entry->getHTML('datafields') ?>

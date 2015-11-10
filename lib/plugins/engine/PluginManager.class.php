@@ -395,7 +395,7 @@ class PluginManager
 
         // plugin must implement at least one interface
         if (count($type) == 0) {
-            return NULL;
+            throw new Exception(_("Plugin implementiert kein gültiges Interface."));
         }
 
         if ($info) {

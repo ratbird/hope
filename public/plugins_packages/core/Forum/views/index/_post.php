@@ -200,7 +200,7 @@
                         <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
                     <? endif ?>
 
-                    <a href="<?= URLHelper::getLink('dipatch.php/profile', array('username' => get_username($post['user_id'])))?>">
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => get_username($post['user_id'])))?>">
                         <span class="username" data-profile="<?= $post['topic_id'] ?>">
                             <?= htmlReady(get_fullname($post['user_id'])) ?>
                         </span>

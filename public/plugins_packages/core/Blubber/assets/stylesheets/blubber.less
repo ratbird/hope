@@ -193,8 +193,14 @@
 #blubber_threads > li.thread.course .contextinfo > .name {
     height: 20px;
 }
-#blubber_threads.coursestream > li.thread .contextinfo, #blubber_threads.profilestream > li.thread .contextinfo  {
-    display: none;
+#blubber_threads.coursestream, #blubber_threads.profilestream {
+    > li.thread {
+        border-top-width: 2px;
+        border-bottom-width: 2px;
+        .contextinfo {
+            display: none;
+        }
+    }
 }
 #blubber_threads.coursestream > .thread > .avatar, #blubber_threads.profilestream > .thread > .avatar {
     margin-top: 7px;

@@ -45,9 +45,22 @@ class Admission_RuleController extends AuthenticatedController {
      */
     public function configure_action($ruleType='', $ruleId='') {
         $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules();
+        UserFilterField::getAvailableFilterFields();
         $this->ruleType = $ruleType;
-        $this->rule = new $ruleType($ruleId);
-        $this->ruleTemplate = $this->rule->getTemplate();
+        // Check if rule data has been given via request.
+        if (Request::get('rule')) {
+            $rule = unserialize(Request::get('rule'));
+            if ($ruleType == get_class($rule)) {
+                $this->rule = $rule;
+            }
+        } else {
+            if (in_array($ruleType, array_keys($this->ruleTypes))) {
+                $this->rule = new $ruleType($ruleId);
+            }
+        }
+        if ($this->rule) {
+            $this->ruleTemplate = $this->rule->getTemplate();
+        }
     }
 
     /**

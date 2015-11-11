@@ -7,6 +7,6 @@ use Studip\Button, Studip\LinkButton;
     <div class="submit_wrapper" data-dialog-button>
         <input type="hidden" id="action" name="action" value=""/>
         <?= Button::createAccept(_('Speichern'), 'submit') ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), 'cancel', array('onclick' => "$('#configurerule').remove(); return false;")) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), 'cancel') ?>
     </div>
 </form>

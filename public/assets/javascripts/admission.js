@@ -28,7 +28,7 @@ STUDIP.Admission = {
         return false;
     },
 
-    configureRule: function (ruleType, targetUrl) {
+    configureRule: function (ruleType, targetUrl, ruleId) {
         var urlparts = targetUrl.split('?');
         targetUrl = urlparts[0] + '/' + ruleType;
         if (urlparts[1]) {
@@ -36,8 +36,11 @@ STUDIP.Admission = {
         }
 
         STUDIP.Dialog.fromURL(targetUrl, {
+            method: 'post',
             size: 'auto',
-            title: 'Anmelderegel konfigurieren'.toLocaleString()
+            title: 'Anmelderegel konfigurieren'.toLocaleString(),
+            id: 'configurerule',
+            data: {rule : $('#rule_data_' + ruleId + ' input[name="rules[]"]').val()},
         });
 
         return false;
@@ -47,7 +50,9 @@ STUDIP.Admission = {
         STUDIP.Dialog.fromURL(source, {
             title: 'Anmelderegel konfigurieren'.toLocaleString(),
             size: 'auto',
-            data: {rules : _.pluck($('#rules input[name="rules[]"]'), 'value')}
+            data: {rules : _.pluck($('#rules input[name="rules[]"]'), 'value')},
+            method: 'post',
+            id: 'configurerule'
         });
         return false;
     },
@@ -123,10 +128,10 @@ STUDIP.Admission = {
      */
     checkAndSaveRule: function (ruleId, errorTarget, validateUrl, savedTarget, saveUrl) {
         if (STUDIP.Admission.validateRuleConfig(errorTarget, validateUrl)) {
-            return STUDIP.Admission.saveRule(ruleId, savedTarget, saveUrl);
-        } else {
-            return false;
+            STUDIP.Admission.saveRule(ruleId, savedTarget, saveUrl);
+            STUDIP.Dialog.close({id: 'configurerule'});
         }
+        return false;
     },
 
     validateRuleConfig: function (containerId, targetUrl) {

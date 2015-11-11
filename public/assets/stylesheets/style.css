@@ -5930,7 +5930,7 @@ div.available-widgets .studip-widget {
 .pagination .next a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
 }
-#rulelist div {
+#rulelist div.admissionrule {
   display: list-item;
   list-style-type: disc;
   margin-left: 25px;

@@ -88,7 +88,7 @@ class ProfileController extends AuthenticatedController
         if (get_config('SCORE_ENABLE')) {
             if ($this->current_user->user_id === $GLOBALS['user']->id || $this->current_user->score) {
                 $this->score         = Score::GetMyScore($this->current_user);
-                $this->score_title   = Score::getTitel($this->current_user->score, $this->current_user->geschlecht);
+                $this->score_title   = Score::getTitel($this->score, $this->current_user->geschlecht);
             }
         }
 

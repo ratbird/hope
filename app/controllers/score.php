@@ -93,6 +93,7 @@ class ScoreController extends AuthenticatedController
         $this->offset          = $offset;
         $this->max_per_page    = $max_per_page;
         $this->current_user    = User::findCurrent();
+        $this->current_user_score = Score::getMyScore($this->current_user);
 
         // Set up sidebar and helpbar
 

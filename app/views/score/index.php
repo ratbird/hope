@@ -2,8 +2,8 @@
     <caption>
         <span class="actions" style="font-size: 0.9em;">
             <?= _('Ihre Punkte:') ?>
-            <strong><?= number_format(Score::getMyScore($this->current_user), 0, ',', '.') ?></strong>
-            (<?= Score::getTitel($this->current_user->score, $this->current_user->geschlecht) ?>)
+            <strong><?= number_format($this->current_user_score, 0, ',', '.') ?></strong>
+            (<?= Score::getTitel($this->current_user_score, $this->current_user->geschlecht) ?>)
         </span>
         <?= _('Stud.IP-Rangliste')?>
     </caption>

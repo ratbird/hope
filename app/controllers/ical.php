@@ -57,7 +57,7 @@ class iCalController extends StudipController
             $export = new CalendarExport(new CalendarWriterICalendar());
             $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS');
 
-            if ($GLOBALS['_calendar_error']->getMaxStatus(ERROR_CRITICAL)) {
+            if ($GLOBALS['_calendar_error']->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
                 $this->set_status(500);
                 $this->render_nothing();
                 return;

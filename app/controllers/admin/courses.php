@@ -75,6 +75,8 @@ class Admin_CoursesController extends AuthenticatedController
         PageLayout::setTitle(_("Verwaltung von Veranstaltungen und Einrichtungen"));
         Sidebar::Get()->setTitle(_('Veranstaltungsadministration'));
 
+        // Add admission functions.
+        PageLayout::addSqueezePackage('admission');
     }
 
     /**

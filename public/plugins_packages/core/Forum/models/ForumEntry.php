@@ -87,9 +87,16 @@ class ForumEntry {
      */
     static function getContentAsHtml($description, $anonymous = false)
     {
-        $content = formatReady(ForumEntry::killEdit($description));
+        $raw_content = ForumEntry::killEdit($description);
+
         $comment = ForumEntry::getEditComment($description, $anonymous);
-        return $content . ($comment ? '<br><i>' . htmlReady($comment) . '</i>' : '');
+        if ($comment) {
+            $raw_content .= "\n" . '%%' . $comment . '%%';
+        }
+
+        $content = formatReady($raw_content);
+
+        return $content;
     }
 
     /**
@@ -392,7 +399,6 @@ class ForumEntry {
                 'content'         => ForumEntry::getContentAsHtml($data['content'], $data['anonymous']),
                 'content_raw'     => ForumEntry::killEdit($data['content']),
                 'content_short'   => $desc_short,
-                'opengraph'       => ($og = OpenGraphURL::find(OpenGraphURL::$tempURLStorage[0])) ? $og->render() : "",
                 'chdate'          => $data['chdate'],
                 'mkdate'          => $data['mkdate'],
                 'user_id'        => $data['user_id'],

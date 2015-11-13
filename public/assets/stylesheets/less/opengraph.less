@@ -1,64 +1,106 @@
-.opengraph {
-    font-size: 0.8em; 
-    border: thin solid lightgrey; 
-    padding: 10px; 
-    margin-top: 10px;
-    min-height: 120px;
-    
-    margin-left: auto;
-    margin-right: auto;
+.opengraph-area {
+    margin: 10px auto 5px;
     max-width: 700px;
 
+    .switcher {
+        list-style: none;
+        text-align: right;
+
+        li {
+            border-top: thin solid @dark-gray-color-20;
+            display: inline-block;
+            padding: 5px;
+
+            &:first-child {
+                border-left: thin solid @dark-gray-color-20;
+            }
+            &:last-child {
+                border-right: thin solid @dark-gray-color-20;
+            }
+        }
+        .switch-left, .switch-right {
+            .hide-text();
+            .square(20px);
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+
+            &:not([disabled]) {
+                cursor: pointer;
+            }
+        }
+        .switch-left {
+            .retina-background-icon('blue/arr_1left.svg');
+            &[disabled] {
+                .retina-background-icon('grey/arr_1left.svg');
+            }
+        }
+        .switch-right {
+            .retina-background-icon('blue/arr_1right.svg');
+            &[disabled] {
+                .retina-background-icon('grey/arr_1right.svg');
+            }
+        }
+    }
+
+    .js & .opengraph.hidden,
+    .js &:not(.handled) .opengraph:not(:first-of-type) {
+        // The second selector prevents flash of content before everything
+        // is setup
+        display: none;
+    }
+}
+
+.opengraph {
+    @padding: 10px;
+    @height: 120px;
+
+    .clearfix;
+
+    font-size: 0.8em;
+    border: 1px solid @dark-gray-color-20;
+    padding: @padding;
+    min-height: @height;
+
     .flash-embedder {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        .flex();
+        .flex-justify-content(center);
+        .flex-align-items(center);
         width: 100%;
         height: 100px;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: 100% auto;
         .play {
-            background-color: rgba(0,0,0,0.7);
-            border-radius: 100px;
+            .border-radius(100px);
+            .transition(background-color 300ms);
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 10px;
-            transition: background-color 0.3s;
         }
         &:hover .play {
-            background-color: rgba(0,0,0,1);
-            transition: background-color 0.3s;
+            background-color: rgba(0, 0, 0, 1);
         }
     }
-    .video {
-        .flash-embedder {
-            height: 200px;
-        }
-    }
-    .audio {
-        text-align: center;
+    .video .flash-embedder {
+        height: 200px;
     }
 
     a.info {
+        .box-sizing(border-box);
+        color: black;
         display: block;
         word-break: normal !important;
-        color: black;
+        &:hover {
+            color: black;
+        }
     }
-    a.info:hover {
-        color: black;
-    }
-    .info_image {
-        transition: margin, padding, width, height;
-        transition-duration: 100ms;
-        float:left;
-        width: 120px;
-        height: 120px;
-        margin: 0px;
-        margin-right: 10px;
-        padding: 0px;
-        background-size: auto 100%;
-        background-position: center center;
+    .image {
+        .square(@height);
+        background-size: contain;
+        background-position: left center;
         background-repeat: no-repeat;
+        display: inline-block;
+        float: left;
+        margin-right: @padding;
     }
 }
-
-

@@ -11,8 +11,15 @@
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'config.inc.php'; //$SMILE_SHORT and $SYMBOL_SHORT needed by formatReady
+require_once 'lib/classes/StudipArrayObject.class.php';
+require_once 'lib/classes/MultiDimArrayObject.class.php';
+require_once 'lib/classes/JSONArrayObject.class.php';
 require_once 'lib/models/SimpleORMap.class.php';
+require_once 'lib/models/SimpleCollection.class.php';
+require_once 'lib/models/SimpleORMapCollection.class.php';
 require_once 'lib/models/OpenGraphURL.class.php';
+require_once 'lib/models/OpenGraphURLCollection.class.php';
+require_once 'lib/classes/FormattedContent.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/SmileyFormat.php';
@@ -22,7 +29,8 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         static $config = array(
-            'LOAD_EXTERNAL_MEDIA' => 'allow'
+            'LOAD_EXTERNAL_MEDIA' => 'allow',
+            'OPENGRAPH_ENABLE'    => false,
         );
 
         Config::set(new Config($config));

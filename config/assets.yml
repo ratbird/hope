@@ -104,6 +104,7 @@ javascripts:
     - javascripts/coursewizard.js
     - javascripts/smiley.js
     - javascripts/big-image-handler.js
+    - javascripts/opengraph.js
 
     - javascripts/studip-secure-forms.js
     - javascripts/studip-css.js

@@ -90,9 +90,9 @@
             
             <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <?= ForumHelpers::highlight($post['content'], $highlight) ?>
+                <?= OpenGraph::extract($post['content'])->render() ?>
             </span>
         </div>
-        <div class="opengraph_area"><?= $post['opengraph'] ?></div>
 
         <!-- Buttons for this Posting -->
         <div class="buttons">

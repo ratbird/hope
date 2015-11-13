@@ -21,6 +21,9 @@ class BlubberPosting extends SimpleORMap {
     //regexp for hashtags
     static public $hashtags_regexp = "(^|\s)\#([\w\d_\.\-\?!\+=%]*[\w\d])";
 
+    // Storage for formatted content for performance reasons
+    protected $formatted_content = null;
+
     /**
      * Special format-function that adds hashtags to the common formatReady-markup.
      * @param string $text : original text with studip-markup plus hashtags
@@ -30,6 +33,7 @@ class BlubberPosting extends SimpleORMap {
         StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, null, "BlubberPosting::markupHashtags");
         $output = formatReady($text);
         StudipFormat::removeStudipMarkup("blubberhashtag");
+
         return $output;
     }
 
@@ -182,6 +186,28 @@ class BlubberPosting extends SimpleORMap {
         $this->db_table = "blubber";
         $this->registerCallback('after_store', 'synchronizeHashtags');
         parent::__construct($id);
+    }
+
+    /**
+     * @return String containing the formatted content
+     */
+    public function getContent()
+    {
+        if ($this->formatted_content === null) {
+            $content = $this->description;
+            if ($this->isThread() && $this->name && strpos($this->description, $this->name) === false) {
+                $content = $this->name . "\n" . $content;
+            }
+
+            $this->formatted_content = self::format($content);
+        }
+
+        return $this->formatted_content;
+    }
+
+    public function getOpenGraphURLs()
+    {
+        return OpenGraph::extract($this->description);
     }
 
     /**

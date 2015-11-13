@@ -191,7 +191,7 @@ class Course_BasicdataController extends AuthenticatedController
         //Dritter Reiter: Personal
         $this->dozenten = $sem->getMembers('dozent');
         $instUsers = new SimpleCollection(InstituteMember::findByInstituteAndStatus($sem->getInstitutId(), 'dozent'));
-        $this->membersOfInstitute = $instUsers->pluck('user_id');
+        $this->lecturersOfInstitute = $instUsers->pluck('user_id');
 
         if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
             $search_template = "user_inst_not_already_in_sem";
@@ -236,8 +236,9 @@ class Course_BasicdataController extends AuthenticatedController
                                  )
                             );
         $this->tutor_title = get_title_for_status('tutor', 1, $sem->status);
-
-
+        $instUsers = new SimpleCollection(InstituteMember::findByInstituteAndStatus($sem->getInstitutId(), 'tutor'));
+        $this->tutorsOfInstitute = $instUsers->pluck('user_id');
+        unset($instUsers);
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
             'title' => _("Teilnehmde"),

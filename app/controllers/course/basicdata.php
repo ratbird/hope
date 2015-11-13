@@ -172,6 +172,7 @@ class Course_BasicdataController extends AuthenticatedController
                 ($inst['is_fak'] ? "</span>" : "");
         }
         $sem_institutes = $sem->getInstitutes();
+
         $inst = array_flip($sem_institutes);
         unset($inst[$sem->institut_id]);
         $inst = array_flip($inst);
@@ -189,6 +190,8 @@ class Course_BasicdataController extends AuthenticatedController
 
         //Dritter Reiter: Personal
         $this->dozenten = $sem->getMembers('dozent');
+        $instUsers = new SimpleCollection(InstituteMember::findByInstituteAndStatus($sem->getInstitutId(), 'dozent'));
+        $this->membersOfInstitute = $instUsers->pluck('user_id');
 
         if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
             $search_template = "user_inst_not_already_in_sem";

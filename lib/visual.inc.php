@@ -266,18 +266,13 @@ function quotes_encode($description,$author)
  * @param boolean $extern         (deprecated, has no effect)
  * @param boolean $wiki           (deprecated, has no effect)
  * @param string  $show_comments  (deprecated, has no effect)
- * @return FormattedContent Object containing the HTML code computed by
- *                          applying markup-rules (will convert itself to
- *                          string if neccessary).
+ * @return string        HTML code computed by applying markup-rules.
  */
 // TODO remove unused function arguments
 function formatReady($text, $trim=TRUE, $extern=FALSE, $wiki=FALSE, $show_comments='icon')
 {
-    if ($trim) {
-        $text = trim($text);
-    }
-
-    return new FormattedContent($text);
+    return sprintf(FORMATTED_CONTENT_WRAPPER,
+                   Markup::apply(new StudipFormat(), $text, $trim));
 }
 
 /**

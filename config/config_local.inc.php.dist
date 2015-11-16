@@ -435,6 +435,7 @@ $STUDIP_AUTH_CONFIG_STANDARD = array("error_head" => "intern");
 $STUDIP_AUTH_CONFIG_LDAPREADANDBIND = array("host" => "localhost",
                                         "base_dn" => "dc=studip,dc=de",
                                         "protocol_version" => 3,
+                                        "port" => 389,
                                         "start_tls" => false,
                                         "send_utf8_credentials" => true,
                                         "decode_utf8_values" => true,

@@ -198,7 +198,7 @@ class StartNavigation extends Navigation
         // community
         $navigation = new Navigation(_('Community'));
         $navigation->addSubNavigation('online', new Navigation(_('Wer ist online?'), 'dispatch.php/online'));
-        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha')));
+        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'dispatch.php/contact'));
         // study groups
         if (get_config('STUDYGROUPS_ENABLE')) {
             $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse'));

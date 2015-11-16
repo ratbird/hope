@@ -36,8 +36,9 @@
 class StudipAuthLdap extends StudipAuthAbstract {
     
     var $anonymous_bind = true;
-    
-    var $host;
+
+    var $host = 389;
+    var $port;
     var $base_dn;
     var $protocol_version;
     var $username_attribute = 'uid';
@@ -78,7 +79,7 @@ class StudipAuthLdap extends StudipAuthAbstract {
 
     function doLdapConnect()
     {
-        if (!($this->conn = ldap_connect($this->host))) {
+        if (!($this->conn = ldap_connect($this->host, $this->port))) {
             $this->error_msg = _("Keine Verbindung zum LDAP Server möglich.");
             return false;
         }

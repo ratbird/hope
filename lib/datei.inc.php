@@ -1080,7 +1080,7 @@ function getFileExtension($str) {
  * @return Can the given file be uploaded to Stud.IP?
  */
 function validate_upload($the_file, $real_file_name='') {
-    global $UPLOAD_TYPES, $msg, $SessSemName, $user, $auth, $i_page;
+    global $UPLOAD_TYPES, $msg, $SessSemName, $user, $auth;
 
     $the_file_size = $the_file['size'];
     $the_file_name = $the_file['name'];
@@ -1088,7 +1088,7 @@ function validate_upload($the_file, $real_file_name='') {
     if (!$the_file) { # haben wir eine Datei?
         $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgewählt!") . "§";
     } else { # pruefen, ob der Typ stimmt
-        if ($i_page == "dispatch.php/messages/upload_attachment") {
+        if (match_route("dispatch.php/messages/upload_attachment")) {
             if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
                     $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
             $active_upload_type = "attachments";

@@ -121,7 +121,7 @@
                 )) ?>
             <? endif ?>
 
-            <? if ($section == 'index') : ?>
+            <? if ($section == 'index' && $perms['edit']) : ?>
                 <?= Studip\LinkButton::create(_('Beitrag bearbeiten'), PluginEngine::getUrl('coreforum/index/index/' 
                       . $post['topic_id'] .'/?edit_posting=' . $post['topic_id']), array(
                           'onClick' => "STUDIP.Forum.editEntry('". $post['topic_id'] ."'); return false;",

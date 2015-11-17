@@ -3,8 +3,8 @@
         <?= _('Grunddaten') ?>
     </h1>
 </header>
-<section class="required">
-    <label for="wizard-coursetype">
+<section>
+    <label for="wizard-coursetype" class="required">
         <?= _('Typ') ?>
     </label>
     <select name="coursetype" id="wizard-coursetype">
@@ -19,8 +19,8 @@
         <?php } ?>
     </select>
 </section>
-<section class="required">
-    <label for="wizard-start-time">
+<section>
+    <label for="wizard-start-time" class="required">
         <?= _('Semester') ?>
     </label>
     <select name="start_time" id="wizard-start-time" >
@@ -31,8 +31,8 @@
         <?php } ?>
     </select>
 </section>
-<section class="required">
-    <label for="wizard-name">
+<section>
+    <label for="wizard-name" class="required">
         <?= _('Name') ?>
     </label>
     <input type="text" name="name" id="wizard-name" size="75" maxlength="254" value="<?= htmlReady($values['name']) ?>"/>
@@ -49,8 +49,8 @@
     </label>
     <textarea name="description" id="wizard-description" cols="75" rows="4"><?= htmlReady($values['description']) ?></textarea>
 </section>
-<section class="required">
-    <label for="wizard-home-institute">
+<section>
+    <label for="wizard-home-institute" class="required">
         <?= _('Heimateinrichtung') ?>
     </label>
     <select name="institute" id="wizard-home-institute"
@@ -95,8 +95,8 @@
         <?php endforeach ?>
     </div>
 </section>
-<section class="required" for="lecturer_id_parameter">
-    <label for="lecturer_id_2">
+<section >
+    <label for="lecturer_id_2" class="required">
         <?= _('Lehrende') ?>
     </label>
     <div id="wizard-lecturersearch">
@@ -134,7 +134,7 @@
         <div class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
             <?= _('bereits zugeordnet:') ?>
         </div>
-        <?php foreach ($values['deputies'] as $id) : ?>
+        <?php foreach ($values['deputies'] as $id => $assigned) : ?>
             <?php if ($user = User::find($id)) : ?>
                 <?php if (!in_array($id, array_keys($values['lecturers']))) : ?>
                     <?= $this->render_partial('basicdata/_user',

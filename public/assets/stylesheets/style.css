@@ -6463,6 +6463,16 @@ div#studyareas {
   padding-left: 10px;
   width: 45%;
 }
+div#wizard-lecturers, div#wizard-deputies, div#wizard-tutors {
+  margin-top: 5px;
+  margin-left: 25px;
+}
+div#wizard-lecturers div.description,
+div#wizard-deputies div.description,
+div#wizard-tutors div.description {
+  font-style: italic;
+  font-weight: normal;
+}
 .smiley-tabs {
   display: -ms-flexbox;
   display: -webkit-box;

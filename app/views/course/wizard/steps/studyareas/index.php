@@ -22,7 +22,7 @@
     data-forward-url="<?= $no_js_url ?>" data-no-search-result="<?=_('Es wurde kein Suchergebnis gefunden.') ?>">
     <h2><?= _('Alle Studienbereiche') ?></h2>
     <div>
-        <input type="text" size="40" maxlength="255" name="search" id="sem-tree-search"
+        <input type="text" size="40" name="search" id="sem-tree-search"
                value="<?= $values['searchterm'] ?>"/>
         <span id="sem-tree-search-start">
             <?= Assets::input('icons/blue/search.svg',

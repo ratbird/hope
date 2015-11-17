@@ -496,7 +496,7 @@ class Course_MembersController extends AuthenticatedController
             }
             $coursesearch = MyCoursesSearch::get('Seminar_id', $GLOBALS['perm']->get_perm(), $parameters);
             $this->search = QuickSearch::get('course_id', $coursesearch)
-                ->setInputStyle('width: 400px')
+                ->setInputStyle('width:100%')
                 ->withButton()
                 ->render();
             $this->course_id = Request::option('course_id');
@@ -513,9 +513,14 @@ class Course_MembersController extends AuthenticatedController
                     $this->response->add_header('X-Title', _('Zielveranstaltung auswählen'));
                 }
             } else {
+                if (Request::isXhr()) {
+                    $this->response->add_header('X-Dialog-Close', '1');
+                    $this->render_nothing();
+                } else {
                 $this->redirect('course/members/index');
             }
         }
+    }
     }
 
     /**
@@ -580,8 +585,13 @@ class Course_MembersController extends AuthenticatedController
             $_SESSION['sms_data']['p_rec'] = array_filter($users);
             $this->redirect(URLHelper::getURL('dispatch.php/messages/write', array('default_subject' => $this->getSubject(), 'tmpsavesnd' => 1)));
         } else {
+            if (Request::isXhr()) {
+                $this->response->add_header('X-Dialog-Close', '1');
+                $this->render_nothing();
+            } else {
             $this->redirect('course/members/index');
         }
+    }
     }
 
     public function import_autorlist_action()

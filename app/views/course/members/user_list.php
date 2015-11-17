@@ -1,7 +1,7 @@
 <? use \Studip\Button; ?>
 <a name="users"></a>
 
-<form action="<?= $controller->url_for('course/members/edit_user/') ?>" method="post" data-dialog="size=auto">
+<form action="<?= $controller->url_for('course/members/edit_user/') ?>" method="post" data-dialog="">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable">
         <colgroup>

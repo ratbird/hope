@@ -281,14 +281,14 @@ jQuery(document).on('ready', function () {
 });
 
 
-/* notify MathJax about new content*/
-jQuery(document)
-    .on('dialog-open',
-        function (event) {
-            if (typeof MathJax !== 'undefined') {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.dialog]);
-            }
-        });
+jQuery(document).on('dialog-update', function (event) {
+    jQuery('.add_toolbar').addToolbar();
+
+    /* notify MathJax about new content*/
+    if (typeof MathJax !== 'undefined') {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.dialog]);
+    }
+});
 
 /*override window.print to allow mathjax rendering to finish before printing*/
 (function (origPrint) {

@@ -52,7 +52,6 @@ class User_Visibility_Settings extends SimpleORMap
      */
     public function loadChildren()
     {
-        $this->displayCheck();
         $this->children = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = ? ", array($this->user_id, $this->visibilityid));
         foreach ($this->children as $child) {
             $child->parent = $this;

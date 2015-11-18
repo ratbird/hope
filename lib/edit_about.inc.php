@@ -608,7 +608,7 @@ class about extends messaging
         // Literature
         $lit_list = StudipLitList::GetListsByRange($this->auth_user['user_id']);
         // Free datafields
-        $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
+        $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id'], 'user');
         // Homepage plugins
         //$homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         // Deactivate plugin visibility settings because they aren't working now.
@@ -669,7 +669,7 @@ class about extends messaging
             $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
-                if ($field->structure->accessAllowed($GLOBALS['perm']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
+                if ($field->getValue() && $field->structure->editAllowed($this->auth_user['perms']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
                     $homepage_elements[$key] = array("name" => _($field->structure->data['name']), "visibility" => $homepage_visibility[$key] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Zusätzliche Datenfelder');
                 }
             }

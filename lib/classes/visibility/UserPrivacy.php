@@ -45,9 +45,18 @@ class UserPrivacy
     function getProfileSettings()
     {
         if (!isset($this->profileSettings)) {
+            // if the default categories have not been created, do this now
+            if (User_Visibility_Settings::countBySQL('user_id = ? AND category = 0', array($this->userid)) == 0) {
+                Visibility::createDefaultCategories($this->userid);
+            }
             $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 AND identifier <> 'plugins'", array($this->userid));
-            foreach ($this->profileSettings as $vis) {
+            foreach ($this->profileSettings as $i => $vis) {
                 $vis->loadChildren();
+                // remap child settings to default categories
+                if ($vis->category == 1) {
+                    $idmap[$vis->identifier] = $vis;
+                    unset($this->profileSettings[$i]);
+                }
             }
             $about = new about($GLOBALS['user']->username, '');
             $elements = $about->get_homepage_elements();
@@ -57,11 +66,13 @@ class UserPrivacy
                     if ($vis->name === $element['category']) {
                         foreach ($vis->children as $child) {
                             if ($child->identifier === $key) {
+                                $child->name = $element['name'];
+                                $child->setDisplayed();
                                 break 2;
                             }
                         }
 
-                        $child = new User_Visibility_Settings();
+                        $child = $idmap[$key] ?: new User_Visibility_Settings();
                         $child->setData(array(
                             'user_id'    => $this->userid,
                             'parent_id'  => $vis->id,

@@ -1115,3 +1115,10 @@ function getResourcesCategories()
     $query = "SELECT * FROM resources_categories ORDER BY name";
     return DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function hasGlobalOccupationAccess()
+{
+    return (Config::get()-> RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION ||
+        $GLOBALS['perm']->have_perm('admin') ||
+        getGlobalPerms($GLOBALS['user']->id) == 'admin');
+}

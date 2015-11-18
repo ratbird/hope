@@ -106,7 +106,8 @@ if ($_SESSION['resources_data']['actual_object']) {
         $navigation->addSubNavigation('edit_perms', new Navigation(_('Rechte bearbeiten'), 'resources.php', array('view' => 'edit_object_perms')));
     }
 
-    if (getResourceObjectCategory($_SESSION['resources_data']['actual_object'])) {
+    if (getResourceObjectCategory($_SESSION['resources_data']['actual_object']) &&
+            ResourceObject::isScheduleViewAllowed($_SESSION['resources_data']['actual_object'])) {
         $navigation->addSubNavigation('view_schedule', new Navigation(_('Belegungsplan'), 'resources.php', array('view' => 'view_schedule')));
 
         if (get_config('RESOURCES_ENABLE_SEM_SCHEDULE')) {
@@ -400,7 +401,8 @@ Belegungen ausgeben, views: view_schedule, openobject_schedule
 /*****************************************************************************/
 if ($view == "view_schedule" || $view == "openobject_schedule") {
     require_once ($RELATIVE_PATH_RESOURCES."/views/ShowSchedules.class.php");
-    if ($_SESSION['resources_data']["actual_object"]) {
+    if ($_SESSION['resources_data']["actual_object"] &&
+            ResourceObject::isScheduleViewAllowed($_SESSION['resources_data']["actual_object"])) {
         $ViewSchedules=new ShowSchedules($_SESSION['resources_data']["actual_object"]);
         $ViewSchedules->setStartTime($_SESSION['resources_data']["schedule_start_time"]);
         $ViewSchedules->setEndTime($_SESSION['resources_data']["schedule_end_time"]);

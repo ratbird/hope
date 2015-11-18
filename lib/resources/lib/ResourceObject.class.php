@@ -333,10 +333,15 @@ class ResourceObject {
 
         
         if ($this->id) {
-            if ((!$javaScript) || (!$auth->auth["jscript"]))
-                return "<a ".(($target_new) ? "target=\"_blank\"" : "")." href=\"".$this->getLink($quick_view, $view, $view_mode, ($timestamp > 0) ? $timestamp : FALSE)."\">".(($link_text) ? $link_text : $this->getName())."</a>";
-            else
-                return "<a href=\"javascript:void(null)\" onClick=\"window.open('".$this->getLink($quick_view, $view, $view_mode, ($timestamp > 0) ? $timestamp : FALSE)."','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >".(($link_text) ? $link_text : $this->getName())."</a>";
+            if (self::isScheduleViewAllowed($this->id)) {
+                if ((!$javaScript) || (!$auth->auth["jscript"])) {
+                    return "<a " . (($target_new) ? "target=\"_blank\"" : "") . " href=\"" . $this->getLink($quick_view, $view, $view_mode, ($timestamp > 0) ? $timestamp : FALSE) . "\">" . (($link_text) ? $link_text : $this->getName()) . "</a>";
+                } else {
+                    return "<a href=\"javascript:void(null)\" onClick=\"window.open('" . $this->getLink($quick_view, $view, $view_mode, ($timestamp > 0) ? $timestamp : FALSE) . "','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >" . (($link_text) ? $link_text : $this->getName()) . "</a>";
+                }
+            } else {
+                return (($link_text) ? $link_text : $this->getName());
+            }
         } else
             return FALSE;
     }
@@ -783,4 +788,27 @@ class ResourceObject {
     {
         return join($delimeter, array_reverse(array_values($this->getPathArray($include_self))));
     }
+
+    /**
+     * Checks if the resource occupation may be seen by current user.
+     */
+    static function isScheduleViewAllowed($object_id) {
+        // Check if room occupation may be seen.
+        $allowed = false;
+
+        // Globally allowed via config, for admins, roots and resource admins.
+        if (hasGlobalOccupationAccess()) {
+            $allowed = true;
+
+        // View occupation only if own room.
+        } else {
+            $list = ResourcesUserRoomsList::getInstance($GLOBALS['user']->id, false, false, false);
+            if (in_array($object_id, array_keys($list->getRooms()))) {
+                $allowed = true;
+            }
+        }
+
+        return $allowed;
+    }
+
 }

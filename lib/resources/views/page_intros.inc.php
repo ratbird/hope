@@ -61,10 +61,14 @@ switch ($view) {
                              $_SESSION['resources_data']['search_mode'] === 'properties',
                              URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&mode=properties'),
                              URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&mode=browse'));
-        $widget->addCheckbox(_('Belegungszeit anzeigen'),
-                             $_SESSION['resources_data']['check_assigns'],
-                             URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=TRUE'),
-                             URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=FALSE'));
+        // Show only if viewing all room occupations is allowed.
+        if (hasGlobalOccupationAccess() ||
+                ResourcesUserRoomsList::getInstance($GLOBALS['user']->id, false, false)->numberOfRooms()) {
+            $widget->addCheckbox(_('Belegungszeit anzeigen'),
+                $_SESSION['resources_data']['check_assigns'],
+                URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=TRUE'),
+                URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=FALSE'));
+        }
         $widget->addCheckbox(_('Nur Räume anzeigen'),
                              $_SESSION['resources_data']['search_only_rooms'],
                              URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=1'),

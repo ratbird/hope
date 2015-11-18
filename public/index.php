@@ -60,10 +60,6 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
  * *   L O G I N - P A G E   ( N O B O D Y - U S E R )   * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once 'lib/functions.php';
-require_once 'lib/visual.inc.php';
-// -- hier muessen Seiten-Initialisierungen passieren --
-
 PageLayout::setHelpKeyword("Basis.Startseite"); // set keyword for new help
 PageLayout::setTitle(_("Startseite"));
 Navigation::activateItem('/start');

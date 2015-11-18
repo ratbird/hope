@@ -138,7 +138,7 @@ else
 
     if ($o_mode == "passthrough")
     {
-        header("Location: " . GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2));
+        header("Location: " . GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2, 'force'));
         unlink( $TMP_PATH . "/export/" . $xml_file_id);
     } else {
 

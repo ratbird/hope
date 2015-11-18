@@ -41,7 +41,7 @@ function startpage_redirect($page_code) {
             $jump_page = "dispatch.php/calendar/schedule";
         break;
         case 4:
-            $jump_page = "contact.php";
+            $jump_page = "dispatch.php/contact";
         break;
         case 5:
             $jump_page = "dispatch.php/calendar/single";

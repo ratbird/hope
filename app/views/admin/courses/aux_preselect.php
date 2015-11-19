@@ -8,4 +8,8 @@
         <? endforeach ?>
     </select>
 </label>
+<label>
+<input type="checkbox" value="1" name="aux_all_forced">
+<?=_("Erzwungen")?>
+</label>
 <?= \Studip\Button::createAccept(_('Speichern'), 'all'); ?>

@@ -418,37 +418,40 @@ class Admin_CoursesController extends AuthenticatedController
     {
         $result = false;
         $courses = Request::getArray('lock_sem');
-
+        $lock_sem_forced = Request::getArray('lock_sem_forced');
+        $errors = array();
         if (!empty($courses)) {
             foreach ($courses as $course_id => $value) {
                 // force to pre selection
-                if (Request::get('lock_sem_all') && Request::submitted('all')) {
+                if (Request::submitted('all')) {
                     $value = Request::get('lock_sem_all');
+                    $value_forced = Request::int('aux_all_forced');
+                } else {
+                    $value_forced = $lock_sem_forced[$course_id];
                 }
 
                 $course = Course::find($course_id);
 
-                if ($value == 'none') {
-                    $value = null;
-                }
-
-                if ($course->aux_lock_rule == $value) {
-                    continue;
+                if (!$value) {
+                    $value_forced = 0;
                 }
 
                 $course->setValue('aux_lock_rule', $value);
-                if (!$course->store()) {
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
-                    Fehler aufgetreten')), $course->name));
-                    $this->redirect('admin/courses/index');
+                $course->setValue('aux_lock_rule_forced', $value_forced);
 
-                    return;
+                $ok = $course->store();
+                if ($ok === false) {
+                    $errors[] = $course->name;
+                } elseif ($ok) {
+                    $result = true;
                 }
-                $result = true;
             }
 
             if ($result) {
                 PageLayout::postMessage(MessageBox::success(sprintf(_('Die gewünschten Änderungen wurden erfolgreich durchgeführt!'))));
+            }
+            if ($errors) {
+                PageLayout::postMessage(MessageBox::error(_('Bei den folgenden Veranstaltungen ist ein Fehler aufgetreten'), array_map('htmlReady', $errors)));
             }
         }
         $this->redirect('admin/courses/index');

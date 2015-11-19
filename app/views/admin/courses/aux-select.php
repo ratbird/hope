@@ -6,3 +6,8 @@
     </option>
 <? endforeach ?>
 </select>
+<br>
+<label>
+<input type="checkbox" value="1" name="lock_sem_forced[<?=$semid?>]" <?=($values['aux_lock_rule_forced'] ? 'checked' : '')?>>
+<?=_("Erzwungen")?>
+</label>

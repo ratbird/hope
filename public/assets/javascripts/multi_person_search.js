@@ -81,7 +81,7 @@ STUDIP.MultiPersonSearch = {
         var searchterm = $("#" + this.name + "_searchinput").val(),
             name = this.name,
             not_found_template = _.template('Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.'.toLocaleString());
-        $.getJSON(  STUDIP.URLHelper.getURL("dispatch.php/multipersonsearch/ajax_search/" + this.name + "?s="  + searchterm), function( data ) {
+        $.getJSON(  STUDIP.URLHelper.getURL("dispatch.php/multipersonsearch/ajax_search/" + this.name,{'s': searchterm}), function( data ) {
             STUDIP.MultiPersonSearch.removeAllNotSelected();
             var searchcount = 0;
             $.each( data, function( i, item ) {

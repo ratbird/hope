@@ -220,7 +220,7 @@ if ($flash['error']) {
     </fieldset>
         <div class="submit_wrapper" data-dialog-button>
             <?= CSRFProtection::tokenTag() ?>
-            <?= Button::createAccept(_('Speichern'), 'submit') ?>
+            <?= Button::createAccept(_('Speichern'), 'submit', $instant_course_set_view ? array('data-dialog' => '') : array()) ?>
             <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admission/courseset')) ?>
         </div>
 

@@ -52,6 +52,7 @@ class Course_AdmissionController extends AuthenticatedController
         }
         update_admission($this->course->id);
         PageLayout::addSqueezePackage('admission');
+        URLHelper::addLinkParam('return_to_dialog', Request::get('return_to_dialog'));
     }
 
     /**
@@ -59,6 +60,7 @@ class Course_AdmissionController extends AuthenticatedController
      */
     function index_action()
     {
+        URLHelper::addLinkParam('return_to_dialog', Request::isXhr() && isset($_SERVER['HTTP_X_DIALOG']));
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage("sidebar/seminar-sidebar.png");
         if ($GLOBALS['perm']->have_perm('admin')) {
@@ -309,12 +311,7 @@ class Course_AdmissionController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success(_("Die zugelassenen Nutzerdomänen wurden geändert.")));
             }
         }
-        if (Request::isXhr()) {
-            $this->response->add_header('X-Dialog-Close', 1);
-            $this->render_nothing();
-        } else {
-            $this->redirect($this->url_for('/index'));
-        }
+        $this->redirect($this->url_for('/index'));
     }
 
     function change_course_set_action()
@@ -335,7 +332,14 @@ class Course_AdmissionController extends AuthenticatedController
             if ($this->course->getNumWaiting() && !Request::submitted('change_course_set_unassign_yes')) {
                 $question = sprintf(_("In dieser Veranstaltung existiert eine Warteliste. Die bestehende Warteliste mit %s Einträgen wird gelöscht. Sind sie sicher?"), $this->course->getNumWaiting());
             }
-            if (!$question && ($cs = CourseSet::getSetForCourse($this->course_id))) {
+            $cs = CourseSet::getSetForCourse($this->course_id);
+            if ($cs) {
+                $priorities = AdmissionPriority::getPrioritiesByCourse($cs->getId(), $this->course_id);
+                if (count($priorities) && !Request::submitted('change_course_set_unassign_yes')) {
+                    $question = sprintf(_("In dieser Veranstaltung existiert eine Anmeldeliste (Losverfahren am %s). Die bestehende Anmeldeliste mit %s Einträgen wird gelöscht. Sind sie sicher?"), strftime('%x %R', $cs->getSeatDistributionTime()), count($priorities));
+                }
+            }
+            if (!$question && $cs) {
                 CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (!in_array($this->course_id, $cs->getCourses())) {
@@ -482,7 +486,7 @@ class Course_AdmissionController extends AuthenticatedController
 
     function after_filter($action, $args)
     {
-        if (Request::isXhr()) {
+        if (Request::isXhr() && !Request::get('return_to_dialog')) {
             foreach ($this->response->headers as $k => $v) {
                 if ($k === 'Location') {
                     $this->response->headers['X-Location'] = $v;

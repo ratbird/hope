@@ -90,7 +90,7 @@
                             <div id="course_set_assign_explain" style="display: inline-block;padding:1ex;">
                             </div>
                             <div style="display: inline-block;padding:1ex;">
-                                <?= Studip\Button::create(_("Zuordnen"), 'change_course_set_assign') ?>
+                                <?= Studip\Button::create(_("Zuordnen"), 'change_course_set_assign', array('data-dialog' => '')) ?>
                             </div>
                         </td>
                     </tr>
@@ -181,13 +181,12 @@
         <input <?=$is_locked['write_level'] ?> id="schreibzugriff" type="checkbox" <?= ($course->schreibzugriff == 0 ? "checked" : ""); ?> name="write_level"  value="1">
         <?= _("Schreibzugriff für nicht angemeldete Personen erlauben") ?></label>
         </div>
-        <?= Studip\Button::create(_("Freien Zugriff ändern"), 'change_free_access') ?>
+        <?= Studip\Button::create(_("Freien Zugriff ändern"), 'change_free_access', array('data-dialog' => '')) ?>
     </fieldset>
     <? endif ?>
 </form>
 <? if (count($all_domains)) : ?>
-<form class="studip_form" action="<?= $controller->link_for('/change_domains') ?>" method="post"
-      <? if (Request::isXhr()) echo 'data-dialog="reload-on-close"'; ?>>
+<form class="studip_form" action="<?= $controller->link_for('/change_domains') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _("Zugelassenene Nutzerdomänen")?></legend>
@@ -201,7 +200,7 @@
               <?= htmlReady($domain->getName())?></label>
         <? endforeach ?>
         </fieldset>
-        <?= Studip\Button::create(_("Nutzerdomänen ändern"), 'change_domains') ?>
+        <?= Studip\Button::create(_("Nutzerdomänen ändern"), 'change_domains', array('data-dialog' => '')) ?>
     </fieldset>
 </form>
 <? endif ?>

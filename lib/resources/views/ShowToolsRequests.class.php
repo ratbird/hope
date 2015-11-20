@@ -253,7 +253,7 @@ class ShowToolsRequests
                     //echo "<font size=\"-1\">";
                     echo $zt->cell("&nbsp;");
                     echo $zt->cell("<font size=\"-1\">$i.</font>");
-                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Assets::img('icons/16/blue/edit.png', tooltip(_("Anfrage bearbeiten")))."</a>");
+                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Assets::img('icons/16/blue/edit.png', array('title' => _("Anfrage bearbeiten")))."</a>");
                     echo $zt->cell((($_SESSION['resources_data']['requests_open'][$val['request_id']]) ? '' : Assets::img('icons/16/green/accept.png'))."</font>");
                     echo $zt->cell("<font size=\"-1\">".htmlReady($semObj->seminar_number)."</font>");
                     echo $zt->cell("<font size=\"-1\"><a href=\"dispatch.php/course/details/?sem_id=".$semObj->getId()."&send_from_search=true&send_from_search_page=".urlencode($CANONICAL_RELATIVE_PATH_STUDIP."resources.php?view=list_requests")."\">".my_substr(htmlReady($semObj->getName()),0,50)."</a><br></font>");

@@ -49,7 +49,7 @@
             <? endif; ?>
 
             <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
-                <a href="<?= URLHelper::getURL('dispatch.php/admin/statusgroups') ?>">
+                <a href="<?= URLHelper::getURL('dispatch.php/institute/members', array('cid' => $inst_id, 'admin_view' => 1)) ?>">
                     <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Einrichtung'))) ?>
                 </a>
             <? else: ?>
@@ -92,7 +92,7 @@
                     <?= Assets::img('icons/16/blue/trash', tooltip2(_('Löschen'))) ?>
                 </a>
 
-                <a href="<?= URLHelper::getURL('dispatch.php/admin/statusgroups', array('range_id' => $inst_id, 'role_id' => $role_id)) ?>#<?= $role_id ?>">
+                <a href="<?= URLHelper::getURL('dispatch.php/admin/statusgroups', array('cid' => $inst_id)) ?>#group-<?= $role_id ?>">
                     <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Funktion'))) ?>
                 </a>
             <? endif; ?>

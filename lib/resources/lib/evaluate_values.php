@@ -853,13 +853,10 @@ if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Reques
                 Request::option('delete_type')
             ));
         }
-        $resource_is_room = Request::int('resource_is_room', 0);
+        $resource_is_room = Request::submitted('resource_is_room');
         //$insert_type_description = Request::quoted('insert_type_description');
         if (Request::quoted('add_type') && Request::submitted('_add_type')) {
             $id=md5(uniqid("Sommer2002",1));
-            if ($resource_is_room) {
-                $resource_is_room = 1;
-            }
             $query = "INSERT INTO resources_categories
                         (category_id, name, is_room)
                       VALUES (?, ?, ?)";

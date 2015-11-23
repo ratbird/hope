@@ -68,7 +68,7 @@ class Institute_BasicdataController extends AuthenticatedController
         }
 
         $lockrule = LockRules::getObjectRule($i_view);
-        if ($lockrule->description && LockRules::CheckLockRulePermission($i_view)) {
+        if ($lockrule->description && LockRules::CheckLockRulePermission($i_view, $lockrule['permission'])) {
             PageLayout::postMessage(MessageBox::info(formatLinks($lockrule->description)));
         }
 

@@ -44,6 +44,8 @@ class Admin_StatusgroupsController extends AuthenticatedController
         ));
 
         $this->setType();
+        // Check if the viewing user should get the admin interface
+        $this->tutor = $this->type['edit']($this->user_id);
     }
 
     /**
@@ -51,28 +53,31 @@ class Admin_StatusgroupsController extends AuthenticatedController
      */
     public function index_action()
     {
+        $lockrule = LockRules::getObjectRule($_SESSION['SessionSeminar']);
+        $this->is_locked = LockRules::Check($_SESSION['SessionSeminar'], 'groups');
+        if ($lockrule->description && $this->is_locked) {
+            PageLayout::postMessage(MessageBox::info(formatLinks($lockrule->description)));
+        }
         // Setup sidebar.
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/group-sidebar.png');
-
-        $widget = new ActionsWidget();
-        $widget->addLink(_('Neue Gruppe anlegen'),
-                         $this->url_for('admin/statusgroups/editGroup'),
-                         'icons/16/blue/add/group3.png')
-               ->asDialog('size=auto');
-        $widget->addLink(_('Gruppenreihenfolge ändern'),
-                         $this->url_for('admin/statusgroups/sortGroups'),
-                         'icons/16/blue/arr_2down.png')
-               ->asDialog();
-        $sidebar->addWidget($widget);
-
+        if ($this->tutor) {
+            $widget = new ActionsWidget();
+            $widget->addLink(_('Neue Gruppe anlegen'),
+                             $this->url_for('admin/statusgroups/editGroup'),
+                             'icons/16/blue/add/group3.png')
+                   ->asDialog('size=auto');
+            $widget->addLink(_('Gruppenreihenfolge ändern'),
+                             $this->url_for('admin/statusgroups/sortGroups'),
+                             'icons/16/blue/arr_2down.png')
+                   ->asDialog();
+            $sidebar->addWidget($widget);
+        }
         // Collect all groups
         $this->loadGroups();
 
-        // Check if the viewing user should get the admin interface
-        $this->tutor = $this->type['edit']($this->user_id);
         $this->membersOfInstitute = Institute::find($_SESSION['SessionSeminar'])->members->orderBy('nachname')->pluck('user_id');
-        
+
         // Create multiperson search type
         $query = "SELECT auth_user_md5.user_id, CONCAT({$GLOBALS['_fullname_sql']['full']}, ' (', auth_user_md5.username, ')') as fullname
                   FROM auth_user_md5
@@ -125,7 +130,7 @@ class Admin_StatusgroupsController extends AuthenticatedController
     /**
      * Interface to sort groups
      */
-    public function sortGroups_action() 
+    public function sortGroups_action()
     {
         $this->check('edit');
 
@@ -146,7 +151,7 @@ class Admin_StatusgroupsController extends AuthenticatedController
      *
      * @param string group id
      */
-    public function memberAdd_action($group_id = null) 
+    public function memberAdd_action($group_id = null)
     {
         $mp = MultiPersonSearch::load("add_statusgroup" . $group_id);
         $this->group = new Statusgruppen($group_id);
@@ -205,6 +210,8 @@ class Admin_StatusgroupsController extends AuthenticatedController
             $this->type['after_user_delete']($user_id);
             $this->afterFilter();
         }
+        // Check if the viewing user should get the admin interface
+        $this->tutor = $this->type['edit']($this->user_id);
     }
 
     /**

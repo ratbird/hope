@@ -10,14 +10,14 @@
     <caption>
         <?= formatReady($group->name) ?>
         <? if ($type['needs_size']): ?>
-            <?= $group->getPlaces() ?> 
+            <?= $group->getPlaces() ?>
         <? endif; ?>
-        <span class="actions">
         <? if ($tutor): ?>
+        <span class="actions">
             <? if ($type['needs_self_assign']): ?>
                 <? if ($group->selfassign): ?>
                     <?= Assets::img("icons/16/grey/lock-unlocked.png") ?>
-                <? else: ?> 
+                <? else: ?>
                     <?= Assets::img("icons/16/grey/lock-locked.png") ?>
                 <? endif; ?>
             <? endif; ?>
@@ -51,8 +51,8 @@
                     </a>
                 <? endif; ?>
             <? endif; ?>
-        <? endif; ?>
         </span>
+        <? endif; ?>
     </caption>
     <thead>
         <tr>

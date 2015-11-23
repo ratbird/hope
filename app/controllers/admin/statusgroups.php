@@ -210,8 +210,6 @@ class Admin_StatusgroupsController extends AuthenticatedController
             $this->type['after_user_delete']($user_id);
             $this->afterFilter();
         }
-        // Check if the viewing user should get the admin interface
-        $this->tutor = $this->type['edit']($this->user_id);
     }
 
     /**

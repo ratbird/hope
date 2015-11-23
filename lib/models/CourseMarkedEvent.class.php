@@ -31,9 +31,10 @@ class CourseMarkedEvent extends CourseEvent
     public static function getEventsByInterval($user_id, DateTime $start, dateTime $end)
     {
         $stmt = DBManager::get()->prepare('SELECT DISTINCT termine.* FROM schedule_seminare '
-                . 'INNER JOIN termine ON seminar_id = range_id '
-                . 'WHERE user_id = :user_id AND schedule_seminare.visible = 1 '
-                . 'AND date BETWEEN :start AND :end '
+                . 'INNER JOIN termine ON schedule_seminare.seminar_id = range_id '
+                . 'LEFT JOIN seminar_user ON seminar_user.seminar_id = range_id AND seminar_user.user_id= :user_id '
+                . 'WHERE schedule_seminare.user_id = :user_id AND schedule_seminare.visible = 1 '
+                . 'AND seminar_user.seminar_id IS NULL AND date BETWEEN :start AND :end '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
             ':user_id' => $user_id,

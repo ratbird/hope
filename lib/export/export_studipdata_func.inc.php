@@ -814,7 +814,10 @@ function export_pers($inst_id)
     }
 
     $data_object .= xml_close_tag( $xml_groupnames_person['group']);
-    output_data($data_object, $o_mode);
+
+    if ($data_found) {
+        output_data($data_object, $o_mode);
+    }
 }
 
 /**

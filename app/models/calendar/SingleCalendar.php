@@ -16,39 +16,39 @@
 require_once 'app/models/calendar/Calendar.php';
 
 class SingleCalendar
-{   
+{
     /**
      * This collection holds all Events in this calendar.
-     * 
-     * @var SimpleORMapCollection Collection of Objects which inherits Event. 
+     *
+     * @var SimpleORMapCollection Collection of Objects which inherits Event.
      */
     public $events;
-    
+
     /**
      * The owner of this calendar.
-     * 
+     *
      * @var Object A Stud.IP object of type User, Institute or Course.
      */
     public $range_object;
-    
+
     public $type;
-    
+
     public $range;
-    
+
     /**
      * The start of this calendar.
-     * 
+     *
      * @var int Unix timestamp.
      */
     public $start;
-    
+
     /**
      * The end of this calendar.
-     * 
+     *
      * @var int Unix timestamp.
      */
     public $end;
-    
+
     public function __construct($range_id, $start = null, $end = null)
     {
         $this->getRangeObject($range_id);
@@ -58,10 +58,10 @@ class SingleCalendar
         $this->events->setClassName('Event');
         $this->type = get_class($this->range_object);
     }
-    
+
     /**
      * Sets the range object and checks whether the calendar is available.
-     * 
+     *
      * @param string $range_id The id of a course, institute or user.
      * @throws AccessDeniedException
      */
@@ -85,11 +85,11 @@ class SingleCalendar
             }
         }
     }
-    
+
     /**
      * Returns all events of given class names between start and end.
-     * Returns events of all types if no class names are given. 
-     * 
+     * Returns events of all types if no class names are given.
+     *
      * @param array|null $class_names The names of classes that implements Event.
      * @param int $start The start date time.
      * @param int $end The end date time.
@@ -103,21 +103,24 @@ class SingleCalendar
         if (!is_array($class_names)) {
             $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
+        $events = $this->events->getArrayCopy();
         foreach ($class_names as $type) {
             if (in_array('Event', class_implements($type))) {
-                $this->events->merge($type::getEventsByInterval(
+                $events = array_merge($events, $type::getEventsByInterval(
                         $this->range_object->getId(), new DateTime('@' . $start),
-                        new DateTime('@' . $end)));
+                        new DateTime('@' . $end))->getArrayCopy());
             } else {
                 throw new InvalidArgumentException(sprintf('Class %s does not implements Event.', $type));
             }
         }
+        $this->events = SimpleORMapCollection::createFromArray($events, false);
+        $this->events->setClassName('Event');
         return $this;
     }
-    
+
     /**
      * Stores the event in the calendars of all attendees.
-     * 
+     *
      * @param CalendarEvent $event The event to store.
      * @param array $attendee_ids The user ids of the attendees.
      * @return bool|int The number of stored events or false if an error occured.
@@ -144,10 +147,10 @@ class SingleCalendar
             }
         }
     }
-    
+
     /**
      * Helper function for SingleCalendar::storeEvent().
-     * 
+     *
      * @param CalendarEvent $event The ecent to store.
      * @param type $attendee_ids The user ids of the attendees.
      * @return bool|int The number of stored events or false if an error occured.
@@ -186,10 +189,10 @@ class SingleCalendar
         }
         return $ret;
     }
-    
+
     /**
      * Sets the start date time by given unix timestamp.
-     * 
+     *
      * @param int $start Unix timestamp.
      */
     public function setStart($start)
@@ -197,20 +200,20 @@ class SingleCalendar
         $this->start = $start;
         return $this;
     }
-    
+
     /**
      * Returns the start date time of this calendar as a unix timestamp.
-     * 
+     *
      * @return int Unix timestamp.
      */
     public function getStart()
     {
         return $this->start;
     }
-    
+
     /**
      * Sets the end date time by given unix timestamp.
-     * 
+     *
      * @param int $end Unix timestamp.
      */
     public function setEnd($end)
@@ -218,22 +221,22 @@ class SingleCalendar
         $this->end = $end;
         return $this;
     }
-    
+
     /**
      * Returns the end date time of this calendar as a unix timestamp.
-     * 
+     *
      * @return int Unix timestamp.
      */
     public function getEnd()
     {
         return $this->end;
     }
-    
+
     /**
-     * Returns a event by given $event_id. Returns a new event of type 
+     * Returns a event by given $event_id. Returns a new event of type
      * CalendarEvent with default data if the id is null or unknown.
      * If $class_names is set, only these types of Object will be returned.
-     * 
+     *
      * @param string $event_id
      * @param array $class_names Names of classes which inherits Event.
      * @return Event|null The found event, a new CalendarEvent or null if no
@@ -256,10 +259,10 @@ class SingleCalendar
         }
         return $this->getNewEvent();
     }
-    
+
     /**
      * Creates a new event, sets some default data and returns it.
-     * 
+     *
      * @return \CalendarEvent The new event.
      */
     public function getNewEvent()
@@ -274,7 +277,7 @@ class SingleCalendar
         $calendar_event->event = $event_data;
         return $calendar_event;
     }
-    
+
     /**
      * Sorts all events by start time.
      */
@@ -282,48 +285,48 @@ class SingleCalendar
     {
         $this->events->orderBy('start');
     }
-    
+
     /**
      * An alias for SingleCalendar::getRangeId().
-     * 
+     *
      * @see SingleCalendar::getRangeId()
      */
     public function getId()
     {
         return $this->getRangeId();
     }
-    
+
     /**
      * Returns the range id of this calendar.
      * Possible range id are for objects of type user, inst, fak, group.
-     * 
+     *
      * @return string The range id.
      */
     public function getRangeId()
     {
         return $this->range_object->getId();
     }
-    
+
     /**
      * Returns the object range of this calendar.
-     * 
+     *
      * @return int The object range.
      */
     public function getRange()
     {
         return $this->range;
     }
-    
+
     /**
      * Returns the permission of the given user for this calendar.
-     * 
+     *
      * @param string $user_id User id.
      * @return int The calendar permission.
      */
     public function getPermissionByUser($user_id = null)
     {
         static $user_permission = array();
-        
+
         $user_id = $user_id ?: $GLOBALS['user']->id;
         $id = $user_id . $this->getRangeId();
         if ($user_permission[$id]) {
@@ -342,7 +345,7 @@ class SingleCalendar
                 if ($GLOBALS['perm']->have_perm('dozent') && $GLOBALS['perm']->get_perm($this->range_object->getId()) == 'dozent') {
                     return Calendar::PERMISSION_WRITABLE;
                 }
-                 * 
+                 *
                  */
                 $cal_user = CalendarUser::find(array($this->getRangeId(), $user_id));
                 if ($cal_user) {
@@ -352,10 +355,10 @@ class SingleCalendar
                             break;
                         case 2 :
                             $user_permission[$id] = Calendar::PERMISSION_READABLE;
-                            break; 
+                            break;
                         case 4 :
                             $user_permission[$id] = Calendar::PERMISSION_WRITABLE;
-                            break; 
+                            break;
                         default :
                             $user_permission[$id] = Calendar::PERMISSION_FORBIDDEN;
                     }
@@ -374,7 +377,7 @@ class SingleCalendar
                     }
                 }
                 return Calendar::PERMISSION_FORBIDDEN;
-                 * 
+                 *
                  */
             case 'Course' :
                 switch ($GLOBALS['perm']->get_studip_perm($this->range_object->getId(), $user_id)) {
@@ -416,11 +419,11 @@ class SingleCalendar
         }
         return $user_permission[$id];
     }
-    
+
     /**
      * Returns whether the given user has at least the $permission to this calendar.
      * It checks for the actual user if $user_id is null.
-     * 
+     *
      * @param int $permission An accepted calendar permission.
      * @param string|null $user_id The id of the user.
      * @return bool True if the user has at least the given permission.
@@ -434,7 +437,7 @@ class SingleCalendar
     /**
      * Returns whether the given user has the $permission to this calendar.
      * It checks for the actual user if $user_id is null.
-     * 
+     *
      * @param int $permission An accepted calendar permission.
      * @param string|null $user_id The id of the user.
      * @return bool True if the user has the given permission.
@@ -444,11 +447,11 @@ class SingleCalendar
         $user_id = $user_id ?: $GLOBALS['user']->id;
         return $permission == $this->getPermissionByUser($user_id);
     }
-    
+
     /**
      * Sends a message to the owner of the calendar that a new event was inserted
-     * or an old event was modified by another user. 
-     * 
+     * or an old event was modified by another user.
+     *
      * @param CalendarEvent $event The new or updated event.
      * @param bool $is_new True if the event is new.
      */
@@ -491,7 +494,7 @@ class SingleCalendar
 
     /**
      * Deletes an event from this calendar.
-     * 
+     *
      * @param string|object $calendar_event The id of an event or an event object of type CalendarEvent.
      * @param boolean $all If true all events of a group event will be deleted.
      * @return boolean|int The number of deleted events. False if the event was not deleted.
@@ -508,7 +511,7 @@ class SingleCalendar
                     || !$calendar_event->havePermission(Event::PERMISSION_WRITABLE)) {
                 return false;
             }
-            
+
             if (!is_a($calendar_event, 'CalendarEvent')) {
                 return false;
             }
@@ -531,11 +534,11 @@ class SingleCalendar
         }
         return false;
     }
-    
+
     /**
      * Sends a message to the owner of the calendar that this event was deleted
      * by another user.
-     * 
+     *
      * @param CalendarEvent $event The deleted event.
      */
     protected function sendDeleteMessage($event)
@@ -569,11 +572,11 @@ class SingleCalendar
         $message->insert_message($msg_text, get_username($event->range_id),
                 '____%system%____', '', '', '', '', $subject);
     }
-    
+
     /**
      * Returns an array of all events (with calculated recurrences)
      * in the given time range.
-     * 
+     *
      * @param string $owner_id The user id of calendar owner.
      * @param int $time A unix timestamp of this day.
      * @param string $user_id The id of the user who gets access to the calendar (optional, default current user)
@@ -599,11 +602,11 @@ class SingleCalendar
         } while ($time <= $end_time);
         return $events;
     }
-    
+
     /**
      * Returns a SingleCalendar object with all events of the given owner or
      * SingleCalendar object for one day set by timestamp.
-     * 
+     *
      * @param string|SingleCalendar $owner The user id of calendar owner or a calendar object.
      * @param int $time A unix timestamp of this day.
      * @param string $user_id The id of the user who gets access to the calendar (optional, default current user)
@@ -618,7 +621,7 @@ class SingleCalendar
         if (!is_array($class_names)) {
             $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
-        
+
         $day = date('Y-m-d-', $time);
         $start = DateTime::createFromFormat('Y-m-d-H:i:s', $day . '00:00:00');
         $end = DateTime::createFromFormat('Y-m-d-H:i:s', $day . '23:59:59');
@@ -634,12 +637,12 @@ class SingleCalendar
                     $start->format('U'), $end->format('U'));
         }
         $calendar->getEvents($class_names)->sortEvents();
-        
+
         $dow = date('w', $calendar->getStart());
         $month = date('n', $calendar->getStart());
         $year = date('Y', $calendar->getStart());
         $events_created = array();
-        
+
         foreach ($calendar->events as $event) {
             if (!$calendar->havePermission(Calendar::PERMISSION_READABLE, $user_id)
                    && $event->getAccessibility() != 'PUBLIC') {
@@ -681,7 +684,7 @@ class SingleCalendar
                     if ($calendar->getEnd() > $rep['expire'] + $duration * 86400) {
                         continue;
                     }
-                     * 
+                     *
                      */
                     if ($end > $rep['expire'] + $duration * 86400) {
                         continue;
@@ -801,12 +804,12 @@ class SingleCalendar
         $calendar->events->exchangeArray(array_values($events_created));
         return $calendar;
     }
-    
+
     /**
      * Creates events for the day view.
-     * 
+     *
      * @param Event $event
-     * @param int $lwst 
+     * @param int $lwst
      * @param int $hgst
      * @param int $cl_start
      * @param int $cl_end
@@ -834,7 +837,7 @@ class SingleCalendar
                 date('s', $event->getStart()), date('n', $lwst), date('j', $lwst), date('Y', $lwst));
         $end = mktime(date('G', $event->getEnd()), date('i', $event->getEnd()),
                 date('s', $event->getEnd()), date('n', $hgst), date('j', $hgst), date('Y', $hgst));
-        
+
         if (($start <= $cl_start && $end >= $cl_end)
                 || ($start >= $cl_start && $start < $cl_end)
                 || ($end > $cl_start && $end <= $cl_end)) {
@@ -847,12 +850,12 @@ class SingleCalendar
             }
         }
     }
-    
+
     /**
      * Returns an array with all days between start and end of this SingleCalendar.
      * The keys are the timestamps of the days (12:00) and the values are number
      * of events for a day.
-     * 
+     *
      * @param string $user_id Use the permissions of this user.
      * @param array $restrictions
      * @return array An array with year day as key and number of events per day as value.
@@ -992,7 +995,7 @@ class SingleCalendar
                 case 'MONTHLY' :
                     $bmonth = ($rep['linterval'] - ((($year - date('Y', $rep['ts'])) * 12)
                             - date('n', $rep['ts'])) % $rep['linterval']) % $rep['linterval'];
-                    
+
                     for ($amonth = $bmonth - $rep['linterval']; $amonth <= $bmonth; $amonth += $rep['linterval']) {
                         if ($rep['ts'] < $start) {
                             // is repeated at X. week day of X. month...
@@ -1027,7 +1030,7 @@ class SingleCalendar
                             $lwst = mktime(12, 0, 0, $amonth
                                         - ((($year - date('Y', $rep['ts'])) * 12
                                         + ($amonth - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $year);
-                            
+
                         }
                         $hgst = $lwst + $duration * 86400;
                         $md_date = $lwst;
@@ -1077,7 +1080,7 @@ class SingleCalendar
         }
         return $daylist;
     }
-    
+
     private function countListEvent($properties, $date, $lwst, $hgst, &$daylist)
     {
         if ($date < $this->getStart() || $date > $this->getEnd()) {
@@ -1101,11 +1104,11 @@ class SingleCalendar
                 ? $daylist["$idate"]["{$properties['STUDIP_ID']}"]++ : 1;
         return true;
     }
-    
+
     /**
-     * 
+     *
      * TODO use filter instead
-     * 
+     *
      * @param Event $event
      * @param array $restrictions
      * @return boolean
@@ -1126,10 +1129,10 @@ class SingleCalendar
 
         return true;
     }
-    
+
     /**
      * Returns an array with all necessary informations to build the day view.
-     * 
+     *
      * @param type $start
      * @param type $end
      * @param type $step
@@ -1268,7 +1271,7 @@ class SingleCalendar
 
     /**
      * Returns max value of colspan in calendar tables for day view.
-     * 
+     *
      * @param Array $term Array with table cell content.
      * @param int $st Seconds between each row in calendar table.
      * @return int Max value of colspan.
@@ -1294,7 +1297,7 @@ class SingleCalendar
     /**
      * Returns array with events and other information to build calendar tables
      * for day view.
-     * 
+     *
      * @param int $start Start time date as unix timestamp
      * @param int $end End time date as unix timestamp
      * @param int $step Seconds between each row in calendar table.
@@ -1339,7 +1342,7 @@ class SingleCalendar
                     $cloned_event->setEnd($cloned_event->getStart() + ($event->getEnd() - $event->getStart()) +
                             3600 * ($dst_corr_end - $dst_corr_event_end)
                             + 3600 * ($dst_corr_event_end - $dst_corr_event_start));
-                    
+
                     $tmp_event[] = $cloned_event;
                     $map_events[] = $i;
                 }
@@ -1351,5 +1354,5 @@ class SingleCalendar
         return array('events' => $tmp_event, 'map' => $map_events, 'day_events' => $tmp_day_event,
             'day_map' => $map_day_events);
     }
-    
+
 }

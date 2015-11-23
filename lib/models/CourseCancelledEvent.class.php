@@ -9,22 +9,22 @@
  * @copyright   2014 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  */
 
 class CourseCancelledEvent extends CourseEvent
 {
-    
+
     protected static function configure($config= array())
     {
         $config['alias_fields']['ex_description'] = 'content';
         parent::configure($config);
         self::$config['CourseCancelledEvent']['db_table'] = 'ex_termine';
     }
-    
+
     /**
      * Returns all CourseCancelledEvents in the given time range for the given range_id.
-     * 
+     *
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
@@ -46,8 +46,7 @@ class CourseCancelledEvent extends CourseEvent
             ':start'   => $start->getTimestamp(),
             ':end'     => $end->getTimestamp()
         ));
-        $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('Event');
+        $event_collection = array();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event = new CourseCancelledEvent();
             $event->setData($row);
@@ -57,9 +56,11 @@ class CourseCancelledEvent extends CourseEvent
                 $event_collection[] = $event;
             }
         }
+        $event_collection = SimpleORMapCollection::createFromArray($event_collection, false);
+        $event_collection->setClassName('Event');
         return $event_collection;
     }
-    
+
     /**
      * Returns the title of this event.
      * The title of a course event is the name of the course or if a topic is
@@ -76,7 +77,7 @@ class CourseCancelledEvent extends CourseEvent
         }
         return $title;
     }
-    
+
     /**
      * Returns the index of the category.
      * If the user has no permission, 255 is returned.
@@ -90,7 +91,7 @@ class CourseCancelledEvent extends CourseEvent
     {
         return 255;
     }
-    
+
     public function getDescription()
     {
         if ($this->havePermission(Event::PERMISSION_READABLE)) {

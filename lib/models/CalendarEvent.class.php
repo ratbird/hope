@@ -1035,8 +1035,7 @@ class CalendarEvent extends SimpleORMap implements Event
             ':end'      => $end->getTimestamp()
         ));
         $i = 0;
-        $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('Event');
+        $event_collection = array();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event_collection[$i] = new CalendarEvent();
             $event_collection[$i]->setData($row);
@@ -1047,6 +1046,8 @@ class CalendarEvent extends SimpleORMap implements Event
             $event_collection[$i]->event = $event;
             $i++;
         }
+        $event_collection = SimpleORMapCollection::createFromArray($event_collection, false);
+        $event_collection->setClassName('Event');
         return $event_collection;
     }
 

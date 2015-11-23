@@ -41,14 +41,15 @@ class CourseMarkedEvent extends CourseEvent
             ':start'   => $start->getTimestamp(),
             ':end'     => $end->getTimestamp()
         ));
-        $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('Event');
+        $event_collection = array();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event = new CourseMarkedEvent();
             $event->setData($row);
             $event->setNew(false);
             $event_collection[] = $event;
         }
+        $event_collection = SimpleORMapCollection::createFromArray($event_collection, false);
+        $event_collection->setClassName('Event');
         return $event_collection;
     }
 

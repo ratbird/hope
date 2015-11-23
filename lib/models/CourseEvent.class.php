@@ -78,8 +78,7 @@ class CourseEvent extends CourseDate implements Event
             ':start'   => $start->getTimestamp(),
             ':end'     => $end->getTimestamp()
         ));
-        $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('Event');
+       $event_collection = array();
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event = new CourseEvent();
             $event->setData($row);
@@ -89,15 +88,17 @@ class CourseEvent extends CourseDate implements Event
                 $event_collection[] = $event;
             }
         }
+        $event_collection = SimpleORMapCollection::createFromArray($event_collection, false);
+        $event_collection->setClassName('Event');
         return $event_collection;
     }
-    
-    // 
-    
+
+    //
+
     /**
      * Checks if given user is the responsible lecturer or is member of a
      * related group
-     * 
+     *
      * @global object $perm The globa perm object.
      * @param CourseEvent $event The course event to check against.
      * @param string $user_id The id of the user.

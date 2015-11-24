@@ -376,7 +376,7 @@ class StudipNews extends SimpleORMap {
                 break;
             case 'user':
                 if ($operation == 'view') {
-                    if (($range_id = $user_id) OR get_visibility_by_id($range_id))
+                    if (($range_id == $user_id) OR get_visibility_by_id($range_id))
                         return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
                 }
                 elseif (($operation == 'edit') OR ($operation == 'copy')) {
@@ -407,6 +407,21 @@ class StudipNews extends SimpleORMap {
             'class_name' => 'User',
             'foreign_key' => 'user_id',
         );
+
+        $config['notification_map'] = array(
+            'after_create'  => 'NewsDidCreate',
+            'before_create' => 'NewsWillCreate',
+
+            'after_delete'  => 'NewsDidDelete',
+            'before_delete' => 'NewsWillDelete',
+
+            'after_store'   => 'NewsDidStore',
+            'before_store'  => 'NewsWillStore',
+
+            'after_update'  => 'NewsDidUpdate',
+            'before_update' => 'NewsWillUpdate'
+        );
+
         parent::configure($config);
     }
 

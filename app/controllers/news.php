@@ -427,9 +427,7 @@ class NewsController extends StudipController
 
             // save news
             if ($news->validate() AND !$error) {
-                if (!$id)
-                    NotificationCenter::postNotification('NewsDidCreate', $news->getId());
-                elseif (($news->getValue('user_id') != $GLOBALS['auth']->auth['uid'])) {
+                if (($news->getValue('user_id') != $GLOBALS['auth']->auth['uid'])) {
                     $news->setValue('chdate_uid', $GLOBALS['auth']->auth['uid']);
                     setTempLanguage($news->getValue('user_id'));
                     $msg = sprintf(_('Ihre Ankündigung "%s" wurde von %s verändert.'), $news->getValue('topic'), get_fullname() . ' ('.get_username().')'). "\n";

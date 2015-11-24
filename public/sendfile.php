@@ -101,6 +101,8 @@ if(in_array($type, array(2,3,4))){
 
 //if download not allowed throw exception to terminate script
 if ($no_access) {
+    // redirect to login page if user is not logged in
+    $auth->login_if($auth->auth['uid'] == 'nobody');
     throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung für diesen Download!"));
 }
 

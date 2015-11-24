@@ -159,21 +159,18 @@ abstract class DataFieldEntry
      */
     function store()
     {
-        $st = DBManager::get()->prepare("SELECT content FROM datafields_entries "
-            . "WHERE datafield_id = ? AND range_id = ? AND sec_range_id = ?");
-        $ok = $st->execute(array($this->structure->getID(), (string)$this->getRangeID() , (string)$this->getSecondRangeID()));
-        if ($ok) {
-            $old_value = $st->fetchColumn();
+        $df = new DatafieldEntryModel(array($this->structure->getID(), $this->getRangeID(), $this->getSecondRangeID()));
+        $old_value = $df->content;
+        $df->content = $this->getValue();
+
+        if ($this->isEmpty()) {
+            $ret = $df->delete();
+        } else {
+            $ret = $df->store();
         }
 
-        $query = "INSERT INTO datafields_entries (content, datafield_id, range_id, sec_range_id, mkdate, chdate)
-                     VALUES (?,?,?,?,UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
-                     ON DUPLICATE KEY UPDATE content=?, chdate=UNIX_TIMESTAMP()";
-        $st = DBManager::get()->prepare($query);
-        $ret = $st->execute(array($this->getValue() , $this->structure->getID() , $this->getRangeID() , $this->getSecondRangeID() , $this->getValue()));
-
         if ($ret) {
-            NotificationCenter::postNotification('DatafieldDidUpdate', $this, array('changed' => $st->rowCount(), 'old_value' => $old_value));
+            NotificationCenter::postNotification('DatafieldDidUpdate', $this, array('changed' => $ret, 'old_value' => $old_value));
         }
 
         return $ret;
@@ -313,7 +310,7 @@ abstract class DataFieldEntry
      * @param unknown_type $name
      * @return unknown
      */
-    function getHTML($name = '')
+    function getHTML($name)
     {
         return $name;
     }
@@ -436,6 +433,16 @@ abstract class DataFieldEntry
     function isEditable()
     {
         return $this->structure->editAllowed($GLOBALS['perm']->get_perm());
+    }
+
+    /**
+     * Checks if datafield is empty (was not set)
+     *
+     * @return bool true if empty, else false
+     */
+    function isEmpty()
+    {
+        return $this->getValue() == '';
     }
 }
 
@@ -810,6 +817,11 @@ class DataFieldPhoneEntry extends DataFieldEntry
             return  parent::isValid();;
         return (preg_match('/^[1-9][0-9]*\n[1-9][0-9]+\n[1-9][0-9]+(-[0-9]+)?$/', $this->value)  && parent::isValid());
     }
+
+    function isEmpty()
+    {
+        return $this->getValue() == "\n\n";
+    }
 }
 
 class DataFieldDateEntry extends DataFieldEntry
@@ -822,7 +834,7 @@ class DataFieldDateEntry extends DataFieldEntry
 
     function setValueFromSubmit($value)
     {
-        if(is_array($value) && $value[0] != '' && $value[1] != '' && $value[2] != '')
+        if(is_array($value))
         {
             parent::setValueFromSubmit("$value[2]-$value[1]-$value[0]");
         }
@@ -892,6 +904,11 @@ class DataFieldTimeEntry extends DataFieldEntry
     {
         $parts = explode(':', $this->value);
         return (($parts[0] >= 0 && $parts[0] <= 24 && $parts[1] >= 0 && $parts[1] <= 59)  && parent::isValid());
+    }
+
+    function isEmpty()
+    {
+        return $this->getValue() == ':';
     }
 }
 ?>

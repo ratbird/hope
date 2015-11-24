@@ -223,18 +223,19 @@ function printQuestionField ( $question = "" ) {
     global $pageMode;
 
     if( $question == "" || $question == QUESTION_HELPTEXT ) {
-    $question = QUESTION_HELPTEXT;
-    $js = "onFocus='deleteField( this, \"".$question."\" );'";
-    $js .= " onBlur='restoreField( this, \"".$question."\" );'";
+        $placeholder = QUESTION_HELPTEXT;
+    } else {
+        $placeholder = "";
     }
 
-    if( strpos($_SERVER["HTTP_REFERER"], "page=edit") && $pageMode != MODE_RESTRICTED )
-       $question = stripslashes($question);
+    if( strpos($_SERVER["HTTP_REFERER"], "page=edit") && $pageMode != MODE_RESTRICTED ) {
+        $question = stripslashes($question);
+    }
 
     $html = "<font size=-1><b>" . _("Frage:")   . "</b></font><br>";
 
     if( $pageMode != MODE_RESTRICTED ) {
-    $html .= "<textarea class=\"add_toolbar\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=2>".htmlReady($question)."</textarea>";
+    $html .= "<textarea class=\"add_toolbar\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=\"2\" placeholder=\"".htmlReady($placeholder)."\">".htmlReady($question)."</textarea>";
     } else {
        $html .= "<div class=table_row_odd style=\"padding:2px;\">"
       . "<font size=-1>".formatReady($question)."</font>"

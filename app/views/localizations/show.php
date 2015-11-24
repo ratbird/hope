@@ -19,7 +19,6 @@ $translations = array(
     // public/assets/javascripts/application.js
     'Blenden Sie die restlichen Termine aus' => _('Blenden Sie die restlichen Termine aus'),
     'Blenden Sie die restlichen Termine ein' => _('Blenden Sie die restlichen Termine ein'),
-    'Ihre Eingaben wurden bislang noch nicht gespeichert.' => _('Ihre Eingaben wurden bislang noch nicht gespeichert.'),
 
     // public/assets/javascripts/big-image-handler.js
     'Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.' => _('Dieses Bild wird verkleinert dargestellt. Klicken Sie für eine größere Darstellung.'),
@@ -42,6 +41,7 @@ $translations = array(
     'Der eingegebene Wert darf nicht größer als $1 sein' => _('Der eingegebene Wert darf nicht größer als $1 sein'),
     'Der eingegebene Wert darf nicht kleiner als $1 sein' => _('Der eingegebene Wert darf nicht kleiner als $1 sein'),
     'Dies ist ein erforderliches Feld' => _('Dies ist ein erforderliches Feld'),
+    'Zeichen verbleibend: ' => _('Zeichen verbleibend: '),
 
     // public/assets/javascripts/messages.js
     'Sie haben nicht angegeben, wer die Nachricht empfangen soll!' => _('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'),
@@ -94,15 +94,16 @@ $translations = array(
     'Schliessen' => _('Schliessen'),
 
     // public/assets/javascripts/studip-dialog.js
-    'Schließen' => _('Schließen'),
+    'Abbrechen' => _('Abbrechen'),
 
     // public/assets/javascripts/studip-helper-attributes.js
-    'Zeichen verbleibend: ' => _('Zeichen verbleibend: '),
-    'Eingegebene Zeichen: ' => _('Eingegebene Zeichen: '),
     'Wollen Sie die Aktion wirklich ausführen?' => _('Wollen Sie die Aktion wirklich ausführen?'),
 
     // public/assets/javascripts/studip-jquery.multi-select.tweaks.js
     'Die Person ist bereits eingetragen.' => _('Die Person ist bereits eingetragen.'),
+
+    // public/assets/javascripts/studip-secure-forms.js
+    'Ihre Eingaben wurden bislang noch nicht gespeichert.' => _('Ihre Eingaben wurden bislang noch nicht gespeichert.'),
 
     // public/assets/javascripts/studip-ui.js
     'schließen' => _('schließen'),

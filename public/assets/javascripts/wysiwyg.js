@@ -84,6 +84,7 @@ jQuery(function ($) {
                 caption: {},
                 em: {},
                 div: {
+                    classes: 'author', // needed for quotes
                     // only allow left margin and horizontal text alignment to
                     // be set in divs
                     // - margin-left should only be settable in multiples of

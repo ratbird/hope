@@ -344,7 +344,7 @@ class Settings_StatusgruppenController extends Settings_SettingsController
                         $id
                     ));
 
-                    log_event('INST_USER_STATUS', $id, $this->user->user_id, $GLOBALS['user']->id .' -> '. $status);
+                    log_event('INST_USER_STATUS', $id, $this->user->user_id, $perms .' -> '. $status);
 
                     $this->reportSuccess(_('Der Status wurde geändert!'));
                 }

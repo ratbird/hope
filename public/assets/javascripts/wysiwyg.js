@@ -108,7 +108,9 @@ jQuery(function ($) {
                 },
                 li: {},
                 ol: {},
-                p: {},
+                p: {
+                    styles: ['text-align']
+                },
                 pre: {},
                 span: {
                     // note that 'wiki-links' are currently set as a span due

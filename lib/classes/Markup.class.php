@@ -229,6 +229,7 @@ class Markup
             a[class|href|target|rel]
             br
             caption
+            div[class|style]
             em
             h1
             h2

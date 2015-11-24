@@ -298,6 +298,7 @@ class Admin_CoursesController extends AuthenticatedController
     {
         $result = false;
         $courses = Request::getArray('lock_sem');
+        $errors = array();
 
         if (!empty($courses)) {
             foreach ($courses as $course_id => $value) {
@@ -317,17 +318,17 @@ class Admin_CoursesController extends AuthenticatedController
 
                 $course->setValue('lock_rule', $value);
                 if (!$course->store()) {
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
-                    Fehler aufgetreten')), $course->name));
-                    $this->redirect('admin/courses/index');
-
-                    return;
+                    $errors[] = $course->name;
+                } else {
+                    $result = true;
                 }
-                $result = true;
             }
 
             if ($result) {
-                PageLayout::postMessage(MessageBox::success(sprintf(_('Die gewünschten Änderungen wurden erfolgreich durchgeführt!'))));
+                PageLayout::postMessage(MessageBox::success(_('Die gewünschten Änderungen wurden erfolgreich durchgeführt!')));
+            }
+            if ($errors) {
+                PageLayout::postMessage(MessageBox::error(_('Bei den folgenden Veranstaltungen ist ein Fehler aufgetreten'), array_map('htmlReady', $errors)));
             }
         }
         $this->redirect('admin/courses/index');
@@ -381,6 +382,7 @@ class Admin_CoursesController extends AuthenticatedController
         $result = false;
         $visibilites = Request::getArray('visibility');
         $all_courses = Request::getArray('all_sem');
+        $errors = array();
 
         if (!empty($all_courses)) {
             foreach ($all_courses as $course_id) {
@@ -394,17 +396,18 @@ class Admin_CoursesController extends AuthenticatedController
 
                 $course->setValue('visible', $visibility);
                 if (!$course->store()) {
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
-                    Fehler aufgetreten')), $course->name));
-                    $this->redirect('admin/courses/index');
-
-                    return;
+                    $errors[] = $course->name;
+                } else {
+                    $result = true;
+                    log_event($visibility ? 'SEM_VISIBLE' : 'SEM_INVISIBLE', $course->id);
                 }
-                $result = true;
             }
 
             if ($result) {
-                PageLayout::postMessage(MessageBox::success(sprintf(_('Die Sichtbarkeit wurde bei den gewünschten Veranstatungen erfolgreich geändert!'))));
+                PageLayout::postMessage(MessageBox::success(_('Die Sichtbarkeit wurde bei den gewünschten Veranstatungen erfolgreich geändert!')));
+            }
+            if ($errors) {
+                PageLayout::postMessage(MessageBox::error(_('Bei den folgenden Veranstaltungen ist ein Fehler aufgetreten'), array_map('htmlReady', $errors)));
             }
         }
         $this->redirect('admin/courses/index');
@@ -448,7 +451,7 @@ class Admin_CoursesController extends AuthenticatedController
             }
 
             if ($result) {
-                PageLayout::postMessage(MessageBox::success(sprintf(_('Die gewünschten Änderungen wurden erfolgreich durchgeführt!'))));
+                PageLayout::postMessage(MessageBox::success(_('Die gewünschten Änderungen wurden erfolgreich durchgeführt!')));
             }
             if ($errors) {
                 PageLayout::postMessage(MessageBox::error(_('Bei den folgenden Veranstaltungen ist ein Fehler aufgetreten'), array_map('htmlReady', $errors)));

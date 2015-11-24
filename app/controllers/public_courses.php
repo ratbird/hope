@@ -14,8 +14,10 @@
  * @since       3.0
  */
 
-class PublicCoursesController extends StudipController
+class PublicCoursesController extends AuthenticatedController
 {
+    protected $allow_nobody = true;
+
     /**
      * Initializes the controller.
      *
@@ -24,12 +26,7 @@ class PublicCoursesController extends StudipController
      */
     public function before_filter(&$action, &$args)
     {
-        page_open(array('sess' => 'Seminar_Session',
-        'auth' => 'Seminar_Default_Auth',
-        'perm' => 'Seminar_Perm',
-        'user' => 'Seminar_User'));
-
-        include 'lib/seminar_open.php';
+        parent::before_filter($action, $args);
 
         if (!Config::get()->ENABLE_FREE_ACCESS) {
             throw new AccessDeniedException(_('Öffentliche Veranstaltungen sind nicht aktiviert.'));
@@ -39,8 +36,6 @@ class PublicCoursesController extends StudipController
 
         PageLayout::setTitle(_('Öffentliche Veranstaltungen'));
         PageLayout::setHelpKeyword('Basis.SymboleFreieVeranstaltungen');
-
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
         // we are definitely not in an lexture or institute
         closeObject();

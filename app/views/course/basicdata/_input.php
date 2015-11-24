@@ -45,6 +45,6 @@ if ($input['type'] === "datafield"):?>
         <?=$input['locked'] ? $input['display_value'] : $input['html_value'];?>
     </div>
     <?if($input['description']):?>
-        <?=tooltipIcon(_($input['description']))?>
+        <?=tooltipIcon($input['description'])?>
     <?endif?>
 <?endif?>

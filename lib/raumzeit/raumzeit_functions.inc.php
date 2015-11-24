@@ -108,7 +108,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
             }
             if ($val->isExTermin()) {
                 if ($name = $val->isHoliday()) {
-                    $tpl['room'] = '('._($name).')';
+                    $tpl['room'] = '('.$name.')';
                 } else {
                     $tpl['room'] = '('._('fällt aus').')';
                 }
@@ -117,7 +117,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
                     $tpl['room'] = '('.htmlReady($val->getFreeRoomText()).')';
                 }
                 if (($name = $val->isHoliday()) && $showSpecialDays) {
-                    $tpl['room'] .= '&nbsp;('._($name).')';
+                    $tpl['room'] .= '&nbsp;('.$name.')';
                 }
             }
             $tpl['class'] = 'content_title_red';
@@ -129,7 +129,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
             $tpl['room'] = '('.htmlReady($val->getFreeRoomText()).')';
         }
         if (($name = $val->isHoliday()) && $showSpecialDays) {
-            $tpl['room'] .= '&nbsp;('._($name).')';
+            $tpl['room'] .= '&nbsp;('.$name.')';
         }
 
     }

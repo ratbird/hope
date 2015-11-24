@@ -3558,7 +3558,7 @@ elseif ($level == 5) {
                                             ?>
                                         </div>
                                         <?if ($perm->have_perm($struct->getEditPerms()) && $struct->getDescription())
-                                            echo tooltipIcon(_($struct->getDescription()));
+                                            echo tooltipIcon($struct->getDescription());
                                         ?>
                                     </td>
                                 </tr>

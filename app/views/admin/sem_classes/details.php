@@ -287,13 +287,13 @@
 <div id="sem_type_delete_question" style="display: none;">
     <p class="info"><?= _("Wirklich den Veranstaltungstyp löschen?") ?></p>
     <input type="hidden" id="sem_type_for_deletion">
-    <?= Studip\LinkButton::create(_("löschen"), array('onclick' => "STUDIP.admin_sem_class.delete_sem_type(); return false;")) ?>
-    <?= Studip\LinkButton::create(_("abbrechen"), array('onclick' => "jQuery(this).closest('#sem_type_delete_question').dialog('close'); return false;")) ?>
+    <?= Studip\LinkButton::create(_("Löschen"), array('onclick' => "STUDIP.admin_sem_class.delete_sem_type(); return false;")) ?>
+    <?= Studip\LinkButton::create(_("Abbrechen"), array('onclick' => "jQuery(this).closest('#sem_type_delete_question').dialog('close'); return false;")) ?>
 </div>
 
 
 
 <?
 $sidebar = Sidebar::Get();
-$sidebar->setTitle(_(PageLayout::getTitle()));
+$sidebar->setTitle(PageLayout::getTitle());
 $sidebar->setImage('sidebar/plugin-sidebar.png');

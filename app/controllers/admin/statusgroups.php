@@ -166,8 +166,8 @@ class Admin_StatusgroupsController extends AuthenticatedController
         }
 
         if ($countAdded > 0) {
-            $message = sprintf(ngettext(_('Es wurde eine Person hinzugefügt.'),
-                                        _('Es wurden %u MitgliederInnen hinzugefügt.'),
+            $message = sprintf(ngettext('Es wurde eine Person hinzugefügt.',
+                                        'Es wurden %u MitgliederInnen hinzugefügt.',
                                         $countAdded),
                                $countAdded);
             PageLayout::postMessage(MessageBox::success($message));

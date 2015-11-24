@@ -116,7 +116,7 @@ class ProfileModulesController extends AuthenticatedController
             if ($key == 'Sonstiges') continue;
             if (Request::Get(md5('cat_' . $key)) != null) $_SESSION['profile_plus']['Kategorie'][$key] = Request::Get(md5('cat_' . $key));
 
-            $widget->addCheckbox(_($key), $_SESSION['profile_plus']['Kategorie'][$key],
+            $widget->addCheckbox($key, $_SESSION['profile_plus']['Kategorie'][$key],
                 URLHelper::getLink('?', array(md5('cat_' . $key) => 1)), URLHelper::getLink('?', array(md5('cat_' . $key) => 0)));
 
         }

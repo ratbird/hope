@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><?= Studip\Button::create(_("erstellen")) ?></td>
+                <td><?= Studip\Button::create(_("Erstellen")) ?></td>
             </tr>
         </tbody>
     </table>
@@ -82,7 +82,7 @@ STUDIP.sem_classes = {
 </script>
 <?
 $sidebar = Sidebar::Get();
-$sidebar->setTitle(_(PageLayout::getTitle()));
+$sidebar->setTitle(PageLayout::getTitle());
 $sidebar->setImage('sidebar/plugin-sidebar.png');
 $links = new ActionsWidget();
 $links->addLink(_('Neue Kategorie anlegen'), '#', 'icons/16/blue/add.png', array('onClick' => 'STUDIP.sem_classes.add(); return false;'));

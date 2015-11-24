@@ -169,7 +169,7 @@ class Course_PlusController extends AuthenticatedController
             }
 
             if ($key == 'Sonstiges') continue;
-            $widget->addCheckbox(_($key), $_SESSION['plus']['Kategorie'][$key],
+            $widget->addCheckbox($key, $_SESSION['plus']['Kategorie'][$key],
                 URLHelper::getLink('?', array(md5('cat_' . $key) => 1, 'displaystyle' => 'category')), URLHelper::getLink('?', array(md5('cat_' . $key) => 0, 'displaystyle' => 'category')));
 
         }

@@ -260,7 +260,7 @@ class Institute_MembersController extends AuthenticatedController
                                         $mails_sent += 1;
                                     }
                                 }
-                                PageLayout::postMessage(MessageBox::info(_(sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$mails_sent,$wem))));
+                                PageLayout::postMessage(MessageBox::info(sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$mails_sent,$wem)));
                             }
 
                             log_event('INST_USER_ADD', $ins_id ,$u_id, 'admin');

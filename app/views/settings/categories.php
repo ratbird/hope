@@ -75,8 +75,8 @@
         <tbody>
             <tr>
                 <td colspan="4">
-                    <?= sprintf(ngettext(_('Es existiert zusätzlich eine Kategorie, die Sie nicht einsehen und bearbeiten können.'),
-                                         _('Es existiereren zusätzlich %s Kategorien, die Sie nicht einsehen und bearbeiten können.'),
+                    <?= sprintf(ngettext('Es existiert zusätzlich eine Kategorie, die Sie nicht einsehen und bearbeiten können.',
+                                         'Es existiereren zusätzlich %s Kategorien, die Sie nicht einsehen und bearbeiten können.',
                                          $hidden_count), $hidden_count) ?>
                 </td>
             </tr>

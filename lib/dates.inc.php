@@ -36,30 +36,30 @@ require_once 'lib/raumzeit/raumzeit_functions.inc.php'; // Helper-Funktionen
 function getWeekday($day_num, $short = TRUE) {
     switch ($day_num) {
         case 0:
-            $short ? $day = _("So") : $day = _("Sonntag");
+            $day = $short ? _("So") : _("Sonntag");
             break;
         case 1:
-            $short ? $day = _("Mo") : $day = _("Montag");
+            $day = $short ? _("Mo") : _("Montag");
             break;
         case 2:
-            $short ? $day = _("Di") : $day = _("Dienstag");
+            $day = $short ? _("Di") : _("Dienstag");
             break;
         case 3:
-            $short ? $day = _("Mi") : $day = _("Mittwoch");
+            $day = $short ? _("Mi") : _("Mittwoch");
             break;
         case 4:
-            $short ? $day = _("Do") : $day = _("Donnerstag");
+            $day = $short ? _("Do") : _("Donnerstag");
             break;
         case 5:
-            $short ? $day = _("Fr") : $day = _("Freitag");
+            $day = $short ? _("Fr") : _("Freitag");
             break;
         case 6:
-            $short ? $day = _("Sa") : $day = _("Samstag");
+            $day = $short ? _("Sa") : _("Samstag");
             break;
     }
 
     // return i18n of day
-    return _($day);
+    return $day;
 }
 
 

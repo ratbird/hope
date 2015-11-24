@@ -398,8 +398,8 @@ class Course_BasicdataController extends AuthenticatedController
             }
 
             if (count($invalid_datafields)) {
-                $message = ngettext(_('%s der Veranstaltung wurde falsch angegeben'),
-                                    _('%s der Veranstaltung wurden falsch angegeben'),
+                $message = ngettext('%s der Veranstaltung wurde falsch angegeben',
+                                    '%s der Veranstaltung wurden falsch angegeben',
                                     count($invalid_datafields));
                 $message .= ', ' . _('bitte korrigieren Sie dies unter "Beschreibungen"') . '.';
                 $message = sprintf($message, join(', ', array_map('htmlReady', $invalid_datafields)));

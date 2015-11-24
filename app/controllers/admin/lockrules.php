@@ -146,7 +146,7 @@ class Admin_LockrulesController extends AuthenticatedController
         $this->lock_rule->permission = Request::option('lockdata_permission');
         $this->lock_rule->attributes = Request::intArray('lockdata_attributes');
         if (!$this->lock_rule->name) {
-            $this->msg['error'][] = _(_('Bitte geben Sie einen Namen für die Sperrebene an!'));
+            $this->msg['error'][] = _('Bitte geben Sie einen Namen für die Sperrebene an!');
             return false;
         }
         return $this->lock_rule->store();

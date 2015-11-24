@@ -156,14 +156,13 @@ class StudipKing {
     private static function textual_representation($type, $amount)
     {
         $alt_text = array(
-            'files'            => "%d hochgeladene Dateien",
-            'forum'            => "%d Forums-Beiträge",
-            'wiki'             => "%d Wiki-Beiträge",
-            'voter'            => "%d abgegebene Stimmen",
-            'votes'            => "%d bekommene Stimmen",
-            'news'             => "%d eingestellte Ankündigungen"
+            'files'            => _('%d hochgeladene Dateien'),
+            'forum'            => _('%d Forums-Beiträge'),
+            'wiki'             => _('%d Wiki-Beiträge'),
+            'voter'            => _('%d abgegebene Stimmen'),
+            'votes'            => _('%d bekommene Stimmen'),
+            'news'             => _('%d eingestellte Ankündigungen')
         );
-        return sprintf(_($alt_text[$type]), $amount);
+        return sprintf($alt_text[$type], $amount);
     }
 }
-

@@ -47,6 +47,18 @@ h1, .topic {
     margin: 3pt 0 2pt 0;
 }
 
+h1 span {
+    display: block;
+    font-size: 14.25px;
+    font-weight: 100;
+    padding: 5px 0;
+}
+
+section header h1 {
+    font-size: 12pt;
+    margin-top: 8pt;
+}
+
 h2 {
     font-size: 13pt;
 }

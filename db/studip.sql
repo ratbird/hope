@@ -1,16 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.11
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 10, 2015 at 08:22 PM
--- Server version: 5.6.25-73.1-log
--- PHP Version: 5.6.10-1+deb.sury.org~trusty+1
-
-SET time_zone = "+00:00";
+-- Generation Time: Nov 26, 2015 at 07:14 PM
+-- Server version: 5.6.27-75.0-log
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 --
--- Database: `studip_32`
+-- Database: `studip_33`
 --
 
 -- --------------------------------------------------------
@@ -25,7 +23,8 @@ CREATE TABLE IF NOT EXISTS `abschluss` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `beschreibung` text,
   `mkdate` int(20) DEFAULT NULL,
-  `chdate` int(20) DEFAULT NULL
+  `chdate` int(20) DEFAULT NULL,
+  PRIMARY KEY (`abschluss_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -41,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `admissionfactor` (
   `factor` decimal(5,2) NOT NULL DEFAULT '1.00',
   `owner_id` varchar(32) NOT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`list_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -52,10 +52,12 @@ CREATE TABLE IF NOT EXISTS `admissionfactor` (
 
 DROP TABLE IF EXISTS `admissionrules`;
 CREATE TABLE IF NOT EXISTS `admissionrules` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `ruletype` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
-  `mkdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ruletype` (`ruletype`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -68,7 +70,8 @@ DROP TABLE IF EXISTS `admissionrule_inst`;
 CREATE TABLE IF NOT EXISTS `admissionrule_inst` (
   `rule_id` varchar(32) NOT NULL,
   `institute_id` varchar(32) NOT NULL,
-  `mkdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`,`institute_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -81,7 +84,8 @@ DROP TABLE IF EXISTS `admission_condition`;
 CREATE TABLE IF NOT EXISTS `admission_condition` (
   `rule_id` varchar(32) NOT NULL,
   `filter_id` varchar(32) NOT NULL,
-  `mkdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`,`filter_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -98,7 +102,9 @@ CREATE TABLE IF NOT EXISTS `admission_seminar_user` (
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `position` int(5) DEFAULT NULL,
   `comment` tinytext,
-  `visible` enum('yes','no','unknown') NOT NULL DEFAULT 'unknown'
+  `visible` enum('yes','no','unknown') NOT NULL DEFAULT 'unknown',
+  PRIMARY KEY (`user_id`,`seminar_id`),
+  KEY `seminar_id` (`seminar_id`,`status`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -113,8 +119,8 @@ CREATE TABLE IF NOT EXISTS `api_consumers` (
   `consumer_type` enum('http','studip','oauth') NOT NULL DEFAULT 'studip',
   `auth_key` varchar(64) DEFAULT NULL,
   `auth_secret` varchar(64) DEFAULT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `system` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `system` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `type` enum('website','mobile','desktop') DEFAULT 'website',
   `title` varchar(128) DEFAULT NULL,
   `contact` varchar(255) DEFAULT NULL,
@@ -123,10 +129,11 @@ CREATE TABLE IF NOT EXISTS `api_consumers` (
   `callback` varchar(255) DEFAULT NULL,
   `commercial` tinyint(1) DEFAULT NULL,
   `description` text,
-  `priority` int(11) unsigned NOT NULL DEFAULT '0',
+  `priority` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `notes` text,
-  `mkdate` int(11) unsigned NOT NULL,
-  `chdate` int(11) unsigned NOT NULL
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  `chdate` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`consumer_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -140,7 +147,8 @@ CREATE TABLE IF NOT EXISTS `api_consumer_permissions` (
   `route_id` char(32) NOT NULL,
   `consumer_id` char(32) NOT NULL DEFAULT '',
   `method` char(6) NOT NULL,
-  `granted` tinyint(1) unsigned NOT NULL DEFAULT '0'
+  `granted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  UNIQUE KEY `route_id` (`route_id`,`consumer_id`,`method`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -151,9 +159,10 @@ CREATE TABLE IF NOT EXISTS `api_consumer_permissions` (
 
 DROP TABLE IF EXISTS `api_oauth_user_mapping`;
 CREATE TABLE IF NOT EXISTS `api_oauth_user_mapping` (
-  `oauth_id` int(11) unsigned NOT NULL,
+  `oauth_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` char(32) NOT NULL DEFAULT '',
-  `mkdate` int(11) unsigned NOT NULL
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`oauth_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -166,9 +175,10 @@ DROP TABLE IF EXISTS `api_user_permissions`;
 CREATE TABLE IF NOT EXISTS `api_user_permissions` (
   `user_id` char(32) NOT NULL DEFAULT '',
   `consumer_id` char(32) NOT NULL DEFAULT '',
-  `granted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(11) unsigned NOT NULL,
-  `chdate` int(11) unsigned NOT NULL
+  `granted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  `chdate` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_id`,`consumer_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -196,8 +206,10 @@ CREATE TABLE IF NOT EXISTS `archiv` (
   `forumdump` longtext NOT NULL,
   `wikidump` longtext,
   `studienbereiche` text NOT NULL,
-  `VeranstaltungsNummer` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `VeranstaltungsNummer` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`),
+  KEY `heimat_inst_id` (`heimat_inst_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -209,8 +221,10 @@ DROP TABLE IF EXISTS `archiv_user`;
 CREATE TABLE IF NOT EXISTS `archiv_user` (
   `seminar_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `status` enum('user','autor','tutor','dozent') NOT NULL DEFAULT 'user'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `status` enum('user','autor','tutor','dozent') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`seminar_id`,`user_id`),
+  KEY `user_id` (`user_id`,`status`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -226,7 +240,8 @@ CREATE TABLE IF NOT EXISTS `auth_extern` (
   `external_user_password` varchar(32) NOT NULL DEFAULT '',
   `external_user_category` varchar(32) NOT NULL DEFAULT '',
   `external_user_system_type` varchar(32) NOT NULL DEFAULT '',
-  `external_user_type` smallint(6) NOT NULL DEFAULT '0'
+  `external_user_type` smallint(6) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`studip_user_id`,`external_user_system_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -246,11 +261,14 @@ CREATE TABLE IF NOT EXISTS `auth_user_md5` (
   `Email` varchar(64) DEFAULT NULL,
   `validation_key` varchar(10) NOT NULL DEFAULT '',
   `auth_plugin` varchar(64) DEFAULT 'standard',
-  `locked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `locked` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `lock_comment` varchar(255) DEFAULT NULL,
   `locked_by` varchar(32) DEFAULT NULL,
-  `visible` enum('global','always','yes','unknown','no','never') NOT NULL DEFAULT 'unknown'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `visible` enum('global','always','yes','unknown','no','never') NOT NULL DEFAULT 'unknown',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `k_username` (`username`),
+  KEY `perms` (`perms`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -262,7 +280,8 @@ DROP TABLE IF EXISTS `auto_insert_sem`;
 CREATE TABLE IF NOT EXISTS `auto_insert_sem` (
   `seminar_id` char(32) NOT NULL,
   `status` enum('autor','tutor','dozent') NOT NULL DEFAULT 'autor',
-  `domain_id` varchar(45) NOT NULL DEFAULT ''
+  `domain_id` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`,`status`,`domain_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -275,7 +294,8 @@ DROP TABLE IF EXISTS `auto_insert_user`;
 CREATE TABLE IF NOT EXISTS `auto_insert_user` (
   `seminar_id` char(32) NOT NULL,
   `user_id` char(32) NOT NULL,
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0'
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`seminar_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -290,7 +310,8 @@ CREATE TABLE IF NOT EXISTS `aux_lock_rules` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `attributes` text NOT NULL,
-  `sorting` text NOT NULL
+  `sorting` text NOT NULL,
+  PRIMARY KEY (`lock_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -313,7 +334,8 @@ CREATE TABLE IF NOT EXISTS `banner_ads` (
   `views` int(11) NOT NULL DEFAULT '0',
   `clicks` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ad_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -335,7 +357,14 @@ CREATE TABLE IF NOT EXISTS `blubber` (
   `author_host` varchar(255) DEFAULT NULL,
   `Seminar_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `external_contact` tinyint(4) NOT NULL DEFAULT '0'
+  `external_contact` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`topic_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `chdate` (`chdate`),
+  KEY `mkdate` (`mkdate`),
+  KEY `user_id` (`user_id`,`Seminar_id`),
+  KEY `root_id` (`root_id`,`mkdate`),
+  KEY `Seminar_id` (`Seminar_id`,`context_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -348,7 +377,9 @@ DROP TABLE IF EXISTS `blubber_events_queue`;
 CREATE TABLE IF NOT EXISTS `blubber_events_queue` (
   `event_type` varchar(32) NOT NULL,
   `item_id` varchar(32) NOT NULL,
-  `mkdate` int(11) NOT NULL
+  `mkdate` int(11) NOT NULL,
+  PRIMARY KEY (`event_type`,`item_id`,`mkdate`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -365,7 +396,10 @@ CREATE TABLE IF NOT EXISTS `blubber_external_contact` (
   `name` varchar(256) NOT NULL,
   `data` text,
   `chdate` bigint(20) NOT NULL,
-  `mkdate` bigint(20) NOT NULL
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`external_contact_id`),
+  KEY `mail_identifier` (`mail_identifier`),
+  KEY `contact_type` (`contact_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -378,7 +412,9 @@ DROP TABLE IF EXISTS `blubber_follower`;
 CREATE TABLE IF NOT EXISTS `blubber_follower` (
   `studip_user_id` varchar(32) NOT NULL,
   `external_contact_id` varchar(32) NOT NULL,
-  `left_follows_right` tinyint(1) NOT NULL
+  `left_follows_right` tinyint(1) NOT NULL,
+  KEY `studip_user_id` (`studip_user_id`),
+  KEY `external_contact_id` (`external_contact_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -392,7 +428,10 @@ CREATE TABLE IF NOT EXISTS `blubber_mentions` (
   `topic_id` varchar(32) NOT NULL,
   `user_id` varchar(32) NOT NULL,
   `external_contact` tinyint(4) NOT NULL DEFAULT '0',
-  `mkdate` int(11) NOT NULL
+  `mkdate` int(11) NOT NULL,
+  UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`),
+  KEY `topic_id` (`topic_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -406,7 +445,10 @@ CREATE TABLE IF NOT EXISTS `blubber_reshares` (
   `topic_id` varchar(32) NOT NULL,
   `user_id` varchar(32) NOT NULL,
   `external_contact` tinyint(4) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL
+  `chdate` int(11) NOT NULL,
+  UNIQUE KEY `unique_reshares` (`topic_id`,`user_id`,`external_contact`),
+  KEY `topic_id` (`topic_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -432,7 +474,9 @@ CREATE TABLE IF NOT EXISTS `blubber_streams` (
   `filter_hashtags` text,
   `filter_nohashtags` text,
   `chdate` bigint(20) NOT NULL,
-  `mkdate` bigint(20) NOT NULL
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`stream_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -444,7 +488,25 @@ CREATE TABLE IF NOT EXISTS `blubber_streams` (
 DROP TABLE IF EXISTS `blubber_tags`;
 CREATE TABLE IF NOT EXISTS `blubber_tags` (
   `topic_id` varchar(32) NOT NULL,
-  `tag` varchar(128) NOT NULL
+  `tag` varchar(128) NOT NULL,
+  PRIMARY KEY (`topic_id`,`tag`),
+  KEY `tag` (`tag`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cache_operations`
+--
+
+DROP TABLE IF EXISTS `cache_operations`;
+CREATE TABLE IF NOT EXISTS `cache_operations` (
+  `cache_key` varchar(256) NOT NULL DEFAULT '',
+  `operation` char(6) NOT NULL DEFAULT '',
+  `parameters` text NOT NULL,
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  `chdate` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`cache_key`(200),`operation`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -457,9 +519,10 @@ DROP TABLE IF EXISTS `calendar_event`;
 CREATE TABLE IF NOT EXISTS `calendar_event` (
   `range_id` varchar(32) NOT NULL,
   `event_id` varchar(32) NOT NULL,
-  `group_status` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `group_status` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL,
-  `chdate` int(10) unsigned NOT NULL DEFAULT '0'
+  `chdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`range_id`,`event_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -474,7 +537,8 @@ CREATE TABLE IF NOT EXISTS `calendar_user` (
   `user_id` varchar(32) NOT NULL,
   `permission` int(2) NOT NULL,
   `mkdate` int(11) NOT NULL,
-  `chdate` int(11) NOT NULL
+  `chdate` int(11) NOT NULL,
+  PRIMARY KEY (`owner_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -490,7 +554,9 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `content` text NOT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_id`),
+  KEY `object_id` (`object_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -507,7 +573,8 @@ CREATE TABLE IF NOT EXISTS `conditionaladmissions` (
   `end_time` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
   `conditions_stopped` tinyint(1) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -531,7 +598,10 @@ CREATE TABLE IF NOT EXISTS `config` (
   `chdate` int(20) NOT NULL DEFAULT '0',
   `description` varchar(255) NOT NULL DEFAULT '',
   `comment` text NOT NULL,
-  `message_template` varchar(255) NOT NULL DEFAULT ''
+  `message_template` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`config_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `field` (`field`,`range`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -543,7 +613,9 @@ CREATE TABLE IF NOT EXISTS `config` (
 DROP TABLE IF EXISTS `contact`;
 CREATE TABLE IF NOT EXISTS `contact` (
   `owner_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT ''
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`owner_id`,`user_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -561,7 +633,8 @@ CREATE TABLE IF NOT EXISTS `coursememberadmissions` (
   `course_id` varchar(32) NOT NULL DEFAULT '',
   `modus` tinyint(1) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -580,7 +653,9 @@ CREATE TABLE IF NOT EXISTS `coursesets` (
   `algorithm_run` tinyint(1) NOT NULL DEFAULT '0',
   `private` tinyint(1) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`set_id`),
+  KEY `set_user` (`user_id`,`set_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -593,7 +668,8 @@ DROP TABLE IF EXISTS `courseset_factorlist`;
 CREATE TABLE IF NOT EXISTS `courseset_factorlist` (
   `set_id` varchar(32) NOT NULL,
   `factorlist_id` varchar(32) NOT NULL,
-  `mkdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`set_id`,`factorlist_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -607,7 +683,9 @@ CREATE TABLE IF NOT EXISTS `courseset_institute` (
   `set_id` varchar(32) NOT NULL,
   `institute_id` varchar(32) NOT NULL,
   `mkdate` int(11) DEFAULT NULL,
-  `chdate` int(11) DEFAULT NULL
+  `chdate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`set_id`,`institute_id`),
+  KEY `institute_id` (`institute_id`,`set_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -621,7 +699,28 @@ CREATE TABLE IF NOT EXISTS `courseset_rule` (
   `set_id` varchar(32) NOT NULL,
   `rule_id` varchar(32) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
-  `mkdate` int(11) DEFAULT NULL
+  `mkdate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`set_id`,`rule_id`),
+  KEY `type` (`set_id`,`type`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coursewizardsteps`
+--
+
+DROP TABLE IF EXISTS `coursewizardsteps`;
+CREATE TABLE IF NOT EXISTS `coursewizardsteps` (
+  `id` varchar(32) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `classname` varchar(255) NOT NULL,
+  `number` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `classname` (`classname`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -634,11 +733,13 @@ DROP TABLE IF EXISTS `cronjobs_logs`;
 CREATE TABLE IF NOT EXISTS `cronjobs_logs` (
   `log_id` char(32) NOT NULL DEFAULT '',
   `schedule_id` char(32) NOT NULL DEFAULT '',
-  `scheduled` int(11) unsigned NOT NULL,
-  `executed` int(11) unsigned NOT NULL,
+  `scheduled` int(11) UNSIGNED NOT NULL,
+  `executed` int(11) UNSIGNED NOT NULL,
   `exception` text,
   `output` text,
-  `duration` float NOT NULL
+  `duration` float NOT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `schedule_id` (`schedule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -661,13 +762,15 @@ CREATE TABLE IF NOT EXISTS `cronjobs_schedules` (
   `hour` tinyint(2) DEFAULT NULL,
   `day` tinyint(2) DEFAULT NULL,
   `month` tinyint(2) DEFAULT NULL,
-  `day_of_week` tinyint(1) unsigned DEFAULT NULL,
-  `next_execution` int(11) unsigned NOT NULL DEFAULT '0',
-  `last_execution` int(11) unsigned DEFAULT NULL,
+  `day_of_week` tinyint(1) UNSIGNED DEFAULT NULL,
+  `next_execution` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `last_execution` int(11) UNSIGNED DEFAULT NULL,
   `last_result` text,
-  `execution_count` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(11) unsigned NOT NULL,
-  `chdate` int(11) unsigned NOT NULL
+  `execution_count` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  `chdate` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`schedule_id`),
+  KEY `task_id` (`task_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -682,8 +785,9 @@ CREATE TABLE IF NOT EXISTS `cronjobs_tasks` (
   `filename` varchar(255) NOT NULL,
   `class` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
-  `execution_count` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `assigned_count` int(11) unsigned NOT NULL DEFAULT '0'
+  `execution_count` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+  `assigned_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`task_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -700,14 +804,16 @@ CREATE TABLE IF NOT EXISTS `datafields` (
   `object_class` varchar(10) DEFAULT NULL,
   `edit_perms` enum('user','autor','tutor','dozent','admin','root') DEFAULT NULL,
   `view_perms` enum('all','user','autor','tutor','dozent','admin','root') DEFAULT NULL,
-  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(20) unsigned DEFAULT NULL,
-  `chdate` int(20) unsigned DEFAULT NULL,
+  `priority` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(20) UNSIGNED DEFAULT NULL,
+  `chdate` int(20) UNSIGNED DEFAULT NULL,
   `type` enum('bool','textline','textarea','selectbox','date','time','email','phone','radio','combo','link','selectboxmultiple') NOT NULL DEFAULT 'textline',
   `typeparam` text NOT NULL,
   `is_required` tinyint(4) NOT NULL DEFAULT '0',
-  `is_userfilter` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `description` text NOT NULL
+  `is_userfilter` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  PRIMARY KEY (`datafield_id`),
+  KEY `object_type` (`object_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -721,9 +827,13 @@ CREATE TABLE IF NOT EXISTS `datafields_entries` (
   `datafield_id` varchar(32) NOT NULL DEFAULT '',
   `range_id` varchar(32) NOT NULL DEFAULT '',
   `content` text,
-  `mkdate` int(20) unsigned DEFAULT NULL,
-  `chdate` int(20) unsigned DEFAULT NULL,
-  `sec_range_id` varchar(32) NOT NULL DEFAULT ''
+  `mkdate` int(20) UNSIGNED DEFAULT NULL,
+  `chdate` int(20) UNSIGNED DEFAULT NULL,
+  `sec_range_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`datafield_id`,`range_id`,`sec_range_id`),
+  KEY `range_id` (`range_id`,`datafield_id`),
+  KEY `datafield_id_2` (`datafield_id`,`sec_range_id`),
+  KEY `datafields_contents` (`datafield_id`,`content`(32))
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -738,7 +848,9 @@ CREATE TABLE IF NOT EXISTS `deputies` (
   `user_id` varchar(32) NOT NULL,
   `gruppe` tinyint(4) NOT NULL DEFAULT '0',
   `notification` int(10) NOT NULL DEFAULT '0',
-  `edit_about` tinyint(1) NOT NULL DEFAULT '0'
+  `edit_about` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`range_id`,`user_id`),
+  KEY `user_id` (`user_id`,`range_id`,`edit_about`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -749,9 +861,10 @@ CREATE TABLE IF NOT EXISTS `deputies` (
 
 DROP TABLE IF EXISTS `doc_filetype`;
 CREATE TABLE IF NOT EXISTS `doc_filetype` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(45) NOT NULL,
-  `description` text
+  `description` text,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -762,9 +875,12 @@ CREATE TABLE IF NOT EXISTS `doc_filetype` (
 
 DROP TABLE IF EXISTS `doc_filetype_forbidden`;
 CREATE TABLE IF NOT EXISTS `doc_filetype_forbidden` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` varchar(45) NOT NULL,
-  `dateityp_id` int(11) NOT NULL
+  `dateityp_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id`),
+  KEY `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -775,7 +891,7 @@ CREATE TABLE IF NOT EXISTS `doc_filetype_forbidden` (
 
 DROP TABLE IF EXISTS `doc_usergroup_config`;
 CREATE TABLE IF NOT EXISTS `doc_usergroup_config` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` varchar(45) NOT NULL,
   `upload_quota` text NOT NULL,
   `upload_unit` varchar(45) DEFAULT NULL,
@@ -784,7 +900,8 @@ CREATE TABLE IF NOT EXISTS `doc_usergroup_config` (
   `upload_forbidden` int(11) NOT NULL DEFAULT '0',
   `area_close` int(11) NOT NULL DEFAULT '0',
   `area_close_text` text,
-  `is_group_config` int(11) NOT NULL DEFAULT '0'
+  `is_group_config` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`usergroup`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -809,9 +926,15 @@ CREATE TABLE IF NOT EXISTS `dokumente` (
   `downloads` int(20) NOT NULL DEFAULT '0',
   `url` varchar(255) NOT NULL DEFAULT '',
   `protected` tinyint(4) NOT NULL DEFAULT '0',
-  `priority` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `author_name` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `priority` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+  `author_name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`dokument_id`),
+  KEY `range_id` (`range_id`),
+  KEY `seminar_id` (`seminar_id`),
+  KEY `user_id` (`user_id`),
+  KEY `chdate` (`chdate`),
+  KEY `mkdate` (`mkdate`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -832,8 +955,9 @@ CREATE TABLE IF NOT EXISTS `eval` (
   `chdate` int(20) NOT NULL DEFAULT '0',
   `anonymous` tinyint(1) NOT NULL DEFAULT '1',
   `visible` tinyint(1) NOT NULL DEFAULT '1',
-  `shared` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `shared` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`eval_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -850,7 +974,9 @@ CREATE TABLE IF NOT EXISTS `evalanswer` (
   `value` int(11) NOT NULL DEFAULT '0',
   `rows` tinyint(4) NOT NULL DEFAULT '0',
   `counter` int(11) NOT NULL DEFAULT '0',
-  `residual` tinyint(1) NOT NULL DEFAULT '0'
+  `residual` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`evalanswer_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -862,8 +988,9 @@ CREATE TABLE IF NOT EXISTS `evalanswer` (
 DROP TABLE IF EXISTS `evalanswer_user`;
 CREATE TABLE IF NOT EXISTS `evalanswer_user` (
   `evalanswer_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`evalanswer_id`,`user_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -880,8 +1007,10 @@ CREATE TABLE IF NOT EXISTS `evalgroup` (
   `position` int(11) NOT NULL DEFAULT '0',
   `child_type` enum('EvaluationGroup','EvaluationQuestion') NOT NULL DEFAULT 'EvaluationGroup',
   `mandatory` tinyint(1) NOT NULL DEFAULT '0',
-  `template_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `template_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`evalgroup_id`),
+  KEY `parent_id` (`parent_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -896,7 +1025,9 @@ CREATE TABLE IF NOT EXISTS `evalquestion` (
   `type` enum('likertskala','multiplechoice','polskala') NOT NULL DEFAULT 'multiplechoice',
   `position` int(11) NOT NULL DEFAULT '0',
   `text` text NOT NULL,
-  `multiplechoice` tinyint(1) NOT NULL DEFAULT '0'
+  `multiplechoice` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`evalquestion_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -909,7 +1040,8 @@ DROP TABLE IF EXISTS `eval_group_template`;
 CREATE TABLE IF NOT EXISTS `eval_group_template` (
   `evalgroup_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `group_type` varchar(250) NOT NULL DEFAULT 'normal'
+  `group_type` varchar(250) NOT NULL DEFAULT 'normal',
+  PRIMARY KEY (`evalgroup_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -921,8 +1053,9 @@ CREATE TABLE IF NOT EXISTS `eval_group_template` (
 DROP TABLE IF EXISTS `eval_range`;
 CREATE TABLE IF NOT EXISTS `eval_range` (
   `eval_id` varchar(32) NOT NULL DEFAULT '',
-  `range_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `range_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`eval_id`,`range_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -944,7 +1077,9 @@ CREATE TABLE IF NOT EXISTS `eval_templates` (
   `polscale_gfx_type` varchar(255) NOT NULL DEFAULT 'bars',
   `likertscale_gfx_type` varchar(255) NOT NULL DEFAULT 'bars',
   `mchoice_scale_gfx_type` varchar(255) NOT NULL DEFAULT 'bars',
-  `kurzbeschreibung` varchar(255) DEFAULT NULL
+  `kurzbeschreibung` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`template_id`),
+  KEY `user_id` (`user_id`,`institution_id`,`name`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -956,7 +1091,9 @@ CREATE TABLE IF NOT EXISTS `eval_templates` (
 DROP TABLE IF EXISTS `eval_templates_eval`;
 CREATE TABLE IF NOT EXISTS `eval_templates_eval` (
   `eval_id` varchar(32) NOT NULL DEFAULT '',
-  `template_id` varchar(32) NOT NULL DEFAULT ''
+  `template_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`eval_id`),
+  KEY `eval_id` (`eval_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -969,7 +1106,8 @@ DROP TABLE IF EXISTS `eval_templates_user`;
 CREATE TABLE IF NOT EXISTS `eval_templates_user` (
   `eval_id` varchar(32) NOT NULL DEFAULT '',
   `template_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT ''
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  KEY `eval_id` (`eval_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -981,7 +1119,8 @@ CREATE TABLE IF NOT EXISTS `eval_templates_user` (
 DROP TABLE IF EXISTS `eval_user`;
 CREATE TABLE IF NOT EXISTS `eval_user` (
   `eval_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT ''
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`eval_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -996,29 +1135,32 @@ CREATE TABLE IF NOT EXISTS `event_data` (
   `author_id` varchar(32) NOT NULL,
   `editor_id` varchar(32) DEFAULT NULL,
   `uid` varchar(255) NOT NULL,
-  `start` int(10) unsigned NOT NULL DEFAULT '0',
-  `end` int(10) unsigned NOT NULL DEFAULT '0',
+  `start` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `end` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `summary` varchar(255) NOT NULL DEFAULT '',
   `description` text,
   `class` enum('PUBLIC','PRIVATE','CONFIDENTIAL') NOT NULL DEFAULT 'PRIVATE',
   `categories` tinytext,
-  `category_intern` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `category_intern` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `priority` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `location` tinytext,
-  `ts` int(10) unsigned NOT NULL DEFAULT '0',
-  `linterval` smallint(5) unsigned DEFAULT NULL,
-  `sinterval` smallint(5) unsigned DEFAULT NULL,
+  `ts` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `linterval` smallint(5) UNSIGNED DEFAULT NULL,
+  `sinterval` smallint(5) UNSIGNED DEFAULT NULL,
   `wdays` varchar(7) DEFAULT NULL,
-  `month` tinyint(3) unsigned DEFAULT NULL,
-  `day` tinyint(3) unsigned DEFAULT NULL,
+  `month` tinyint(3) UNSIGNED DEFAULT NULL,
+  `day` tinyint(3) UNSIGNED DEFAULT NULL,
   `rtype` enum('SINGLE','DAILY','WEEKLY','MONTHLY','YEARLY') NOT NULL DEFAULT 'SINGLE',
-  `duration` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `duration` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `count` smallint(5) DEFAULT '0',
-  `expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `expire` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `exceptions` text,
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `importdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `chdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `importdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`event_id`),
+  UNIQUE KEY `uid` (`uid`),
+  KEY `autor_id` (`author_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1036,7 +1178,8 @@ CREATE TABLE IF NOT EXISTS `extern_config` (
   `is_standard` int(4) NOT NULL DEFAULT '0',
   `config` mediumtext NOT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`config_id`,`range_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1060,8 +1203,12 @@ CREATE TABLE IF NOT EXISTS `ex_termine` (
   `topic_id` varchar(32) DEFAULT NULL,
   `raum` varchar(255) DEFAULT NULL,
   `metadate_id` varchar(32) DEFAULT NULL,
-  `resource_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `resource_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`termin_id`),
+  KEY `range_id` (`range_id`,`date`),
+  KEY `metadate_id` (`metadate_id`,`date`),
+  KEY `autor_id` (`autor_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1075,12 +1222,13 @@ CREATE TABLE IF NOT EXISTS `files` (
   `user_id` char(32) NOT NULL,
   `filename` varchar(255) NOT NULL,
   `mime_type` varchar(64) NOT NULL,
-  `size` bigint(20) unsigned NOT NULL,
+  `size` bigint(20) UNSIGNED NOT NULL,
   `restricted` tinyint(1) NOT NULL DEFAULT '0',
   `storage` varchar(32) NOT NULL DEFAULT 'DiskFileStorage',
   `storage_id` varchar(32) NOT NULL,
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(11) unsigned NOT NULL DEFAULT '0'
+  `mkdate` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `chdate` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`file_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1091,9 +1239,10 @@ CREATE TABLE IF NOT EXISTS `files` (
 
 DROP TABLE IF EXISTS `files_backend_studip`;
 CREATE TABLE IF NOT EXISTS `files_backend_studip` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `files_id` varchar(64) NOT NULL,
-  `path` varchar(256) NOT NULL
+  `path` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1104,9 +1253,10 @@ CREATE TABLE IF NOT EXISTS `files_backend_studip` (
 
 DROP TABLE IF EXISTS `files_backend_url`;
 CREATE TABLE IF NOT EXISTS `files_backend_url` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `files_id` varchar(64) NOT NULL,
-  `url` varchar(256) NOT NULL
+  `url` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1122,8 +1272,9 @@ CREATE TABLE IF NOT EXISTS `files_share` (
   `description` mediumtext,
   `read_perm` tinyint(1) DEFAULT '0',
   `write_perm` tinyint(1) DEFAULT '0',
-  `start_date` int(10) unsigned NOT NULL,
-  `end_date` int(10) unsigned NOT NULL
+  `start_date` int(10) UNSIGNED NOT NULL,
+  `end_date` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`files_id`,`entity_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1139,7 +1290,8 @@ CREATE TABLE IF NOT EXISTS `file_refs` (
   `parent_id` char(32) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `downloads` int(11) NOT NULL DEFAULT '0'
+  `downloads` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1156,11 +1308,15 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text,
-  `permission` tinyint(3) unsigned NOT NULL DEFAULT '7',
+  `permission` tinyint(3) UNSIGNED NOT NULL DEFAULT '7',
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
-  `priority` smallint(5) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `priority` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`folder_id`),
+  KEY `user_id` (`user_id`),
+  KEY `range_id` (`range_id`),
+  KEY `chdate` (`chdate`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1171,7 +1327,8 @@ CREATE TABLE IF NOT EXISTS `folder` (
 DROP TABLE IF EXISTS `forum_abo_users`;
 CREATE TABLE IF NOT EXISTS `forum_abo_users` (
   `topic_id` varchar(32) NOT NULL,
-  `user_id` varchar(32) NOT NULL
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1185,7 +1342,9 @@ CREATE TABLE IF NOT EXISTS `forum_categories` (
   `category_id` varchar(32) NOT NULL,
   `seminar_id` varchar(32) NOT NULL,
   `entry_name` varchar(255) NOT NULL,
-  `pos` int(11) NOT NULL DEFAULT '0'
+  `pos` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`),
+  KEY `seminar_id` (`seminar_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1198,7 +1357,8 @@ DROP TABLE IF EXISTS `forum_categories_entries`;
 CREATE TABLE IF NOT EXISTS `forum_categories_entries` (
   `category_id` varchar(32) NOT NULL,
   `topic_id` varchar(32) NOT NULL,
-  `pos` int(11) NOT NULL DEFAULT '0'
+  `pos` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`,`topic_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1225,7 +1385,11 @@ CREATE TABLE IF NOT EXISTS `forum_entries` (
   `depth` int(11) NOT NULL,
   `anonymous` tinyint(4) NOT NULL DEFAULT '0',
   `closed` tinyint(1) NOT NULL DEFAULT '0',
-  `sticky` int(1) NOT NULL DEFAULT '0'
+  `sticky` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`topic_id`),
+  KEY `seminar_id` (`seminar_id`,`lft`),
+  KEY `seminar_id_2` (`seminar_id`,`rgt`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1237,7 +1401,8 @@ CREATE TABLE IF NOT EXISTS `forum_entries` (
 DROP TABLE IF EXISTS `forum_entries_issues`;
 CREATE TABLE IF NOT EXISTS `forum_entries_issues` (
   `topic_id` varchar(32) NOT NULL,
-  `issue_id` varchar(32) NOT NULL
+  `issue_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`issue_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1249,7 +1414,8 @@ CREATE TABLE IF NOT EXISTS `forum_entries_issues` (
 DROP TABLE IF EXISTS `forum_favorites`;
 CREATE TABLE IF NOT EXISTS `forum_favorites` (
   `user_id` varchar(32) NOT NULL,
-  `topic_id` varchar(32) NOT NULL
+  `topic_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`user_id`,`topic_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1261,7 +1427,8 @@ CREATE TABLE IF NOT EXISTS `forum_favorites` (
 DROP TABLE IF EXISTS `forum_likes`;
 CREATE TABLE IF NOT EXISTS `forum_likes` (
   `topic_id` varchar(32) NOT NULL,
-  `user_id` varchar(32) NOT NULL
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1275,7 +1442,8 @@ CREATE TABLE IF NOT EXISTS `forum_visits` (
   `user_id` varchar(32) NOT NULL,
   `seminar_id` varchar(32) NOT NULL,
   `visitdate` int(11) NOT NULL,
-  `last_visitdate` int(11) NOT NULL
+  `last_visitdate` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`seminar_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1297,8 +1465,9 @@ CREATE TABLE IF NOT EXISTS `help_content` (
   `visible` tinyint(4) NOT NULL DEFAULT '1',
   `author_email` varchar(255) NOT NULL,
   `installation_id` varchar(255) NOT NULL,
-  `mkdate` int(11) unsigned NOT NULL,
-  `chdate` int(11) NOT NULL
+  `mkdate` int(11) UNSIGNED NOT NULL,
+  `chdate` int(11) NOT NULL,
+  PRIMARY KEY (`content_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1315,13 +1484,14 @@ CREATE TABLE IF NOT EXISTS `help_tours` (
   `description` text NOT NULL,
   `type` enum('tour','wizard') NOT NULL,
   `roles` varchar(255) NOT NULL,
-  `version` int(11) unsigned NOT NULL DEFAULT '1',
+  `version` int(11) UNSIGNED NOT NULL DEFAULT '1',
   `language` char(2) NOT NULL DEFAULT 'de',
   `studip_version` varchar(32) NOT NULL DEFAULT '',
   `installation_id` varchar(255) NOT NULL DEFAULT 'demo-installation',
   `author_email` varchar(255) NOT NULL,
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL
+  `mkdate` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL,
+  PRIMARY KEY (`tour_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1334,7 +1504,8 @@ DROP TABLE IF EXISTS `help_tour_audiences`;
 CREATE TABLE IF NOT EXISTS `help_tour_audiences` (
   `tour_id` char(32) NOT NULL,
   `range_id` char(32) NOT NULL,
-  `type` enum('inst','sem','studiengang','abschluss','userdomain','tour') NOT NULL
+  `type` enum('inst','sem','studiengang','abschluss','userdomain','tour') NOT NULL,
+  PRIMARY KEY (`tour_id`,`range_id`,`type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1347,7 +1518,8 @@ DROP TABLE IF EXISTS `help_tour_settings`;
 CREATE TABLE IF NOT EXISTS `help_tour_settings` (
   `tour_id` varchar(32) NOT NULL,
   `active` tinyint(4) NOT NULL,
-  `access` enum('standard','link','autostart','autostart_once') DEFAULT NULL
+  `access` enum('standard','link','autostart','autostart_once') DEFAULT NULL,
+  PRIMARY KEY (`tour_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1369,8 +1541,9 @@ CREATE TABLE IF NOT EXISTS `help_tour_steps` (
   `action_prev` varchar(255) NOT NULL,
   `action_next` varchar(255) NOT NULL,
   `author_email` varchar(255) NOT NULL,
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL
+  `mkdate` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `chdate` int(11) NOT NULL,
+  PRIMARY KEY (`tour_id`,`step`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1384,7 +1557,8 @@ CREATE TABLE IF NOT EXISTS `help_tour_user` (
   `tour_id` varchar(32) NOT NULL,
   `user_id` varchar(32) NOT NULL,
   `step_nr` int(11) NOT NULL,
-  `completed` tinyint(4) NOT NULL DEFAULT '0'
+  `completed` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`tour_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1404,14 +1578,16 @@ CREATE TABLE IF NOT EXISTS `Institute` (
   `telefon` varchar(32) NOT NULL DEFAULT '',
   `email` varchar(255) NOT NULL DEFAULT '',
   `fax` varchar(32) NOT NULL DEFAULT '',
-  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `modules` int(10) unsigned DEFAULT NULL,
+  `type` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `modules` int(10) UNSIGNED DEFAULT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
   `lit_plugin_name` varchar(255) DEFAULT NULL,
   `srienabled` tinyint(4) NOT NULL DEFAULT '0',
-  `lock_rule` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `lock_rule` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`Institut_id`),
+  KEY `fakultaets_id` (`fakultaets_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1427,7 +1603,10 @@ CREATE TABLE IF NOT EXISTS `kategorien` (
   `content` text NOT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
-  `priority` int(11) NOT NULL DEFAULT '0'
+  `priority` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`kategorie_id`),
+  KEY `priority` (`priority`),
+  KEY `range_id` (`range_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1444,7 +1623,8 @@ CREATE TABLE IF NOT EXISTS `limitedadmissions` (
   `end_time` int(11) NOT NULL DEFAULT '0',
   `maxnumber` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1475,7 +1655,8 @@ CREATE TABLE IF NOT EXISTS `lit_catalog` (
   `dc_language` varchar(10) DEFAULT NULL,
   `dc_relation` varchar(255) DEFAULT NULL,
   `dc_coverage` varchar(255) DEFAULT NULL,
-  `dc_rights` varchar(255) DEFAULT NULL
+  `dc_rights` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`catalog_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1494,7 +1675,11 @@ CREATE TABLE IF NOT EXISTS `lit_list` (
   `mkdate` int(11) NOT NULL DEFAULT '0',
   `chdate` int(11) NOT NULL DEFAULT '0',
   `priority` smallint(6) NOT NULL DEFAULT '0',
-  `visibility` tinyint(4) NOT NULL DEFAULT '0'
+  `visibility` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`list_id`),
+  KEY `range_id` (`range_id`),
+  KEY `priority` (`priority`),
+  KEY `visibility` (`visibility`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1512,7 +1697,11 @@ CREATE TABLE IF NOT EXISTS `lit_list_content` (
   `mkdate` int(11) NOT NULL DEFAULT '0',
   `chdate` int(11) NOT NULL DEFAULT '0',
   `note` text,
-  `priority` smallint(6) NOT NULL DEFAULT '0'
+  `priority` smallint(6) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`list_element_id`),
+  KEY `list_id` (`list_id`),
+  KEY `catalog_id` (`catalog_id`),
+  KEY `priority` (`priority`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1526,7 +1715,8 @@ CREATE TABLE IF NOT EXISTS `lockedadmissions` (
   `rule_id` varchar(32) NOT NULL,
   `message` text NOT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1543,7 +1733,8 @@ CREATE TABLE IF NOT EXISTS `lock_rules` (
   `description` text NOT NULL,
   `attributes` text NOT NULL,
   `object_type` enum('sem','inst','user') NOT NULL DEFAULT 'sem',
-  `user_id` varchar(32) NOT NULL DEFAULT ''
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`lock_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1562,7 +1753,8 @@ CREATE TABLE IF NOT EXISTS `log_actions` (
   `expires` int(20) NOT NULL DEFAULT '0',
   `filename` varchar(255) DEFAULT NULL,
   `class` varchar(255) DEFAULT NULL,
-  `type` enum('core','plugin','file') DEFAULT NULL
+  `type` enum('core','plugin','file') DEFAULT NULL,
+  PRIMARY KEY (`action_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1580,7 +1772,9 @@ CREATE TABLE IF NOT EXISTS `log_events` (
   `coaffected_range_id` varchar(32) DEFAULT NULL,
   `info` text,
   `dbg_info` text,
-  `mkdate` int(20) NOT NULL DEFAULT '0'
+  `mkdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`event_id`),
+  KEY `action_id` (`action_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1598,7 +1792,10 @@ CREATE TABLE IF NOT EXISTS `mail_queue_entries` (
   `tries` int(11) NOT NULL,
   `last_try` int(11) NOT NULL DEFAULT '0',
   `mkdate` bigint(20) NOT NULL,
-  `chdate` bigint(20) NOT NULL
+  `chdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`mail_queue_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1612,7 +1809,8 @@ CREATE TABLE IF NOT EXISTS `media_cache` (
   `id` varchar(32) NOT NULL,
   `type` varchar(64) NOT NULL,
   `chdate` timestamp NOT NULL,
-  `expires` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `expires` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1628,7 +1826,9 @@ CREATE TABLE IF NOT EXISTS `message` (
   `subject` varchar(255) NOT NULL DEFAULT '',
   `message` text NOT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `priority` enum('normal','high') NOT NULL DEFAULT 'normal'
+  `priority` enum('normal','high') NOT NULL DEFAULT 'normal',
+  PRIMARY KEY (`message_id`),
+  KEY `autor_id` (`autor_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1643,7 +1843,8 @@ CREATE TABLE IF NOT EXISTS `message_tags` (
   `user_id` varchar(32) NOT NULL,
   `tag` varchar(64) NOT NULL,
   `chdate` bigint(20) NOT NULL,
-  `mkdate` bigint(20) NOT NULL
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`message_id`,`user_id`,`tag`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1660,7 +1861,10 @@ CREATE TABLE IF NOT EXISTS `message_user` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `snd_rec` enum('rec','snd') NOT NULL DEFAULT 'rec',
   `answered` tinyint(1) NOT NULL DEFAULT '0',
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0'
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`message_id`,`snd_rec`,`user_id`),
+  KEY `user_id` (`user_id`,`snd_rec`,`deleted`,`readed`,`mkdate`),
+  KEY `user_id_2` (`user_id`,`snd_rec`,`deleted`,`mkdate`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1679,10 +1883,13 @@ CREATE TABLE IF NOT EXISTS `news` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `expire` int(11) NOT NULL DEFAULT '0',
   `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
-  `chdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `chdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `chdate_uid` varchar(32) NOT NULL DEFAULT '',
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`news_id`),
+  KEY `date` (`date`),
+  KEY `chdate` (`chdate`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1693,8 +1900,10 @@ CREATE TABLE IF NOT EXISTS `news` (
 DROP TABLE IF EXISTS `news_range`;
 CREATE TABLE IF NOT EXISTS `news_range` (
   `news_id` varchar(32) NOT NULL DEFAULT '',
-  `range_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `range_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`news_id`,`range_id`),
+  KEY `range_id` (`range_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1706,7 +1915,9 @@ DROP TABLE IF EXISTS `news_rss_range`;
 CREATE TABLE IF NOT EXISTS `news_rss_range` (
   `range_id` char(32) NOT NULL DEFAULT '',
   `rss_id` char(32) NOT NULL DEFAULT '',
-  `range_type` enum('user','sem','inst','global') NOT NULL DEFAULT 'user'
+  `range_type` enum('user','sem','inst','global') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`range_id`),
+  KEY `rss_id` (`rss_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1717,18 +1928,23 @@ CREATE TABLE IF NOT EXISTS `news_rss_range` (
 
 DROP TABLE IF EXISTS `oauth_consumer_registry`;
 CREATE TABLE IF NOT EXISTS `oauth_consumer_registry` (
-  `ocr_id` int(11) NOT NULL,
+  `ocr_id` int(11) NOT NULL AUTO_INCREMENT,
   `ocr_usa_id_ref` int(11) DEFAULT NULL,
-  `ocr_consumer_key` varchar(128) binary NOT NULL,
-  `ocr_consumer_secret` varchar(128) binary NOT NULL,
+  `ocr_consumer_key` varchar(128) BINARY NOT NULL,
+  `ocr_consumer_secret` varchar(128) BINARY NOT NULL,
   `ocr_signature_methods` varchar(128) NOT NULL DEFAULT 'HMAC-SHA1,PLAINTEXT',
   `ocr_server_uri` varchar(128) NOT NULL,
   `ocr_server_uri_host` varchar(128) NOT NULL,
-  `ocr_server_uri_path` varchar(128) binary NOT NULL,
+  `ocr_server_uri_path` varchar(128) BINARY NOT NULL,
   `ocr_request_token_uri` varchar(255) NOT NULL,
   `ocr_authorize_uri` varchar(255) NOT NULL,
   `ocr_access_token_uri` varchar(255) NOT NULL,
-  `ocr_timestamp` timestamp NOT NULL
+  `ocr_timestamp` timestamp NOT NULL,
+  PRIMARY KEY (`ocr_id`),
+  UNIQUE KEY `ocr_consumer_key` (`ocr_consumer_key`,`ocr_usa_id_ref`,`ocr_server_uri`),
+  KEY `ocr_server_uri` (`ocr_server_uri`),
+  KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`),
+  KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1739,15 +1955,19 @@ CREATE TABLE IF NOT EXISTS `oauth_consumer_registry` (
 
 DROP TABLE IF EXISTS `oauth_consumer_token`;
 CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
-  `oct_id` int(11) NOT NULL,
+  `oct_id` int(11) NOT NULL AUTO_INCREMENT,
   `oct_ocr_id_ref` int(11) NOT NULL,
   `oct_usa_id_ref` int(11) NOT NULL,
-  `oct_name` varchar(64) binary NOT NULL DEFAULT '',
-  `oct_token` varchar(128) binary NOT NULL,
-  `oct_token_secret` varchar(128) binary NOT NULL,
+  `oct_name` varchar(64) BINARY NOT NULL DEFAULT '',
+  `oct_token` varchar(128) BINARY NOT NULL,
+  `oct_token_secret` varchar(128) BINARY NOT NULL,
   `oct_token_type` enum('request','authorized','access') DEFAULT NULL,
   `oct_token_ttl` datetime NOT NULL DEFAULT '9999-12-31 00:00:00',
-  `oct_timestamp` timestamp NOT NULL
+  `oct_timestamp` timestamp NOT NULL,
+  PRIMARY KEY (`oct_id`),
+  UNIQUE KEY `oct_ocr_id_ref` (`oct_ocr_id_ref`,`oct_token`),
+  UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`),
+  KEY `oct_token_ttl` (`oct_token_ttl`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1758,18 +1978,24 @@ CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
 
 DROP TABLE IF EXISTS `oauth_log`;
 CREATE TABLE IF NOT EXISTS `oauth_log` (
-  `olg_id` int(11) NOT NULL,
-  `olg_osr_consumer_key` varchar(64) binary DEFAULT NULL,
-  `olg_ost_token` varchar(64) binary DEFAULT NULL,
-  `olg_ocr_consumer_key` varchar(64) binary DEFAULT NULL,
-  `olg_oct_token` varchar(64) binary DEFAULT NULL,
+  `olg_id` int(11) NOT NULL AUTO_INCREMENT,
+  `olg_osr_consumer_key` varchar(64) BINARY DEFAULT NULL,
+  `olg_ost_token` varchar(64) BINARY DEFAULT NULL,
+  `olg_ocr_consumer_key` varchar(64) BINARY DEFAULT NULL,
+  `olg_oct_token` varchar(64) BINARY DEFAULT NULL,
   `olg_usa_id_ref` int(11) DEFAULT NULL,
   `olg_received` text NOT NULL,
   `olg_sent` text NOT NULL,
   `olg_base_string` text NOT NULL,
   `olg_notes` text NOT NULL,
   `olg_timestamp` timestamp NOT NULL,
-  `olg_remote_ip` bigint(20) NOT NULL
+  `olg_remote_ip` bigint(20) NOT NULL,
+  PRIMARY KEY (`olg_id`),
+  KEY `olg_osr_consumer_key` (`olg_osr_consumer_key`,`olg_id`),
+  KEY `olg_ost_token` (`olg_ost_token`,`olg_id`),
+  KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`),
+  KEY `olg_oct_token` (`olg_oct_token`,`olg_id`),
+  KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1780,11 +2006,13 @@ CREATE TABLE IF NOT EXISTS `oauth_log` (
 
 DROP TABLE IF EXISTS `oauth_server_nonce`;
 CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
-  `osn_id` int(11) NOT NULL,
-  `osn_consumer_key` varchar(64) binary NOT NULL,
-  `osn_token` varchar(64) binary NOT NULL,
+  `osn_id` int(11) NOT NULL AUTO_INCREMENT,
+  `osn_consumer_key` varchar(64) BINARY NOT NULL,
+  `osn_token` varchar(64) BINARY NOT NULL,
   `osn_timestamp` bigint(20) NOT NULL,
-  `osn_nonce` varchar(80) binary NOT NULL
+  `osn_nonce` varchar(80) BINARY NOT NULL,
+  PRIMARY KEY (`osn_id`),
+  UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1795,10 +2023,10 @@ CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
 
 DROP TABLE IF EXISTS `oauth_server_registry`;
 CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
-  `osr_id` int(11) NOT NULL,
+  `osr_id` int(11) NOT NULL AUTO_INCREMENT,
   `osr_usa_id_ref` int(11) DEFAULT NULL,
-  `osr_consumer_key` varchar(64) binary NOT NULL,
-  `osr_consumer_secret` varchar(64) binary NOT NULL,
+  `osr_consumer_key` varchar(64) BINARY NOT NULL,
+  `osr_consumer_secret` varchar(64) BINARY NOT NULL,
   `osr_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `osr_status` varchar(16) NOT NULL,
   `osr_requester_name` varchar(64) NOT NULL,
@@ -1811,7 +2039,10 @@ CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
   `osr_application_type` varchar(20) NOT NULL,
   `osr_application_commercial` tinyint(1) NOT NULL DEFAULT '0',
   `osr_issue_date` datetime NOT NULL,
-  `osr_timestamp` timestamp NOT NULL
+  `osr_timestamp` timestamp NOT NULL,
+  PRIMARY KEY (`osr_id`),
+  UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`),
+  KEY `osr_usa_id_ref` (`osr_usa_id_ref`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1822,18 +2053,22 @@ CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
 
 DROP TABLE IF EXISTS `oauth_server_token`;
 CREATE TABLE IF NOT EXISTS `oauth_server_token` (
-  `ost_id` int(11) NOT NULL,
+  `ost_id` int(11) NOT NULL AUTO_INCREMENT,
   `ost_osr_id_ref` int(11) NOT NULL,
   `ost_usa_id_ref` int(11) NOT NULL,
-  `ost_token` varchar(64) binary NOT NULL,
-  `ost_token_secret` varchar(64) binary NOT NULL,
+  `ost_token` varchar(64) BINARY NOT NULL,
+  `ost_token_secret` varchar(64) BINARY NOT NULL,
   `ost_token_type` enum('request','access') DEFAULT NULL,
   `ost_authorized` tinyint(1) NOT NULL DEFAULT '0',
   `ost_referrer_host` varchar(128) NOT NULL DEFAULT '',
   `ost_token_ttl` datetime NOT NULL DEFAULT '9999-12-31 00:00:00',
   `ost_timestamp` timestamp NOT NULL,
   `ost_verifier` char(10) DEFAULT NULL,
-  `ost_callback_url` varchar(512) DEFAULT NULL
+  `ost_callback_url` varchar(512) DEFAULT NULL,
+  PRIMARY KEY (`ost_id`),
+  UNIQUE KEY `ost_token` (`ost_token`),
+  KEY `ost_osr_id_ref` (`ost_osr_id_ref`),
+  KEY `ost_token_ttl` (`ost_token_ttl`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1849,7 +2084,8 @@ CREATE TABLE IF NOT EXISTS `object_contentmodules` (
   `system_type` varchar(32) NOT NULL DEFAULT '',
   `module_type` varchar(32) NOT NULL DEFAULT '',
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`,`module_id`,`system_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1864,7 +2100,9 @@ CREATE TABLE IF NOT EXISTS `object_user_visits` (
   `user_id` char(32) NOT NULL DEFAULT '',
   `type` enum('vote','documents','forum','literature','schedule','scm','sem','wiki','news','eval','inst','ilias_connect','elearning_interface','participants') NOT NULL DEFAULT 'vote',
   `visitdate` int(20) NOT NULL DEFAULT '0',
-  `last_visitdate` int(20) NOT NULL DEFAULT '0'
+  `last_visitdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`,`user_id`,`type`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1877,7 +2115,9 @@ DROP TABLE IF EXISTS `object_views`;
 CREATE TABLE IF NOT EXISTS `object_views` (
   `object_id` varchar(32) NOT NULL DEFAULT '',
   `views` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`),
+  KEY `views` (`views`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1897,7 +2137,8 @@ CREATE TABLE IF NOT EXISTS `opengraphdata` (
   `data` text NOT NULL,
   `last_update` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL,
-  `mkdate` bigint(20) NOT NULL
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`url`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1912,7 +2153,8 @@ CREATE TABLE IF NOT EXISTS `participantrestrictedadmissions` (
   `message` text NOT NULL,
   `distribution_time` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1929,7 +2171,8 @@ CREATE TABLE IF NOT EXISTS `passwordadmissions` (
   `end_time` int(11) NOT NULL DEFAULT '0',
   `password` varchar(255) DEFAULT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1940,12 +2183,13 @@ CREATE TABLE IF NOT EXISTS `passwordadmissions` (
 
 DROP TABLE IF EXISTS `personal_notifications`;
 CREATE TABLE IF NOT EXISTS `personal_notifications` (
-  `personal_notification_id` int(11) NOT NULL,
+  `personal_notification_id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(512) NOT NULL DEFAULT '',
   `text` text NOT NULL,
   `avatar` varchar(256) NOT NULL DEFAULT '',
   `html_id` varchar(64) NOT NULL DEFAULT '',
-  `mkdate` int(11) unsigned NOT NULL DEFAULT '0'
+  `mkdate` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`personal_notification_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1956,9 +2200,11 @@ CREATE TABLE IF NOT EXISTS `personal_notifications` (
 
 DROP TABLE IF EXISTS `personal_notifications_user`;
 CREATE TABLE IF NOT EXISTS `personal_notifications_user` (
-  `personal_notification_id` int(10) unsigned NOT NULL,
+  `personal_notification_id` int(10) UNSIGNED NOT NULL,
   `user_id` binary(32) NOT NULL,
-  `seen` tinyint(1) NOT NULL DEFAULT '0'
+  `seen` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`personal_notification_id`,`user_id`),
+  KEY `user_id` (`user_id`,`seen`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1969,16 +2215,17 @@ CREATE TABLE IF NOT EXISTS `personal_notifications_user` (
 
 DROP TABLE IF EXISTS `plugins`;
 CREATE TABLE IF NOT EXISTS `plugins` (
-  `pluginid` int(10) unsigned NOT NULL,
+  `pluginid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `pluginclassname` varchar(255) NOT NULL DEFAULT '',
   `pluginpath` varchar(255) NOT NULL DEFAULT '',
   `pluginname` varchar(45) NOT NULL DEFAULT '',
   `plugintype` text NOT NULL,
   `enabled` enum('yes','no') NOT NULL DEFAULT 'no',
-  `navigationpos` int(10) unsigned NOT NULL DEFAULT '0',
-  `dependentonid` int(10) unsigned DEFAULT NULL,
+  `navigationpos` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `dependentonid` int(10) UNSIGNED DEFAULT NULL,
   `automatic_update_url` varchar(256) DEFAULT NULL,
-  `automatic_update_secret` varchar(32) DEFAULT NULL
+  `automatic_update_secret` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`pluginid`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1989,9 +2236,11 @@ CREATE TABLE IF NOT EXISTS `plugins` (
 
 DROP TABLE IF EXISTS `plugins_activated`;
 CREATE TABLE IF NOT EXISTS `plugins_activated` (
-  `pluginid` int(10) unsigned NOT NULL DEFAULT '0',
+  `pluginid` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `poiid` varchar(36) NOT NULL DEFAULT '',
-  `state` enum('on','off') NOT NULL DEFAULT 'on'
+  `state` enum('on','off') NOT NULL DEFAULT 'on',
+  PRIMARY KEY (`pluginid`,`poiid`),
+  UNIQUE KEY `poiid` (`poiid`,`pluginid`,`state`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2002,9 +2251,10 @@ CREATE TABLE IF NOT EXISTS `plugins_activated` (
 
 DROP TABLE IF EXISTS `plugins_default_activations`;
 CREATE TABLE IF NOT EXISTS `plugins_default_activations` (
-  `pluginid` int(10) unsigned NOT NULL DEFAULT '0',
-  `institutid` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM COMMENT='default activations of standard plugins';
+  `pluginid` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `institutid` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`pluginid`,`institutid`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2019,7 +2269,9 @@ CREATE TABLE IF NOT EXISTS `priorities` (
   `seminar_id` varchar(32) NOT NULL,
   `priority` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`,`set_id`,`seminar_id`),
+  KEY `user_rule_priority` (`user_id`,`priority`,`set_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2036,7 +2288,11 @@ CREATE TABLE IF NOT EXISTS `range_tree` (
   `priority` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL DEFAULT '',
   `studip_object` varchar(10) DEFAULT NULL,
-  `studip_object_id` varchar(32) DEFAULT NULL
+  `studip_object_id` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `priority` (`priority`),
+  KEY `studip_object_id` (`studip_object_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2062,7 +2318,10 @@ CREATE TABLE IF NOT EXISTS `resources_assign` (
   `repeat_day_of_week` int(2) DEFAULT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
-  `comment_internal` text
+  `comment_internal` text,
+  PRIMARY KEY (`assign_id`),
+  KEY `resource_id` (`resource_id`),
+  KEY `assign_user_id` (`assign_user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2078,7 +2337,9 @@ CREATE TABLE IF NOT EXISTS `resources_categories` (
   `description` text NOT NULL,
   `system` tinyint(4) NOT NULL DEFAULT '0',
   `is_room` tinyint(4) NOT NULL DEFAULT '0',
-  `iconnr` int(3) DEFAULT '1'
+  `iconnr` int(3) DEFAULT '1',
+  PRIMARY KEY (`category_id`),
+  KEY `is_room` (`is_room`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2092,7 +2353,8 @@ CREATE TABLE IF NOT EXISTS `resources_categories_properties` (
   `category_id` varchar(32) NOT NULL DEFAULT '',
   `property_id` varchar(32) NOT NULL DEFAULT '',
   `requestable` tinyint(4) NOT NULL DEFAULT '0',
-  `system` tinyint(4) NOT NULL DEFAULT '0'
+  `system` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`,`property_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2104,9 +2366,10 @@ CREATE TABLE IF NOT EXISTS `resources_categories_properties` (
 DROP TABLE IF EXISTS `resources_locks`;
 CREATE TABLE IF NOT EXISTS `resources_locks` (
   `lock_id` varchar(32) NOT NULL DEFAULT '',
-  `lock_begin` int(20) unsigned DEFAULT NULL,
-  `lock_end` int(20) unsigned DEFAULT NULL,
-  `type` varchar(15) NOT NULL DEFAULT ''
+  `lock_begin` int(20) UNSIGNED DEFAULT NULL,
+  `lock_end` int(20) UNSIGNED DEFAULT NULL,
+  `type` varchar(15) NOT NULL DEFAULT '',
+  PRIMARY KEY (`lock_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2129,7 +2392,13 @@ CREATE TABLE IF NOT EXISTS `resources_objects` (
   `lockable` tinyint(4) DEFAULT NULL,
   `multiple_assign` tinyint(4) DEFAULT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`resource_id`),
+  KEY `institut_id` (`institut_id`),
+  KEY `root_id` (`root_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `category_id` (`category_id`),
+  KEY `owner_id` (`owner_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2142,7 +2411,9 @@ DROP TABLE IF EXISTS `resources_objects_properties`;
 CREATE TABLE IF NOT EXISTS `resources_objects_properties` (
   `resource_id` varchar(32) NOT NULL DEFAULT '',
   `property_id` varchar(32) NOT NULL DEFAULT '',
-  `state` text NOT NULL
+  `state` text NOT NULL,
+  PRIMARY KEY (`resource_id`,`property_id`),
+  KEY `property_id` (`property_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2158,7 +2429,8 @@ CREATE TABLE IF NOT EXISTS `resources_properties` (
   `description` text NOT NULL,
   `type` set('bool','text','num','select') NOT NULL DEFAULT 'bool',
   `options` text NOT NULL,
-  `system` tinyint(4) NOT NULL DEFAULT '0'
+  `system` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`property_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2180,9 +2452,17 @@ CREATE TABLE IF NOT EXISTS `resources_requests` (
   `comment` text,
   `reply_comment` text,
   `reply_recipients` enum('requester','lecturer') NOT NULL DEFAULT 'requester',
-  `closed` tinyint(3) unsigned DEFAULT NULL,
-  `mkdate` int(20) unsigned DEFAULT NULL,
-  `chdate` int(20) unsigned DEFAULT NULL
+  `closed` tinyint(3) UNSIGNED DEFAULT NULL,
+  `mkdate` int(20) UNSIGNED DEFAULT NULL,
+  `chdate` int(20) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`request_id`),
+  KEY `termin_id` (`termin_id`),
+  KEY `seminar_id` (`seminar_id`),
+  KEY `user_id` (`user_id`),
+  KEY `resource_id` (`resource_id`),
+  KEY `category_id` (`category_id`),
+  KEY `closed` (`closed`,`request_id`,`resource_id`),
+  KEY `metadate_id` (`metadate_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2196,8 +2476,9 @@ CREATE TABLE IF NOT EXISTS `resources_requests_properties` (
   `request_id` varchar(32) NOT NULL DEFAULT '',
   `property_id` varchar(32) NOT NULL DEFAULT '',
   `state` text,
-  `mkdate` int(20) unsigned DEFAULT NULL,
-  `chdate` int(20) unsigned DEFAULT NULL
+  `mkdate` int(20) UNSIGNED DEFAULT NULL,
+  `chdate` int(20) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`request_id`,`property_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2210,7 +2491,8 @@ DROP TABLE IF EXISTS `resources_requests_user_status`;
 CREATE TABLE IF NOT EXISTS `resources_requests_user_status` (
   `request_id` char(32) NOT NULL DEFAULT '',
   `user_id` char(32) NOT NULL DEFAULT '',
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0'
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`request_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2226,7 +2508,10 @@ CREATE TABLE IF NOT EXISTS `resources_temporary_events` (
   `assign_id` char(32) NOT NULL DEFAULT '',
   `begin` int(20) NOT NULL DEFAULT '0',
   `end` int(20) NOT NULL DEFAULT '0',
-  `mkdate` int(20) NOT NULL DEFAULT '0'
+  `mkdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`event_id`),
+  KEY `resource_id` (`resource_id`,`begin`),
+  KEY `assign_object_id` (`assign_id`,`resource_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2239,7 +2524,8 @@ DROP TABLE IF EXISTS `resources_user_resources`;
 CREATE TABLE IF NOT EXISTS `resources_user_resources` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `resource_id` varchar(32) NOT NULL DEFAULT '',
-  `perms` varchar(10) NOT NULL DEFAULT ''
+  `perms` varchar(10) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`,`resource_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2250,9 +2536,10 @@ CREATE TABLE IF NOT EXISTS `resources_user_resources` (
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
-  `roleid` int(10) unsigned NOT NULL,
+  `roleid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `rolename` varchar(80) NOT NULL DEFAULT '',
-  `system` enum('y','n') NOT NULL DEFAULT 'n'
+  `system` enum('y','n') NOT NULL DEFAULT 'n',
+  PRIMARY KEY (`roleid`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2263,8 +2550,9 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 DROP TABLE IF EXISTS `roles_plugins`;
 CREATE TABLE IF NOT EXISTS `roles_plugins` (
-  `roleid` int(10) unsigned NOT NULL DEFAULT '0',
-  `pluginid` int(10) unsigned NOT NULL DEFAULT '0'
+  `roleid` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `pluginid` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`roleid`,`pluginid`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2275,8 +2563,9 @@ CREATE TABLE IF NOT EXISTS `roles_plugins` (
 
 DROP TABLE IF EXISTS `roles_studipperms`;
 CREATE TABLE IF NOT EXISTS `roles_studipperms` (
-  `roleid` int(10) unsigned NOT NULL DEFAULT '0',
-  `permname` varchar(255) NOT NULL DEFAULT ''
+  `roleid` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `permname` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`roleid`,`permname`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2287,9 +2576,10 @@ CREATE TABLE IF NOT EXISTS `roles_studipperms` (
 
 DROP TABLE IF EXISTS `roles_user`;
 CREATE TABLE IF NOT EXISTS `roles_user` (
-  `roleid` int(10) unsigned NOT NULL DEFAULT '0',
+  `roleid` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `userid` char(32) NOT NULL DEFAULT '',
-  `institut_id` char(32) NOT NULL DEFAULT ''
+  `institut_id` char(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`roleid`,`userid`,`institut_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2300,14 +2590,16 @@ CREATE TABLE IF NOT EXISTS `roles_user` (
 
 DROP TABLE IF EXISTS `schedule`;
 CREATE TABLE IF NOT EXISTS `schedule` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `start` smallint(6) NOT NULL COMMENT 'start hour and minutes',
   `end` smallint(6) NOT NULL COMMENT 'end hour and minutes',
   `day` tinyint(4) NOT NULL COMMENT 'day of week, 0-6',
   `title` varchar(255) NOT NULL,
   `content` varchar(255) NOT NULL,
   `color` varchar(7) NOT NULL COMMENT 'color, rgb in hex',
-  `user_id` varchar(32) NOT NULL
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2322,7 +2614,8 @@ CREATE TABLE IF NOT EXISTS `schedule_seminare` (
   `seminar_id` varchar(32) NOT NULL,
   `metadate_id` varchar(32) NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '1',
-  `color` varchar(7) DEFAULT NULL COMMENT 'color, rgb in hex'
+  `color` varchar(7) DEFAULT NULL COMMENT 'color, rgb in hex',
+  PRIMARY KEY (`user_id`,`seminar_id`,`metadate_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2334,7 +2627,8 @@ CREATE TABLE IF NOT EXISTS `schedule_seminare` (
 DROP TABLE IF EXISTS `schema_version`;
 CREATE TABLE IF NOT EXISTS `schema_version` (
   `domain` varchar(255) NOT NULL DEFAULT '',
-  `version` int(11) NOT NULL DEFAULT '0'
+  `version` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`domain`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2352,7 +2646,10 @@ CREATE TABLE IF NOT EXISTS `scm` (
   `content` text,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
-  `position` int(11) unsigned NOT NULL DEFAULT '0'
+  `position` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`scm_id`),
+  KEY `chdate` (`chdate`),
+  KEY `range_id` (`range_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2367,10 +2664,11 @@ CREATE TABLE IF NOT EXISTS `semester_data` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `semester_token` varchar(10) NOT NULL DEFAULT '',
-  `beginn` int(20) unsigned DEFAULT NULL,
-  `ende` int(20) unsigned DEFAULT NULL,
-  `vorles_beginn` int(20) unsigned DEFAULT NULL,
-  `vorles_ende` int(20) unsigned DEFAULT NULL
+  `beginn` int(20) UNSIGNED DEFAULT NULL,
+  `ende` int(20) UNSIGNED DEFAULT NULL,
+  `vorles_beginn` int(20) UNSIGNED DEFAULT NULL,
+  `vorles_ende` int(20) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`semester_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2385,8 +2683,9 @@ CREATE TABLE IF NOT EXISTS `semester_holiday` (
   `semester_id` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
-  `beginn` int(20) unsigned DEFAULT NULL,
-  `ende` int(20) unsigned NOT NULL DEFAULT '0'
+  `beginn` int(20) UNSIGNED DEFAULT NULL,
+  `ende` int(20) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`holiday_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2402,7 +2701,7 @@ CREATE TABLE IF NOT EXISTS `seminare` (
   `Institut_id` varchar(32) NOT NULL DEFAULT '0',
   `Name` varchar(255) NOT NULL DEFAULT '',
   `Untertitel` varchar(255) DEFAULT NULL,
-  `status` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `status` tinyint(4) UNSIGNED NOT NULL DEFAULT '1',
   `Beschreibung` text NOT NULL,
   `Ort` varchar(255) DEFAULT NULL,
   `Sonstiges` text,
@@ -2420,18 +2719,22 @@ CREATE TABLE IF NOT EXISTS `seminare` (
   `ects` varchar(32) DEFAULT NULL,
   `admission_turnout` int(5) DEFAULT NULL,
   `admission_binding` tinyint(4) DEFAULT NULL,
-  `admission_prelim` tinyint(4) unsigned NOT NULL DEFAULT '0',
+  `admission_prelim` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
   `admission_prelim_txt` text,
-  `admission_disable_waitlist` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `visible` tinyint(2) unsigned NOT NULL DEFAULT '1',
+  `admission_disable_waitlist` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `visible` tinyint(2) UNSIGNED NOT NULL DEFAULT '1',
   `showscore` tinyint(3) DEFAULT '0',
-  `modules` int(10) unsigned DEFAULT NULL,
+  `modules` int(10) UNSIGNED DEFAULT NULL,
   `aux_lock_rule` varchar(32) DEFAULT NULL,
   `aux_lock_rule_forced` tinyint(4) NOT NULL DEFAULT '0',
   `lock_rule` varchar(32) DEFAULT NULL,
-  `admission_waitlist_max` int(10) unsigned NOT NULL DEFAULT '0',
-  `admission_disable_waitlist_move` tinyint(3) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `admission_waitlist_max` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `admission_disable_waitlist_move` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`Seminar_id`),
+  KEY `Institut_id` (`Institut_id`),
+  KEY `visible` (`visible`),
+  KEY `status` (`status`,`Seminar_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2443,7 +2746,9 @@ DROP TABLE IF EXISTS `seminar_courseset`;
 CREATE TABLE IF NOT EXISTS `seminar_courseset` (
   `set_id` varchar(32) NOT NULL,
   `seminar_id` varchar(32) NOT NULL,
-  `mkdate` int(11) NOT NULL DEFAULT '0'
+  `mkdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`set_id`,`seminar_id`),
+  KEY `seminar_id` (`seminar_id`,`set_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2458,14 +2763,16 @@ CREATE TABLE IF NOT EXISTS `seminar_cycle_dates` (
   `seminar_id` varchar(32) NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
-  `weekday` tinyint(3) unsigned NOT NULL,
+  `weekday` tinyint(3) UNSIGNED NOT NULL,
   `description` varchar(255) NOT NULL DEFAULT '',
   `sws` decimal(2,1) NOT NULL DEFAULT '0.0',
-  `cycle` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `week_offset` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sorter` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(10) unsigned NOT NULL,
-  `chdate` int(10) unsigned NOT NULL
+  `cycle` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `week_offset` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `sorter` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(10) UNSIGNED NOT NULL,
+  `chdate` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`metadate_id`),
+  KEY `seminar_id` (`seminar_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2477,8 +2784,10 @@ CREATE TABLE IF NOT EXISTS `seminar_cycle_dates` (
 DROP TABLE IF EXISTS `seminar_inst`;
 CREATE TABLE IF NOT EXISTS `seminar_inst` (
   `seminar_id` varchar(32) NOT NULL DEFAULT '',
-  `institut_id` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `institut_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`,`institut_id`),
+  KEY `institut_id` (`institut_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2489,7 +2798,9 @@ CREATE TABLE IF NOT EXISTS `seminar_inst` (
 DROP TABLE IF EXISTS `seminar_sem_tree`;
 CREATE TABLE IF NOT EXISTS `seminar_sem_tree` (
   `seminar_id` varchar(32) NOT NULL DEFAULT '',
-  `sem_tree_id` varchar(32) NOT NULL DEFAULT ''
+  `sem_tree_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`,`sem_tree_id`),
+  KEY `sem_tree_id` (`sem_tree_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2510,8 +2821,11 @@ CREATE TABLE IF NOT EXISTS `seminar_user` (
   `comment` varchar(255) NOT NULL DEFAULT '',
   `visible` enum('yes','no','unknown') NOT NULL DEFAULT 'unknown',
   `label` varchar(128) NOT NULL DEFAULT '',
-  `bind_calendar` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `bind_calendar` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Seminar_id`,`user_id`),
+  KEY `status` (`status`,`Seminar_id`),
+  KEY `user_id` (`user_id`,`Seminar_id`,`status`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2522,7 +2836,8 @@ CREATE TABLE IF NOT EXISTS `seminar_user` (
 DROP TABLE IF EXISTS `seminar_userdomains`;
 CREATE TABLE IF NOT EXISTS `seminar_userdomains` (
   `seminar_id` varchar(32) NOT NULL DEFAULT '',
-  `userdomain_id` varchar(32) NOT NULL DEFAULT ''
+  `userdomain_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`,`userdomain_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2533,7 +2848,7 @@ CREATE TABLE IF NOT EXISTS `seminar_userdomains` (
 
 DROP TABLE IF EXISTS `sem_classes`;
 CREATE TABLE IF NOT EXISTS `sem_classes` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `compact_mode` tinyint(4) NOT NULL,
   `workgroup_mode` tinyint(4) NOT NULL,
@@ -2572,7 +2887,9 @@ CREATE TABLE IF NOT EXISTS `sem_classes` (
   `title_autor` varchar(64) DEFAULT NULL,
   `title_autor_plural` varchar(64) DEFAULT NULL,
   `mkdate` bigint(20) NOT NULL,
-  `chdate` bigint(20) NOT NULL
+  `chdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2589,7 +2906,11 @@ CREATE TABLE IF NOT EXISTS `sem_tree` (
   `info` text NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT '',
   `studip_object_id` varchar(32) DEFAULT NULL,
-  `type` tinyint(3) unsigned NOT NULL
+  `type` tinyint(3) UNSIGNED NOT NULL,
+  PRIMARY KEY (`sem_tree_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `priority` (`priority`),
+  KEY `studip_object_id` (`studip_object_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2600,11 +2921,12 @@ CREATE TABLE IF NOT EXISTS `sem_tree` (
 
 DROP TABLE IF EXISTS `sem_types`;
 CREATE TABLE IF NOT EXISTS `sem_types` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `class` int(11) NOT NULL,
   `mkdate` bigint(20) NOT NULL,
-  `chdate` bigint(20) NOT NULL
+  `chdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2617,7 +2939,9 @@ DROP TABLE IF EXISTS `session_data`;
 CREATE TABLE IF NOT EXISTS `session_data` (
   `sid` varchar(32) NOT NULL DEFAULT '',
   `val` mediumtext NOT NULL,
-  `changed` timestamp NOT NULL
+  `changed` timestamp NOT NULL,
+  PRIMARY KEY (`sid`),
+  KEY `changed` (`changed`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2628,11 +2952,12 @@ CREATE TABLE IF NOT EXISTS `session_data` (
 
 DROP TABLE IF EXISTS `siteinfo_details`;
 CREATE TABLE IF NOT EXISTS `siteinfo_details` (
-  `detail_id` smallint(5) unsigned NOT NULL,
-  `rubric_id` smallint(5) unsigned NOT NULL,
-  `position` tinyint(3) unsigned DEFAULT NULL,
+  `detail_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `rubric_id` smallint(5) UNSIGNED NOT NULL,
+  `position` tinyint(3) UNSIGNED DEFAULT NULL,
   `name` varchar(255) NOT NULL,
-  `content` text NOT NULL
+  `content` text NOT NULL,
+  PRIMARY KEY (`detail_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2643,9 +2968,10 @@ CREATE TABLE IF NOT EXISTS `siteinfo_details` (
 
 DROP TABLE IF EXISTS `siteinfo_rubrics`;
 CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
-  `rubric_id` smallint(5) unsigned NOT NULL,
-  `position` tinyint(3) unsigned DEFAULT NULL,
-  `name` varchar(255) NOT NULL
+  `rubric_id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `position` tinyint(3) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`rubric_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2656,16 +2982,19 @@ CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
 
 DROP TABLE IF EXISTS `smiley`;
 CREATE TABLE IF NOT EXISTS `smiley` (
-  `smiley_id` int(11) unsigned NOT NULL,
+  `smiley_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `smiley_name` varchar(50) NOT NULL DEFAULT '',
   `smiley_width` int(11) NOT NULL DEFAULT '0',
   `smiley_height` int(11) NOT NULL DEFAULT '0',
   `short_name` varchar(50) NOT NULL DEFAULT '',
-  `smiley_counter` int(11) unsigned NOT NULL DEFAULT '0',
-  `short_counter` int(11) unsigned NOT NULL DEFAULT '0',
-  `fav_counter` int(11) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(10) unsigned DEFAULT NULL,
-  `chdate` int(10) unsigned DEFAULT NULL
+  `smiley_counter` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `short_counter` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `fav_counter` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(10) UNSIGNED DEFAULT NULL,
+  `chdate` int(10) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`smiley_id`),
+  UNIQUE KEY `name` (`smiley_name`),
+  KEY `short` (`short_name`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2684,9 +3013,12 @@ CREATE TABLE IF NOT EXISTS `statusgruppen` (
   `selfassign` tinyint(4) NOT NULL DEFAULT '0',
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
-  `calendar_group` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `calendar_group` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
   `name_w` varchar(255) DEFAULT NULL,
-  `name_m` varchar(255) DEFAULT NULL
+  `name_m` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`statusgruppe_id`),
+  KEY `range_id` (`range_id`),
+  KEY `position` (`position`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2701,7 +3033,9 @@ CREATE TABLE IF NOT EXISTS `statusgruppe_user` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `position` int(11) NOT NULL DEFAULT '0',
   `visible` tinyint(4) NOT NULL DEFAULT '1',
-  `inherit` tinyint(4) NOT NULL DEFAULT '1'
+  `inherit` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`statusgruppe_id`,`user_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2716,7 +3050,8 @@ CREATE TABLE IF NOT EXISTS `studiengaenge` (
   `name` varchar(255) DEFAULT NULL,
   `beschreibung` text,
   `mkdate` int(20) NOT NULL DEFAULT '0',
-  `chdate` int(20) NOT NULL DEFAULT '0'
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`studiengang_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2729,7 +3064,8 @@ DROP TABLE IF EXISTS `studygroup_invitations`;
 CREATE TABLE IF NOT EXISTS `studygroup_invitations` (
   `sem_id` varchar(32) NOT NULL,
   `user_id` varchar(32) NOT NULL,
-  `mkdate` int(20) NOT NULL
+  `mkdate` int(20) NOT NULL,
+  PRIMARY KEY (`sem_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2752,8 +3088,11 @@ CREATE TABLE IF NOT EXISTS `termine` (
   `date_typ` tinyint(4) NOT NULL DEFAULT '0',
   `topic_id` varchar(32) DEFAULT NULL,
   `raum` varchar(255) DEFAULT NULL,
-  `metadate_id` varchar(32) DEFAULT NULL
-) ENGINE=MyISAM PACK_KEYS=1;
+  `metadate_id` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`termin_id`),
+  KEY `metadate_id` (`metadate_id`,`date`),
+  KEY `range_id` (`range_id`,`date`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2764,7 +3103,10 @@ CREATE TABLE IF NOT EXISTS `termine` (
 DROP TABLE IF EXISTS `termin_related_groups`;
 CREATE TABLE IF NOT EXISTS `termin_related_groups` (
   `termin_id` varchar(32) NOT NULL,
-  `statusgruppe_id` varchar(45) NOT NULL
+  `statusgruppe_id` varchar(45) NOT NULL,
+  UNIQUE KEY `unique` (`termin_id`,`statusgruppe_id`),
+  KEY `termin_id` (`termin_id`),
+  KEY `statusgruppe_id` (`statusgruppe_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2776,7 +3118,8 @@ CREATE TABLE IF NOT EXISTS `termin_related_groups` (
 DROP TABLE IF EXISTS `termin_related_persons`;
 CREATE TABLE IF NOT EXISTS `termin_related_persons` (
   `range_id` varchar(32) NOT NULL,
-  `user_id` varchar(32) NOT NULL
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`range_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2792,9 +3135,11 @@ CREATE TABLE IF NOT EXISTS `themen` (
   `author_id` varchar(32) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
-  `priority` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `chdate` int(10) unsigned NOT NULL DEFAULT '0'
+  `priority` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+  `mkdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `chdate` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`issue_id`),
+  KEY `seminar_id` (`seminar_id`,`priority`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2806,7 +3151,9 @@ CREATE TABLE IF NOT EXISTS `themen` (
 DROP TABLE IF EXISTS `themen_termine`;
 CREATE TABLE IF NOT EXISTS `themen_termine` (
   `issue_id` varchar(32) NOT NULL DEFAULT '',
-  `termin_id` varchar(32) NOT NULL DEFAULT ''
+  `termin_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`issue_id`,`termin_id`),
+  KEY `termin_id` (`termin_id`,`issue_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2822,7 +3169,11 @@ CREATE TABLE IF NOT EXISTS `timedadmissions` (
   `start_time` int(11) NOT NULL DEFAULT '0',
   `end_time` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rule_id`),
+  KEY `start_time` (`start_time`),
+  KEY `end_time` (`end_time`),
+  KEY `start_end` (`start_time`,`end_time`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2834,7 +3185,8 @@ CREATE TABLE IF NOT EXISTS `timedadmissions` (
 DROP TABLE IF EXISTS `userdomains`;
 CREATE TABLE IF NOT EXISTS `userdomains` (
   `userdomain_id` varchar(32) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT ''
+  `name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`userdomain_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2847,7 +3199,8 @@ DROP TABLE IF EXISTS `userfilter`;
 CREATE TABLE IF NOT EXISTS `userfilter` (
   `filter_id` varchar(32) NOT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`filter_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2864,7 +3217,8 @@ CREATE TABLE IF NOT EXISTS `userfilter_fields` (
   `value` varchar(255) NOT NULL,
   `compare_op` varchar(255) NOT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`field_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2879,7 +3233,8 @@ CREATE TABLE IF NOT EXISTS `userlimits` (
   `user_id` varchar(32) NOT NULL,
   `maxnumber` int(11) DEFAULT NULL,
   `mkdate` int(11) DEFAULT NULL,
-  `chdate` int(11) DEFAULT NULL
+  `chdate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`rule_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2897,7 +3252,9 @@ CREATE TABLE IF NOT EXISTS `user_config` (
   `value` text NOT NULL,
   `mkdate` int(11) NOT NULL DEFAULT '0',
   `chdate` int(11) NOT NULL DEFAULT '0',
-  `comment` text NOT NULL
+  `comment` text NOT NULL,
+  PRIMARY KEY (`userconfig_id`),
+  KEY `user_id` (`user_id`,`field`,`value`(5))
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2910,7 +3267,8 @@ DROP TABLE IF EXISTS `user_factorlist`;
 CREATE TABLE IF NOT EXISTS `user_factorlist` (
   `list_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `mkdate` int(11) DEFAULT NULL
+  `mkdate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`list_id`,`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2930,7 +3288,7 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   `privatnr` varchar(32) NOT NULL DEFAULT '',
   `privatcell` varchar(32) NOT NULL DEFAULT '',
   `privadr` varchar(64) NOT NULL DEFAULT '',
-  `score` int(11) unsigned NOT NULL DEFAULT '0',
+  `score` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `geschlecht` tinyint(4) NOT NULL DEFAULT '0',
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
@@ -2942,8 +3300,10 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   `email_forward` tinyint(4) NOT NULL DEFAULT '0',
   `smiley_favorite` varchar(255) NOT NULL DEFAULT '',
   `motto` varchar(255) NOT NULL DEFAULT '',
-  `lock_rule` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=MyISAM PACK_KEYS=1;
+  `lock_rule` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`),
+  KEY `score` (`score`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2960,10 +3320,13 @@ CREATE TABLE IF NOT EXISTS `user_inst` (
   `raum` varchar(200) NOT NULL DEFAULT '',
   `Telefon` varchar(32) NOT NULL DEFAULT '',
   `Fax` varchar(32) NOT NULL DEFAULT '',
-  `externdefault` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `visible` tinyint(3) unsigned NOT NULL DEFAULT '1'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `externdefault` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `priority` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `visible` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Institut_id`,`user_id`),
+  KEY `inst_perms` (`inst_perms`,`Institut_id`),
+  KEY `user_id` (`user_id`,`inst_perms`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2974,7 +3337,9 @@ CREATE TABLE IF NOT EXISTS `user_inst` (
 DROP TABLE IF EXISTS `user_online`;
 CREATE TABLE IF NOT EXISTS `user_online` (
   `user_id` char(32) NOT NULL,
-  `last_lifesign` int(10) unsigned NOT NULL
+  `last_lifesign` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `last_lifesign` (`last_lifesign`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -2988,7 +3353,9 @@ CREATE TABLE IF NOT EXISTS `user_studiengang` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `studiengang_id` varchar(32) NOT NULL DEFAULT '',
   `semester` tinyint(2) DEFAULT '0',
-  `abschluss_id` char(32) NOT NULL DEFAULT '0'
+  `abschluss_id` char(32) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`,`studiengang_id`,`abschluss_id`),
+  KEY `studiengang_id` (`studiengang_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3001,7 +3368,11 @@ DROP TABLE IF EXISTS `user_token`;
 CREATE TABLE IF NOT EXISTS `user_token` (
   `user_id` varchar(32) NOT NULL,
   `token` varchar(32) NOT NULL,
-  `expiration` int(11) NOT NULL
+  `expiration` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`token`,`expiration`),
+  KEY `index_expiration` (`expiration`),
+  KEY `index_token` (`token`),
+  KEY `index_user_id` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3013,7 +3384,8 @@ CREATE TABLE IF NOT EXISTS `user_token` (
 DROP TABLE IF EXISTS `user_userdomains`;
 CREATE TABLE IF NOT EXISTS `user_userdomains` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `userdomain_id` varchar(32) NOT NULL DEFAULT ''
+  `userdomain_id` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`,`userdomain_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3030,7 +3402,8 @@ CREATE TABLE IF NOT EXISTS `user_visibility` (
   `email` tinyint(1) NOT NULL DEFAULT '1',
   `homepage` text NOT NULL,
   `default_homepage_visibility` int(11) NOT NULL DEFAULT '0',
-  `mkdate` int(20) NOT NULL DEFAULT '0'
+  `mkdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3042,13 +3415,17 @@ CREATE TABLE IF NOT EXISTS `user_visibility` (
 DROP TABLE IF EXISTS `user_visibility_settings`;
 CREATE TABLE IF NOT EXISTS `user_visibility_settings` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `visibilityid` int(32) NOT NULL,
+  `visibilityid` int(32) NOT NULL AUTO_INCREMENT,
   `parent_id` int(32) NOT NULL,
   `category` varchar(128) NOT NULL,
   `name` varchar(128) NOT NULL,
   `state` int(2) DEFAULT NULL,
   `plugin` int(11) DEFAULT NULL,
-  `identifier` varchar(64) NOT NULL
+  `identifier` varchar(64) NOT NULL,
+  PRIMARY KEY (`visibilityid`),
+  KEY `parent_id` (`parent_id`),
+  KEY `identifier` (`identifier`),
+  KEY `userid` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3076,8 +3453,16 @@ CREATE TABLE IF NOT EXISTS `vote` (
   `anonymous` tinyint(1) NOT NULL DEFAULT '1',
   `changeable` tinyint(1) NOT NULL DEFAULT '0',
   `co_visibility` tinyint(1) DEFAULT NULL,
-  `namesvisibility` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM PACK_KEYS=1;
+  `namesvisibility` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`vote_id`),
+  KEY `range_id` (`range_id`),
+  KEY `state` (`state`),
+  KEY `startdate` (`startdate`),
+  KEY `stopdate` (`stopdate`),
+  KEY `resultvisibility` (`resultvisibility`),
+  KEY `chdate` (`chdate`),
+  KEY `author_id` (`author_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -3092,8 +3477,11 @@ CREATE TABLE IF NOT EXISTS `voteanswers` (
   `answer` varchar(255) NOT NULL DEFAULT '',
   `position` int(11) NOT NULL DEFAULT '0',
   `counter` int(11) NOT NULL DEFAULT '0',
-  `correct` tinyint(1) DEFAULT NULL
-) ENGINE=MyISAM PACK_KEYS=1;
+  `correct` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`answer_id`),
+  KEY `vote_id` (`vote_id`),
+  KEY `position` (`position`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -3105,8 +3493,10 @@ DROP TABLE IF EXISTS `voteanswers_user`;
 CREATE TABLE IF NOT EXISTS `voteanswers_user` (
   `answer_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `votedate` int(20) DEFAULT NULL
-) ENGINE=MyISAM PACK_KEYS=1;
+  `votedate` int(20) DEFAULT NULL,
+  PRIMARY KEY (`answer_id`,`user_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -3118,8 +3508,10 @@ DROP TABLE IF EXISTS `vote_user`;
 CREATE TABLE IF NOT EXISTS `vote_user` (
   `vote_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) NOT NULL DEFAULT '',
-  `votedate` int(20) DEFAULT NULL
-) ENGINE=MyISAM PACK_KEYS=1;
+  `votedate` int(20) DEFAULT NULL,
+  PRIMARY KEY (`vote_id`,`user_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -3133,7 +3525,8 @@ CREATE TABLE IF NOT EXISTS `webservice_access_rules` (
   `method` varchar(100) NOT NULL DEFAULT '',
   `ip_range` varchar(200) NOT NULL DEFAULT '',
   `type` enum('allow','deny') NOT NULL DEFAULT 'allow',
-  `id` int(11) NOT NULL
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3147,7 +3540,8 @@ CREATE TABLE IF NOT EXISTS `widget_default` (
   `pluginid` int(11) NOT NULL,
   `col` tinyint(1) NOT NULL DEFAULT '0',
   `position` tinyint(1) NOT NULL DEFAULT '0',
-  `perm` enum('user','autor','tutor','dozent','admin','root') NOT NULL DEFAULT 'autor'
+  `perm` enum('user','autor','tutor','dozent','admin','root') NOT NULL DEFAULT 'autor',
+  PRIMARY KEY (`perm`,`pluginid`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3158,11 +3552,13 @@ CREATE TABLE IF NOT EXISTS `widget_default` (
 
 DROP TABLE IF EXISTS `widget_user`;
 CREATE TABLE IF NOT EXISTS `widget_user` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `pluginid` int(11) NOT NULL,
   `position` int(11) NOT NULL DEFAULT '0',
   `range_id` varchar(32) NOT NULL,
-  `col` tinyint(1) NOT NULL DEFAULT '0'
+  `col` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `range_id` (`range_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3175,10 +3571,13 @@ DROP TABLE IF EXISTS `wiki`;
 CREATE TABLE IF NOT EXISTS `wiki` (
   `range_id` varchar(32) NOT NULL DEFAULT '',
   `user_id` varchar(32) DEFAULT NULL,
-  `keyword` varchar(128) binary NOT NULL DEFAULT '',
+  `keyword` varchar(128) BINARY NOT NULL DEFAULT '',
   `body` text,
   `chdate` int(11) DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0'
+  `version` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`range_id`,`keyword`,`version`),
+  KEY `user_id` (`user_id`),
+  KEY `chdate` (`chdate`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3190,8 +3589,9 @@ CREATE TABLE IF NOT EXISTS `wiki` (
 DROP TABLE IF EXISTS `wiki_links`;
 CREATE TABLE IF NOT EXISTS `wiki_links` (
   `range_id` char(32) NOT NULL DEFAULT '',
-  `from_keyword` char(128) binary NOT NULL DEFAULT '',
-  `to_keyword` char(128) binary NOT NULL DEFAULT ''
+  `from_keyword` char(128) BINARY NOT NULL DEFAULT '',
+  `to_keyword` char(128) BINARY NOT NULL DEFAULT '',
+  PRIMARY KEY (`range_id`,`to_keyword`,`from_keyword`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -3204,1440 +3604,9 @@ DROP TABLE IF EXISTS `wiki_locks`;
 CREATE TABLE IF NOT EXISTS `wiki_locks` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `range_id` varchar(32) NOT NULL DEFAULT '',
-  `keyword` varchar(128) binary NOT NULL DEFAULT '',
-  `chdate` int(11) NOT NULL DEFAULT '0'
+  `keyword` varchar(128) BINARY NOT NULL DEFAULT '',
+  `chdate` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`range_id`,`user_id`,`keyword`),
+  KEY `user_id` (`user_id`),
+  KEY `chdate` (`chdate`)
 ) ENGINE=MyISAM;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `abschluss`
---
-ALTER TABLE `abschluss`
-  ADD PRIMARY KEY (`abschluss_id`);
-
---
--- Indexes for table `admissionfactor`
---
-ALTER TABLE `admissionfactor`
-  ADD PRIMARY KEY (`list_id`);
-
---
--- Indexes for table `admissionrules`
---
-ALTER TABLE `admissionrules`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ruletype` (`ruletype`);
-
---
--- Indexes for table `admissionrule_inst`
---
-ALTER TABLE `admissionrule_inst`
-  ADD PRIMARY KEY (`rule_id`,`institute_id`);
-
---
--- Indexes for table `admission_condition`
---
-ALTER TABLE `admission_condition`
-  ADD PRIMARY KEY (`rule_id`,`filter_id`);
-
---
--- Indexes for table `admission_seminar_user`
---
-ALTER TABLE `admission_seminar_user`
-  ADD PRIMARY KEY (`user_id`,`seminar_id`),
-  ADD KEY `seminar_id` (`seminar_id`,`status`);
-
---
--- Indexes for table `api_consumers`
---
-ALTER TABLE `api_consumers`
-  ADD PRIMARY KEY (`consumer_id`);
-
---
--- Indexes for table `api_consumer_permissions`
---
-ALTER TABLE `api_consumer_permissions`
-  ADD UNIQUE KEY `route_id` (`route_id`,`consumer_id`,`method`);
-
---
--- Indexes for table `api_oauth_user_mapping`
---
-ALTER TABLE `api_oauth_user_mapping`
-  ADD PRIMARY KEY (`oauth_id`);
-
---
--- Indexes for table `api_user_permissions`
---
-ALTER TABLE `api_user_permissions`
-  ADD PRIMARY KEY (`user_id`,`consumer_id`);
-
---
--- Indexes for table `archiv`
---
-ALTER TABLE `archiv`
-  ADD PRIMARY KEY (`seminar_id`),
-  ADD KEY `heimat_inst_id` (`heimat_inst_id`);
-
---
--- Indexes for table `archiv_user`
---
-ALTER TABLE `archiv_user`
-  ADD PRIMARY KEY (`seminar_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`,`status`);
-
---
--- Indexes for table `auth_extern`
---
-ALTER TABLE `auth_extern`
-  ADD PRIMARY KEY (`studip_user_id`,`external_user_system_type`);
-
---
--- Indexes for table `auth_user_md5`
---
-ALTER TABLE `auth_user_md5`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `k_username` (`username`),
-  ADD KEY `perms` (`perms`);
-
---
--- Indexes for table `auto_insert_sem`
---
-ALTER TABLE `auto_insert_sem`
-  ADD PRIMARY KEY (`seminar_id`,`status`,`domain_id`);
-
---
--- Indexes for table `auto_insert_user`
---
-ALTER TABLE `auto_insert_user`
-  ADD PRIMARY KEY (`seminar_id`,`user_id`);
-
---
--- Indexes for table `aux_lock_rules`
---
-ALTER TABLE `aux_lock_rules`
-  ADD PRIMARY KEY (`lock_id`);
-
---
--- Indexes for table `banner_ads`
---
-ALTER TABLE `banner_ads`
-  ADD PRIMARY KEY (`ad_id`);
-
---
--- Indexes for table `blubber`
---
-ALTER TABLE `blubber`
-  ADD PRIMARY KEY (`topic_id`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `chdate` (`chdate`),
-  ADD KEY `mkdate` (`mkdate`),
-  ADD KEY `user_id` (`user_id`,`Seminar_id`),
-  ADD KEY `root_id` (`root_id`,`mkdate`),
-  ADD KEY `Seminar_id` (`Seminar_id`,`context_type`);
-
---
--- Indexes for table `blubber_events_queue`
---
-ALTER TABLE `blubber_events_queue`
-  ADD PRIMARY KEY (`event_type`,`item_id`,`mkdate`),
-  ADD KEY `item_id` (`item_id`);
-
---
--- Indexes for table `blubber_external_contact`
---
-ALTER TABLE `blubber_external_contact`
-  ADD PRIMARY KEY (`external_contact_id`),
-  ADD KEY `mail_identifier` (`mail_identifier`),
-  ADD KEY `contact_type` (`contact_type`);
-
---
--- Indexes for table `blubber_follower`
---
-ALTER TABLE `blubber_follower`
-  ADD KEY `studip_user_id` (`studip_user_id`),
-  ADD KEY `external_contact_id` (`external_contact_id`);
-
---
--- Indexes for table `blubber_mentions`
---
-ALTER TABLE `blubber_mentions`
-  ADD UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`),
-  ADD KEY `topic_id` (`topic_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `blubber_reshares`
---
-ALTER TABLE `blubber_reshares`
-  ADD UNIQUE KEY `unique_reshares` (`topic_id`,`user_id`,`external_contact`),
-  ADD KEY `topic_id` (`topic_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `blubber_streams`
---
-ALTER TABLE `blubber_streams`
-  ADD PRIMARY KEY (`stream_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `blubber_tags`
---
-ALTER TABLE `blubber_tags`
-  ADD PRIMARY KEY (`topic_id`,`tag`),
-  ADD KEY `tag` (`tag`);
-
---
--- Indexes for table `calendar_event`
---
-ALTER TABLE `calendar_event`
-  ADD PRIMARY KEY (`range_id`,`event_id`);
-
---
--- Indexes for table `calendar_user`
---
-ALTER TABLE `calendar_user`
-  ADD PRIMARY KEY (`owner_id`,`user_id`);
-
---
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `object_id` (`object_id`);
-
---
--- Indexes for table `conditionaladmissions`
---
-ALTER TABLE `conditionaladmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `config`
---
-ALTER TABLE `config`
-  ADD PRIMARY KEY (`config_id`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `field` (`field`,`range`);
-
---
--- Indexes for table `contact`
---
-ALTER TABLE `contact`
-  ADD PRIMARY KEY (`owner_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `coursememberadmissions`
---
-ALTER TABLE `coursememberadmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `coursesets`
---
-ALTER TABLE `coursesets`
-  ADD PRIMARY KEY (`set_id`),
-  ADD KEY `set_user` (`user_id`,`set_id`);
-
---
--- Indexes for table `courseset_factorlist`
---
-ALTER TABLE `courseset_factorlist`
-  ADD PRIMARY KEY (`set_id`,`factorlist_id`);
-
---
--- Indexes for table `courseset_institute`
---
-ALTER TABLE `courseset_institute`
-  ADD PRIMARY KEY (`set_id`,`institute_id`),
-  ADD KEY `institute_id` (`institute_id`,`set_id`);
-
---
--- Indexes for table `courseset_rule`
---
-ALTER TABLE `courseset_rule`
-  ADD PRIMARY KEY (`set_id`,`rule_id`),
-  ADD KEY `type` (`set_id`,`type`);
-
---
--- Indexes for table `cronjobs_logs`
---
-ALTER TABLE `cronjobs_logs`
-  ADD PRIMARY KEY (`log_id`),
-  ADD KEY `schedule_id` (`schedule_id`);
-
---
--- Indexes for table `cronjobs_schedules`
---
-ALTER TABLE `cronjobs_schedules`
-  ADD PRIMARY KEY (`schedule_id`),
-  ADD KEY `task_id` (`task_id`);
-
---
--- Indexes for table `cronjobs_tasks`
---
-ALTER TABLE `cronjobs_tasks`
-  ADD PRIMARY KEY (`task_id`);
-
---
--- Indexes for table `datafields`
---
-ALTER TABLE `datafields`
-  ADD PRIMARY KEY (`datafield_id`),
-  ADD KEY `object_type` (`object_type`);
-
---
--- Indexes for table `datafields_entries`
---
-ALTER TABLE `datafields_entries`
-  ADD PRIMARY KEY (`datafield_id`,`range_id`,`sec_range_id`),
-  ADD KEY `range_id` (`range_id`,`datafield_id`),
-  ADD KEY `datafield_id_2` (`datafield_id`,`sec_range_id`),
-  ADD KEY `datafields_contents` (`datafield_id`,`content`(32));
-
---
--- Indexes for table `deputies`
---
-ALTER TABLE `deputies`
-  ADD PRIMARY KEY (`range_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`,`range_id`,`edit_about`);
-
---
--- Indexes for table `doc_filetype`
---
-ALTER TABLE `doc_filetype`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `doc_filetype_forbidden`
---
-ALTER TABLE `doc_filetype_forbidden`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id`),
-  ADD KEY `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup`);
-
---
--- Indexes for table `doc_usergroup_config`
---
-ALTER TABLE `doc_usergroup_config`
-  ADD PRIMARY KEY (`id`,`usergroup`);
-
---
--- Indexes for table `dokumente`
---
-ALTER TABLE `dokumente`
-  ADD PRIMARY KEY (`dokument_id`),
-  ADD KEY `range_id` (`range_id`),
-  ADD KEY `seminar_id` (`seminar_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `chdate` (`chdate`),
-  ADD KEY `mkdate` (`mkdate`);
-
---
--- Indexes for table `eval`
---
-ALTER TABLE `eval`
-  ADD PRIMARY KEY (`eval_id`);
-
---
--- Indexes for table `evalanswer`
---
-ALTER TABLE `evalanswer`
-  ADD PRIMARY KEY (`evalanswer_id`),
-  ADD KEY `parent_id` (`parent_id`);
-
---
--- Indexes for table `evalanswer_user`
---
-ALTER TABLE `evalanswer_user`
-  ADD PRIMARY KEY (`evalanswer_id`,`user_id`);
-
---
--- Indexes for table `evalgroup`
---
-ALTER TABLE `evalgroup`
-  ADD PRIMARY KEY (`evalgroup_id`),
-  ADD KEY `parent_id` (`parent_id`);
-
---
--- Indexes for table `evalquestion`
---
-ALTER TABLE `evalquestion`
-  ADD PRIMARY KEY (`evalquestion_id`),
-  ADD KEY `parent_id` (`parent_id`);
-
---
--- Indexes for table `eval_group_template`
---
-ALTER TABLE `eval_group_template`
-  ADD PRIMARY KEY (`evalgroup_id`,`user_id`);
-
---
--- Indexes for table `eval_range`
---
-ALTER TABLE `eval_range`
-  ADD PRIMARY KEY (`eval_id`,`range_id`);
-
---
--- Indexes for table `eval_templates`
---
-ALTER TABLE `eval_templates`
-  ADD PRIMARY KEY (`template_id`),
-  ADD KEY `user_id` (`user_id`,`institution_id`,`name`);
-
---
--- Indexes for table `eval_templates_eval`
---
-ALTER TABLE `eval_templates_eval`
-  ADD PRIMARY KEY (`eval_id`),
-  ADD KEY `eval_id` (`eval_id`);
-
---
--- Indexes for table `eval_templates_user`
---
-ALTER TABLE `eval_templates_user`
-  ADD KEY `eval_id` (`eval_id`);
-
---
--- Indexes for table `eval_user`
---
-ALTER TABLE `eval_user`
-  ADD PRIMARY KEY (`eval_id`,`user_id`);
-
---
--- Indexes for table `event_data`
---
-ALTER TABLE `event_data`
-  ADD PRIMARY KEY (`event_id`),
-  ADD UNIQUE KEY `uid` (`uid`),
-  ADD KEY `autor_id` (`author_id`);
-
---
--- Indexes for table `extern_config`
---
-ALTER TABLE `extern_config`
-  ADD PRIMARY KEY (`config_id`,`range_id`);
-
---
--- Indexes for table `ex_termine`
---
-ALTER TABLE `ex_termine`
-  ADD PRIMARY KEY (`termin_id`),
-  ADD KEY `range_id` (`range_id`,`date`),
-  ADD KEY `metadate_id` (`metadate_id`,`date`),
-  ADD KEY `autor_id` (`autor_id`);
-
---
--- Indexes for table `files`
---
-ALTER TABLE `files`
-  ADD PRIMARY KEY (`file_id`);
-
---
--- Indexes for table `files_backend_studip`
---
-ALTER TABLE `files_backend_studip`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `files_backend_url`
---
-ALTER TABLE `files_backend_url`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `files_share`
---
-ALTER TABLE `files_share`
-  ADD PRIMARY KEY (`files_id`,`entity_id`);
-
---
--- Indexes for table `file_refs`
---
-ALTER TABLE `file_refs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `folder`
---
-ALTER TABLE `folder`
-  ADD PRIMARY KEY (`folder_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `range_id` (`range_id`),
-  ADD KEY `chdate` (`chdate`);
-
---
--- Indexes for table `forum_abo_users`
---
-ALTER TABLE `forum_abo_users`
-  ADD PRIMARY KEY (`topic_id`,`user_id`);
-
---
--- Indexes for table `forum_categories`
---
-ALTER TABLE `forum_categories`
-  ADD PRIMARY KEY (`category_id`),
-  ADD KEY `seminar_id` (`seminar_id`);
-
---
--- Indexes for table `forum_categories_entries`
---
-ALTER TABLE `forum_categories_entries`
-  ADD PRIMARY KEY (`category_id`,`topic_id`);
-
---
--- Indexes for table `forum_entries`
---
-ALTER TABLE `forum_entries`
-  ADD PRIMARY KEY (`topic_id`),
-  ADD KEY `seminar_id` (`seminar_id`,`lft`),
-  ADD KEY `seminar_id_2` (`seminar_id`,`rgt`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `forum_entries_issues`
---
-ALTER TABLE `forum_entries_issues`
-  ADD PRIMARY KEY (`topic_id`,`issue_id`);
-
---
--- Indexes for table `forum_favorites`
---
-ALTER TABLE `forum_favorites`
-  ADD PRIMARY KEY (`user_id`,`topic_id`);
-
---
--- Indexes for table `forum_likes`
---
-ALTER TABLE `forum_likes`
-  ADD PRIMARY KEY (`topic_id`,`user_id`);
-
---
--- Indexes for table `forum_visits`
---
-ALTER TABLE `forum_visits`
-  ADD PRIMARY KEY (`user_id`,`seminar_id`);
-
---
--- Indexes for table `help_content`
---
-ALTER TABLE `help_content`
-  ADD PRIMARY KEY (`content_id`);
-
---
--- Indexes for table `help_tours`
---
-ALTER TABLE `help_tours`
-  ADD PRIMARY KEY (`tour_id`);
-
---
--- Indexes for table `help_tour_audiences`
---
-ALTER TABLE `help_tour_audiences`
-  ADD PRIMARY KEY (`tour_id`,`range_id`,`type`);
-
---
--- Indexes for table `help_tour_settings`
---
-ALTER TABLE `help_tour_settings`
-  ADD PRIMARY KEY (`tour_id`);
-
---
--- Indexes for table `help_tour_steps`
---
-ALTER TABLE `help_tour_steps`
-  ADD PRIMARY KEY (`tour_id`,`step`);
-
---
--- Indexes for table `help_tour_user`
---
-ALTER TABLE `help_tour_user`
-  ADD PRIMARY KEY (`tour_id`,`user_id`);
-
---
--- Indexes for table `Institute`
---
-ALTER TABLE `Institute`
-  ADD PRIMARY KEY (`Institut_id`),
-  ADD KEY `fakultaets_id` (`fakultaets_id`);
-
---
--- Indexes for table `kategorien`
---
-ALTER TABLE `kategorien`
-  ADD PRIMARY KEY (`kategorie_id`),
-  ADD KEY `priority` (`priority`),
-  ADD KEY `range_id` (`range_id`);
-
---
--- Indexes for table `limitedadmissions`
---
-ALTER TABLE `limitedadmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `lit_catalog`
---
-ALTER TABLE `lit_catalog`
-  ADD PRIMARY KEY (`catalog_id`);
-
---
--- Indexes for table `lit_list`
---
-ALTER TABLE `lit_list`
-  ADD PRIMARY KEY (`list_id`),
-  ADD KEY `range_id` (`range_id`),
-  ADD KEY `priority` (`priority`),
-  ADD KEY `visibility` (`visibility`);
-
---
--- Indexes for table `lit_list_content`
---
-ALTER TABLE `lit_list_content`
-  ADD PRIMARY KEY (`list_element_id`),
-  ADD KEY `list_id` (`list_id`),
-  ADD KEY `catalog_id` (`catalog_id`),
-  ADD KEY `priority` (`priority`);
-
---
--- Indexes for table `lockedadmissions`
---
-ALTER TABLE `lockedadmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `lock_rules`
---
-ALTER TABLE `lock_rules`
-  ADD PRIMARY KEY (`lock_id`);
-
---
--- Indexes for table `log_actions`
---
-ALTER TABLE `log_actions`
-  ADD PRIMARY KEY (`action_id`);
-
---
--- Indexes for table `log_events`
---
-ALTER TABLE `log_events`
-  ADD PRIMARY KEY (`event_id`),
-  ADD KEY `action_id` (`action_id`);
-
---
--- Indexes for table `mail_queue_entries`
---
-ALTER TABLE `mail_queue_entries`
-  ADD PRIMARY KEY (`mail_queue_id`),
-  ADD KEY `message_id` (`message_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `media_cache`
---
-ALTER TABLE `media_cache`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`message_id`),
-  ADD KEY `autor_id` (`autor_id`);
-
---
--- Indexes for table `message_tags`
---
-ALTER TABLE `message_tags`
-  ADD PRIMARY KEY (`message_id`,`user_id`,`tag`);
-
---
--- Indexes for table `message_user`
---
-ALTER TABLE `message_user`
-  ADD PRIMARY KEY (`message_id`,`snd_rec`,`user_id`),
-  ADD KEY `user_id` (`user_id`,`snd_rec`,`deleted`,`readed`,`mkdate`),
-  ADD KEY `user_id_2` (`user_id`,`snd_rec`,`deleted`,`mkdate`);
-
---
--- Indexes for table `news`
---
-ALTER TABLE `news`
-  ADD PRIMARY KEY (`news_id`),
-  ADD KEY `date` (`date`),
-  ADD KEY `chdate` (`chdate`);
-
---
--- Indexes for table `news_range`
---
-ALTER TABLE `news_range`
-  ADD PRIMARY KEY (`news_id`,`range_id`),
-  ADD KEY `range_id` (`range_id`);
-
---
--- Indexes for table `news_rss_range`
---
-ALTER TABLE `news_rss_range`
-  ADD PRIMARY KEY (`range_id`),
-  ADD KEY `rss_id` (`rss_id`);
-
---
--- Indexes for table `oauth_consumer_registry`
---
-ALTER TABLE `oauth_consumer_registry`
-  ADD PRIMARY KEY (`ocr_id`),
-  ADD UNIQUE KEY `ocr_consumer_key` (`ocr_consumer_key`,`ocr_usa_id_ref`,`ocr_server_uri`),
-  ADD KEY `ocr_server_uri` (`ocr_server_uri`),
-  ADD KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`),
-  ADD KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`);
-
---
--- Indexes for table `oauth_consumer_token`
---
-ALTER TABLE `oauth_consumer_token`
-  ADD PRIMARY KEY (`oct_id`),
-  ADD UNIQUE KEY `oct_ocr_id_ref` (`oct_ocr_id_ref`,`oct_token`),
-  ADD UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`),
-  ADD KEY `oct_token_ttl` (`oct_token_ttl`);
-
---
--- Indexes for table `oauth_log`
---
-ALTER TABLE `oauth_log`
-  ADD PRIMARY KEY (`olg_id`),
-  ADD KEY `olg_osr_consumer_key` (`olg_osr_consumer_key`,`olg_id`),
-  ADD KEY `olg_ost_token` (`olg_ost_token`,`olg_id`),
-  ADD KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`),
-  ADD KEY `olg_oct_token` (`olg_oct_token`,`olg_id`),
-  ADD KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`);
-
---
--- Indexes for table `oauth_server_nonce`
---
-ALTER TABLE `oauth_server_nonce`
-  ADD PRIMARY KEY (`osn_id`),
-  ADD UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`);
-
---
--- Indexes for table `oauth_server_registry`
---
-ALTER TABLE `oauth_server_registry`
-  ADD PRIMARY KEY (`osr_id`),
-  ADD UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`),
-  ADD KEY `osr_usa_id_ref` (`osr_usa_id_ref`);
-
---
--- Indexes for table `oauth_server_token`
---
-ALTER TABLE `oauth_server_token`
-  ADD PRIMARY KEY (`ost_id`),
-  ADD UNIQUE KEY `ost_token` (`ost_token`),
-  ADD KEY `ost_osr_id_ref` (`ost_osr_id_ref`),
-  ADD KEY `ost_token_ttl` (`ost_token_ttl`);
-
---
--- Indexes for table `object_contentmodules`
---
-ALTER TABLE `object_contentmodules`
-  ADD PRIMARY KEY (`object_id`,`module_id`,`system_type`);
-
---
--- Indexes for table `object_user_visits`
---
-ALTER TABLE `object_user_visits`
-  ADD PRIMARY KEY (`object_id`,`user_id`,`type`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `object_views`
---
-ALTER TABLE `object_views`
-  ADD PRIMARY KEY (`object_id`),
-  ADD KEY `views` (`views`);
-
---
--- Indexes for table `opengraphdata`
---
-ALTER TABLE `opengraphdata`
-  ADD PRIMARY KEY (`url`);
-
---
--- Indexes for table `participantrestrictedadmissions`
---
-ALTER TABLE `participantrestrictedadmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `passwordadmissions`
---
-ALTER TABLE `passwordadmissions`
-  ADD PRIMARY KEY (`rule_id`);
-
---
--- Indexes for table `personal_notifications`
---
-ALTER TABLE `personal_notifications`
-  ADD PRIMARY KEY (`personal_notification_id`);
-
---
--- Indexes for table `personal_notifications_user`
---
-ALTER TABLE `personal_notifications_user`
-  ADD PRIMARY KEY (`personal_notification_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`,`seen`);
-
---
--- Indexes for table `plugins`
---
-ALTER TABLE `plugins`
-  ADD PRIMARY KEY (`pluginid`);
-
---
--- Indexes for table `plugins_activated`
---
-ALTER TABLE `plugins_activated`
-  ADD PRIMARY KEY (`pluginid`,`poiid`),
-  ADD UNIQUE KEY `poiid` (`poiid`,`pluginid`,`state`);
-
---
--- Indexes for table `plugins_default_activations`
---
-ALTER TABLE `plugins_default_activations`
-  ADD PRIMARY KEY (`pluginid`,`institutid`);
-
---
--- Indexes for table `priorities`
---
-ALTER TABLE `priorities`
-  ADD PRIMARY KEY (`user_id`,`set_id`,`seminar_id`),
-  ADD KEY `user_rule_priority` (`user_id`,`priority`,`set_id`);
-
---
--- Indexes for table `range_tree`
---
-ALTER TABLE `range_tree`
-  ADD PRIMARY KEY (`item_id`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `priority` (`priority`),
-  ADD KEY `studip_object_id` (`studip_object_id`);
-
---
--- Indexes for table `resources_assign`
---
-ALTER TABLE `resources_assign`
-  ADD PRIMARY KEY (`assign_id`),
-  ADD KEY `resource_id` (`resource_id`),
-  ADD KEY `assign_user_id` (`assign_user_id`);
-
---
--- Indexes for table `resources_categories`
---
-ALTER TABLE `resources_categories`
-  ADD PRIMARY KEY (`category_id`),
-  ADD KEY `is_room` (`is_room`);
-
---
--- Indexes for table `resources_categories_properties`
---
-ALTER TABLE `resources_categories_properties`
-  ADD PRIMARY KEY (`category_id`,`property_id`);
-
---
--- Indexes for table `resources_locks`
---
-ALTER TABLE `resources_locks`
-  ADD PRIMARY KEY (`lock_id`);
-
---
--- Indexes for table `resources_objects`
---
-ALTER TABLE `resources_objects`
-  ADD PRIMARY KEY (`resource_id`),
-  ADD KEY `institut_id` (`institut_id`),
-  ADD KEY `root_id` (`root_id`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `category_id` (`category_id`),
-  ADD KEY `owner_id` (`owner_id`);
-
---
--- Indexes for table `resources_objects_properties`
---
-ALTER TABLE `resources_objects_properties`
-  ADD PRIMARY KEY (`resource_id`,`property_id`),
-  ADD KEY `property_id` (`property_id`);
-
---
--- Indexes for table `resources_properties`
---
-ALTER TABLE `resources_properties`
-  ADD PRIMARY KEY (`property_id`);
-
---
--- Indexes for table `resources_requests`
---
-ALTER TABLE `resources_requests`
-  ADD PRIMARY KEY (`request_id`),
-  ADD KEY `termin_id` (`termin_id`),
-  ADD KEY `seminar_id` (`seminar_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `resource_id` (`resource_id`),
-  ADD KEY `category_id` (`category_id`),
-  ADD KEY `closed` (`closed`,`request_id`,`resource_id`),
-  ADD KEY `metadate_id` (`metadate_id`);
-
---
--- Indexes for table `resources_requests_properties`
---
-ALTER TABLE `resources_requests_properties`
-  ADD PRIMARY KEY (`request_id`,`property_id`);
-
---
--- Indexes for table `resources_requests_user_status`
---
-ALTER TABLE `resources_requests_user_status`
-  ADD PRIMARY KEY (`request_id`,`user_id`);
-
---
--- Indexes for table `resources_temporary_events`
---
-ALTER TABLE `resources_temporary_events`
-  ADD PRIMARY KEY (`event_id`),
-  ADD KEY `resource_id` (`resource_id`,`begin`),
-  ADD KEY `assign_object_id` (`assign_id`,`resource_id`);
-
---
--- Indexes for table `resources_user_resources`
---
-ALTER TABLE `resources_user_resources`
-  ADD PRIMARY KEY (`user_id`,`resource_id`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`roleid`);
-
---
--- Indexes for table `roles_plugins`
---
-ALTER TABLE `roles_plugins`
-  ADD PRIMARY KEY (`roleid`,`pluginid`);
-
---
--- Indexes for table `roles_studipperms`
---
-ALTER TABLE `roles_studipperms`
-  ADD PRIMARY KEY (`roleid`,`permname`);
-
---
--- Indexes for table `roles_user`
---
-ALTER TABLE `roles_user`
-  ADD PRIMARY KEY (`roleid`,`userid`,`institut_id`);
-
---
--- Indexes for table `schedule`
---
-ALTER TABLE `schedule`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `schedule_seminare`
---
-ALTER TABLE `schedule_seminare`
-  ADD PRIMARY KEY (`user_id`,`seminar_id`,`metadate_id`);
-
---
--- Indexes for table `schema_version`
---
-ALTER TABLE `schema_version`
-  ADD PRIMARY KEY (`domain`);
-
---
--- Indexes for table `scm`
---
-ALTER TABLE `scm`
-  ADD PRIMARY KEY (`scm_id`),
-  ADD KEY `chdate` (`chdate`),
-  ADD KEY `range_id` (`range_id`);
-
---
--- Indexes for table `semester_data`
---
-ALTER TABLE `semester_data`
-  ADD PRIMARY KEY (`semester_id`);
-
---
--- Indexes for table `semester_holiday`
---
-ALTER TABLE `semester_holiday`
-  ADD PRIMARY KEY (`holiday_id`);
-
---
--- Indexes for table `seminare`
---
-ALTER TABLE `seminare`
-  ADD PRIMARY KEY (`Seminar_id`),
-  ADD KEY `Institut_id` (`Institut_id`),
-  ADD KEY `visible` (`visible`),
-  ADD KEY `status` (`status`,`Seminar_id`);
-
---
--- Indexes for table `seminar_courseset`
---
-ALTER TABLE `seminar_courseset`
-  ADD PRIMARY KEY (`set_id`,`seminar_id`),
-  ADD KEY `seminar_id` (`seminar_id`,`set_id`);
-
---
--- Indexes for table `seminar_cycle_dates`
---
-ALTER TABLE `seminar_cycle_dates`
-  ADD PRIMARY KEY (`metadate_id`),
-  ADD KEY `seminar_id` (`seminar_id`);
-
---
--- Indexes for table `seminar_inst`
---
-ALTER TABLE `seminar_inst`
-  ADD PRIMARY KEY (`seminar_id`,`institut_id`),
-  ADD KEY `institut_id` (`institut_id`);
-
---
--- Indexes for table `seminar_sem_tree`
---
-ALTER TABLE `seminar_sem_tree`
-  ADD PRIMARY KEY (`seminar_id`,`sem_tree_id`),
-  ADD KEY `sem_tree_id` (`sem_tree_id`);
-
---
--- Indexes for table `seminar_user`
---
-ALTER TABLE `seminar_user`
-  ADD PRIMARY KEY (`Seminar_id`,`user_id`),
-  ADD KEY `status` (`status`,`Seminar_id`),
-  ADD KEY `user_id` (`user_id`,`Seminar_id`,`status`);
-
---
--- Indexes for table `seminar_userdomains`
---
-ALTER TABLE `seminar_userdomains`
-  ADD PRIMARY KEY (`seminar_id`,`userdomain_id`);
-
---
--- Indexes for table `sem_classes`
---
-ALTER TABLE `sem_classes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `sem_tree`
---
-ALTER TABLE `sem_tree`
-  ADD PRIMARY KEY (`sem_tree_id`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `priority` (`priority`),
-  ADD KEY `studip_object_id` (`studip_object_id`);
-
---
--- Indexes for table `sem_types`
---
-ALTER TABLE `sem_types`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `session_data`
---
-ALTER TABLE `session_data`
-  ADD PRIMARY KEY (`sid`),
-  ADD KEY `changed` (`changed`);
-
---
--- Indexes for table `siteinfo_details`
---
-ALTER TABLE `siteinfo_details`
-  ADD PRIMARY KEY (`detail_id`);
-
---
--- Indexes for table `siteinfo_rubrics`
---
-ALTER TABLE `siteinfo_rubrics`
-  ADD PRIMARY KEY (`rubric_id`);
-
---
--- Indexes for table `smiley`
---
-ALTER TABLE `smiley`
-  ADD PRIMARY KEY (`smiley_id`),
-  ADD UNIQUE KEY `name` (`smiley_name`),
-  ADD KEY `short` (`short_name`);
-
---
--- Indexes for table `statusgruppen`
---
-ALTER TABLE `statusgruppen`
-  ADD PRIMARY KEY (`statusgruppe_id`),
-  ADD KEY `range_id` (`range_id`),
-  ADD KEY `position` (`position`);
-
---
--- Indexes for table `statusgruppe_user`
---
-ALTER TABLE `statusgruppe_user`
-  ADD PRIMARY KEY (`statusgruppe_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `studiengaenge`
---
-ALTER TABLE `studiengaenge`
-  ADD PRIMARY KEY (`studiengang_id`);
-
---
--- Indexes for table `studygroup_invitations`
---
-ALTER TABLE `studygroup_invitations`
-  ADD PRIMARY KEY (`sem_id`,`user_id`);
-
---
--- Indexes for table `termine`
---
-ALTER TABLE `termine`
-  ADD PRIMARY KEY (`termin_id`),
-  ADD KEY `metadate_id` (`metadate_id`,`date`),
-  ADD KEY `range_id` (`range_id`,`date`);
-
---
--- Indexes for table `termin_related_groups`
---
-ALTER TABLE `termin_related_groups`
-  ADD UNIQUE KEY `unique` (`termin_id`,`statusgruppe_id`),
-  ADD KEY `termin_id` (`termin_id`),
-  ADD KEY `statusgruppe_id` (`statusgruppe_id`);
-
---
--- Indexes for table `termin_related_persons`
---
-ALTER TABLE `termin_related_persons`
-  ADD PRIMARY KEY (`range_id`,`user_id`);
-
---
--- Indexes for table `themen`
---
-ALTER TABLE `themen`
-  ADD PRIMARY KEY (`issue_id`),
-  ADD KEY `seminar_id` (`seminar_id`,`priority`);
-
---
--- Indexes for table `themen_termine`
---
-ALTER TABLE `themen_termine`
-  ADD PRIMARY KEY (`issue_id`,`termin_id`),
-  ADD KEY `termin_id` (`termin_id`,`issue_id`);
-
---
--- Indexes for table `timedadmissions`
---
-ALTER TABLE `timedadmissions`
-  ADD PRIMARY KEY (`rule_id`),
-  ADD KEY `start_time` (`start_time`),
-  ADD KEY `end_time` (`end_time`),
-  ADD KEY `start_end` (`start_time`,`end_time`);
-
---
--- Indexes for table `userdomains`
---
-ALTER TABLE `userdomains`
-  ADD PRIMARY KEY (`userdomain_id`);
-
---
--- Indexes for table `userfilter`
---
-ALTER TABLE `userfilter`
-  ADD PRIMARY KEY (`filter_id`);
-
---
--- Indexes for table `userfilter_fields`
---
-ALTER TABLE `userfilter_fields`
-  ADD PRIMARY KEY (`field_id`);
-
---
--- Indexes for table `userlimits`
---
-ALTER TABLE `userlimits`
-  ADD PRIMARY KEY (`rule_id`,`user_id`);
-
---
--- Indexes for table `user_config`
---
-ALTER TABLE `user_config`
-  ADD PRIMARY KEY (`userconfig_id`),
-  ADD KEY `user_id` (`user_id`,`field`,`value`(5));
-
---
--- Indexes for table `user_factorlist`
---
-ALTER TABLE `user_factorlist`
-  ADD PRIMARY KEY (`list_id`,`user_id`);
-
---
--- Indexes for table `user_info`
---
-ALTER TABLE `user_info`
-  ADD PRIMARY KEY (`user_id`),
-  ADD KEY `score` (`score`);
-
---
--- Indexes for table `user_inst`
---
-ALTER TABLE `user_inst`
-  ADD PRIMARY KEY (`Institut_id`,`user_id`),
-  ADD KEY `inst_perms` (`inst_perms`,`Institut_id`),
-  ADD KEY `user_id` (`user_id`,`inst_perms`);
-
---
--- Indexes for table `user_online`
---
-ALTER TABLE `user_online`
-  ADD PRIMARY KEY (`user_id`),
-  ADD KEY `last_lifesign` (`last_lifesign`);
-
---
--- Indexes for table `user_studiengang`
---
-ALTER TABLE `user_studiengang`
-  ADD PRIMARY KEY (`user_id`,`studiengang_id`,`abschluss_id`),
-  ADD KEY `studiengang_id` (`studiengang_id`);
-
---
--- Indexes for table `user_token`
---
-ALTER TABLE `user_token`
-  ADD PRIMARY KEY (`user_id`,`token`,`expiration`),
-  ADD KEY `index_expiration` (`expiration`),
-  ADD KEY `index_token` (`token`),
-  ADD KEY `index_user_id` (`user_id`);
-
---
--- Indexes for table `user_userdomains`
---
-ALTER TABLE `user_userdomains`
-  ADD PRIMARY KEY (`user_id`,`userdomain_id`);
-
---
--- Indexes for table `user_visibility`
---
-ALTER TABLE `user_visibility`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- Indexes for table `user_visibility_settings`
---
-ALTER TABLE `user_visibility_settings`
-  ADD PRIMARY KEY (`visibilityid`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `identifier` (`identifier`),
-  ADD KEY `userid` (`user_id`);
-
---
--- Indexes for table `vote`
---
-ALTER TABLE `vote`
-  ADD PRIMARY KEY (`vote_id`),
-  ADD KEY `range_id` (`range_id`),
-  ADD KEY `state` (`state`),
-  ADD KEY `startdate` (`startdate`),
-  ADD KEY `stopdate` (`stopdate`),
-  ADD KEY `resultvisibility` (`resultvisibility`),
-  ADD KEY `chdate` (`chdate`),
-  ADD KEY `author_id` (`author_id`);
-
---
--- Indexes for table `voteanswers`
---
-ALTER TABLE `voteanswers`
-  ADD PRIMARY KEY (`answer_id`),
-  ADD KEY `vote_id` (`vote_id`),
-  ADD KEY `position` (`position`);
-
---
--- Indexes for table `voteanswers_user`
---
-ALTER TABLE `voteanswers_user`
-  ADD PRIMARY KEY (`answer_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `vote_user`
---
-ALTER TABLE `vote_user`
-  ADD PRIMARY KEY (`vote_id`,`user_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `webservice_access_rules`
---
-ALTER TABLE `webservice_access_rules`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `widget_default`
---
-ALTER TABLE `widget_default`
-  ADD PRIMARY KEY (`perm`,`pluginid`);
-
---
--- Indexes for table `widget_user`
---
-ALTER TABLE `widget_user`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `range_id` (`range_id`);
-
---
--- Indexes for table `wiki`
---
-ALTER TABLE `wiki`
-  ADD PRIMARY KEY (`range_id`,`keyword`,`version`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `chdate` (`chdate`);
-
---
--- Indexes for table `wiki_links`
---
-ALTER TABLE `wiki_links`
-  ADD PRIMARY KEY (`range_id`,`to_keyword`,`from_keyword`);
-
---
--- Indexes for table `wiki_locks`
---
-ALTER TABLE `wiki_locks`
-  ADD PRIMARY KEY (`range_id`,`user_id`,`keyword`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `chdate` (`chdate`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `admissionrules`
---
-ALTER TABLE `admissionrules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `api_oauth_user_mapping`
---
-ALTER TABLE `api_oauth_user_mapping`
-  MODIFY `oauth_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `doc_filetype`
---
-ALTER TABLE `doc_filetype`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `doc_filetype_forbidden`
---
-ALTER TABLE `doc_filetype_forbidden`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `doc_usergroup_config`
---
-ALTER TABLE `doc_usergroup_config`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_consumer_registry`
---
-ALTER TABLE `oauth_consumer_registry`
-  MODIFY `ocr_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_consumer_token`
---
-ALTER TABLE `oauth_consumer_token`
-  MODIFY `oct_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_log`
---
-ALTER TABLE `oauth_log`
-  MODIFY `olg_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_server_nonce`
---
-ALTER TABLE `oauth_server_nonce`
-  MODIFY `osn_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_server_registry`
---
-ALTER TABLE `oauth_server_registry`
-  MODIFY `osr_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `oauth_server_token`
---
-ALTER TABLE `oauth_server_token`
-  MODIFY `ost_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `personal_notifications`
---
-ALTER TABLE `personal_notifications`
-  MODIFY `personal_notification_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `plugins`
---
-ALTER TABLE `plugins`
-  MODIFY `pluginid` int(10) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `roleid` int(10) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `schedule`
---
-ALTER TABLE `schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sem_classes`
---
-ALTER TABLE `sem_classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sem_types`
---
-ALTER TABLE `sem_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `siteinfo_details`
---
-ALTER TABLE `siteinfo_details`
-  MODIFY `detail_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `siteinfo_rubrics`
---
-ALTER TABLE `siteinfo_rubrics`
-  MODIFY `rubric_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `smiley`
---
-ALTER TABLE `smiley`
-  MODIFY `smiley_id` int(11) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `user_visibility_settings`
---
-ALTER TABLE `user_visibility_settings`
-  MODIFY `visibilityid` int(32) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `webservice_access_rules`
---
-ALTER TABLE `webservice_access_rules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `widget_user`
---
-ALTER TABLE `widget_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

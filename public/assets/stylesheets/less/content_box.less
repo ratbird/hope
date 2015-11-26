@@ -106,11 +106,11 @@ section.contentbox {
         }
 
         header {
-            h1 {
+            h1 a {
                 .icon-before('blue/arr_1right.png');
                 &:before {
                     .transition(all 200ms ease 0s);
-                    vertical-align: middle;
+                    vertical-align: bottom;
                 }
             }
             nav {
@@ -150,27 +150,27 @@ section.contentbox {
                 }
             }
         }
-    }
 
-    article.open {
-        > p, > section, > footer, > div {
-            max-height: none;
-            opacity: 1;
-            .transition(opacity 0.3s);
+        &.open {
+            > p, > section, > footer, > div {
+                max-height: none;
+                opacity: 1;
+                .transition(opacity 0.3s);
+            }
+
+            footer {
+                border-top-style: solid;
+            }
+
+            header h1 a::before {
+                .rotate(90deg);
+            }
         }
 
-        footer {
-            border-top-style: solid;
-        }
-
-        header h1:before {
-            .rotate(90deg);
-        }
-    }
-
-    article.new {
-        header h1 {
-            .icon-before('red/arr_1right.png');
+        &.new {
+            header h1 a {
+                .icon-before('red/arr_1right.png');
+            }
         }
     }
 }

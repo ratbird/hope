@@ -107,7 +107,7 @@ class AssignObject {
             if ($argv[13]) {
                 $this->comment_internal = $argv[13];
             }
-            
+
             if (!$this->id)
                 $this->createId();
             $this->isNewObject =TRUE;
@@ -565,7 +565,7 @@ class AssignObject {
     function store($create=''){
         $db = DBManager::get();
         // save only, if changes were made or the object is new and a assign_user_id or a user_free_name is given
-        if ((($this->chng_flag) || ($create)) && (($this->assign_user_id) || ($this->user_free_name))) {
+        if (($this->chng_flag || $create) && ($this->assign_user_id || $this->user_free_name) && $this->resource_id) {
             $chdate = time();
             $mkdate = time();
 

@@ -183,13 +183,10 @@ class Statusgruppen extends SimpleORMap
      */
     public function hasFolder()
     {
-        if (!$this->folderid) {
-            $query = "SELECT folder_id FROM folder WHERE range_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($this->id));
-            $this->folderid = $statement->fetchColumn();
-        }
-        return $this->folderid;
+        $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        return (bool) $statement->fetchColumn();
     }
 
     /**

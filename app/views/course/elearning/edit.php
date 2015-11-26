@@ -5,7 +5,7 @@
         <? if (count($course_output['courses'])) : ?>
             <?=$course_output['text']?><br>
             <? foreach ($course_output['courses'] as $course) : ?>
-                <a href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
+                <a target="_blank" href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
                 <br>
             <? endforeach ?>
         <? endif ?>

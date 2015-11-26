@@ -1,7 +1,7 @@
 <?php use Studip\Button, Studip\LinkButton; ?>
 <? if ($is_inst) : ?>
     <!--h2><?= _('Lernmodule der Einrichtung') ?></h2-->
-<? else : ?> 
+<? else : ?>
     <!--h2><?= _('Lernmodule der Veranstaltung') ?></h2-->
 <? endif ?>
 <? if ($elearning_active) : ?>
@@ -12,13 +12,13 @@
             <br>
             <div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">
                 <?=$course_output['text']?><br>
-                <? foreach ($course_output['courses'] as $course) : ?>        
-                    <a href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
+                <? foreach ($course_output['courses'] as $course) : ?>
+                    <a target="_blank" href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
                     <br>
                 <? endforeach ?>
             </div>
         <? elseif (count($content_modules)) : ?>
-            <?foreach ($content_modules as $module) : ?>        
+            <?foreach ($content_modules as $module) : ?>
                 <? if ($module['show_header']) : ?>
                     <?=ELearningUtils::getModuleHeader(_("Angebundene Lernmodule"))?>
                 <? endif ?>
@@ -28,7 +28,7 @@
             <br>
             <? if (count($course_output['courses'])) : ?>
                 <?=$course_output['text']?><br>
-                <? foreach ($course_output['courses'] as $course) : ?>        
+                <? foreach ($course_output['courses'] as $course) : ?>
                     <a href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
                     <br>
                 <? endforeach ?>

@@ -32,16 +32,48 @@
 
 class ConfigEntry extends SimpleORMap
 {
-
-    static function findByField($field)
+    /**
+     * Customized finder by field that takes sorting into account.
+     *
+     * @param String $field Field for lookup
+     * @return array containing the found records
+     */
+    public static function findByField($field)
     {
         return self::findBySql("`field`=? ORDER BY is_default DESC", array($field));
     }
 
+    /**
+     * Configures this model.
+     *
+     * @param array $config Configuration array
+     */
     protected static function configure($config = array())
     {
         $config['db_table'] = 'config';
         $config['default_values']['comment'] = '';
         parent::configure($config);
+    }
+
+    /**
+     * Returns whether two config entries have the same content - except for
+     * the id, the is_default variable and the mkdate/chdate columns.
+     *
+     * @param ConfigEntry $other_entry Entry to compare this entry with
+     * @return bool indicating whether the two entries can be considered equal
+     */
+    public function equals(ConfigEntry $other_entry)
+    {
+        $ignore = array('config_id', 'is_default', 'mkdate', 'chdate');
+        foreach (array_keys($this->db_fields) as $key) {
+            if (in_array($key, $ignore)) {
+                continue;
+            }
+            if ($this->getValue($key) !== $other_entry->getValue($key)) {
+                PageLayout::postInfo($key . '/' . $value . '/' . $other_entry->getValue($key));
+                return false;
+            }
+        }
+        return true;
     }
 }

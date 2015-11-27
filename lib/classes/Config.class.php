@@ -272,42 +272,49 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             default:
                 $values['value'] = (string)$values['value'];
         }
+
         $entries = ConfigEntry::findByField($field);
-        if (count($entries)) {
-            if (isset($values['value'])) {
-                if(count($entries) == 1 &&  $entries[0]->is_default == 1) {
-                    $entries[1] = clone $entries[0];
-                    $entries[1]->setId($entries[1]->getNewId());
-                    $entries[1]->setNew(true);
-                    $entries[1]->is_default = 0;
-                }
-                $value_entry = $entries[0]->is_default == 1 ? $entries[1] : $entries[0];
-                $old_value = $value_entry->value;
-                $value_entry->value = $values['value'];
-            }
-            foreach ($entries as $entry) {
-                if (isset($values['section'])) {
-                    $entry->section = $values['section'];
-                }
-                if (isset($values['comment'])) {
-                    $entry->comment = $values['comment'];
-                }
-
-                // store the default-type for the modified entry
-                $entry->type = $this->metadata[$field]['type'];
-
-                $ret += $entry->store();
-            }
-            if ($ret) {
-                $this->fetchData();
-                if (isset($value_entry)) {
-                   NotificationCenter::postNotification('ConfigValueDidChange', $this, array('field' => $field, 'old_value' => $old_value, 'new_value' => $value_entry->value));
-                }
-           }
-            return $ret > 0;
-        } else {
+        if (count($entries) === 0) {
             throw new InvalidArgumentException($field . " not found in config table");
         }
+
+        // Check if the setting is equal to the default value. If so, delete
+        // customized entry.
+        if (count($entries) === 2 && $entries[1]->equals($entries[0])) {
+            return $entries[1]->delete();
+        }
+
+        if (isset($values['value'])) {
+            if(count($entries) == 1 &&  $entries[0]->is_default == 1) {
+                $entries[1] = clone $entries[0];
+                $entries[1]->setId($entries[1]->getNewId());
+                $entries[1]->setNew(true);
+                $entries[1]->is_default = 0;
+            }
+            $value_entry = $entries[0]->is_default == 1 ? $entries[1] : $entries[0];
+            $old_value = $value_entry->value;
+            $value_entry->value = $values['value'];
+        }
+        foreach ($entries as $entry) {
+            if (isset($values['section'])) {
+                $entry->section = $values['section'];
+            }
+            if (isset($values['comment'])) {
+                $entry->comment = $values['comment'];
+            }
+
+            // store the default-type for the modified entry
+            $entry->type = $this->metadata[$field]['type'];
+
+            $ret += $entry->store();
+        }
+        if ($ret) {
+            $this->fetchData();
+            if (isset($value_entry)) {
+               NotificationCenter::postNotification('ConfigValueDidChange', $this, array('field' => $field, 'old_value' => $old_value, 'new_value' => $value_entry->value));
+            }
+        }
+        return $ret > 0;
     }
 
     /**

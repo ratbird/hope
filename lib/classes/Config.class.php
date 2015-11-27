@@ -278,12 +278,6 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             throw new InvalidArgumentException($field . " not found in config table");
         }
 
-        // Check if the setting is equal to the default value. If so, delete
-        // customized entry.
-        if (count($entries) === 2 && $entries[1]->equals($entries[0])) {
-            return $entries[1]->delete();
-        }
-
         if (isset($values['value'])) {
             if(count($entries) == 1 &&  $entries[0]->is_default == 1) {
                 $entries[1] = clone $entries[0];
@@ -295,6 +289,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             $old_value = $value_entry->value;
             $value_entry->value = $values['value'];
         }
+
         foreach ($entries as $entry) {
             if (isset($values['section'])) {
                 $entry->section = $values['section'];
@@ -306,7 +301,11 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             // store the default-type for the modified entry
             $entry->type = $this->metadata[$field]['type'];
 
-            $ret += $entry->store();
+            if (!$entry->is_default && $entry->value == $entries[0]->value) {
+                $ret += $entry->delete();
+            } else {
+                $ret += $entry->store();
+            }
         }
         if ($ret) {
             $this->fetchData();

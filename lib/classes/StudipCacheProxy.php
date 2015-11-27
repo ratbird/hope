@@ -39,9 +39,12 @@ class StudipCacheProxy implements StudipCache
     public function expire($key)
     {
         if (in_array('expire', $this->proxy_these)) {
-            $operation = new StudipCacheOperation(array($key, 'expire'));
-            $operation->parameters = serialize(array());
-            $operation->store();
+            try {
+                $operation = new StudipCacheOperation(array($key, 'expire'));
+                $operation->parameters = serialize(array());
+                $operation->store();
+            } catch (Exception $e) {
+            }
         }
 
         return $this->actual_cache->expire($key);
@@ -69,9 +72,12 @@ class StudipCacheProxy implements StudipCache
     public function write($key, $content, $expires = self::DEFAULT_EXPIRATION)
     {
         if (in_array('write', $this->proxy_these)) {
-            $operation = new StudipCacheOperation(array($key, 'write'));
-            $operation->parameters = serialize(array($content, $expires));
-            $operation->store();
+            try {
+                $operation = new StudipCacheOperation(array($key, 'write'));
+                $operation->parameters = serialize(array($content, $expires));
+                $operation->store();
+            } catch (Exception $e) {
+            }
         }
 
         return $this->actual_cache->write($key, $content, $expires);

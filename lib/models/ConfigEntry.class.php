@@ -70,7 +70,6 @@ class ConfigEntry extends SimpleORMap
                 continue;
             }
             if ($this->getValue($key) !== $other_entry->getValue($key)) {
-                PageLayout::postInfo($key . '/' . $value . '/' . $other_entry->getValue($key));
                 return false;
             }
         }

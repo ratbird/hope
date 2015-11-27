@@ -98,14 +98,36 @@
     });
 
     // Lets the user confirm a specific action (submit or click event).
-    function confirmation_handler(event) {
-        if (!event.isDefaultPrevented()) {
-            var element = $(event.target).closest('[data-confirm]'),
+    function confirmation_handler(event, pass_through) {
+        if (!event.isDefaultPrevented() && !pass_through) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            var element  = $(event.target).closest('[data-confirm]'),
                 question = element.data().confirm
                         || element.attr('title')
                         || element.find('[title]:first').attr('title')
                         || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
-            return window.confirm(question);
+
+            $('<div>').text(question).dialog({
+                title: 'Bitte bestätigen Sie die Aktion'.toLocaleString(),
+                modal: true,
+                width: 'auto',
+                buttons: [{
+                    text: 'Ja'.toLocaleString(),
+                    click: function () {
+                        $(event.target).trigger(event.type, [true]);
+                        $(this).dialog('close');
+                    },
+                    'class': 'accept'
+                }, {
+                    text: 'Nein'.toLocaleString(),
+                    click: function () {
+                        $(this).dialog('close');
+                    },
+                    'class': 'cancel'
+                }]
+            });
         }
     }
     $(document).on('click', 'a[data-confirm],input[data-confirm],button[data-confirm]', confirmation_handler);

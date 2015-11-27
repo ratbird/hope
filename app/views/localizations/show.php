@@ -98,6 +98,9 @@ $translations = array(
 
     // public/assets/javascripts/studip-helper-attributes.js
     'Wollen Sie die Aktion wirklich ausführen?' => _('Wollen Sie die Aktion wirklich ausführen?'),
+    'Bitte bestätigen Sie die Aktion' => _('Bitte bestätigen Sie die Aktion'),
+    'Ja' => _('Ja'),
+    'Nein' => _('Nein'),
 
     // public/assets/javascripts/studip-jquery.multi-select.tweaks.js
     'Die Person ist bereits eingetragen.' => _('Die Person ist bereits eingetragen.'),

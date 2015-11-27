@@ -301,7 +301,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             // store the default-type for the modified entry
             $entry->type = $this->metadata[$field]['type'];
 
-            if (!$entry->is_default && $entry->value == $entries[0]->value) {
+            if (count($entries) > 1 && !$entry->is_default && $entry->value == $entries[0]->value) {
                 $ret += $entry->delete();
             } else {
                 $ret += $entry->store();

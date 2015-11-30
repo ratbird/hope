@@ -441,14 +441,21 @@ class messaging
                 }
             }
         }
+
+        // Obtain all users that should receive a notification
+        $user_ids = $rec_id;
+        if (is_object($GLOBALS['user'])) {
+            $user_ids = array_diff($user_ids, array($GLOBALS['user']->id));
+        }
+
+        // Create notifications
         PersonalNotifications::add(
-            $rec_id,
+            $user_ids,
             URLHelper::getUrl("dispatch.php/messages/read/$tmp_message_id", array('cid' => null)),
             sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),
             'message_'.$tmp_message_id,
             Assets::image_path("icons/80/blue/mail")
         );
-
 
         return sizeof($rec_id);
     }

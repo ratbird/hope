@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <td colspan="8" style="text-align: center; vertical-align: middle;">
-                <div style="text-align: left; display: inline-block; width: 20%; white-space: nowrap;">
+                <div style="text-align: left; display: inline-block; width: 33%; white-space: nowrap;">
                     <a <?= tooltip(_('ein Jahr zurück')) ?> style="padding-right: 2em;" href="<?= $controller->url_for('calendar/group/month', array('atime' => mktime(12, 0, 0, date('n', $calendars[0][15]->getStart()), 15, date('Y', $calendars[0][15]->getStart()) - 1))) ?>">
                         <?= Assets::img('icons/16/blue/arr_2left.png', array('style' => 'vertical-align: text-top;')) ?>
                         <?= strftime('%B %Y', strtotime('-1 year', $calendars[0][15]->getStart())) ?>
@@ -13,10 +13,10 @@
                         <?= strftime('%B %Y', strtotime('-1 month', $calendars[0][15]->getStart())) ?>
                     </a>
                 </div>
-                <div class="calhead" style="text-align: center; display: inline-block; width:50%;">
+                <div class="calhead" style="text-align: center; display: inline-block; width: 33%;">
                     <?= htmlReady(strftime("%B ", $calendars[0][15]->getStart())) .' '. date('Y', $calendars[0][15]->getStart()); ?>
                 </div>
-                <div style="text-align: right; display: inline-block; width: 20%; white-space: nowrap;">
+                <div style="text-align: right; display: inline-block; width: 33%; white-space: nowrap;">
                     <a <?= tooltip(_('einen Monat vor')) ?> style="padding-right: 2em;" href="<?= $controller->url_for('calendar/group/month', array('atime' => strtotime('+1 month', $calendars[0][15]->getStart()))) ?>">
                         <?= strftime('%B %Y', strtotime('+1 month', $calendars[0][15]->getStart())) ?>
                         <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
@@ -89,7 +89,7 @@
                     </a>
                     <div style="color: #aaaaaa;" class="inday"><?= $hday['name'] ?></div>
                 <? else : ?>
-                    <a class="<?= $class_day . 'day' ?>" href="<?= $controller->url_for('calendar/single/day', array('atime' => $i)) ?>">
+                    <a class="<?= $class_day . 'day' ?>" href="<?= $controller->url_for('calendar/group/day', array('atime' => $i)) ?>">
                         <?= $aday ?>
                     </a>
                 <? endif; ?>

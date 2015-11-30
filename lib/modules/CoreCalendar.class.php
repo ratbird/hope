@@ -24,16 +24,6 @@ class CoreCalendar implements StudipModule {
             $navigation = new Navigation(_('Kalender'), 'dispatch.php/calendar/single/');
             $navigation->setImage('icons/16/white/schedule.png');
             $navigation->setActiveImage('icons/16/black/schedule.png');
-
-            /*
-            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
-            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
-            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));
-            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear')));
-            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
-            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
-             * 
-             */
             return array('calendar' => $navigation);
         } else {
             return null;

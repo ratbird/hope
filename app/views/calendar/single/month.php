@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <td colspan="8" style="text-align: center; vertical-align: middle;">
-                <div style="text-align: left; display: inline-block; white-space: nowrap;">
+                <div style="text-align: left; display: inline-block; white-space: nowrap; width: 33%;">
                     <a style="padding-right: 2em;" href="<?= $controller->url_for('calendar/single/month', array('atime' => strtotime('-1 year', $atime))) ?>">
                         <span style="vertical-align: middle;" <?= tooltip(_('ein Jahr zurück')) ?>>
                         <?= Assets::img('icons/16/blue/arr_2left.png') ?>
@@ -17,10 +17,10 @@
                         <?= strftime('%B %Y', strtotime('-1 month', $atime)) ?>
                     </a>
                 </div>
-                <div class="calhead" style="text-align: center; width: 40%; display: inline-block;">
+                <div class="calhead" style="text-align: center; width: 33%; display: inline-block;">
                     <?= htmlReady(strftime("%B ", $calendars[15]->getStart())) .' '. date('Y', $calendars[15]->getStart()); ?>
                 </div>
-                <div style="text-align: right; display: inline-block; white-space: nowrap;">
+                <div style="text-align: right; display: inline-block; white-space: nowrap; width: 33%;">
                     <a style="padding-right: 2em;" href="<?= $controller->url_for('calendar/single/month', array('atime' => strtotime('+1 month', $atime))) ?>">
                         <?= strftime('%B %Y', strtotime('+1 month', $atime)) ?>
                         <span style="vertical-align: middle;" <?= tooltip(_('einen Monat vor')) ?>>
@@ -77,7 +77,7 @@
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
                     <div data-tooltip>
-                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday <?= $event instanceof CourseEvent ? 'calendar-course-event-text' : 'calendar-event-text' ?><?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendars[$j]->getRangeId() . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
+                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday <?= $event instanceof CourseEvent ? 'calendar-course-event-text' : 'calendar-event-text' ?><?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event, 'calendar' => $calendars[$j])) ?>
                     </div>
                 <? endforeach; ?>
@@ -100,7 +100,7 @@
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
                     <div data-tooltip>
-                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday <?= $event instanceof CourseEvent ? 'calendar-course-event-text' : 'calendar-event-text' ?><?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendars[$j]->getRangeId() . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
+                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday <?= $event instanceof CourseEvent ? 'calendar-course-event-text' : 'calendar-event-text' ?><?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event, 'calendar' => $calendars[$j])) ?>
                     </div>
                 <? endforeach; ?>

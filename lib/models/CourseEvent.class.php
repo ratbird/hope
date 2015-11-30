@@ -92,9 +92,7 @@ class CourseEvent extends CourseDate implements Event
         $event_collection->setClassName('Event');
         return $event_collection;
     }
-
-    //
-
+    
     /**
      * Checks if given user is the responsible lecturer or is member of a
      * related group

@@ -31,7 +31,6 @@ class Calendar_CalendarController extends AuthenticatedController
         URLHelper::bindLinkParam('atime', $this->atime);
         $this->atime = Request::int('atime', time());
         $this->category = Request::int('category');
-        $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
         $this->last_view = Request::option('last_view',
                 $this->settings['view']);
         $this->action = $action;
@@ -40,11 +39,18 @@ class Calendar_CalendarController extends AuthenticatedController
         if ($this->category) {
             URLHelper::bindLinkParam('category', $this->category);
         }
-        if ($this->range_id) {
+        $self = Request::option('self');
+     //   var_dump($_SESSION['SessSemName'], $self); exit;
+        if (!$self && $_SESSION['SessSemName']['class'] == 'sem') {
+            $this->range_id = Request::option('cid');
+            Navigation::activateItem('/course/calendar');
+        } else {
+            $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
+            Navigation::activateItem('/calendar/calendar');
             URLHelper::bindLinkParam('range_id', $this->range_id);
         }
+        
         URLHelper::bindLinkParam('last_view', $this->last_view);
-        Navigation::activateItem('/calendar/calendar');
     }
     
     protected function createSidebar($active = null, $calendar = null)
@@ -83,7 +89,8 @@ class Calendar_CalendarController extends AuthenticatedController
         $tmpl->category = $this->category;
         $filters->addElement(new WidgetElement($tmpl->render()));
 
-        if (get_config('CALENDAR_GROUP_ENABLE')) {
+        if (get_config('CALENDAR_GROUP_ENABLE')
+                || get_config('CALENDAR_COURSE_ENABLE')) {
             $tmpl = $tmpl_factory->open('calendar/single/_select_calendar');
             $tmpl->range_id = $this->range_id;
             $tmpl->action_url = $this->url_for('calendar/group/switch');
@@ -97,7 +104,18 @@ class Calendar_CalendarController extends AuthenticatedController
     {
         // switch to the view the user has selected in his personal settings
         $default_view = $this->settings['view'] ?: 'week';
-        $this->redirect($this->url_for($this->base . $default_view));
+        
+        // Remove cid
+        if (Request::option('self')) {
+            URLHelper::removeLinkParam('cid');
+            unset($_SESSION['SessSemName']);
+            unset($_SESSION['SessionSeminar']);
+            $this->redirect(URLHelper::getURL('dispatch.php/' . $this->base
+                . $default_view . '/' . $GLOBALS['user']->id, array(), true));
+        } else {
+            $this->redirect(URLHelper::getURL('dispatch.php/' . $this->base
+                . $default_view));
+        }
     }
     
     public function edit_action($range_id = null, $event_id = null)
@@ -207,18 +225,25 @@ class Calendar_CalendarController extends AuthenticatedController
     
     public function switch_action()
     {
-        $view = Request::option('last_view', 'week');
+        $default_view = $this->settings['view'] ?: 'week';
+        $view = Request::option('last_view', $default_view);
         $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
         $object_type = get_object_type($this->range_id);
         switch ($object_type) {
             case 'user':
+                URLHelper::addLinkParam('cid', '');
+                $this->redirect($this->url_for('calendar/single/'
+                        . $view . '/' . $this->range_id));
+                break;
             case 'sem':
             case 'inst':
             case 'fak':
+                URLHelper::addLinkParam('cid', $this->range_id);
                 $this->redirect($this->url_for('calendar/single/'
                         . $view . '/' . $this->range_id));
                 break;
             case 'group':
+                URLHelper::addLinkParam('cid', '');
                 $this->redirect($this->url_for('calendar/group/'
                         . $view . '/' . $this->range_id));
                 break;

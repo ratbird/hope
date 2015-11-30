@@ -1,4 +1,4 @@
-<? if (sizeof($em['day_events'])) : ?>
+<? if (count($em['day_events'])) : ?>
     <td class="<?= $class_cell ?>" style="padding: 0px;" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols']) . '"' : '') ?>>
         <table style="width: 100%; border-spacing: 0;">
         <? $i = 0; ?>
@@ -19,17 +19,15 @@
         <? endforeach ?>
         </table>
     </td>
-    <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-    <td class="calendar-day-edit" onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;">
+    <td class="calendar-day-edit <?= $class_cell ?>" onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;">
+        <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
         <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendar->getStart()) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'isdayevent' => '1')) ?>">+</a>
+        <? endif; ?>
     </td>
-    <? endif; ?>
 <? else : ?>
-    <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
         <td class="calendar-day-edit <?= $class_cell ?>" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
+            <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
             <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendar->getStart()) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'isdayevent' => '1')) ?>">+</a>
+            <? endif; ?>
         </td>
-    <? else : ?>
-        <td class="calendar-day-edit <?= $class_cell ?>" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>></td>
-    <? endif; ?>
 <? endif; ?>

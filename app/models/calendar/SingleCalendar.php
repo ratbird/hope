@@ -51,7 +51,7 @@ class SingleCalendar
 
     public function __construct($range_id, $start = null, $end = null)
     {
-        $this->getRangeObject($range_id);
+        $this->setRangeObject($range_id);
         $this->start = $start ?: 0;
         $this->end = $end ?: Calendar::CALENDAR_END;
         $this->events = new SimpleORMapCollection();
@@ -65,7 +65,7 @@ class SingleCalendar
      * @param string $range_id The id of a course, institute or user.
      * @throws AccessDeniedException
      */
-    private function getRangeObject($range_id)
+    private function setRangeObject($range_id)
     {
         $this->range_object = get_object_by_range_id($range_id);
         if (!is_object($this->range_object)) {
@@ -73,8 +73,8 @@ class SingleCalendar
         }
         $range_map = array(
             'User' => Calendar::RANGE_USER,
-            'Course' => Calendar::RANGE_INST,
-            'Institute' => Calendar::RANGE_SEM
+            'Course' => Calendar::RANGE_SEM,
+            'Institute' => Calendar::RANGE_INST
         );
         $this->range = $range_map[get_class($this->range_object)];
         if ($this->range == Calendar::RANGE_INST
@@ -507,8 +507,8 @@ class SingleCalendar
                         array($this->getRangeId(), $calendar_event));
             }
 
-            if (!$calendar_event
-                    || !$calendar_event->havePermission(Event::PERMISSION_WRITABLE)) {
+            if (!($calendar_event
+                    && $calendar_event->havePermission(Event::PERMISSION_WRITABLE))) {                
                 return false;
             }
 
@@ -529,6 +529,9 @@ class SingleCalendar
                         $deleted += $calendar->deleteEvent($ce);
                     }, 'event_id = ?', array($event_message->event_id));
                 }
+                return $deleted;
+            } else if ($this->getRange() == Calendar::RANGE_SEM) {
+                $deleted = $calendar_event->delete();
                 return $deleted;
             }
         }
@@ -1141,6 +1144,11 @@ class SingleCalendar
      */
     public function createEventMatrix($start, $end, $step)
     {
+        // correction of days where dst starts or ends
+        $dst_offset = (date('I', $this->getStart()) - date('I', $this->getEnd())) * 3600;
+        $start += $dst_offset;
+        $end += $dst_offset;
+        
         $term = array();
         $em = $this->adapt_events($start, $end, $step);
         $max_cols = 0;
@@ -1305,24 +1313,21 @@ class SingleCalendar
      */
     public function adapt_events($start, $end, $step = 900)
     {
-        $tmp_event = array();
+        $tmp_events = array();
         $map_events = array();
-        $dst_corr_start = date('I', $this->getStart());
-        $dst_corr_end = date('I', $this->getEnd());
         for ($i = 0; $i < sizeof($this->events); $i++) {
             $event = $this->events[$i];
             if (($event->getEnd() > $this->getStart() + $start)
                     && ($event->getStart() < $this->getStart() + $end + 3600)) {
+                $cloned_event = clone $event;
                 if ($event->isDayEvent()
                         || ($event->getStart() <= $this->getStart()
                         && $event->getEnd() >= $this->getEnd())) {
-                    $cloned_day_event = clone $event;
-                    $cloned_day_event->setStart($this->getStart());
-                    $cloned_day_event->setEnd($this->getEnd());
-                    $tmp_day_event[] = $cloned_day_event;
+                    $cloned_event->setStart($this->getStart());
+                    $cloned_event->setEnd($this->getEnd());
+                    $tmp_day_event[] = $cloned_event;
                     $map_day_events[] = $i;
                 } else {
-                    $cloned_event = clone $event;
                     $end_corr = $cloned_event->getEnd() % $step;
                     if ($end_corr > 0) {
                         $end_corr = $cloned_event->getEnd() + ($step - $end_corr);
@@ -1334,24 +1339,22 @@ class SingleCalendar
                     if ($cloned_event->getEnd() > ($this->getStart() + $end + 3600)) {
                         $cloned_event->setEnd($this->getStart() + $end + 3600);
                     }
-                    // adjustment of DST-offset
-                    $dst_corr_event_start = date('I', $cloned_event->getStart());
-                    $dst_corr_event_end = date('I', $cloned_event->getEnd());
-                    $cloned_event->setStart($cloned_event->getStart() +
-                            3600 * ($dst_corr_event_start - $dst_corr_start));
-                    $cloned_event->setEnd($cloned_event->getStart() + ($event->getEnd() - $event->getStart()) +
-                            3600 * ($dst_corr_end - $dst_corr_event_end)
-                            + 3600 * ($dst_corr_event_end - $dst_corr_event_start));
-
-                    $tmp_event[] = $cloned_event;
-                    $map_events[] = $i;
+                    $tmp_events[$cloned_event->id . $cloned_event->getStart()] = $cloned_event;
+                    $map_events[$cloned_event->id . $cloned_event->getStart()] = $i;
                 }
             }
         }
-        $collection = new SimpleORMapCollection();
-        $collection->setClassName('Event');
-        $collection->exchangeArray($tmp_event);
-        return array('events' => $tmp_event, 'map' => $map_events, 'day_events' => $tmp_day_event,
+        
+        uasort($tmp_events, function($a, $b) {return $a->start - $b->start;});
+        $map = array();
+        foreach (array_keys($tmp_events) as $key) {
+            $map[] = $map_events[$key];
+        }
+        
+        return array(
+            'events' => array_values($tmp_events),
+            'map' => $map,
+            'day_events' => $tmp_day_event,
             'day_map' => $map_day_events);
     }
 

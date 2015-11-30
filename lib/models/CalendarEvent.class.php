@@ -653,7 +653,7 @@ class CalendarEvent extends SimpleORMap implements Event
     {
         return $this->event->end - $this->event->start;
     }
-
+        
     /**
      * Returns the location.
      * Without permission or the location is not set an empty string is returned.
@@ -851,23 +851,27 @@ class CalendarEvent extends SimpleORMap implements Event
      */
     public function getAccessibilityOptions($permission)
     {
-        switch ($permission) {
-            case Calendar::PERMISSION_OWN :
-            case Calendar::PERMISSION_ADMIN :
-                $options = array(
-                    'PUBLIC' => _('öffentlich'),
-                    'PRIVATE' => _('privat'),
-                    'CONFIDENTIAL' => _('vertraulich')
-                );
-                break;
-            case Calendar::PERMISSION_WRITABLE :
-                $options = array(
-                    'PRIVATE' => _('privat'),
-                    'CONFIDENTIAL' => _('vertraulich')
-                );
-                break;
-            default :
-                $options = array();
+        if ($this->getType() != 'user') {
+            $options = array('PRIVATE' => _('privat'));
+        } else {
+            switch ($permission) {
+                case Calendar::PERMISSION_OWN :
+                case Calendar::PERMISSION_ADMIN :
+                    $options = array(
+                        'PUBLIC' => _('öffentlich'),
+                        'PRIVATE' => _('privat'),
+                        'CONFIDENTIAL' => _('vertraulich')
+                    );
+                    break;
+                case Calendar::PERMISSION_WRITABLE :
+                    $options = array(
+                        'PRIVATE' => _('privat'),
+                        'CONFIDENTIAL' => _('vertraulich')
+                    );
+                    break;
+                default :
+                    $options = array();
+            }
         }
         return $options;
     }

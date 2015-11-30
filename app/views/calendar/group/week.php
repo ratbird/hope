@@ -4,7 +4,7 @@ $width2 = 0;
 $cols = ceil(($settings['end'] - $settings['start'] + 1) * 3600 / $settings['step_week_group']) + 1;
 $start = $settings['start'] * 3600;
 $end = ($settings['end'] + 1) * 3600;
-$wlength = sizeof($calendars[0]) - 1;
+$wlength = count($calendars[0]) - 1;
 // add skip link
 SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
 ?>
@@ -89,32 +89,32 @@ SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
 
                     // display day events
                     $js_events = array(); ?>
-                    <? for ($i = 0; $i < sizeof($adapted['day_events']); $i++) : ?>
+                    <? for ($i = 0; $i < count($adapted['day_events']); $i++) : ?>
                         <? $js_events[] = $day->events[$adapted['day_map'][$i]]; ?>
                     <? endfor; ?>
                     <? if ($day->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                        <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
+                        <td <?= count($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= count($js_events) ? ' calendar-group-events' : '' ?>">
                         <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
                         <a title="<?= strftime(_('Neuer Tagestermin am %x'), $day->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $day->getStart(), 'isdayevent' => '1', 'user_id' => $day->getRangeId())) ?>">+</a>
                     <? else : ?>
-                        <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>"
+                        <td <?= count($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= count($js_events) ? ' calendar-group-events' : '' ?>">
                         <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
                     <? endif;?>
                     </td>
 
                     <? for ($i = $start + $day->getStart(); $i < $end + $day->getStart(); $i += $settings['step_week_group']) : ?>
                         <? $js_events = array(); ?>
-                        <? for ($j = 0; $j < sizeof($adapted['events']); $j++) : ?>
+                        <? for ($j = 0; $j < count($adapted['events']); $j++) : ?>
                             <? if (($adapted['events'][$j]->getStart() <= $i && $adapted['events'][$j]->getEnd() > $i) || ($adapted['events'][$j]->getStart() > $i && $adapted['events'][$j]->getStart() < $i + $settings['step_week_group'])) : ?>
                                 <? $js_events[] = $day->events[$adapted['map'][$j]]; ?>
                             <? endif ?>
                         <? endfor ?>
                         <? if ($day->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
+                            <td <?= count($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= count($js_events) ? ' calendar-group-events' : '' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
                                 <a title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $day->getRangeId())) ?>">+</a>
                         <? else : ?>
-                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
+                            <td <?= count($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= count($js_events) ? ' calendar-group-events' : '' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
                         <? endif; ?>
                         </td>

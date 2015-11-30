@@ -1,13 +1,21 @@
 <? $events = $events ?: $calendar->events ?>
 <? if (sizeof($events)) : ?>
 <div class="calendar-tooltip tooltip-content">
-    <h4><?= htmlReady($calendar->range_object->getFullname('no_title')) ?></h4>
+    <h3><?= htmlReady($calendar->range_object->getFullname('no_title')) ?></h3>
     <? foreach ($events as $event) : ?>
     <div>
-        <? if (date('Ymd', $event->getStart()) == date('Ymd', $event->getStart())) : ?>
-        <?= strftime('%x %X', $event->getStart()) . strftime(' - %X', $event->getStart()) ?>
+        <? if (date('Ymd', $event->getStart()) == date('Ymd', $event->getEnd())) : ?>
+            <? if ($event->isDayEvent()) : ?>
+                <?= strftime('%x ', $event->getStart()) . _(('ganztägig')) ?>
+            <? else : ?>
+                <?= strftime('%x %X', $event->getStart()) . strftime(' - %X', $event->getEnd()) ?>
+            <? endif; ?>
         <? else : ?>
-        <?= strftime('%x %X', $event->getStart()) . strftime(' - %x %X', $event->getStart()) ?>
+            <? if ($event->isDayEvent()) : ?>
+                <?= strftime('%x', $event->getStart()) . strftime(' - %x', $event->getEnd()) . _('(ganztägig)') ?>
+            <? else : ?>
+                <?= strftime('%x %X', $event->getStart()) . strftime(' - %x %X', $event->getEnd()) ?>
+            <? endif; ?>
         <? endif; ?>
     </div>
     <div>

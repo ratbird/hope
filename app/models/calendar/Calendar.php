@@ -105,7 +105,7 @@ class Calendar
                     'statusgruppe_id IN(?) AND user_id IN(?)',
                     array($sg_groups, $calendar_owners));
             foreach ($sg_users as $sg_user) {
-                $groups[] = $sg_user->group;
+                $groups[$sg_user->group->id] = $sg_user->group;
             }
         }
         return $groups;

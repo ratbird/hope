@@ -58,7 +58,7 @@
                                 <td<?= $day_class ?>>
                             <? endif; ?>
                             <? $tooltip = $this->render_partial('calendar/group/_tooltip_year',
-                                    array('aday' => $aday, 'calendars' => $calendars, 'count_list' => $count_list)) ?> 
+                                    array('aday' => $aday, 'calendars' => $calendars, 'count_lists' => $count_lists)) ?> 
                             <? if (trim($tooltip)) : ?>
                                 <table style="width: 100%;">
                                     <tr>

@@ -388,16 +388,27 @@
         instance.element.hide().html(content);
 
         // Adjust size if neccessary
-        if (options.size && options.size === 'auto') {
+        if (options.size && (options.size === 'auto' || options.size === 'fit')) {
             // Render off screen
-            helper = $('<div style="position:absolute;left:-1000px;top:-1000px;">').html(content).appendTo('body');
+            helper = $('<div class="ui-dialog">').addClass(options.dialogClass || dialog_options.dialogClass || '');
+            $('<div class="ui-dialog-content">').html(content).appendTo(helper);
+            helper.css({
+                position: 'absolute',
+                left: '-10000px',
+                top: '-10000px'
+            }).appendTo('body');
             // Hide buttons so they do not account to width or height
             $('[data-dialog-button]', helper).hide();
             // Calculate width and height
-            width  = Math.max(300, Math.min(helper.outerWidth(true) + dialog_margin, width));
-            height = Math.max(200, Math.min(helper.height() + 130, height));
+            // TODO: The value of 113 shouldn't be hardcoded
+            width  = Math.min(helper.outerWidth(true) + dialog_margin, width);
+            height = Math.min(helper.outerHeight(true) + 113, height);
+            if (options.size === 'auto') {
+                width  = Math.max(300, width);
+                height = Math.max(200, height);
+            }
             // Remove helper element
-            helper.remove();
+           helper.remove();
         } else if (options.size && options.size === 'big') {
             width  = $('body').width() * 0.9;
             height = $('body').height() * 0.8;
@@ -431,7 +442,8 @@
         dialog_options = $.extend(dialog_options, {
             width:   width,
             height:  height,
-            buttons: {},
+            dialogClass: options.dialogClass || dialog_options.dialogClass || '',
+            buttons: options.buttons || {},
             title:   $('<div>').text(options.title || '').html(), // kinda like htmlReady()
             modal:   true,
             resizable: options.hasOwnProperty('resize') ? options.resize : true,
@@ -450,7 +462,9 @@
                     link    = options.wiki_link || helpbar_element.attr('href'),
                     element = $('<a class="ui-dialog-titlebar-wiki" target="_blank">').attr('href', link).attr('title', tooltip);
 
-                $(this).siblings('.ui-dialog-titlebar').find('.ui-dialog-titlebar-close').before(element);
+                if (options.wikilink === undefined || options.wikilink !== false) {
+                    $(this).siblings('.ui-dialog-titlebar').find('.ui-dialog-titlebar-close').before(element);
+                }
 
                 instance.open = true;
                 // Execute scripts
@@ -466,7 +480,7 @@
         });
 
         // Create buttons
-        if (!options.hasOwnProperty('buttons') || options.buttons) {
+        if (!options.hasOwnProperty('buttons') || (options.buttons && !$.isPlainObject(options.buttons))) {
             dialog_options.buttons = extractButtons.call(this, instance.element);
             // Create 'close' button
             if (!dialog_options.buttons.hasOwnProperty('cancel')) {

@@ -833,8 +833,8 @@ function TransformInternalLinks($str){
 * creates a modal dialog ensuring that the user is really aware about the action to perform
 *
 * @param   string $question          question of the modal dialog
-* @param   string $approveParams     an array of params for a link to be used on approval
-* @param   string $disapproveParams  an array of params for a link to be used on disapproval
+* @param   array  $approveParams     an array of params for a link to be used on approval
+* @param   array  $disapproveParams  an array of params for a link to be used on disapproval
 * @param   string $baseUrl           if set, this url is used, PHP_SELF otherwise
 *
 * @return  string $dialog            text which contains the dialog
@@ -843,8 +843,8 @@ function TransformInternalLinks($str){
 function createQuestion($question, $approveParams, $disapproveParams = array(), $baseUrl = '?') {
     $template = $GLOBALS['template_factory']->open('shared/question');
 
-    $template->set_attribute('approvalLink', URLHelper::getURL($baseUrl, $approveParams ));
-    $template->set_attribute('disapprovalLink', URLHelper::getURL($baseUrl, $disapproveParams ));
+    $template->set_attribute('approvalLink', URLHelper::getURL($baseUrl, (array)$approveParams));
+    $template->set_attribute('disapprovalLink', URLHelper::getURL($baseUrl, (array)$disapproveParams));
     $template->set_attribute('question', $question);
 
     return $template->render();
@@ -854,8 +854,8 @@ function createQuestion($question, $approveParams, $disapproveParams = array(), 
 * creates a modal dialog ensuring that the user is really aware about the action to perform with formulars
 *
 * @param   string $question          question of the modal dialog
-* @param   string $approveParams     an array of params for a link to be used on approval
-* @param   string $disapproveParams  an array of params for a link to be used on disapproval
+* @param   array  $approveParams     an array of params for a link to be used on approval
+* @param   array  $disapproveParams  an array of params for a link to be used on disapproval
 * @param   string $baseUrl           if set, this url is used, PHP_SELF otherwise
 *
 * @return  string $dialog            text which contains the dialog
@@ -864,8 +864,8 @@ function createQuestion2($question, $approveParams, $disapproveParams = array(),
     $template = $GLOBALS['template_factory']->open('shared/question2');
 
     $template->set_attribute('approvalLink', $baseUrl);
-    $template->set_attribute('approvParams', $approveParams);
-    $template->set_attribute('disapproveParams', $disapproveParams);
+    $template->set_attribute('approvParams', (array)$approveParams);
+    $template->set_attribute('disapproveParams', (array)$disapproveParams);
     $template->set_attribute('question', $question);
 
     return $template->render();

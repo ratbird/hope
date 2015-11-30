@@ -3482,7 +3482,7 @@ div.messagebox_success {
   background-color: white;
   background-image: url("../images/messagebox/success.png");
   background-size: 32px 32px;
-  border-color: #00962d;
+  border-color: #008512;
 }
 div.messagebox_error {
   color: #000;
@@ -3492,18 +3492,18 @@ div.messagebox_error {
   border-color: #d60000;
 }
 div.messagebox_exception {
-  color: #d8000c;
-  background-color: #ffbaba;
+  color: #d60000;
+  background-color: #f7cccc;
   background-image: url("../images/messagebox/exception.png");
   background-size: 32px 32px;
   border-color: #d60000;
 }
 div.messagebox_warning {
-  color: #b06500;
-  background-color: #f7e98e;
+  color: #f26e00;
+  background-color: #f7a866;
   background-image: url("../images/messagebox/advice.png");
   background-size: 32px 32px;
-  border-color: #d5c76c;
+  border-color: #f58b33;
 }
 .modaloverlay {
   background: rgba(0, 0, 0, 0.5);
@@ -3532,8 +3532,9 @@ div.messagebox_warning {
   margin: auto;
   position: relative;
   max-height: 50%;
+  min-width: 30em;
   max-width: 50%;
-  width: 50%;
+  width: auto;
   color: #000;
   border-color: #ffbd33;
   background-color: white;
@@ -3551,6 +3552,16 @@ div.messagebox_warning {
 .modaloverlay .messagebox .buttons {
   margin-top: 1em;
   text-align: center;
+}
+.modaloverlay .ui-dialog {
+  display: inline-block;
+  zoom: 1;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  vertical-align: middle;
+  margin: auto;
 }
 #index .messagebox {
   margin: 5px 0;
@@ -6125,7 +6136,7 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close {
   width: 32px;
   height: 32px;
-  background: #1f3f70;
+  background: inherit;
   border: 0;
   line-height: 32px;
   margin-top: -16px;
@@ -6135,7 +6146,7 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close:hover {
   width: 32px;
   height: 32px;
-  background: #1f3f70;
+  background: inherit;
   border: 0;
   margin-top: -16px;
   padding: 0;
@@ -6321,6 +6332,41 @@ div.available-widgets .studip-widget {
 }
 .modal-overlay-ajax.modal-overlay-dark {
   background-image: none, url("../images/ajax-indicator-black.svg");
+}
+.ui-dialog.studip-confirmation {
+  min-width: 30em;
+}
+.ui-dialog.studip-confirmation .ui-dialog-titlebar {
+  background-color: #ffbd33;
+  color: black;
+  text-align: left;
+}
+.ui-dialog.studip-confirmation .ui-dialog-titlebar-close .ui-icon,
+.ui-dialog.studip-confirmation .ui-dialog-titlebar-close .ui-icon:hover {
+  background-image: url("../images/icons/blue/decline.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+}
+.ui-dialog.studip-confirmation .ui-dialog-content {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-image: url("../images/icons/yellow/question-circle-full.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  background-position: 12px 8px;
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+  font-weight: bold;
+  padding: 15px 15px 15px 55px;
+  text-align: left;
+}
+.ui-dialog.studip-confirmation .ui-dialog-buttonset > * {
+  display: inline-block;
 }
 ul,
 ol {

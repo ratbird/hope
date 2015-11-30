@@ -22,7 +22,7 @@
 
     .ui-dialog-titlebar-close {
         .square(32px);
-        background: @brand-color-darker;
+        background: inherit;
         border: 0;
         line-height:32px;
         margin-top:-16px;
@@ -31,7 +31,7 @@
 
         &:hover {
             .square(32px);
-            background: @brand-color-darker;
+            background: inherit;
             border: 0;
             margin-top:-16px;
             padding: 0;
@@ -151,3 +151,33 @@
     }
 }
 
+// Confirmation dialog (like createQuestion)
+.ui-dialog.studip-confirmation {
+    min-width: 30em;
+
+    .ui-dialog-titlebar {
+        background-color: @yellow;
+        color: black;
+        text-align: left;
+    }
+    .ui-dialog-titlebar-close .ui-icon {
+        &, &:hover {
+            .retina-background-icon('blue/decline.svg');
+        }
+    }
+
+    .ui-dialog-content {
+        .box-sizing(border-box);
+        .retina-background-icon('yellow/question-circle-full.svg');
+        background-position: 12px 8px;
+        background-repeat: no-repeat;
+        background-size: 32px 32px;
+        font-weight: bold;
+        padding: 15px 15px 15px 55px;
+        text-align: left;
+    }
+    .ui-dialog-buttonset > * {
+        display: inline-block;
+    }
+    
+}

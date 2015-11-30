@@ -1,14 +1,14 @@
 /* --- MessageBoxes --------------------------------------------------------- */
 div.messagebox {
     background: no-repeat 10px 10px;
-	border: 2px solid;
+    border: 2px solid;
     font-size: 12pt;
     font-weight: bold;
     margin: 5px 0;
     padding: 15px 15px 15px 55px;
     position: relative;
     text-align: left;
-    
+
     &:first-child {
         margin-top: 0;
     }
@@ -61,16 +61,16 @@ div.messagebox_details {
         color: @color;
         background-color: @background-color;
         background-image: url("@{image-path}/messagebox/@{image}.png");
-    	background-size: 32px 32px;
+        background-size: 32px 32px;
         border-color: @border-color;
     }
 }
 
-.messagebox(info,      #000,    white, @base-color);
-.messagebox(success,   #000,    white, #00962d);
-.messagebox(error,     #000,    white, #d60000);
-.messagebox(exception, #d8000c, #ffbaba, #d60000);
-.messagebox(warning,   #b06500, #f7e98e, #d5c76c, "advice");
+.messagebox(info,      #000,    white,      @base-color);
+.messagebox(success,   #000,    white,      @dark-green);
+.messagebox(error,     #000,    white,      @red);
+.messagebox(exception, @red,    @red-20,    @red);
+.messagebox(warning,   @orange, @yellow-60, @yellow-80, 'advice');
 
 // Define modal messagebox
 .modaloverlay {
@@ -101,16 +101,17 @@ div.messagebox_details {
 
         position: relative;
         max-height: 50%;
+        min-width: 30em;
         max-width: 50%;
-        width: 50%;
+        width: auto;
 
         color: #000;
-        border-color: #ffbd33;
+        border-color: @yellow;
         background-color: white;
         background-image: url("@{image-path}/messagebox/question.png");
-       	background-size: 32px 32px;
-		.box-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
-		
+        background-size: 32px 32px;
+        .box-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
+
         .content {
             max-height: 200px;
             overflow: auto;
@@ -120,6 +121,14 @@ div.messagebox_details {
             margin-top: 1em;
             text-align: center;
         }
+    }
+    .ui-dialog {
+        display: inline-block;
+        zoom: 1; // IE :(
+        .box-sizing(border-box);
+        position: relative;
+        vertical-align: middle;
+        margin: auto;
     }
 }
 

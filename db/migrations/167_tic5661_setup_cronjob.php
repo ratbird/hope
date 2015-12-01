@@ -26,8 +26,8 @@ class Tic5661SetupCronjob extends Migration
 
     public function down()
     {
-        $task_id = CronjobTask::findByFilename($this->getFilename())->task_id;
-        CronjobTask::unregisterTask($task_id);
+        $task_id = CronjobTask::findOneByFilename($this->getFilename())->task_id;
+        CronjobScheduler::unregisterTask($task_id);
     }
 
     private function getFilename()

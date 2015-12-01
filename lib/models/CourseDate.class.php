@@ -95,7 +95,6 @@ class CourseDate extends SimpleORMap {
             'foreign_key' => 'termin_id',
             'assoc_foreign_key' => 'assign_user_id',
             'on_delete' => 'delete',
-            'on_store' => 'store'
         );
         $config['default_values']['date_typ'] = 1;
         parent::configure($config);

@@ -24,7 +24,7 @@ use Studip\Button, Studip\LinkButton;
     <input style="width: 90%;" type="text" name="detail_name" id="detail_name" value="<?= htmlReady($detail_name) ?>"><br>
 
     <label for="content"><?= _('Seiteninhalt')?></label><br>
-    <textarea style="width: 90%;height: 15em;" name="content" id="content" class="add_toolbar"><?= htmlReady($content) ?></textarea><br>
+    <textarea style="width: 90%;height: 15em;" name="content" id="content" class="add_toolbar wysiwyg"><?= htmlReady($content) ?></textarea><br>
 
     <input type="hidden" name="detail_id" value="<?= $currentdetail?>">
 <? endif; ?>

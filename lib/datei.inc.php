@@ -1804,7 +1804,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     //Contentbereich erstellen
     if ($change == $folder_id) { //Aenderungsmodus, zweiter Teil
         $content .= '<textarea name="change_description"'
-            . ' style="width:98%" class="add_toolbar"'
+            . ' style="width:98%" class="add_toolbar wysiwyg"'
             . ' aria-label="Beschreibung des Ordners eingeben"'
             . ' rows="3">'
             . formatReady($result["description"])

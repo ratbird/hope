@@ -37,7 +37,7 @@ jQuery(function ($) {
     // hidden, the editor does not function properly; therefore attach to
     // visible textareas only
     function replaceVisibleTextareas() {
-        $('textarea.add_toolbar').each(function() {
+        $('textarea.wysiwyg').each(function() {
             var editor = CKEDITOR.dom.element.get(this).getEditor();
             if (!editor && $(this).is(':visible')) {
                 replaceTextarea(this);

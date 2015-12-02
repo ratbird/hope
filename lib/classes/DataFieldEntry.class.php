@@ -83,7 +83,7 @@ abstract class DataFieldEntry
                         $object_class = SeminarCategories::GetBySeminarId($rangeID);
                     }
                     $clause2 = "object_class = :object_class OR object_class IS NULL";
-                    $parameters[':object_class'] = (int) $object_class;
+                    $parameters[':object_class'] = (int) $object_class->id;
                     break;
                 case 'inst':
                 case 'fak':

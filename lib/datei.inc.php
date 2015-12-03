@@ -1797,9 +1797,13 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         }
         $content .=  '<hr>';
     }
-    if ($folder_tree->isGroupFolder($folder_id)){
-        $content .=  sprintf(_("Dieser Ordner gehört der Gruppe <b>%s</b>. Nur Mitglieder dieser Gruppe können diesen Ordner sehen."),
-        htmlReady(GetStatusgruppeName($result["range_id"]))) . '<hr>';
+    $is_group_folder = $folder_tree->isGroupFolder($folder_id);
+    if ($is_group_folder){
+        $content .=  sprintf(
+            _('Dieser Ordner gehört der Gruppe <b>%s</b>. Nur Mitglieder dieser Gruppe können diesen Ordner sehen.'
+                . ' Dieser Ordner kann nicht verschoben oder kopiert werden.'),
+            htmlReady(GetStatusgruppeName($result["range_id"]))
+        ) . '<hr>';
     }
     //Contentbereich erstellen
     if ($change == $folder_id) { //Aenderungsmodus, zweiter Teil
@@ -1920,7 +1924,9 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
                         )
                     )
                 ) {
-                    $edit.= LinkButton::create(_("Verschieben"), URLHelper::getURL("?open=".$folder_id."_m_#anker"));
+                    if (!$is_issue_folder && !$is_group_folder) {
+                        $edit.= LinkButton::create(_("Verschieben"), URLHelper::getURL("?open=".$folder_id."_m_#anker"));
+                    }
                 }
 
                 # Knopf: kopieren
@@ -1931,7 +1937,9 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
                         && !$folder_tree->isExerciseFolder($folder_id, $user->id)
                     )
                 ) {
-                    $edit.= LinkButton::create(_("Kopieren"), URLHelper::getURL("?open=".$folder_id."_co_#anker"));
+                    if (!$is_issue_folder && !$is_group_folder) {
+                        $edit.= LinkButton::create(_("Kopieren"), URLHelper::getURL("?open=".$folder_id."_co_#anker"));
+                    }
                 }
             }
 

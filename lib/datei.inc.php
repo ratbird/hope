@@ -997,11 +997,11 @@ function form($refresh = FALSE)
         $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></label></td></tr>";
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<textarea name=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></textarea></label>&nbsp;</td></tr>";
-        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'Absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
     } else if ($folder_system_data['zipupload']) {
-        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'Absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
     } else {
-        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'Absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
     }
     $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
@@ -1446,9 +1446,9 @@ function link_form ($range_id, $updating=FALSE)
 
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<textarea name=\"description\" id=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea></label>&nbsp;</td></tr>";
-        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'Absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
     } else
-        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'Absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
     $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
     $print .= '<div class="button-group">';
@@ -2918,25 +2918,32 @@ function get_upload_file_path ($document_id)
  * @param string MD5 id of the file
  * @return bool
  */
-function check_protected_download($document_id)
-{
+function check_protected_download($document_id) {
     $ok = true;
-    if(Config::GetInstance()->getValue('ENABLE_PROTECTED_DOWNLOAD_RESTRICTION')){
+    if (Config::GetInstance()->getValue('ENABLE_PROTECTED_DOWNLOAD_RESTRICTION')) {
         $doc = new StudipDocument($document_id);
-        if($doc->getValue('protected')){
+        if ($doc->getValue('protected')) {
             $ok = false;
             $range_id = $doc->getValue('seminar_id');
-            if(get_object_type($range_id) == 'sem'){
+
+            if (get_object_type($range_id) == 'sem') {
                 $seminar = Seminar::GetInstance($range_id);
                 $timed_admission = $seminar->getAdmissionTimeFrame();
-                if( $seminar->isPasswordProtected() ||
-                    $seminar->isAdmissionLocked()
-                    || ($timed_admission['end_time'] > 0 && $timed_admission['end_time'] < time())){
+
+                if ($seminar->isPasswordProtected() ||
+                        $seminar->isAdmissionLocked()
+                        || ($timed_admission['end_time'] > 0 && $timed_admission['end_time'] < time())) {
                     $ok = true;
+                } else if (StudygroupModel::isStudygroup($range_id)) {
+                    $studygroup = Seminar::GetInstance($range_id);
+                    if ($studygroup->admission_prelim == 1) {
+                        $ok = true;
+                    }
                 }
             }
         }
     }
+
     return $ok;
 }
 

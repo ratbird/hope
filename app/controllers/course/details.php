@@ -63,7 +63,7 @@ class Course_DetailsController extends AuthenticatedController
     {
 
         $this->prelim_discussion = vorbesprechung($this->course->id);
-        $this->title             = $this->course->getFullname('number-type-name');
+        $this->title             = $this->course->getFullname();
         $this->course_domains    = UserDomain::getUserDomainsForSeminar($this->course->id);
         $this->sem = new Seminar($this->course);
         if ($studienmodulmanagement = PluginEngine::getPlugin('StudienmodulManagement')) {

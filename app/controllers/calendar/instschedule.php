@@ -75,12 +75,15 @@ class Calendar_InstscheduleController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
         PageLayout::setTitle($GLOBALS['SessSemName']['header_line'].' - '._('Veranstaltungs-Stundenplan'));
 
+        $zoom = Request::int('zoom', 0);
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
-        $this->calendar_view->setHeight(40 + (20 * Request::int('zoom', 0)));
+        $this->calendar_view->setHeight(40 + (20 * $zoom));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
 
+        URLHelper::addLinkParam('zoom', $zoom);
+        URLHelper::addLinkParam('semester_id', $this->current_semester['semester_id']);
 
         $style_parameters = array(
             'whole_height' => $this->calendar_view->getOverallHeight(),

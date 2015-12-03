@@ -53,18 +53,11 @@ $infobox['content'][2]['eintrag'] = array (
     )
 );
 
-$semester_chooser  = '<form method="post" action="'. $controller->url_for('calendar/instschedule') .'">';
-$semester_chooser .= CSRFProtection::tokenTag();
-$semester_chooser .= '<select name="semester_id">';
-foreach (array_reverse($semesters) as $semester) :
-    $semester_chooser .= '<option value="'. $semester['semester_id'] .'"';
-    if ($current_semester['semester_id'] == $semester['semester_id']) :
-        $semester_chooser .= ' selected="selected"';
-    endif;
-    $semester_chooser .= '>'. htmlReady($semester['name']) .'</option>';
-endforeach;
-$semester_chooser .= '</select> ';
-$semester_chooser .= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'title' => _('auswählen'))).'</form>';
+$semester_chooser = $this->render_partial('calendar/schedule/_semester_chooser.php', array(
+    'inst_mode' => true,
+    'semesters' => array_reverse($semesters),
+    'current_semester' => $current_semester
+));
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $semester_chooser,

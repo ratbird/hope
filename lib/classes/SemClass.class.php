@@ -124,6 +124,7 @@ class SemClass implements ArrayAccess
             'resources'           => 'CoreResources',
             'calendar'            => 'CoreCalendar',
             'elearning_interface' => 'CoreElearningInterface',
+            'personal'            => 'personal'
         );
         $modules = array(
             'CoreOverview'        => array('activated' => 1, 'sticky' => 1),

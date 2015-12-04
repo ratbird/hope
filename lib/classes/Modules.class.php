@@ -67,7 +67,7 @@ class Modules {
 
     function getLocalModules($range_id, $range_type = '', $modules = false, $type = false) {
         if (!$range_type) {
-            $range_type = get_object_type($range_id, array('sem','inst','fak'));
+            $range_type = get_object_type($range_id, array('sem','inst'));
         }
 
         if ($modules === false || $type === false) {
@@ -137,11 +137,10 @@ class Modules {
         }
 
         foreach ($this->registered_modules as $slot => $val) {
-            if ($sem_class[$slot] && $val[$range_type == 'sem' ? 'sem' : 'inst']) {
-                $temp = $sem_class->isModuleActivated($sem_class->getSlotModule($slot));
-            }
-            if ($temp && $this->checkGlobal($slot)) {
-                $this->setBit($bitmask, $val['id']);
+            if ($val[$range_type == 'sem' ? 'sem' : 'inst']) {
+                if ($sem_class->isModuleActivated($sem_class->getSlotModule($slot)) && $this->checkGlobal($slot)) {
+                    $this->setBit($bitmask, $val['id']);
+                }
             }
         }
         return $bitmask;

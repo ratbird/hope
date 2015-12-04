@@ -53,7 +53,7 @@ class Course_ManagementController extends AuthenticatedController
 
     function change_visibility_action()
     {
-        if (get_config('ALLOW_DOZENT_VISIBILITY') && !LockRules::Check($GLOBALS['SessionSeminar'], 'seminar_visibility') && Seminar_Session::check_ticket(Request::option('studip_ticket'))) {
+        if ((get_config('ALLOW_DOZENT_VISIBILITY') || $GLOBALS['perm']->have_perm('admin')) && !LockRules::Check($GLOBALS['SessionSeminar'], 'seminar_visibility') && Seminar_Session::check_ticket(Request::option('studip_ticket'))) {
             $course = Course::findCurrent();
             if (!$course->visible) {
                 log_event("SEM_VISIBLE", $course->id);

@@ -102,7 +102,7 @@ class SemClass implements ArrayAccess
      * @param integer $type   institute type
      * @return SemClass
      */
-    static public function getDefaultInstituteClass($type) 
+    static public function getDefaultInstituteClass($type)
     {
         global $INST_MODULES;
 
@@ -132,7 +132,7 @@ class SemClass implements ArrayAccess
 
         foreach ($slots as $slot => $module) {
             $data[$slot] = $module;
-            $modules[$module] = array('activated' => 1, 'sticky' => (int) $INST_MODULES[$type][$slot]);
+            $modules[$module] = array('activated' => (int) $INST_MODULES[$type][$slot], 'sticky' => 0);
         }
         $data['modules'] = json_encode($modules);
 

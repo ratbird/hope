@@ -67,7 +67,7 @@ class Modules {
 
     function getLocalModules($range_id, $range_type = '', $modules = false, $type = false) {
         if (!$range_type) {
-            $range_type = get_object_type($range_id, array('sem','inst'));
+            $range_type = get_object_type($range_id, array('sem','inst','fak'));
         }
 
         if ($modules === false || $type === false) {
@@ -106,20 +106,20 @@ class Modules {
                 }
             } else {
                 $modules_list[$key] = 0;
+            }
         }
-        }
-
         return $modules_list;
     }
 
     function getDefaultBinValue($range_id, $range_type = '', $type = false) {
-        global $SEM_TYPE, $SEM_CLASS, $INST_MODULES;
+        global $SEM_TYPE, $SEM_CLASS;
 
         $bitmask = 0;
-        if (!$range_type)
-            $range_type = get_object_type($range_id);
+        if (!$range_type) {
+            $range_type = get_object_type($range_id, array('sem','inst'));
+        }
 
-        if ($type === false){
+        if ($type === false) {
             if ($range_type == "sem") {
                 $query = "SELECT status FROM seminare WHERE Seminar_id = ?";
             } else {
@@ -131,23 +131,19 @@ class Modules {
         }
 
         if ($range_type == 'sem') {
-            $sc = $SEM_CLASS[$SEM_TYPE[$type]['class']];
+            $sem_class = $SEM_CLASS[$SEM_TYPE[$type]['class']];
+        } else {
+            $sem_class = SemClass::getDefaultInstituteClass($type);
         }
 
         foreach ($this->registered_modules as $slot => $val) {
-            if ($range_type == 'sem') {
-                $temp = $sc[$slot];
-                if ($temp && $val['sem']) {
-                    $temp = $sc->isModuleActivated($sc->getSlotModule($slot));
-                }
-            } else {
-                $temp = $INST_MODULES[$INST_MODULES[$type] ? $type : 'default'][$key];
+            if ($sem_class[$slot] && $val[$range_type == 'sem' ? 'sem' : 'inst']) {
+                $temp = $sem_class->isModuleActivated($sem_class->getSlotModule($slot));
             }
-            if ($temp and (!$val['const'] or $GLOBALS[$val['const']])) {
+            if ($temp && $this->checkGlobal($slot)) {
                 $this->setBit($bitmask, $val['id']);
             }
         }
-
         return $bitmask;
     }
 

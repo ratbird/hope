@@ -72,9 +72,6 @@ class Institute_OverviewController extends AuthenticatedController
                                                          'href'  => 'rss.php?id='.$rss_id));
             }
         }
-        // list of used modules
-        $Modules = new Modules;
-        $modules = $Modules->getLocalModules($this->institute_id);
 
         URLHelper::bindLinkParam("inst_data", $this->institut_main_data);
 

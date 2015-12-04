@@ -91,6 +91,8 @@ class Modules {
         }
         if ($range_type == 'sem') {
             $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$type]['class']];
+        } else {
+            $sem_class = SemClass::getDefaultInstituteClass($type);
         }
         foreach ($this->registered_modules as $key => $val) {
             if ($sem_class) {

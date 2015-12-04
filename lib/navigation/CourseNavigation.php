@@ -54,9 +54,10 @@ class CourseNavigation extends Navigation
         // list of used modules
         $Modules = new Modules();
         $modules = $Modules->getLocalModules($SessSemName[1], $SessSemName['class'], false, $SessSemName['art_num']);
-        $sem_class = $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']];
-        if (!$sem_class || $SessSemName['class'] == "inst") {
-            $sem_class = SemClass::getDefaultSemClass();
+        if ($SessSemName['class'] === 'sem') {
+            $sem_class = $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']] ?: SemClass::getDefaultSemClass();
+        } else {
+            $sem_class = SemClass::getDefaultInstituteClass($SessSemName['art_num']);
         }
 
         // general information

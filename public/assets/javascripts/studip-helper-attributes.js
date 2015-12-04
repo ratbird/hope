@@ -29,10 +29,7 @@
     }).on('ready dialog-update', function () {
         $(':checkbox[data-proxyfor]').each(function () {
             var proxied = $(this).data('proxyfor');
-
             // The following seems like a hack but works perfectly fine.
-            // The attribute needs to be changed so the previous event handler
-            // will work
             $(proxied).attr('data-proxiedby', true).data('proxiedby', this);
         }).trigger('update.proxy');
     });
@@ -43,7 +40,7 @@
     $(document).on('change', ':checkbox[data-activates]', function () {
         var activates = $(this).data('activates'),
             activated = $(this).prop('checked') || $(this).prop('indeterminate') || false;
-        $(activates).prop('disabled', !activated).trigger('update.proxy');
+        $(activates).attr('disabled', !activated).trigger('update.proxy');
     }).ready(function () {
         $(':checkbox[data-activates]').trigger('change');
     });
@@ -54,7 +51,7 @@
     $(document).on('change update.proxy', 'select[data-activates]', function () {
         var activates = $(this).data('activates'),
             disabled = $(this).is(':disabled') || $(this).val().length === 0;
-        $(activates).prop('disabled', disabled);
+        $(activates).attr('disabled', disabled);
     }).ready(function () {
         $('select[data-activates]').trigger('change');
     });
@@ -111,6 +108,7 @@
                         || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
 
             STUDIP.Dialog.show(question, {
+                id: 'confirmation-dialog',
                 title: 'Bitte bestätigen Sie die Aktion'.toLocaleString(),
                 size: 'fit',
                 wikilink: false,
@@ -119,7 +117,7 @@
                     accept: {
                         text: 'Ja'.toLocaleString(),
                         click: function () {
-                            STUDIP.Dialog.close();
+                            STUDIP.Dialog.close({id: 'confirmation-dialog'});
 
                             // We need to trigger the native event because for
                             // some reason, jQuery's .trigger() won't always
@@ -131,7 +129,7 @@
                     cancel: {
                         text: 'Nein'.toLocaleString(),
                         click: function () {
-                            STUDIP.Dialog.close();
+                            STUDIP.Dialog.close({id: 'confirmation-dialog'});
                         },
                         'class': 'cancel'
                     }

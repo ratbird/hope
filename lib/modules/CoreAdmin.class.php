@@ -74,13 +74,13 @@ class CoreAdmin implements StudipModule {
                         $main->addSubNavigation('copy', $item);
                     }
 
-                    if (get_config('ALLOW_DOZENT_ARCHIV')) {
+                    if (get_config('ALLOW_DOZENT_ARCHIV') || $GLOBALS['perm']->have_perm('admin')) {
                         $item = new Navigation(_('Veranstaltung archivieren'), 'archiv_assi.php');
                         $item->setImage('icons/16/blue/remove/seminar.png');
                         $main->addSubNavigation('archive', $item);
                     }
 
-                    if (get_config('ALLOW_DOZENT_VISIBILITY') && !LockRules::Check($course_id, 'seminar_visibility')) {
+                    if ((get_config('ALLOW_DOZENT_VISIBILITY') || $GLOBALS['perm']->have_perm('admin')) && !LockRules::Check($course_id, 'seminar_visibility')) {
                         $is_visible = Course::findCurrent()->visible;
                         $item = new Navigation(_('Sichtbarkeit ändern') . ' (' .  ($is_visible ? _('sichtbar') : _('unsichtbar')) . ')', 'dispatch.php/course/management/change_visibility');
                         $item->setImage('icons/16/blue/visibility-' . ($is_visible ? 'visible' : 'invisible' ). '.png');

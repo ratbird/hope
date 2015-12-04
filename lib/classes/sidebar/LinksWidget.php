@@ -27,10 +27,13 @@ class LinksWidget extends ListWidget
      * @param bool   $active Pass true if the link is currently active,
      *                       defaults to false
      */
-    public function &addLink($label, $url, $icon = null, $attributes = array())
+    public function &addLink($label, $url, $icon = null, $attributes = array(), $index = null)
     {
+        if ($index === null) {
+            $index = 'link-' . md5($label.$url);
+        }
         $element = new LinkElement($label, $url, $icon, $attributes);
-        $this->addElement($element, 'link-' . md5(uniqid('link', true)));
+        $this->addElement($element, $index);
         return $element;
     }
 }

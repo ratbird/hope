@@ -117,7 +117,16 @@ class Widget
         }
         return $this->elements[$index];
     }
-   
+
+    /**
+     * Returns all elements of the widget.
+     * @return array of WidgetElement
+     */
+    public function getElements()
+    {
+        return $this->elements;
+    }
+
     /**
      * Removes the element at the specified position.
      *

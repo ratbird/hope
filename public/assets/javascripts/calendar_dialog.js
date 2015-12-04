@@ -16,7 +16,7 @@ STUDIP.CalendarDialog = {
             'type': "post"
         });
         jQuery(form).closest(".ui-dialog-content").dialog("close");
-        STUDIP.Dialog.fromURL(jQuery("#calendar-open-manageaccess").attr("action"));
+        STUDIP.Dialog.fromURL(jQuery("#calendar-open-manageaccess").attr("href"));
         return false;
     },
     

@@ -158,7 +158,7 @@
         // This will also set this date to the maximum allowed date - 1 day
         // if it is currently later than the allowed maximum date.
         '<': function (selector) {
-            STUDIP.UI.Datepicker.dataHandlers.notLaterThan.call(this, selector, 1);
+            STUDIP.UI.Datepicker.dataHandlers['<='].call(this, selector, 1);
         },
         // Ensure this date is not earlier (>=) than another date by setting 
         // the minimum allowed date to the other date.
@@ -195,7 +195,7 @@
         // This will also set this date to the minimum allowed date + 1 day
         // if it is currently earlier than the allowed minimum date.
         '>': function (selector) {
-            STUDIP.UI.Datepicker.dataHandlers.notEarlierThan.call(this, selector, 1);
+            STUDIP.UI.Datepicker.dataHandlers['>='].call(this, selector, 1);
         }
     };
 

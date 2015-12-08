@@ -2136,6 +2136,14 @@ function studip_default_exception_handler($exception) {
     exit;
 }
 
+/**
+ * Converts a string to camelCase.
+ *
+ * @param String $string  The string that should be converted
+ * @param bool   $ucfirst Uppercase the very first character as well
+ *                        (optional, defaults to false)
+ * @return String containing the converted input string
+ */
 function strtocamelcase($string, $ucfirst = false) {
     $string = strtolower($string);
     $chunks = preg_split('/\W+/', $string);
@@ -2148,6 +2156,12 @@ function strtocamelcase($string, $ucfirst = false) {
     return implode($chunks);
 }
 
+/**
+ * Converts a string to snake_case.
+ *
+ * @param String $string  The string that should be converted
+ * @return String containing the converted input string
+ */
 function strtosnakecase($string) {
     $string = preg_replace('/\W+/', '_', $string);
     $string = strtolower($string);

@@ -141,6 +141,10 @@
             return this.instances.hasOwnProperty(id);
         },
         getInstance: function (id) {
+            if (this.stack.length === 0) {
+                this.disableScrolling();
+            }
+
             id = id || 'default';
             if (!this.hasInstance(id)) {
                 this.instances[id] = {
@@ -162,12 +166,28 @@
                 var index = this.stack.indexOf(id);
                 this.stack.splice(index, 1);
             }
+
+            if (this.stack.length === 0) {
+                this.enableScrolling();
+            }
         },
         shouldOpen: function () {
             return $(window).innerWidth() >= 800 && $(window).innerHeight() >= 400;
         },
         handlers: {
             header: {}
+        },
+        disableScrolling: function () {
+            $('html,body').css({
+                overflow: 'hidden',
+                height: '100%'
+            });
+        },
+        enableScrolling: function () {
+            $('html,body').css({
+                overflow: '',
+                height: ''
+            });
         }
     };
 
@@ -408,7 +428,7 @@
                 height = Math.max(200, height);
             }
             // Remove helper element
-           helper.remove();
+            helper.remove();
         } else if (options.size && options.size === 'big') {
             width  = $('body').width() * 0.9;
             height = $('body').height() * 0.8;

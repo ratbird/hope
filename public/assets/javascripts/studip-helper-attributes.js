@@ -108,10 +108,18 @@
                         || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
 
             STUDIP.Dialog.confirm(question, function () {
+                var content = $(event.target).data().confirm;
+
                 // We need to trigger the native event because for
                 // some reason, jQuery's .trigger() won't always
-                // work
+                // work. Thus the data-confirm attribute will be removed
+                // so that the original event can be executed
                 $(event.target).removeAttr('data-confirm').get(0)[event.type]();
+
+                // Reapply the data-confirm attribute
+                window.setTimeout(function () {
+                    $(event.target).attr('data-confirm', content);
+                }, 0);
             });
         }
     }

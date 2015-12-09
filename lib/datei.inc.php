@@ -2038,14 +2038,13 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     $query = "SELECT ". $_fullname_sql['full'] ." AS fullname , username, folder_id, a.range_id, a.user_id, name, a.description, a.mkdate, a.chdate FROM folder a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.folder_id = '$folder_id' ORDER BY a.name, a.chdate";
     $result = $db->query($query)->fetch();
 
-    $depth = $folder_tree->getItemPath($folder_id);
-    $depth = count(explode(" / ", $depth));
-    print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\"".($rechte ? " class=\"draggable_folder\"" : "").">";
+    $depth = count($folder_tree->getParents($folder_id));
+    print "<div id=\"folder_".($depth > 2 ? $result['range_id'] : "root")."_".$countfolder."\"".($rechte ? " class=\"draggable_folder\"" : "").">";
     print "<div style=\"display:none\" id=\"getmd5_fo".$result['range_id']."_".$countfolder."\">".$folder_id."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
 
     //Abzweigung, wenn Ordner ein Unterordner ist
-    if ($depth > 3) //Warum gerade 3, soll jeder selbst rausfinden
+    if ($depth > 2) // root > folder > subfolder
         print "<td class=\"tree-elbow-end\">" . Assets::img("datatree_2.gif") . "</td>";
     else
         print "<td></td>";
@@ -2075,7 +2074,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\" id=\"droppable_folder_$droppable_folder\"><tr>";
 
     // -> Pfeile zum Verschieben (bzw. die Ziehfläche)
-    if (($rechte) && ($depth > 3)) {
+    if (($rechte) && ($depth > 2)) {
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$folder_id."\">";
         if (($position == "middle") || ($position == "bottom")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.$folder_id)."_mfou_\" title=\""._("Nach oben verschieben").

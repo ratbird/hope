@@ -266,7 +266,7 @@ class MessagesController extends AuthenticatedController {
                         $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
                     }
                 }
-                $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
+                $this->default_message['subject'] = substr($old_message['subject'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
                 $user = new MessageUser();
                 $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
                 $this->default_message->receivers[] = $user;

@@ -178,16 +178,10 @@
             header: {}
         },
         disableScrolling: function () {
-            $('html,body').css({
-                overflow: 'hidden',
-                height: '100%'
-            });
+            $('html').css('overflow', 'hidden');
         },
         enableScrolling: function () {
-            $('html,body').css({
-                overflow: '',
-                height: ''
-            });
+            $('html').css('overflow', '');
         }
     };
 
@@ -514,7 +508,10 @@
         }
 
         // Blur background
-        $('#layout_wrapper').css('filter', 'blur(' + STUDIP.Dialog.stack.length + 'px)');
+        $('#layout_wrapper').css({
+            WebkitFilter: 'blur(' + STUDIP.Dialog.stack.length + 'px)',
+            filter: 'blur(' + STUDIP.Dialog.stack.length + 'px)'
+        });
 
         // Create/update dialog
         instance.element.dialog(dialog_options);
@@ -554,7 +551,10 @@
             STUDIP.Dialog.removeInstance(options.id);
 
             // Remove background blur
-            $('#layout_wrapper').css('filter', 'blur(' + STUDIP.Dialog.stack.length + 'px)');
+            $('#layout_wrapper').css({
+                WebkitFilter: 'blur(' + STUDIP.Dialog.stack.length + 'px)',
+                filter: 'blur(' + STUDIP.Dialog.stack.length + 'px)'
+            });
         }
 
         if (options['reload-on-close']) {

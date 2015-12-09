@@ -32,7 +32,7 @@ class Admission_UserListController extends AuthenticatedController {
         } else {
             $layout = $GLOBALS['template_factory']->open('layouts/base');
             $this->set_layout($layout);
-            PageLayout::setTitle(_('Nutzerlisten'));
+            PageLayout::setTitle(_('Personenlisten'));
             Navigation::activateItem('/tools/coursesets/userlists');
         }
         PageLayout::addSqueezePackage('admission');
@@ -63,29 +63,46 @@ class Admission_UserListController extends AuthenticatedController {
     public function configure_action($userlistId='') {
         if ($userlistId) {
             $this->userlist = new AdmissionUserList($userlistId);
+            $this->userlist_id = $userlistId;
+            PageLayout::setTitle(_('Personenliste bearbeiten'));
+
+        } else {
+            PageLayout::setTitle(_('Personenliste anlegen'));
+
+            $this->userlist = new AdmissionUserList();
+            $this->userlist_id = '';
         }
-        if ($this->flash['name'] || $this->flash['factor'] || $this->flash['users']) {
-            if (!$userlistId) {
-                $this->userlist = new AdmissionUserList();
-            }
+        $this->users = User::findMany(array_keys($this->userlist->getUsers()));
+        if ($this->flash['name'] || $this->flash['factor'] || $this->flash['users'] || $this->flash['deleted_member']) {
             if ($this->flash['name']) {
                 $this->userlist->setName($this->flash['name']);
             }
             if ($this->flash['factor']) {
                 $this->userlist->setFactor($this->flash['factor']);
             }
-            if ($this->flash['users']) {
-                $this->userlist->setUsers($this->flash['users']);
+            if ($this->flash['users'] || $this->flash['deleted_member']) {
+                $this->users = User::findMany($this->flash['cleared_users'] ?: $this->flash['users'] ?: array());
             }
         }
-        Request::set('user_id_parameter', $this->flash['user_id_parameter']);
-        $userSearch = new StandardSearch('user_id');
-        $this->search = QuickSearch::get('user_id', $userSearch)
-                                    ->withButton()
-                                    ->render();
-        if ($this->flash['error']) {
-            $this->error = MessageBox::error($this->flash['error']);
-        }
+        usort($this->users, function($a, $b) {
+            if ($a->nachname == $b->nachname) {
+                if ($a->vorname == $b->vorname) {
+                    return strnatcasecmp($a->username, $b->username);
+                } else {
+                    return strnatcasecmp($a->vorname, $b->vorname);
+                }
+            } else {
+                return strnatcasecmp($a->nachname, $b->nachname);
+            }
+        });
+        $uids = array_map(function($u) { return $u->id; }, $this->users);
+        $this->userSearch = new PermissionSearch('user', 'Person hinzufügen', 'user_id',
+            array(
+                'permission' => array('user', 'autor', 'tutor', 'dozent'),
+                'exclude_user' => $uids
+            ));
+
+        $this->flash['listusers'] = $uids;
     }
 
     /**
@@ -94,29 +111,18 @@ class Admission_UserListController extends AuthenticatedController {
      * @param String $userlistId user list to save
      */
     public function save_action($userlistId='') {
-        if (Request::submitted('submit') && Request::get('name')) {
-            $userlist = new AdmissionUserList($userlistId);
-            $userlist->setName(Request::get('name'))
-                ->setFactor(Request::float('factor'))
-                ->setUsers(Request::getArray('users'))
-                ->setOwnerId($GLOBALS['user']->id);
-            $userlist->store();
-            $this->redirect('admission/userlist');
+        CSRFProtection::verifyUnsafeRequest();
+        $userlist = new AdmissionUserList($userlistId);
+        $userlist->setName(Request::get('name'))
+            ->setFactor(Request::float('factor'))
+            ->setUsers(Request::getArray('users'))
+            ->setOwnerId($GLOBALS['user']->id);
+        if ($userlist->store()) {
+            PageLayout::postSuccess(_('Die Personenliste wurde gespeichert.'));
         } else {
-            $this->flash['name'] = Request::get('name');
-            $this->flash['factor'] = Request::float('factor');
-            $this->flash['users'] = Request::getArray('users');
-            if (Request::submitted('add_user')) {
-                $this->flash['users'] = array_merge($this->flash['users'], array(Request::get('user_id')));
-            } else {
-                $this->flash['user_id'] = Request::get('user_id');
-                $this->flash['user_id_parameter'] = Request::get('user_id_parameter');
-                if (!Request::get('name')) {
-                    $this->flash['error'] = _('Bitte geben Sie einen Namen für die Personenliste an.');
-                }
-            }
-            $this->redirect($this->url_for('admission/userlist/configure', $userlistId));
+            PageLayout::postError(_('Die Personenliste konnte nicht gespeichert werden.'));
         }
+        $this->redirect('admission/userlist');
     }
 
     /**
@@ -133,6 +139,51 @@ class Admission_UserListController extends AuthenticatedController {
         if (Request::int('cancel')) {
             $this->redirect($this->url_for('admission/userlist'));
         }
+    }
+
+    /**
+     * Deletes the given user from the given user list.
+     * @param $userlistId
+     * @param $userId
+     */
+    public function delete_member_action($userlistId, $userId)
+    {
+        $newusers = array_filter($this->flash['listusers'], function($u) use ($userId) { return $u != $userId; });
+        $this->flash['cleared_users'] = $newusers;
+        $this->flash['deleted_member'] = true;
+
+        PageLayout::postInfo(
+            sprintf(_('%s wurde von der Liste entfernt, die Liste ist aber noch nicht gespeichert.'),
+            User::find($userId)->getFullname()));
+
+        $this->redirect($this->url_for('admission/userlist/configure', $userlistId));
+    }
+
+    /**
+     * Landing page for mulitpersonsearch, adds the selected users to the
+     * user list.
+     * @param $userlistId string ID of the userlist to edit
+     */
+    public function add_members_action($userlistId)
+    {
+        $mp = MultiPersonSearch::load("add_userlist_member_" . $userlistId);
+
+        $users = $mp->getDefaultSelectedUsersIDs();
+
+        $oldsize = count($users);
+        foreach ($mp->getAddedUsers() as $u) {
+            $users[] = $u;
+        }
+        $newsize = count($users);
+
+        $this->flash['users'] = $users;
+
+        PageLayout::postInfo(
+            sprintf(ngettext('Eine Person wurde der Liste hinzugefügt.',
+                '%u Personen wurden der Liste hinzugefügt, die Liste ist aber noch nicht gespeichert.',
+                $newsize - $oldsize), $newsize - $oldsize));
+
+        $this->redirect($this->url_for('admission/userlist/configure', $userlistId));
     }
 
 }

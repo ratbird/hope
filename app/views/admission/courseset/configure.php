@@ -176,7 +176,7 @@ if ($flash['error']) {
 
     <? if ($courseset && $courseset->getSeatDistributionTime()) :?>
         <label class="caption">
-            <?= _('Nutzerlisten zuordnen:') ?>
+            <?= _('Personenlisten zuordnen:') ?>
             </label>
             <?php if ($myUserlists) { ?>
                 <?php
@@ -190,7 +190,7 @@ if ($flash['error']) {
                 <?php } ?>
 
             <?php } else { ?>
-                <i><?=  _('Sie haben noch keine Nutzerlisten angelegt.') ?></i>
+                <i><?=  _('Sie haben noch keine Personenlisten angelegt.') ?></i>
             <?php
             }?>
             <? if ($courseset) : ?>

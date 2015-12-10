@@ -104,7 +104,7 @@ class Course_ManagementController extends AuthenticatedController
      */
     public function set_lock_rule_action()
     {
-        CSRFProtection::verifyRequest();
+        CSRFProtection::verifyUnsafeRequest();
 
         $course = Course::findCurrent();
 

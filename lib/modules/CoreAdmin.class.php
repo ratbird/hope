@@ -13,7 +13,7 @@ class CoreAdmin implements StudipModule {
 
     function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
-        $navigation->setImage('icons/16/grey/admin.png', tooltip2(_('Verwaltung')));
+        $navigation->setImage('icons/grey/admin.svg', tooltip2(_('Verwaltung')));
         return $navigation;
     }
 
@@ -23,8 +23,8 @@ class CoreAdmin implements StudipModule {
 
         if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
             $navigation = new Navigation(_('Verwaltung'));
-            $navigation->setImage('icons/16/white/admin.png');
-            $navigation->setActiveImage('icons/16/black/admin.png');
+            $navigation->setImage('icons/white/admin.svg');
+            $navigation->setActiveImage('icons/black/admin.svg');
 
             $main = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
             $navigation->addSubNavigation('main', $main);
@@ -37,7 +37,7 @@ class CoreAdmin implements StudipModule {
 
                 $item = new Navigation(_('Infobild'), 'dispatch.php/course/avatar/update/' . $course_id);
                 $item->setImage('icons/blue/file-pic.svg');
-                $item->setDescription(_('Infobild dieser Veranstaltung bearbeiten oder l<öschen.'));
+                $item->setDescription(_('Infobild dieser Veranstaltung bearbeiten oder löschen.'));
                 $navigation->addSubNavigation('avatar', $item);
 
                 $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $course_id);
@@ -70,29 +70,34 @@ class CoreAdmin implements StudipModule {
                 if ($GLOBALS['perm']->have_perm($sem_create_perm)) {
                     if (!LockRules::check($course_id, 'seminar_copy')) {
                         $item = new Navigation(_('Veranstaltung kopieren'), 'dispatch.php/course/wizard/copy/'.$course_id);
-                        $item->setImage('icons/16/blue/add/seminar.png');
+                        $item->setImage('icons/blue/add/seminar.svg');
                         $main->addSubNavigation('copy', $item);
                     }
 
                     if (get_config('ALLOW_DOZENT_ARCHIV') || $GLOBALS['perm']->have_perm('admin')) {
                         $item = new Navigation(_('Veranstaltung archivieren'), 'archiv_assi.php');
-                        $item->setImage('icons/16/blue/remove/seminar.png');
+                        $item->setImage('icons/blue/remove/seminar.svg');
                         $main->addSubNavigation('archive', $item);
                     }
 
                     if ((get_config('ALLOW_DOZENT_VISIBILITY') || $GLOBALS['perm']->have_perm('admin')) && !LockRules::Check($course_id, 'seminar_visibility')) {
                         $is_visible = Course::findCurrent()->visible;
                         $item = new Navigation(_('Sichtbarkeit ändern') . ' (' .  ($is_visible ? _('sichtbar') : _('unsichtbar')) . ')', 'dispatch.php/course/management/change_visibility');
-                        $item->setImage('icons/16/blue/visibility-' . ($is_visible ? 'visible' : 'invisible' ). '.png');
+                        $item->setImage('icons/blue/visibility-' . ($is_visible ? 'visible' : 'invisible' ));
                         $main->addSubNavigation('visibility', $item);
                     }
+
+                    $item = new Navigation(_('Sperren'), 'dispatch.php/course/management/lock');
+                    $item->setImage(sprintf('icons/blue/lock-%s.svg', LockRule::findBySeminar($course_id) ? 'locked' : 'unlocked'));
+                    $main->addSubNavigation('lock', $item);
+
                 }
 
                 // show entry for simulated participant view
                 if (in_array($GLOBALS['perm']->get_studip_perm($course_id), words('tutor dozent'))) {
                     $item = new Navigation('Studierendenansicht simulieren', 'dispatch.php/course/change_view?cid='.Request::option('cid'));
                     $item->setDescription(_('Hier können Sie sich die Veranstaltung aus der Sicht von Studierenden sehen.'));
-                    $item->setImage('icons/16/blue/visibility-invisible.png');
+                    $item->setImage('icons/blue/visibility-invisible.svg');
                     $main->addSubNavigation('change_view', $item);
                 }
             }  // endif modules only seminars

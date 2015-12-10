@@ -129,13 +129,13 @@ class Admin_CoursesController extends AuthenticatedController
         }, array_values($this->courses), array_keys($this->courses));
 
 
-        $this->all_lock_rules = array_merge(
+        $this->all_lock_rules = new SimpleCollection(array_merge(
             array(array(
                 'name'    => '--' . _("keine Sperrebene") . '--',
                 'lock_id' => 'none'
             )),
             LockRule::findAllByType('sem')
-        );
+        ));
         $this->aux_lock_rules = array_merge(
             array(array(
                 'name'    => '--' . _("keine Zusatzangaben") . '--',

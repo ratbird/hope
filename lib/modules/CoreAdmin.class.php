@@ -86,10 +86,12 @@ class CoreAdmin implements StudipModule {
                         $item->setImage('icons/blue/visibility-' . ($is_visible ? 'visible' : 'invisible' ));
                         $main->addSubNavigation('visibility', $item);
                     }
-
-                    $item = new Navigation(_('Sperren'), 'dispatch.php/course/management/lock');
-                    $item->setImage(sprintf('icons/blue/lock-%s.svg', LockRule::findBySeminar($course_id) ? 'locked' : 'unlocked'));
-                    $main->addSubNavigation('lock', $item);
+                    if ($GLOBALS['perm']->have_perm('admin')) {
+                        $is_locked = Course::findCurrent()->lock_rule;
+                        $item = new Navigation(_('Sperrebene ändern') . ' (' .  ($is_locked ? _('gesperrt') : _('nicht gesperrt')) . ')', 'dispatch.php/course/management/lock');
+                        $item->setImage(sprintf('icons/blue/lock-%s.svg',  $is_locked  ? 'locked' : 'unlocked'), array('data-dialog'=> 'size=auto'));
+                        $main->addSubNavigation('lock', $item);
+                    }
 
                 }
 

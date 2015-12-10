@@ -85,16 +85,16 @@ class Course_ManagementController extends AuthenticatedController
     public function lock_action()
     {
         Navigation::activateItem('course/admin/main');
-        PageLayout::setTitle(_("Sperren von Veranstaltungen"));
+        PageLayout::setTitle(_('Sperrebene ändern'));
         $course = Course::findCurrent();
 
-        if(!$course) {
+        if (!$course) {
             $this->redirect($this->url_for('/index'));
             return;
         }
 
-        $this->all_lock_rules    = array_merge(array(array('name' => '--' . _("keine Sperrebene") . '--', 'lock_id' => 'none')), LockRule::findAllByType('sem'));
-        $this->current_lock_rule = LockRule::findBySeminar($course->id);
+        $this->all_lock_rules    = array_merge(array(array('name' => ' -- ' . _("keine Sperrebene") . ' -- ', 'lock_id' => 'none')), LockRule::findAllByType('sem'));
+        $this->current_lock_rule = LockRule::find($course->lock_rule);
     }
 
     /**
@@ -105,7 +105,9 @@ class Course_ManagementController extends AuthenticatedController
     public function set_lock_rule_action()
     {
         CSRFProtection::verifyUnsafeRequest();
-
+        if (!$GLOBALS['perm']->have_studip_perm('admin', $GLOBALS['SessionSeminar'])) {
+            throw new AccessDeniedException();
+        }
         $course = Course::findCurrent();
 
         if ($course) {
@@ -122,6 +124,6 @@ class Course_ManagementController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::success($msg));
             }
         }
-        $this->redirect($this->url_for('/lock'));
+        $this->relocate($this->url_for('/index'));
     }
 }

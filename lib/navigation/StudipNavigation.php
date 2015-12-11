@@ -83,34 +83,6 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('resources', $navigation);
         }
 
-        // settings
-        if (is_object($user) && $perm->have_perm('autor')) {
-            $navigation = new Navigation(_('Einstellungen'));
-            $navigation->setImage('icons/lightblue/radiobutton-unchecked.svg', array('title' => _('Persönliche Einstellungen')));
-
-            $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'dispatch.php/settings/general'));
-            $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'dispatch.php/settings/privacy'));
-            $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'dispatch.php/settings/messaging'));
-
-            if (get_config('CALENDAR_ENABLE')) {
-                $navigation->addSubNavigation('calendar_new', new Navigation(_('Terminkalender'), 'dispatch.php/settings/calendar'));
-            }
-
-            if (!$perm->have_perm('admin') and get_config('MAIL_NOTIFICATION_ENABLE')) {
-                $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'dispatch.php/settings/notification'));
-            }
-
-            if (isDefaultDeputyActivated() && $perm->get_perm() == 'dozent') {
-                $navigation->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'dispatch.php/settings/deputies'));
-            }
-
-            if (Config::Get()->API_ENABLED) {
-                $navigation->addSubNavigation('api', new Navigation(_('API-Berechtigungen'), 'dispatch.php/api/authorizations'));
-            }
-
-            $this->addSubNavigation('settings', $navigation);
-        }
-
         // quick links
         $links = new Navigation('Links');
 

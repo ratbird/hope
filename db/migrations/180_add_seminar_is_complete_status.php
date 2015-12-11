@@ -10,7 +10,7 @@ class AddSeminarIsCompleteStatus extends Migration
     {
         $query = "ALTER TABLE `seminare`
                   ADD COLUMN `is_complete` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0";
-#        DBManager::get()->exec($query);
+        DBManager::get()->exec($query);
 
         SimpleORMap::expireTableScheme();
 

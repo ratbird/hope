@@ -631,6 +631,23 @@ class MyCoursesController extends AuthenticatedController
     }
 
     /**
+     * Remove yourself as default deputy of the given boss.
+     * @param $boss_id
+     */
+    public function delete_boss_action($boss_id) {
+        if (deleteDeputy($GLOBALS['user']->id, $boss_id)) {
+            PageLayout::postSuccess(
+                sprintf(_('Sie wurden als Standardvertretung von %s entfernt.'),
+                User::find($boss_id)->getFullname()));
+        } else {
+            PageLayout::postError(
+                sprintf(_('Sie konnten nicht als Standardvertretung von %s entfernt werden.'),
+                User::find($boss_id)->getFullname()));
+        }
+        $this->redirect($this->url_for('my_courses'));
+    }
+
+    /**
      * Get widget for grouping selected courses (e.g. by colors, ...)
      * @param      $action
      * @param bool $selected

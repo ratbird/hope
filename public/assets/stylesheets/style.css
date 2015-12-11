@@ -4164,6 +4164,32 @@ table.attribute_table div[container]#deactivated_modules {
 table.attribute_table div[container]#deactivated_modules .plugin > div {
   display: none;
 }
+.course-admin .course-completion {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  background-image: url("../images/icons/red/radiobutton-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  display: block;
+}
+.course-admin .course-completion.course-complete {
+  background-image: url("../images/icons/green/radiobutton-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+}
+.course-admin .course-completion.ajaxing {
+  background-image: url("../images/ajax_indicator_small.gif");
+}
 /* --- Styles fuer Terminkalender ------------------------------------------- */
 a.day {
   font-weight: bold;

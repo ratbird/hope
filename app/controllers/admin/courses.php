@@ -508,6 +508,18 @@ class Admin_CoursesController extends AuthenticatedController
         $this->redirect('admin/courses/index');
     }
 
+    public function toggle_complete_action($course_id)
+    {
+        $course = Course::find($course_id);
+        $course->is_complete = !$course->is_complete;
+        $course->store();
+
+        if (Request::isXhr()) {
+            $this->render_json((bool)$course->is_complete);
+        } else {
+            $this->redirect('admin/courses/index#course-' . $course_id);
+        }
+    }
 
     /**
      * Return a specifically action oder all available actions

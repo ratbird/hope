@@ -145,12 +145,19 @@
     </thead>
     <tbody>
     <? foreach ($courses as $semid => $values) { ?>
-        <tr>
+        <tr id="course-<?= $semid ?>">
             <td>
+            <? if (Config::get()->ADMIN_COURSES_SHOW_COMPLETE): ?>
+                <a href="<?= $controller->url_for('admin/courses/toggle_complete/' . $semid) ?>"
+                   class="course-completion <? if ($values['is_complete']) echo 'course-complete'; ?>">
+                       <?= _('Bearbeitungsstatus ändern') ?>
+                </a>
+            <? else: ?>
                 <?=
                 CourseAvatar::getAvatar($semid)->is_customized()
                     ? CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
                     : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($values["Name"]))) ?>
+            <? endif; ?>
             </td>
             <? if (in_array('number', $view_filter)) : ?>
                 <td>

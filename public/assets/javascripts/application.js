@@ -280,6 +280,18 @@ jQuery(document).on('ready', function () {
     }
 });
 
+jQuery(document).on('click', '.course-admin .course-completion', function () {
+    var href = $(this).attr('href'),
+        that = this;
+
+    $(this).addClass('ajaxing');
+
+    $.getJSON(href, function (complete) {
+        $(that).removeClass('ajaxing').toggleClass('course-complete', complete);
+    });
+    return false;
+});
+
 
 jQuery(document).on('dialog-update', function (event) {
     jQuery('.add_toolbar').addToolbar();

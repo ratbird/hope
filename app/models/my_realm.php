@@ -600,8 +600,7 @@ class MyRealmModel
         }
 
         // Get the needed semester
-        if ($sem != 'all' && $sem != 'current' && $sem != 'future' &&
-                $sem != 'nexttwo' && $sem != 'last' && $sem != 'lastandnext') {
+        if (!in_array($sem, array('all', 'current', 'future', 'nexttwo', 'last', 'lastandnext'))) {
             $semesters[] = SemesterData::GetSemesterIndexById($sem);
         } else {
             switch ($sem) {

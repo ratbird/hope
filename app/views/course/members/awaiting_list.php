@@ -20,16 +20,11 @@
             <col width="20">
             <col width="20">
             <col>
+            <col width="25%">
             <col width="15%">
             <col width="80">
         </colgroup>
         <thead>
-            <tr>
-                <th class="table_header_bold" colspan="4">
-                </th>
-                <th class="table_header_bold" style="text-align: right">
-                </th>
-            </tr>
             <tr class="sortable">
                 <? if (!$is_locked) : ?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
@@ -43,6 +38,9 @@
                             $order, ($sort_by == 'nachname'))) ?>#awaiting">
                         <?=_('Nachname, Vorname')?>
                     </a>
+                </th>
+                <th>
+                    <?= _('Studiengang')  ?>
                 </th>
                     <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == $waiting_type) ?
                         sprintf('class="sort%s"', $order) : '' ?>>
@@ -76,6 +74,10 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
+                <td>
+                    <?= $this->render_partial("course/members/_studycourse.php",
+                        array('study_courses' => UserModel::getUserStudycourse($waiting['user_id']))) ?>
+                </td>
                 <td style="text-align: center">
                     <?= $waiting['position'] ?>
                 </td>
@@ -105,7 +107,7 @@
         <? if (!$is_locked) : ?>
         <tfoot>
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade_autor"><?= sprintf(_('Zu %s hochstufen'),

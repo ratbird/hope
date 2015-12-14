@@ -293,7 +293,7 @@ class BlubberStream extends SimpleORMap {
                 (count($filter_sql) ? implode(" AND ", $filter_sql)." " : "") .
             "GROUP BY blubber.topic_id " .
             "ORDER BY " . ($this['sort'] === "activity"
-                            ? "IF(blubber_reshares.chdate IS NULL OR MAX(comment.mkdate) > MAX(blubber_reshares.chdate), MAX(comment.mkdate), MAX(blubber_reshares.chdate)) DESC"
+                            ? "IF(MAX(blubber_reshares.chdate) IS NULL OR MAX(comment.mkdate) > MAX(blubber_reshares.chdate), MAX(comment.mkdate), MAX(blubber_reshares.chdate)) DESC"
                             : "blubber.mkdate DESC"
                           )." " .
             (($offset or $limit) ? "LIMIT ".(int) $offset.", ".(int) $limit." " : " ") .

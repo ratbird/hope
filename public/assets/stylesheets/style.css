@@ -2755,16 +2755,9 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
-/*
-.sidebar-widget.sidebar-infobox {
-    border-color: @red;
-    background: @light-gray-color-20;
-
-    .sidebar-widget-header {
-        background: @red-40;
-    }
+.sidebar select {
+  max-width: 100%;
 }
-*/
 .helpbar-container {
   background: #fff;
   clear: both;

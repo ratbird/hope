@@ -305,7 +305,9 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         if (sizeof($user_list) == 0) {
             return array();
         }
-        
+
+        $ext_vis_query = get_ext_vis_query();
+
         $query = sprintf(
             "SELECT ui.Institut_id, ui.raum, ui.sprechzeiten, ui.Telefon, "
             . "inst_perms,  i.Name, aum.Email, aum.user_id, username, "
@@ -315,6 +317,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             . "LEFT JOIN auth_user_md5 aum USING(user_id)"
             . "LEFT JOIN user_info uin USING(user_id) "
             . "WHERE CONCAT(ui.user_id, ui.Institut_id) IN ('%s') "
+            . "AND {$ext_vis_query} "
             . "ORDER BY aum.Nachname ",
             $GLOBALS['_fullname_sql'][$nameformat],
             implode("','", $user_list));
@@ -332,7 +335,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             $content['PERSONS']['PERSON'][$j]['INSTNAME'] = ExternModule::ExtHtmlReady($db->f('Name'));
             $content['PERSONS']['PERSON'][$j]['PHONE'] = ExternModule::ExtHtmlReady($db->f('Telefon'));
             $content['PERSONS']['PERSON'][$j]['ROOM'] = ExternModule::ExtHtmlReady($db->f('raum'));
-            $content['PERSONS']['PERSON'][$j]['EMAIL'] = ExternModule::ExtHtmlReady($db->f('Email'));
+            $content['PERSONS']['PERSON'][$j]['EMAIL'] = ExternModule::ExtHtmlReady(get_visible_email($db->f('user_id')));
             $content['PERSONS']['PERSON'][$j]['EMAIL-LOCAL'] = array_shift(explode('@', $content['PERSONS']['PERSON'][$j]['EMAIL']));
             $content['PERSONS']['PERSON'][$j]['EMAIL-DOMAIN'] = array_pop(explode('@', $content['PERSONS']['PERSON'][$j]['EMAIL']));
             $content['PERSONS']['PERSON'][$j]['OFFICEHOURS'] = ExternModule::ExtHtmlReady($db->f('sprechzeiten'));

@@ -132,15 +132,22 @@ table.attribute_table {
 .course-admin {
     .course-completion {
         .hide-text();
-        .retina-background-icon('red/radiobutton-checked.svg');
         .square(16px);
         background-repeat: no-repeat;
         display: block;
+    }
+
+    th .course-completion {
+        .retina-background-icon('blue/radiobutton-checked.svg');
+    }
+
+    td .course-completion {
+        .retina-background-icon('red/radiobutton-checked.svg');
 
         &.course-complete {
             .retina-background-icon('green/radiobutton-checked.svg');
         }
-        
+
         &.ajaxing {
             background-image: url("@{image-path}/ajax_indicator_small.gif");
         }

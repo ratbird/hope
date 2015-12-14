@@ -661,6 +661,8 @@ class Admin_CoursesController extends AuthenticatedController
         $filter->filterByInstitute($inst_ids);
         if ($params['sortby'] === "status") {
             $filter->orderBy(sprintf('sem_classes.name %s, sem_types.name %s, VeranstaltungsNummer', $params['sortFlag'], $params['sortFlag'], $params['sortFlag']), $params['sortFlag']);
+        } elseif ($params['sortby'] === 'completion') {
+            $filter->orderBy('is_complete', $params['sortFlag']);
         } elseif($params['sortby']) {
             $filter->orderBy($params['sortby'], $params['sortFlag']);
         }

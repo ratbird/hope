@@ -280,7 +280,7 @@ jQuery(document).on('ready', function () {
     }
 });
 
-jQuery(document).on('click', '.course-admin .course-completion', function () {
+jQuery(document).on('click', '.course-admin td .course-completion', function () {
     var href = $(this).attr('href'),
         that = this;
 

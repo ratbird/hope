@@ -59,9 +59,17 @@
     </caption>
     <thead>
     <tr class="sortable">
-        <th width="2%">
+    <? if (Config::get()->ADMIN_COURSES_SHOW_COMPLETE): ?>
+        <th <? if ($sortby === 'completion') printf('class="sort%s"', strtolower($sortFlag)) ?>>
+            <a href="<?= URLHelper::getLink('', array('sortby' => 'completion', 'sortFlag' => strtolower($sortFlag))) ?>" class="course-completion">
+                <?= _('Bearbeitungsstatus') ?>
+            </a>
+        </th>
+    <? else: ?>
+        <th>
             &nbsp;
         </th>
+    <? endif; ?>
         <? if (in_array('number', $view_filter)) : ?>
             <th <?= ($sortby == 'VeranstaltungsNummer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                 <a href="<?=

@@ -593,8 +593,15 @@ class MyRealmModel
             $max_sem = $current_sem;
         }
 
+        if (isset($sem_data[$current_sem + 2])) {
+            $after_next_sem = $current_sem + 2;
+        } else {
+            $after_next_sem = $max_sem;
+        }
+
         // Get the needed semester
-        if ($sem != 'all' && $sem != 'current' && $sem != 'future' && $sem != 'last') {
+        if ($sem != 'all' && $sem != 'current' && $sem != 'future' &&
+                $sem != 'nexttwo' && $sem != 'last' && $sem != 'lastandnext') {
             $semesters[] = SemesterData::GetSemesterIndexById($sem);
         } else {
             switch ($sem) {
@@ -605,12 +612,22 @@ class MyRealmModel
                     $semesters[] = $current_sem;
                     $semesters[] = $max_sem;
                     break;
+                case 'nexttwo':
+                    $semesters[] = $current_sem;
+                    $semesters[] = $max_sem;
+                    $semesters[] = $after_next_sem;
+                    break;
                 case 'last':
                     $semesters[] = $current_sem - 1;
                     $semesters[] = $current_sem;
                     break;
+                case 'lastandnext':
+                    $semesters[] = $current_sem - 1;
+                    $semesters[] = $current_sem;
+                    $semesters[] = $max_sem;
+                    break;
                 default:
-                    $semesters = array_keys($sem_data);;
+                    $semesters = array_keys($sem_data);
                     break;
             }
         }

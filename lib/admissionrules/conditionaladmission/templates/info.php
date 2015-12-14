@@ -1,11 +1,11 @@
 <?php
 if ($rule->getStartTime() && $rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt von %s bis %s.'), strftime('%d.%m.%Y',
-        $rule->getStartTime()), strftime('%d.%m.%Y', $rule->getEndTime())).'<br/>';
+    echo sprintf(_('Diese Regel gilt von %s bis %s.'), strftime('%d.%m.%Y %H:%M',
+        $rule->getStartTime()), strftime('%d.%m.%Y %H:%M', $rule->getEndTime())).'<br/>';
 } else if ($rule->getStartTime() && !$rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt ab %s.'), strftime('%d.%m.%Y', $rule->getStartTime())).'<br/>';
+    echo sprintf(_('Diese Regel gilt ab %s.'), strftime('%d.%m.%Y %H:%M', $rule->getStartTime())).'<br/>';
 } else if (!$rule->getStartTime() && $rule->getEndTime()) {
-    echo sprintf(_('Diese Regel gilt bis %s.'), strftime('%d.%m.%Y', $rule->getEndTime())).'<br/>';
+    echo sprintf(_('Diese Regel gilt bis %s.'), strftime('%d.%m.%Y %H:%M', $rule->getEndTime())).'<br/>';
 }
 ?>
 <?php if (count($rule->getConditions()) == 1) { ?>

@@ -93,13 +93,13 @@ class Admission_RuleController extends AuthenticatedController {
         $requestData = Request::getInstance();
         // Check for start and end date and parse the String values to timestamps.
         if ($requestData['start_date'] ) {
-            $parsed = date_parse($requestData['start_date'].' 00:00:00');
+            $parsed = date_parse($requestData['start_date']);
             $timestamp = mktime($parsed['hour'], $parsed['minute'], 0,
                 $parsed['month'], $parsed['day'], $parsed['year']);
             $requestData['start_time'] = $timestamp;
         }
         if ($requestData['end_date'] ) {
-            $parsed = date_parse($requestData['end_date'].' 23:59:59');
+            $parsed = date_parse($requestData['end_date']);
             $timestamp = mktime($parsed['hour'], $parsed['minute'], 0,
                 $parsed['month'], $parsed['day'], $parsed['year']);
             $requestData['end_time'] = $timestamp;

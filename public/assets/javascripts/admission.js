@@ -37,7 +37,7 @@ STUDIP.Admission = {
 
         STUDIP.Dialog.fromURL(targetUrl, {
             method: 'post',
-            size: 'auto',
+            width: '450',
             title: 'Anmelderegel konfigurieren'.toLocaleString(),
             id: 'configurerule',
             data: {rule : $('#rule_data_' + ruleId + ' input[name="rules[]"]').val()},

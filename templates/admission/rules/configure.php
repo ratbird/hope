@@ -9,15 +9,17 @@
 </label>
 <div class="form_group">
     <?= _('von') ?>
-    <input type="text" size="8" maxlength="10" name="start_date" 
+    <input type="text" size="16" maxlength="16" name="start_date"
         id="start_date" value="<?= $rule->getStartTime() ? 
-        date('d.m.Y', $rule->getStartTime()) : '' ?>" data-max-date=""/>
+        date('d.m.Y H:i', $rule->getStartTime()) : '' ?>" data-max-date=""
+        placeholder="tt.mm.jjjj --:--"/>
     <?= _('bis') ?>
-    <input type="text" size="8" maxlength="10" name="end_date" 
+    <input type="text" size="16" maxlength="16" name="end_date"
         id="end_date" value="<?= $rule->getEndTime() ? 
-        date('d.m.Y', $rule->getEndTime()) : '' ?>" data-min-date=""/>
+        date('d.m.Y H:i', $rule->getEndTime()) : '' ?>" data-min-date=""
+        placeholder="tt.mm.jjjj --:--"/>
     <script>
-        $('#start_date').datepicker();
-        $('#end_date').datepicker();
+        $('#start_date').datetimepicker();
+        $('#end_date').datetimepicker();
     </script>
 </div>

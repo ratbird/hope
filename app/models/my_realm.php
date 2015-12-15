@@ -600,7 +600,7 @@ class MyRealmModel
         }
 
         // Get the needed semester
-        if (!in_array($sem, array('all', 'current', 'future', 'nexttwo', 'last', 'lastandnext'))) {
+        if (!in_array($sem, array('all', 'current', 'future', 'last', 'lastandnext'))) {
             $semesters[] = SemesterData::GetSemesterIndexById($sem);
         } else {
             switch ($sem) {
@@ -610,11 +610,6 @@ class MyRealmModel
                 case 'future':
                     $semesters[] = $current_sem;
                     $semesters[] = $max_sem;
-                    break;
-                case 'nexttwo':
-                    $semesters[] = $current_sem;
-                    $semesters[] = $max_sem;
-                    $semesters[] = $after_next_sem;
                     break;
                 case 'last':
                     $semesters[] = $current_sem - 1;

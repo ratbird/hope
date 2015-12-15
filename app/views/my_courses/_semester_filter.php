@@ -2,7 +2,6 @@
 <select name="sem_select" onchange="jQuery(this).closest('form').submit();">
     <option <?= ($sem == 'current' ? 'selected' : '')?> value="current"><?= _('Aktuelles Semester') ?></option>
     <option <?= ($sem == 'future' ? 'selected' : '')?> value="future"><?= _('Aktuelles und nächstes Semester') ?></option>
-    <option <?= ($sem == 'nexttwo' ? 'selected' : '')?> value="nexttwo"><?= _('Aktuelles und zwei nächste Semester') ?></option>
     <option <?= ($sem == 'last' ? 'selected' : '')?> value="last"><?= _('Aktuelles und letztes Semester') ?></option>
     <option <?= ($sem == 'lastandnext' ? 'selected' : '')?> value="lastandnext"><?= _('Letztes, aktuelles, nächstes Semester') ?></option>
     <? if (Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS) : ?>

@@ -773,13 +773,7 @@ class DataFieldPhoneEntry extends DataFieldEntry
         {
             if($country)
                 $country = "+$country";
-            if($area)
-            {
-                $area = "(0)$area";
-                if($phone)
-                    $area .= '/';
-            }
-            return "$country $area$phone";
+            return "$country $area $phone";
         }
         else
         {
@@ -795,19 +789,14 @@ class DataFieldPhoneEntry extends DataFieldEntry
             array_unshift($parts, '');
         $size = array(3 , 6 , 10);
         $title = array(_('Landesvorwahl ohne führende Nullen') , _('Ortsvorwahl ohne führende Null') , _('Rufnummer'));
-        $prefix = array('+' , '(0)' , ' / ');
+        $prefix = array('+' ,' ' ,' ');
         $ret = '';
         foreach($parts as $i => $part)
         {
             $require = ($this->structure->getIsRequired() && $i > 0) ? "required" : "";
-            //      $part = preg_replace('/^0+(.*)$/', '\1', $part);
-            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s" %s>', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i], $require);
+            $ret .= sprintf('<span>%s</span><input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s" %s>', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i], $require);
         }
-        $ret .= '<font size="-1">';
-        $ret .= ' ' . _('z.B.:') . ' +<span style="border-style:inset; border-width:2px;"> 49 </span>';
-        $ret .= ' (0)<span style="border-style:inset; border-width:2px;"> 541 </span>';
-        $ret .= ' / <span style="border-style:inset; border-width:2px;"> 969-0000 </span>';
-        $ret .= '</font>';
+        $ret .= ' ' . tooltipIcon(_('Beispiel: +49 541 969-0000'));
         return $ret;
     }
 

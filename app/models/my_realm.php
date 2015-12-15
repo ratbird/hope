@@ -575,9 +575,9 @@ class MyRealmModel
 
     public static function getDeputieGroup($range_id)
     {
-        $query     = "SELECT gruppe FROM deputies WHERE range_id = ?";
+        $query     = "SELECT gruppe FROM deputies WHERE range_id = ? AND user_id=?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($range_id));
+        $statement->execute(array($range_id, $GLOBALS['user']->id));
         return $statement->fetch(PDO::FETCH_COLUMN);
     }
 

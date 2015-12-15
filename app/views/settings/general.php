@@ -37,12 +37,12 @@ $start_pages = array(
                 .'angezeigt wird. Wenn Sie zum Beispiel regelmäßig die Seite &raquo;Meine '
                 .'Veranstaltungen&laquo; nach dem Login aufrufen, so können Sie dies hier '
                 .'direkt einstellen.')) ?>
-            <select name="personal_startpage"
-                <? foreach ($start_pages as $index => $label): ?>
-                    <option value="<?= $index ?>" <? if ($config->PERSONAL_STARTPAGE == $index) echo 'selected'; ?>>
-                        <?= htmlReady($label) ?>
-                    </option>
-                <? endforeach; ?>
+            <select name="personal_startpage">
+            <? foreach ($start_pages as $index => $label): ?>
+                <option value="<?= $index ?>" <? if ($config->PERSONAL_STARTPAGE == $index) echo 'selected'; ?>>
+                    <?= htmlReady($label) ?>
+                </option>
+            <? endforeach; ?>
             </select>
         </label>
         <? endif ?>

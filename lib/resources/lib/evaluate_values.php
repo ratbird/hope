@@ -1447,10 +1447,8 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
                            termine AS t
                       WHERE rq.request_id IN (?) AND t.date > UNIX_TIMESTAMP()
                         AND ((t.range_id = rq.seminar_id AND IFNULL(rq.termin_id, '') = '')
-                             OR (IFNULL(rq.termin_id, '') != '' AND rq.termin_id = t.termin_id))";
-            if ($order) {
-                $query .= " ORDER BY {$order}";
-            }
+                             OR (IFNULL(rq.termin_id, '') != '' AND rq.termin_id = t.termin_id))
+                      ORDER BY t.date ASC";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
                array_keys($selected_requests) ?: ''

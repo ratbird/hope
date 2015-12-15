@@ -87,18 +87,18 @@ if (Request::get('folderzip')) {
     }
 }
 
-if (Request::get('zipnewest')) {
+if (Request::get('zipnewest') !== NULL) {
     //Abfrage der neuen Dateien
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
     $query = "SELECT range_id, dokument_id, url
               FROM dokumente
               WHERE seminar_id = ? AND user_id != ?
-                AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
+                AND GREATEST(mkdate, IFNULL(chdate, 0)) > ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $SessSemName[1],
         $user->id,
-        Request::get('zipnewest') ?: null,
+        Request::int('zipnewest'),
     ));
     $download_ids = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -949,10 +949,10 @@ if ($question) {
     $query = "SELECT COUNT(*)
               FROM dokumente
               WHERE seminar_id = ? AND user_id != ? AND url=''
-              AND range_id NOT IN(?) AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
+              AND range_id NOT IN(?) AND GREATEST(mkdate, IFNULL(chdate, 0)) > ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
-        $range_id, $user->id, $folder_tree->getUnreadableFolders($user->id) ?: '', $lastvisit ?: null
+        $range_id, $user->id, $folder_tree->getUnreadableFolders($user->id) ?: '', $lastvisit
     ));
     $result = $statement->fetchColumn();
     if ($result > 0) {

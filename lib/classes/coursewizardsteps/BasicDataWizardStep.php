@@ -359,14 +359,20 @@ class BasicDataWizardStep implements CourseWizardStep
         }
         if ($course->store()) {
             StudipLog::log('SEM_CREATE', $course->id, null, 'Veranstaltung mit Assistent angelegt');
-            $seminar->setInstitutes(array_keys($values['participating']));
-            foreach (array_keys($values['lecturers']) as $user_id) {
-                $seminar->addMember($user_id, 'dozent');
+            if (isset($values['participating']) && is_array($values['participating'])) {
+                $seminar->setInstitutes(array_keys($values['participating']));
             }
-            foreach (array_keys($values['tutors']) as $user_id) {
-                $seminar->addMember($user_id, 'tutor');
+            if (isset($values['lecturers']) && is_array($values['lecturers'])) {
+                foreach (array_keys($values['lecturers']) as $user_id) {
+                    $seminar->addMember($user_id, 'dozent');
+                }
             }
-            if (Config::get()->DEPUTIES_ENABLE && $values['deputies']) {
+            if (isset($values['tutors']) && is_array($values['tutors'])) {
+                foreach (array_keys($values['tutors']) as $user_id) {
+                    $seminar->addMember($user_id, 'tutor');
+                }
+            }
+            if (Config::get()->DEPUTIES_ENABLE && isset($values['deputies']) && is_array($values['deputies'])) {
                 foreach ($values['deputies'] as $d => $assigned) {
                     addDeputy($d, $course->id);
                 }

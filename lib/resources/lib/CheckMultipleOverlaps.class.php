@@ -112,32 +112,28 @@ class CheckMultipleOverlaps
             return;
         }
 
-        $parameters = $clauses = $assign_ids = array();
+        $parameters = $assign_ids = array();
         $cases = '';
         foreach (array_values($events) as $i => $obj) {
-            $clause = "((begin <= :begin{$i} AND end > :begin{$i}) OR
-                        (begin >= :begin{$i} AND end <= :end{$i}) OR
-                        (begin <= :begin{$i} AND end >= :end{$i}) OR
-                        (begin <  :end{$i} AND end >= :end{$i}))";
+            $cases .= "WHEN begin < :end{$i} AND end > :begin{$i} THEN :id{$i} ";
 
-            $parameters['begin' . $i] = $obj->getBegin();
-            $parameters['end' . $i]   = $obj->getEnd();
-
-            $cases .= sprintf(" WHEN %s THEN :id{$i}", $clause);
+            $parameters['begin' . $i] = $begin[] = (int) $obj->getBegin();
+            $parameters['end' . $i]   = $end[]   = (int) $obj->getEnd();
             $parameters['id' . $i] = $obj->getId();
 
             $assign_ids[] = $obj->assign_id;
-            $clauses[]    = $clause;
         }
-
-        $clause = join(' OR ', $clauses);
 
         $query = "SELECT resource_id, `begin`, end, assign_id,
                          CASE {$cases} END AS event_id
                   FROM resources_temporary_events
-                  WHERE ({$clause}) AND resource_id IN (:resource_ids)
+                  WHERE begin < :end_max AND end > :begin_min
+                    AND resource_id IN (:resource_ids)
                     AND assign_id NOT IN (:assign_ids)
+                  HAVING event_id IS NOT NULL
                   ORDER BY begin";
+        $parameters[':end_max']      = max($end);
+        $parameters[':begin_min']    = min($begin);
         $parameters[':resource_ids'] = $this->resource_ids;
         $parameters[':assign_ids']   = $assign_ids;
 

@@ -91,7 +91,6 @@ class RoomGroups {
                     $res_obj->restore($parent_id);
                     $this->groups[$offset]['name'] = $res_obj->getPathToString(true);
                     foreach ($resource_ids as $resource_id){
-                        $res_obj->restore($resource_id);
                         $this->groups[$offset]['resources'][] = $resource_id;  
                     }
                     ++$offset;

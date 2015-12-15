@@ -1908,9 +1908,10 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
         //add the matching ressources to selection
         if (getGlobalPerms($user->id) != "admin")
             $resList = new ResourcesUserRoomsList ($user->id, FALSE, FALSE);
-        $matching_resources = $reqObj->searchRooms(FALSE, TRUE, $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"], $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"], TRUE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
-        if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]  > ($reqObj->last_search_result_count + $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"]))
-            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] + $reqObj->last_search_result_count;
+        $matching_resources = $reqObj->searchRooms(FALSE, TRUE, 0, 0, TRUE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
+        if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] > $reqObj->last_search_result_count) {
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = $reqObj->last_search_result_count;
+        }
 
         foreach ($matching_resources as $key => $val) {
             if (!$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$key])
@@ -2032,7 +2033,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                 if (count($overlaps)) {
                     $events_count = sizeof($event_zw);
                     foreach ($overlaps as $overlap_room_id => $overlap_events_count) {
-                        if ($overlap_events_count >= round($events_count * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
+                        if ($overlap_events_count && $overlap_events_count >= round($events_count * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
                             if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id]['type'] == 'matching') {
                                 $red_flag_rooms[$overlap_room_id]++;
                             }
@@ -2041,10 +2042,12 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                 }
 
             }  // Ende: gruppierte Termine durchlaufen
+            // move all red_flag_rooms to the end of the list
             $current_group_count = count($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"]);
-            foreach ($red_flag_rooms as $overlap_room_id => $overlap_group_count) {
-                if ($overlap_group_count == $current_group_count) {
+            foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"] as $overlap_room_id => $val) {
+                if (isset($red_flag_rooms[$overlap_room_id]) && $red_flag_rooms[$overlap_room_id] == $current_group_count) {
                     unset($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id]);
+                    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id] = $val;
                 }
             }
             $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"] = $result;

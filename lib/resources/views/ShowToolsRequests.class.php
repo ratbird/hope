@@ -556,11 +556,10 @@ class ShowToolsRequests
                             }
 
                         if (sizeof($matching_rooms)) {
-                            $sql = "SELECT r1.resource_id FROM resources_objects r1 INNER JOIN resources_objects r2 ON r1.parent_id=r2.resource_id
-                                    WHERE r1.resource_id IN(?) ORDER BY r2.name,r1.name";
-                            $st = DbManager::get()->prepare($sql);
-                            $st->execute(array(array_keys($matching_rooms)));
-                            $matching_rooms = array_flip($st->fetchAll(PDO::FETCH_COLUMN));
+                            // filter list to [search_limit_low]...[search_limit_high]
+                            $search_limit_low = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"];
+                            $search_limit_high = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"];
+                            $matching_rooms = array_slice($matching_rooms, $search_limit_low, $search_limit_high - $search_limit_low);
                             foreach ($matching_rooms as $key=>$val) {
                             ?>
                         <tr>
@@ -621,12 +620,12 @@ class ShowToolsRequests
                                 <font size="-1">
                                     <?=_("zeige Räume")?>
                                     <a href="<?=URLHelper::getLink('?dec_limit_low=1')?>">-</a>
-                                    <input type="text" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] + 1)?>">
+                                    <input type="text" name="search_rooms_limit_low" size="1" value="<?=($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] + 1)?>">
                                     <a href="<?=URLHelper::getLink('?inc_limit_low=1')?>">+</a>
 
                                     bis
                                     <a href="<?=URLHelper::getLink('?dec_limit_high=1') ?>">-</a>
-                                    <input type="text" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]?>">
+                                    <input type="text" name="search_rooms_limit_high" size="1" value="<?=$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]?>">
                                     <a href="<?=URLHelper::getLink('?inc_limit_high=1') ?>">+</a>
 
                                     <?= Assets::input('icons/16/yellow/arr_2up.png', tooltip2('ausgewählten Bereich anzeigen') + array(

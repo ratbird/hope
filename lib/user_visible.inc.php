@@ -290,6 +290,19 @@ function get_local_visibility_by_id($user_id, $context, $return_user_perm=false)
     $statement->execute(array($user_id));
     $data = $statement->fetch(PDO::FETCH_ASSOC);
 
+    if ($context === 'homepage') {
+        $settings = User_Visibility_Settings::findByUser_id($user_id);
+        foreach ($settings as $setting) {
+            if ($setting['category'] == 1) {
+                $homepage_settings[$setting['identifier']] = $setting['state'];
+            }
+        }
+
+        if ($homepage_settings) {
+            $data[$context] = json_encode($homepage_settings);
+        }
+    }
+
     if ($data[$context] === null) {
         $user_perm = $data['perm'];
         $data['perms'] = $user_perm;

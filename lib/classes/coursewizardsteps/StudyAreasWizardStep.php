@@ -44,7 +44,7 @@ class StudyAreasWizardStep implements CourseWizardStep
         // First tree level is always shown.
         $tree = StudipStudyArea::findByParent(StudipStudyArea::ROOT);
 
-        if (count($tree) < 1) {
+        if (count($tree) == 0) {
             PageLayout::postError(formatReady(_('Das Anlegen einer ' .
                 'Veranstaltung ist nicht möglich, da keine Studienbereiche ' .
                 'existieren. Bitte wenden Sie sich an [die ' .

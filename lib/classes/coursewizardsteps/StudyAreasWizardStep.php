@@ -40,13 +40,23 @@ class StudyAreasWizardStep implements CourseWizardStep
             $tpl->set_attribute('assigned', array());
         }
         $tpl->set_attribute('values', $values);
+
         // First tree level is always shown.
         $tree = StudipStudyArea::findByParent(StudipStudyArea::ROOT);
+
+        if (count($tree) < 1) {
+            PageLayout::postError(formatReady(_('Das Anlegen einer ' .
+                'Veranstaltung ist nicht möglich, da keine Studienbereiche ' .
+                'existieren. Bitte wenden Sie sich an [die ' .
+                'Stud.IP-Administration]' .
+                URLHelper::getLink('dispatch.php/siteinfo/show') . ' .')));
+            return false;
+        }
+
         /*
          * Someone works without JS activated, load all ancestors and
          * children of open node.
          */
-
         if ($values['open_node']) {
             $tpl->set_attribute('open_nodes',
                 $this->buildPartialSemTree(

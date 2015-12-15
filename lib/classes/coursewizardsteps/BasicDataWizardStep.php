@@ -81,21 +81,40 @@ class BasicDataWizardStep implements CourseWizardStep
                 $semesters[] = $s;
             }
         }
-        $tpl->set_attribute('semesters', array_reverse($semesters));
-        // If no semester is set, use current as selected default.
-        if (!$values['start_time']) {
-            $values['start_time'] = Semester::findCurrent()->beginn;
+        if ($semesters) {
+            $tpl->set_attribute('semesters', array_reverse($semesters));
+            // If no semester is set, use current as selected default.
+            if (!$values['start_time']) {
+                $values['start_time'] = Semester::findCurrent()->beginn;
+            }
+        } else {
+            PageLayout::postError(formatReady(_('Veranstaltungen können nur ' .
+                'im aktuellen oder in zukünftigen Semestern angelegt werden. ' .
+                'Leider wurde kein passendes Semester gefunden. Bitte wenden ' .
+                'Sie sich an [die Stud.IP-Administration]' .
+                URLHelper::getLink('dispatch.php/siteinfo/show') . ' .')));
+            return false;
         }
 
         // Get all allowed home institutes (my own).
         $institutes = Institute::getMyInstitutes();
-        $tpl->set_attribute('institutes', $institutes);
-        if (!$values['institute']) {
-            if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT && Request::isXhr()) {
-                $values['institute'] = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
-            } else {
-                $values['institute'] = $institutes[0]['Institut_id'];
+        if ($institutes) {
+            $tpl->set_attribute('institutes', $institutes);
+            if (!$values['institute']) {
+                if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT && Request::isXhr()) {
+                    $values['institute'] = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
+                } else {
+                    $values['institute'] = $institutes[0]['Institut_id'];
+                }
             }
+        } else {
+            PageLayout::postError(formatReady(_('Um Veranstaltungen ' .
+                'anlegen zu können, muss Ihr Account der Einrichtung, ' .
+                'für die Sie eine Veranstaltung anlegen möchten, zugeordnet ' .
+                'werden. Bitte wenden Sie sich an [die ' .
+                'Stud.IP-Administration]' .
+                URLHelper::getLink('dispatch.php/siteinfo/show') . ' .')));
+            return false;
         }
 
         // QuickSearch for participating institutes.

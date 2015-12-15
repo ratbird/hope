@@ -1397,7 +1397,7 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
 
     $_SESSION['resources_data']["requests_working_pos"] = 0;
     $_SESSION['resources_data']["skip_closed_requests"] = TRUE;
-    if(Request::quoted('resolve_requests_mode') == "one_res"){
+    if(Request::option('resolve_requests_mode') == "one_res"){
         $_SESSION['resources_data']['resolve_requests_one_res'] = Request::quoted('resolve_requests_one_res');
     } else {
         $_SESSION['resources_data']['resolve_requests_one_res'] = null;
@@ -1406,13 +1406,13 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
     //filter the requests
     foreach($requests as $key => $val) {
         if (!$val["closed"] && !(Request::option('resolve_requests_no_time') && !$val['have_times'])) {
-            if ($resolve_requests_mode == "sem") {
+            if (Request::option('resolve_requests_mode') == "sem") {
                 if ($val["my_sem"])
                     $selected_requests[$key] = TRUE;
-            } elseif ($resolve_requests_mode == "res") {
+            } elseif (Request::option('resolve_requests_mode') == "res") {
                 if ($val["my_res"])
                     $selected_requests[$key] = TRUE;
-            } elseif (Request::quoted('resolve_requests_mode') == "one_res") {
+            } elseif (Request::option('resolve_requests_mode') == "one_res") {
                 if ($val["resource_id"] == Request::quoted('resolve_requests_one_res'))
                     $selected_requests[$key] = TRUE;
             } else {

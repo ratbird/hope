@@ -20,8 +20,7 @@ use Studip\Button,
             <span class="required"><?= _('Titel') ?></span>
             <input required id="tab_name" type="text" name="tab_name"
                    value="<?= htmlReady($scm->tab_name) ?>"
-                   placeholder="<?= _('Titel der Informationsseite') ?>"
-                   maxlength="20">
+                   placeholder="<?= _('Titel der Informationsseite') ?>">
         </label>
 
         <label>

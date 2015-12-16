@@ -38,7 +38,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 
     public function testFormatReady()
     {
-        $expected = '<b>some code</b>';
+        $expected = '<strong>some code</strong>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady('*some*code*'));
     }
@@ -81,7 +81,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testHeading()
     {
         $input = '!!%%Überschrift%%';
-        $expected = '<h3 class="content"><i>Überschrift</i></h3>';
+        $expected = '<h3 class="content"><em>Überschrift</em></h3>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
@@ -89,7 +89,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testBoldItalics()
     {
         $input = '**some %%code%%**';
-        $expected = '<b>some <i>code</i></b>';
+        $expected = '<strong>some <em>code</em></strong>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
@@ -105,7 +105,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testSimpleBoldItalics()
     {
         $input = '*bold*text* %some%italics%';
-        $expected = '<b>bold text</b> <i>some italics</i>';
+        $expected = '<strong>bold text</strong> <em>some italics</em>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
@@ -127,7 +127,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
-        $expected = '** test <i> test ** test </i>';
+        $expected = '** test <em> test ** test </em>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }
@@ -200,7 +200,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testPre()
     {
         $input = '[pre]**A**{-C-}[/pre]';
-        $expected = '<pre><b>A</b><strike>C</strike></pre>';
+        $expected = '<pre><strong>A</strong><s>C</s></pre>';
         $expected = $this->wrap($expected);
         $this->assertEquals($expected, formatReady($input));
     }

@@ -328,13 +328,13 @@ class StudipFormat extends TextFormat
     protected static function markupText($markup, $matches, $contents)
     {
         static $tag = array(
-            '**' => 'b',
-            '%%' => 'i',
+            '**' => 'strong',
+            '%%' => 'em',
             '__' => 'u',
             '##' => 'tt',
             '&gt;&gt;' => 'sup',
             '&lt;&lt;' => 'sub',
-            '{-' => 'strike',
+            '{-' => 's',
             '[admin_msg]' => 'i'
         );
 
@@ -367,8 +367,8 @@ class StudipFormat extends TextFormat
     protected static function markupTextSimple($markup, $matches)
     {
         static $tag = array(
-            '*' => 'b',
-            '%' => 'i',
+            '*' => 'strong',
+            '%' => 'em',
             '_' => 'u',
             '#' => 'tt',
             '+' => 'big',

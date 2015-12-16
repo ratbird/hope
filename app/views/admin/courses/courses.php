@@ -214,7 +214,7 @@
             <? if (in_array('members', $view_filter)) : ?>
                 <td style="text-align: center;">
                     <a title="<?=_('Teilnehmende')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
-                        <?= $values["Teilnehmende"] ?>
+                        <?= $values["teilnehmer"] ?>
                     </a>
                 </td>
             <? endif ?>

@@ -187,53 +187,6 @@ function getAllSortedSingleDates(&$sem) {
     return $termine;
 }
 
-
-function raumzeit_get_semesters(&$sem, &$semester, $filter) {
-    // this function works like raumzeit_get_semester_chooser() but it
-    // returns a data structure for a selectionlist template instead of html code
-
-    $all_semester = array_reverse($semester->getAllSemesterData());
-    $passed = false;
-    $semester_chooser['all'] = _("Alle Semester");
-    foreach ($all_semester as $val) {
-        if ($sem->getStartSemester() <= $val['vorles_beginn']) $passed = true;
-        if ($passed && ($sem->getEndSemesterVorlesEnde() >= $val['vorles_ende'])) {
-            $semester_chooser[$val['beginn']] = $val['name'];
-        }
-    }
-
-    if (sizeof($semester_chooser) == 2 && !$sem->hasDatesOutOfDuration(true)) {
-        unset($semester_chooser['all']);
-        foreach ($semester_chooser as $beginn => $trash) {
-            $_SESSION['raumzeitFilter'] = $beginn;
-            $filter = $beginn;
-            $selected = $beginn;
-            break;
-        }
-    }
-
-    $selected = $filter;
-
-    $i = 0;
-    foreach ($semester_chooser as $key => $val) {
-
-        // add text and link for each semester
-        $selectionlist[$i]["url"]  = '?cmd=applyFilter&newFilter='.$key;
-        $selectionlist[$i]["value"]  = $key;
-        $selectionlist[$i]["linktext"] = $val;
-
-        // set "selected" status
-        if ($selected == $key) {
-            $selectionlist[$i]["is_selected"] = true;
-        } else {
-            $selectionlist[$i]["is_selected"] = false;
-        }
-        $i++;
-    }
-
-    return $selectionlist;
-}
-
 /**
  * @param string $comment
  * @param array $dates SingleDate

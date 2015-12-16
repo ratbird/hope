@@ -77,6 +77,10 @@ form.default {
             padding: 0;
             text-indent: 10px;
             width: calc(100% + 20px);
+            
+            + * {
+                clear: left;
+            }
         }
 
         > :first-child:not(legend), > legend + * {

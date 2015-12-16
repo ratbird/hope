@@ -59,7 +59,8 @@ class Course_TimesroomsController extends AuthenticatedController
 
         $this->checkFilter();
 
-        $this->selection = raumzeit_get_semesters($this->course, new SemesterData(), $_SESSION['raumzeitFilter']);
+        $this->selection = $this->getSemestersForCourse($this->course, $_SESSION['raumzeitFilter']);
+        PageLayout::postInfo($_SESSION['raumzeitFilter']);
 
         if (!Request::isXhr()) {
             $this->setSidebar();
@@ -1107,6 +1108,53 @@ class Course_TimesroomsController extends AuthenticatedController
             $filterSemester = $semester->getSemesterDataByDate($_SESSION['raumzeitFilter']);
             $this->course->applyTimeFilter($filterSemester['beginn'], $filterSemester['ende']);
         }
+    }
+
+    /**
+     * Get all semesters that a course spans over.
+     *
+     * @param Seminar $course   The course as a Seminar object
+     * @param String  $selected Selected semester (can be updated)
+     */
+    private function getSemestersForCourse(Seminar $course, &$selected)
+    {
+        // Step 1: Get all matching semesters
+        $semesters = array_filter(Semester::getAll(), function (Semester $semester) use ($course) {
+            return $course->getStartSemester() <= $semester->vorles_beginn
+                && $course->getEndSemesterVorlesEnde() >= $semester->vorles_ende;
+        });
+
+        // Step 2: Add option 'all' if more than one semester is found or if
+        // there is any date outside of the semester range. Otherwise, adjust
+        // the $selected variable
+        $temp = array();
+        if (count($semesters) > 1 || $course->hasDatesOutOfDuration(true)) {
+            $temp['all'] = _('Alle Semester');
+        } elseif (count($semesters) === 1) {
+            $semester = reset($semesters);
+            $selected = $semester->beginn;
+        }
+        PageLayout::postInfo($selected);
+
+        // Step 3: Normalize semesters array (with option 'all' this needs
+        // to be in a pretty simple format)
+        $result = array();
+        foreach (array_reverse($semesters) as $semester) {
+            $temp[$semester->beginn] = $semester->name;
+        }
+
+        // Step 4: Create required result array from normalized array
+        $result = array();
+        foreach ($temp as $key => $val) {
+            $result[] = array(
+                'url'         => '?cmd=applyFilter&newFilter=' . $key,
+                'value'       => $key,
+                'linktext'    => $val,
+                'is_selected' => $selected == $key,
+            );
+        }
+
+        return $result;
     }
 
     /**

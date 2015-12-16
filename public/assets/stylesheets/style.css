@@ -1117,6 +1117,9 @@ form.default fieldset > legend {
   text-indent: 10px;
   width: calc(100% + 20px);
 }
+form.default fieldset > legend + * {
+  clear: left;
+}
 form.default fieldset > :first-child:not(legend),
 form.default fieldset > legend + * {
   margin-top: 10px;

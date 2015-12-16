@@ -63,7 +63,7 @@ class StudipFormatTest extends PHPUnit_Framework_TestCase
         $markup = new StudipFormat();
 
         $input = '++++abc++++ **++123++**';
-        $expected = '<big><big>abc</big></big> <b><big>123</big></b>';
+        $expected = '<big><big>abc</big></big> <strong><big>123</big></strong>';
         $this->assertEquals($expected, $markup->format($input));
     }
 

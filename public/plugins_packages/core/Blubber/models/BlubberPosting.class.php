@@ -61,7 +61,7 @@ class BlubberPosting extends SimpleORMap {
      * @return string
      */
     static public function mention($markup, $matches) {
-        $mention = $matches[0];
+        $mention = $matches[1];
         $posting = new BlubberPosting(self::$mention_posting_id);
         $username = stripslashes(substr($mention, 1));
         if ($username[0] !== '"') {

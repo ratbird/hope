@@ -257,8 +257,8 @@ class StreamsController extends PluginController {
         $thread->store();
 
         BlubberPosting::$mention_posting_id = $thread->getId();
-        StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
-        StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
+        StudipTransformFormat::addStudipMarkup("mention1", '(?:^|\W)(@\"[^\n\"]*\")', "", "BlubberPosting::mention");
+        StudipTransformFormat::addStudipMarkup("mention2", '(?:^|\W)(@[^\s]*[\d\w_]+)', "", "BlubberPosting::mention");
         $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
 
         if (strpos($content, "\n") !== false) {

@@ -120,7 +120,7 @@ class LiteratureController extends AuthenticatedController
         $xmlfile      = $_FILES['xmlfile']['tmp_name'];
         $xmlfile_name = $_FILES['xmlfile']['name'];
         $xmlfile_size = $_FILES['xmlfile']['size'];
-        $this->plugin_name  = Request::get('plugin_name');
+        $this->plugin_name  = Request::option('plugin_name');
         if ($cmd=="import_lit_list" && $xmlfile) {
             StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $this->plugin_name, $this->_range_id);
         }

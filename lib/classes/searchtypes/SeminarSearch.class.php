@@ -81,6 +81,11 @@ class SeminarSearch extends SearchType
                    LEFT JOIN auth_user_md5 USING (user_id)
                    WHERE s.Seminar_id IN (?)
                    GROUP BY s.Seminar_id";
+         if (Config::get()->IMPORTANT_SEMNUMBER) {
+             $query .= " ORDER BY s.VeranstaltungsNummer, s.Name";
+         } else {
+             $query .= " ORDER BY s.Name";
+         }
          $statement = DBManager::get()->prepare($query);
          $statement->execute(array(
             array_slice($result, $offset, $limit) ?: ''

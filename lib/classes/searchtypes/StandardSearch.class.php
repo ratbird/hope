@@ -116,7 +116,8 @@ class StandardSearch extends SQLSearch
                             "OR seminare.Sonstiges LIKE :input) " .
                             "AND seminare.visible = 1 " .
                             "AND seminare.status NOT IN ('".implode("', '", studygroup_sem_types())."') " .
-                        "ORDER BY seminare.Name";
+                (Config::get()->IMPORTANT_SEMNUMBER ? "ORDER BY seminare.VeranstaltungsNummer, seminare.Name" :
+                    "ORDER BY seminare.Name");
             case "Arbeitsgruppe_id":
                 return "SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
                         "FROM seminare " .

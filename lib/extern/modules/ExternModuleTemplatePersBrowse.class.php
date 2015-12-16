@@ -218,7 +218,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         $db = new DB_Seminar();
         
         $dbv = DbView::getView('sem_tree');
-        
+
         if ($module_params['initiale']) {
             if ($this->config->getValue('Main', 'onlylecturers')) {
                 $current_semester = get_sem_num(time());
@@ -233,7 +233,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                 . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1))) "
                 . "AND ui.Institut_id IN ('%s') "
                 . "AND ui.inst_perms = 'dozent' "
-                . "AND ui.externdefault = 1 ",
+                . "AND ui.externdefault = 1 "
+                . "AND " . get_ext_vis_query(),
                 substr($module_params['initiale'], 0, 1),
                 $dbv->sem_number_sql,
                 $current_semester,
@@ -251,7 +252,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "WHERE LOWER(LEFT(TRIM(aum.Nachname), 1)) = LOWER('%s') "
                     . "AND ui.inst_perms IN('%s') "
                     . "AND ui.Institut_id IN ('%s') "
-                    . "AND ui.externdefault = 1 ",
+                    . "AND ui.externdefault = 1 "
+                    . "AND " . get_ext_vis_query(),
                     substr($module_params['initiale'], 0, 1),
                     implode("','", $this->config->getValue('Main', 'instperms')),
                     implode("','", $selected_item_ids));
@@ -268,6 +270,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "WHERE ui.Institut_id = '%s' "
                     . "AND ui.inst_perms = 'dozent' "
                     . "AND ui.externdefault = 1 "
+                    . "AND " . get_ext_vis_query()
                     . "AND su.status = 'dozent' "
                     . "AND s.visible = 1 "
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1))) ",
@@ -285,7 +288,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "FROM user_inst ui "
                     . "WHERE ui.Institut_id = '%s' "
                     . "AND ui.inst_perms IN('%s') "
-                    . "AND ui.externdefault = 1 ",
+                    . "AND ui.externdefault = 1 "
+                    . "AND " . get_ext_vis_query(),
                     $module_params['item_id'],
                     implode("','", $this->config->getValue('Main', 'instperms')));
             }
@@ -306,8 +310,6 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             return array();
         }
 
-        $ext_vis_query = get_ext_vis_query();
-
         $query = sprintf(
             "SELECT ui.Institut_id, ui.raum, ui.sprechzeiten, ui.Telefon, "
             . "inst_perms,  i.Name, aum.Email, aum.user_id, username, "
@@ -317,7 +319,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             . "LEFT JOIN auth_user_md5 aum USING(user_id)"
             . "LEFT JOIN user_info uin USING(user_id) "
             . "WHERE CONCAT(ui.user_id, ui.Institut_id) IN ('%s') "
-            . "AND {$ext_vis_query} "
+            . "AND " . get_ext_vis_query()
             . "ORDER BY aum.Nachname ",
             $GLOBALS['_fullname_sql'][$nameformat],
             implode("','", $user_list));
@@ -398,6 +400,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                 . "AND TRIM(aum.Nachname) != '' "
                 . "AND ui.Institut_id IN ('%s') "
                 . "AND ui.externdefault = 1 "
+                . "AND " . get_ext_vis_query()
                 . "GROUP BY initiale",
                 $dbv->sem_number_sql,
                 $current_semester,
@@ -467,6 +470,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "WHERE ui.Institut_id = '%s' "
                     . "AND su.status = 'dozent' "
                     . "AND ui.externdefault = 1 "
+                    . "AND " . get_ext_vis_query()
                     . "AND ui.inst_perms = 'dozent' "
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1)))",
                     $row['Institut_id'],
@@ -483,7 +487,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "FROM user_inst ui "
                     . "WHERE ui.Institut_id = '%s' "
                     . "AND ui.inst_perms IN('%s') "
-                    . "AND ui.externdefault = 1 ",
+                    . "AND ui.externdefault = 1"
+                    . "AND " . get_ext_vis_query(),
                     $row['Institut_id'],
                     implode("','", $this->config->getValue('Main', 'instperms')));
             }

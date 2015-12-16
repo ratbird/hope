@@ -41,8 +41,9 @@
             </nav>
         </header>
         <section>
-            <?= formatReady($new['body']) ?>
-
+            <article>
+                <?= formatReady($new['body']) ?>
+            </article>
         </section>
         <?= $this->render_partial('news/_comments.php', array('new' => $new, 'range' => $range)) ?>
     </article>

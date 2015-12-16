@@ -1,20 +1,55 @@
-#raumzeit {
-    ul.termin_related {
+ul.termin_related {
+    padding: 0;
+    margin: 5px 0 10px 0;
+    li {
         padding: 0;
-        margin: 5px 0 10px 0;
-        li {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            position: relative;
-            width: 325px;
-        }
-    }
-
-    div.at_least_one_teacher {
+        margin: 0;
+        list-style: none;
+        position: relative;
         width: 325px;
     }
+}
 
-    a.bookable_rooms_action { display: none; }
+div.at_least_one_teacher {
+    width: 325px;
+}
 
+a.bookable_rooms_action {
+    display: none;
+}
+
+.is_ex_termin {
+    color: @dark-gray-color-80;
+    text-decoration: line-through;
+}
+
+.contentbox.timesrooms {
+    article header {
+        &.red {
+            border-left: 3px solid @red;
+        }
+        &.yellow {
+            border-left: 3px solid @activity-color;
+        }
+        &.green {
+            border-left: 3px solid @green;
+        }
+        &.red .tooltip-icon {
+            .icon-before('red/radiobutton-checked.svg');
+        }
+        &.yellow .tooltip-icon {
+            .icon-before('yellow/radiobutton-checked.svg');
+        }
+        &.green .tooltip-icon {
+            .icon-before('green/radiobutton-checked.svg');
+        }
+    }
+    form.default {
+        td label {
+            margin-top: 0;
+        }
+        tfoot select {
+            max-width: 30em;
+        }
+    }
 }

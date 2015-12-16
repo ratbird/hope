@@ -27,6 +27,12 @@ require_once 'lib/object.inc.php';
 
 class Admin_CoursesController extends AuthenticatedController
 {
+    /**
+     * Common tasks for all actions
+     *
+     * @param String $action Called action
+     * @param Array  $args   Possible arguments
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -74,7 +80,7 @@ class Admin_CoursesController extends AuthenticatedController
         PageLayout::setHelpKeyword("Basis.Veranstaltungen");
         PageLayout::setTitle(_("Verwaltung von Veranstaltungen und Einrichtungen"));
         Sidebar::Get()->setTitle(_('Veranstaltungsadministration'));
-
+        PageLayout::addSqueezePackage('raumzeit');
         // Add admission functions.
         PageLayout::addSqueezePackage('admission');
     }
@@ -89,7 +95,7 @@ class Admin_CoursesController extends AuthenticatedController
             : 'dozent';
 
         // get courses only if institutes available
-        $this->actions = self::getActions();
+        $this->actions = $this->getActions();
 
         $config_my_course_type_filter = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
 
@@ -508,6 +514,11 @@ class Admin_CoursesController extends AuthenticatedController
         $this->redirect('admin/courses/index');
     }
 
+    /**
+     * Marks a course as complete/incomplete.
+     *
+     * @param String $course_id Id of the course
+     */
     public function toggle_complete_action($course_id)
     {
         $course = Course::find($course_id);
@@ -526,66 +537,94 @@ class Admin_CoursesController extends AuthenticatedController
      * @param null $selected
      * @return array
      */
-    private static function getActions($selected = null)
+    private function getActions($selected = null)
     {
         // array for the avaiable modules
+        $sem_filter = $this->semester ? $this->semester->beginn : 'all';
         $actions = array(
-            1  => array('name'       => _('Grunddaten'),
-                        'title'      => _('Grunddaten'),
-                        'url'        => 'dispatch.php/course/basicdata/view?cid=%s',
-                        'attributes' => array(
-                            'data-dialog' => 'size=50%'
-                        )),
-            2  => array('name'       => _('Studienbereiche'),
-                        'title'      => _('Studienbereiche'),
-                        'url'        => 'dispatch.php/course/study_areas/show/?cid=%s&from=admin/courses',
-                        'attributes' => array(
-                            'data-dialog' => 'size=50%'
-                        )),
-            3  => array('name'  => _('Zeiten / Räume'),
-                        'title' => _('Zeiten / Räume'),
-                        'url'   => 'raumzeit.php?cid=%s'),
-            8  => array('name'      => _('Sperrebene'),
-                        'title'     => _('Sperrebenen'),
-                        'url'       => 'dispatch.php/admin/courses/set_lockrule',
-                        'multimode' => true),
-            9  => array('name'      => _('Sichtbarkeit'),
-                        'title'     => _('Sichtbarkeit'),
-                        'url'       => 'dispatch.php/admin/courses/set_visibility',
-                        'multimode' => true),
-            10 => array('name'      => _('Zusatzangaben'),
-                        'title'     => _('Zusatzangaben'),
-                        'url'       => 'dispatch.php/admin/courses/set_aux_lockrule',
-                        'multimode' => true),
-            11 => array('name'  => _('Veranstaltung kopieren'),
-                        'title' => _('Kopieren'),
-                        'url'   => 'dispatch.php/course/wizard/copy/%s',
-                        'attributes' => array(
-                            'data-dialog' => 'size=50%'
-                        )),
-            14 => array('name'       => 'Zugangsberechtigungen',
-                        'title'      => _('Zugangsberechtigungen'),
-                        'url'        => 'dispatch.php/course/admission?cid=%s',
-                        'attributes' => array(
-                            'data-dialog' => 'size=50%'
-                        )),
-            16 => array('name'      => _('Archivieren'),
-                        'title'     => _('Archivieren'),
-                        'url'       => 'archiv_assi.php',
-                        'multimode' => true),
-            17  => array('name'      => _('Gesperrte Veranstaltungen'),
-                        'title'     => _('Einstellungen speichern'),
-                        'url'       => 'dispatch.php/admin/courses/set_locked',
-                        'multimode' => true),
+            1 => array(
+                'name'       => _('Grunddaten'),
+                'title'      => _('Grunddaten'),
+                'url'        => 'dispatch.php/course/basicdata/view?cid=%s',
+                'attributes' => ['data-dialog' => 'size=big'],
+            ),
+            2 => array(
+                'name'       => _('Studienbereiche'),
+                'title'      => _('Studienbereiche'),
+                'url'        => 'dispatch.php/course/study_areas/show/?cid=%s&from=admin/courses',
+                'attributes' => ['data-dialog' => 'size=big'],
+            ),
+            3 => array(
+                'name'       => _('Zeiten / Räume'),
+                'title'      => _('Zeiten / Räume'),
+                'url'        => 'dispatch.php/course/timesrooms/index?cid=%s',
+                'attributes' => ['data-dialog' => 'size=big'],
+                'params'     => array(
+                    'newFilter' => $sem_filter,
+                    'cmd'       => 'applyFilter'
+                ),
+            ),
+            8 => array(
+                'name'      => _('Sperrebene'),
+                'title'     => _('Sperrebenen'),
+                'url'       => 'dispatch.php/admin/courses/set_lockrule',
+                'multimode' => true
+            ),
+            9 => array(
+                'name'      => _('Sichtbarkeit'),
+                'title'     => _('Sichtbarkeit'),
+                'url'       => 'dispatch.php/admin/courses/set_visibility',
+                'multimode' => true
+            ),
+            10 => array(
+                'name'      => _('Zusatzangaben'),
+                'title'     => _('Zusatzangaben'),
+                'url'       => 'dispatch.php/admin/courses/set_aux_lockrule',
+                'multimode' => true
+            ),
+            11 => array(
+                'name'       => _('Veranstaltung kopieren'),
+                'title'      => _('Kopieren'),
+                'url'        => 'dispatch.php/course/wizard/copy/%s',
+                'attributes' => ['data-dialog' => 'size=big'],
+            ),
+            14 => array(
+                'name'       => 'Zugangsberechtigungen',
+                'title'      => _('Zugangsberechtigungen'),
+                'url'        => 'dispatch.php/course/admission?cid=%s',
+                'attributes' => ['data-dialog' => 'size=big'],
+            ),
+            16 => array(
+                'name'      => _('Archivieren'),
+                'title'     => _('Archivieren'),
+                'url'       => 'archiv_assi.php',
+                'multimode' => true
+            ),
+            17 => array(
+                'name'      => _('Gesperrte Veranstaltungen'),
+                'title'     => _('Einstellungen speichern'),
+                'url'       => 'dispatch.php/admin/courses/set_locked',
+                'multimode' => true
+            ),
+            18 => array(
+                'name'       => _('Startsemester'),
+                'title'      => _('Startsemester'),
+                'url'        => 'dispatch.php/course/timesrooms/editSemester?cid=%s&origin=admin_courses',
+                'attributes' => ['data-dialog' => 'size=400'],
+            ),
         );
 
-        if (get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
-            $actions[4] = array('name'  => 'Raumanfragen',
-                                'title' => _('Raumanfragen'),
-                                'url'   => 'dispatch.php/course/room_requests/index?cid=%s');
+        if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) {
+            $actions[4] = array(
+                'name'  => 'Raumanfragen',
+                'title' => _('Raumanfragen'),
+                'url'   => 'dispatch.php/course/room_requests/index?cid=%s&origin=admin_courses',
+                'attributes' => ['data-dialog' => 'size=big'],
+            );
         }
+        ksort($actions);
 
-        foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
+        foreach (PluginManager::getInstance()->getPlugins('AdminCourseAction') as $plugin) {
             $actions[get_class($plugin)] = array(
                 'name'      => $plugin->getPluginName(),
                 'title'     => $plugin->getPluginName(),
@@ -621,6 +660,12 @@ class Admin_CoursesController extends AuthenticatedController
         );
     }
 
+    /**
+     * Returns all courses matching set criteria.
+     *
+     * @param Array $params Additional parameters
+     * @return Array of courses
+     */
     private function getCourses($params = array())
     {
         // Init
@@ -736,26 +781,23 @@ class Admin_CoursesController extends AuthenticatedController
     }
 
     /**
-     * TODO: SORM
      * Returns the teacher for a given cours
-     * @param $course_id
-     * @return array
+     *
+     * @param String $course_id Id of the course
+     * @return array of user infos [user_id, username, Nachname, fullname]
      */
     private function getTeacher($course_id)
     {
-        $query = "SELECT DISTINCT user_id, username, Nachname, CONCAT(Nachname, ', ', Vorname) as fullname
-                  FROM seminar_user
-                  LEFT JOIN auth_user_md5 USING (user_id)
-                  WHERE Seminar_id = ? AND status='dozent'
-                  ORDER BY position, Nachname ASC";
-
-        $teacher_statement = DBManager::get()->prepare($query);
-        $teacher_statement->execute(array($course_id));
-
-        $dozenten = array_map('reset', $teacher_statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
-        $teacher_statement->closeCursor();
-
-        return $dozenten;
+        $teachers   = CourseMember::findByCourseAndStatus($course_id, 'dozent');
+        $collection = SimpleORMapCollection::createFromArray($teachers);
+        return $collection->map(function (CourseMember $teacher) {
+            return array(
+                'user_id'  => $teacher->user_id,
+                'username' => $teacher->username,
+                'Nachname' => $teacher->nachname,
+                'fullname' => $teacher->getUserFullname('no_title_rev'),
+            );
+        });
     }
 
 
@@ -836,7 +878,7 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function setActionsWidget($selected_action = null)
     {
-        $actions = self::getActions();
+        $actions = $this->getActions();
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Aktionsbereich-Auswahl'), $this->url_for('admin/courses/set_action_type'), 'action_area');
 
@@ -915,7 +957,9 @@ class Admin_CoursesController extends AuthenticatedController
         $sidebar->addWidget($list, 'filter_teacher');
     }
 
-
+    /**
+     * Adds a search widget to the sidebar
+     */
     private function setSearchWiget()
     {
         $sidebar = Sidebar::Get();
@@ -924,6 +968,11 @@ class Admin_CoursesController extends AuthenticatedController
         $sidebar->addWidget($search, 'filter_search');
     }
 
+    /**
+     * Returns the filter configuration.
+     *
+     * @return array containing the filter configuration
+     */
     private function getFilterConfig()
     {
         $available_filters = array_keys($this->getViewFilters());
@@ -943,6 +992,12 @@ class Admin_CoursesController extends AuthenticatedController
         return $config;
     }
 
+    /**
+     * Sets the filter configuration.
+     *
+     * @param Array $config Filter configuration
+     * @return array containing the filter configuration
+     */
     private function setFilterConfig($config)
     {
         $config = $config ?: array_keys($this->getViewFilters());

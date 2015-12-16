@@ -94,7 +94,6 @@ jQuery(function ($) {
         var that = this;
         $.get($(this).attr('href'), function (response) {
             var row = $('<tr />').addClass('loaded-details');
-
             $('<td />')
                 .attr('colspan', $(that).closest('td').siblings().length + 1)
                 .html(response)
@@ -114,6 +113,14 @@ jQuery(function ($) {
     $(document).on('click', '.loaded-details a.cancel', function () {
         $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
         return false;
+    });
+    
+    $(document).on('ready', function() {
+        var elements = $('.load-in-new-row-open');
+        elements.click();
+        if (elements.length > 0) {
+            $(window).scrollTo(elements.first());
+        }
     });
 
 });
@@ -161,7 +168,7 @@ jQuery(document).on('keyup', 'input.allow-only-numbers', function () {
  * ------------------------------------------------------------------------ */
 jQuery.ui.accordion.prototype.options.icons = {
     header: 'arrow_right',
-    activeHeader : 'arrow_down'
+    activeHeader: 'arrow_down'
 };
 
 
@@ -190,6 +197,10 @@ jQuery.ui.accordion.prototype.options.icons = {
         showTimezone: false
     };
     $.timepicker.setDefaults($.timepicker.regional.de);
+
+    $(document).on('focus', '.has-time-picker', function () {
+        $(this).removeClass('has-time-picker').timepicker();
+    });
 }(jQuery));
 
 
@@ -213,10 +224,85 @@ jQuery(function ($) {
     });
 });
 
+/* Secure textareas by displaying a warning on page unload if there are
+ unsaved changes */
+(function ($) {
+    function securityHandlerWindow(event) {
+        var message = 'Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString();
+        event = event || window.event || {};
+        event.returnValue = message;
+        return message;
+    }
+
+    function submissionHandlerWindow() {
+        $(window).off('beforeunload', securityHandlerWindow);
+    }
+
+    $(document).on('change keyup', 'textarea[data-secure]', function () {
+        var secured = $(this).data('secured'),
+            changed = (this.value !== this.defaultValue),
+            action = null;
+
+        if (changed && !secured) {
+            action = 'on';
+        } else if (!changed && secured) {
+            action = 'off';
+        }
+
+        if (action !== null) {
+            // (at|de)tach before unload handler that will display the message
+            $(window)[action]('beforeunload', securityHandlerWindow);
+
+            // (at|de)tach submit handler that will remove the securityHandlerWindow
+            // on form submission
+            $(this).closest('form')[action]('submit', submissionHandlerWindow);
+
+            // Store current state
+            $(this).data('secured', action === 'on');
+        }
+
+        $(this).data('changed', changed);
+    });
+
+    function securityHandlerDialog(event, ui) {
+        var unchanged = true;
+        $('textarea[data-secure]', ui.dialog).each(function () {
+            unchanged = unchanged && this.value === this.defaultValue;
+        });
+
+        // If WYSIWYG editor is enabled, always assume that the text has been
+        // changed.
+        if ($('textarea.wysiwyg', ui.dialog).length > 0) {
+            unchanged = false;
+        }
+
+        if (!unchanged && !confirm('Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString())) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        submissionHandlerWindow();
+        return true;
+    }
+
+    $(document).on('dialog-update', function (event, ui) {
+        if ($('textarea[data-secure]', ui.dialog).length === 0) {
+            return;
+        }
+
+        $(ui.dialog).on('dialogbeforeclose', securityHandlerDialog)
+            .find('form:has(textarea[data-secure])').on('submit', function () {
+                $(this).closest('ui.dialog').off('dialogbeforeclose', securityHandlerDialog);
+            });
+    });
+
+}(jQuery));
+
 /* Copies a value from a select to another element*/
 jQuery(document).on('change', 'select[data-copy-to]', function () {
     var target = jQuery(this).data().copyTo,
-        value  = jQuery(this).val() || jQuery(target).prop('defaultValue');
+        value = jQuery(this).val() || jQuery(target).prop('defaultValue');
     jQuery(target).val(value);
 });
 
@@ -227,18 +313,18 @@ jQuery(document).ready(function ($) {
 // Fix horizontal scroll issue on domready, window load and window resize.
 // This also makes the header and footer sticky regarding horizontal scrolling.
 jQuery(document).on('ready', function () {
-    var page_margin    = ($('#layout_page').outerWidth(true) - $('#layout_page').width()) / 2,
+    var page_margin = ($('#layout_page').outerWidth(true) - $('#layout_page').width()) / 2,
         content_margin = $('#layout_content').outerWidth(true) - $('#layout_content').innerWidth(),
-        sidebar_width  = $('#layout-sidebar').outerWidth(true);
+        sidebar_width = $('#layout-sidebar').outerWidth(true);
 
-    function fixScrolling () {
+    function fixScrolling() {
         $('#layout_page').removeClass('oversized').css({
             minWidth: '',
             marginRight: '',
             paddingRight: ''
         });
 
-        var max_width    = 0,
+        var max_width = 0,
             fix_required = $('html').is(':not(.responsified)') && $('#layout_content').get(0).scrollWidth > $('#layout_content').width();
 
         if (fix_required) {
@@ -304,14 +390,14 @@ jQuery(document).on('dialog-update', function (event) {
 
 /*override window.print to allow mathjax rendering to finish before printing*/
 (function (origPrint) {
-     window.print = function () {
-       if (typeof MathJax !== 'undefined') {
-          MathJax.Hub.Queue(
-              ["Delay",MathJax.Callback,700],
+    window.print = function () {
+        if (typeof MathJax !== 'undefined') {
+            MathJax.Hub.Queue(
+                ["Delay", MathJax.Callback, 700],
                 origPrint
-                );
-         } else {
+            );
+        } else {
             origPrint();
-         }
-     }
+        }
+    }
 })(window.print);

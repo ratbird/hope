@@ -213,6 +213,70 @@ class Semester extends SimpleORMap
     }
 
     /**
+     * Returns the start week dates for this semester (and other
+     * semesters if duration is > 0).
+     *
+     * @param mixed $duration Duration time (false to restrict to current
+     *                        semester, -1 for indefinite duration, otherwise
+     *                        the int value for the duration so that
+     *                        semester start + duration = end)
+     * @return array containing the start weeks
+     */
+    public function getStartWeeks($duration = false)
+    {
+        if ($duration === false) {
+            $end_semester = $this;
+        } elseif ($duration == -1) {
+            $end_semester = end(self::getAll());
+        } else {
+            $end_semester = self::findByTimestamp($this->beginn + $duration); 
+        }
+
+        $timestamp = $this->getCorrectedVorlesBegin();
+        $end_date  = $end_semester->vorles_ende;
+
+        $i = 0;
+
+        $start_weeks = array();
+        while ($timestamp < $end_date) {
+            $start_weeks[$i] = sprintf(_('%u. Semesterwoche (ab %s)'),
+                                       $i + 1,
+                                       strftime('%x', $timestamp));
+
+            $i += 1;
+
+            $timestamp = strtotime('+1 week', $timestamp);
+        }
+
+        return $start_weeks;
+    }
+
+    /**
+     * Returns the corrected begin of lectures which ensures that the begin
+     * is always on a monday.
+     *
+     * @return int unix timestamp of correct begin of lectures
+     */
+    public function getCorrectedVorlesBegin()
+    {
+        $dow = date('w', $this->vorles_beginn);
+
+        // Date is already on a monday
+        if ($dow == 1) {
+            return $this->vorles_beginn;
+        }
+
+        // Saturday or sunday: return next monday
+        if ($dow == 0 || $dow == 6) {
+            return strtotime('next monday', $this->vorles_beginn);
+        }
+
+        // Otherwise return last monday
+        return strtotime('last monday', $this->vorles_beginn);
+    }
+
+
+    /**
      * returns "Semesterwoche" for a given timestamp
      * @param integer $timestamp
      * @return number|boolean
@@ -235,7 +299,13 @@ class Semester extends SimpleORMap
         return false;
     }
 
-    function toArray($only_these_fields = null)
+    /**
+     * Returns an array representation of this semester.
+     *
+     * @param mixed $only_these_fields List of fields to extract
+     * @return array represenation
+     */
+    public function toArray($only_these_fields = null)
     {
         if (!isset($only_these_fields)) {
             $fields = array_flip(array_diff($this->known_slots, array_keys($this->relations)));

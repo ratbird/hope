@@ -204,8 +204,11 @@
     };
     // Handler for HTTP header X-Dialog-Execute: Execute arbitrary function
     STUDIP.Dialog.handlers.header['X-Dialog-Execute'] = function (value, options, xhr) {
-        var chunks,
-            callback = window;
+        var chunks = value.trim().split('.'),
+            callback = window,
+            payload = xhr.getResponseHeader('Content-Type').match(/json/)
+                ? $.parseJSON(xhr.responseText)
+                : xhr.responseText;
 
         // Try to parse value as JSON (value might be {func: 'foo', payload: {}})
         try {
@@ -466,7 +469,7 @@
             },
             resizeStop: function (event, ui) {
                 var position = [Math.floor(ui.position.left) - $(window).scrollLeft(),
-                                Math.floor(ui.position.top) - $(window).scrollTop()];
+                    Math.floor(ui.position.top) - $(window).scrollTop()];
                 $(event.target).parent().css('position', 'fixed');
                 $(event.target).dialog('option', 'position', position);
             },

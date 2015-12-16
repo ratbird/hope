@@ -64,7 +64,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
                 )
             )
         );
-        
+
         date_default_timezone_set(@date_default_timezone_get());
         setlocale(LC_TIME, "C");
 
@@ -187,7 +187,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
         $compare = '<raumzeit>
     <startwoche>0</startwoche>
     <datum>wöchentlich</datum>
-    <wochentag>Mo</wochentag>
+    <wochentag>Montag</wochentag>
     <zeit>10:00-12:00</zeit>
     <raum>
         <gebucht>Hörsaal 1 &lt;br&gt;</gebucht>
@@ -196,7 +196,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 </raumzeit>
 <raumzeit>
     <datum>12.05.2010</datum>
-    <wochentag>Mi</wochentag>
+    <wochentag>Mittwoch</wochentag>
     <zeit>09:00-13:00</zeit>
     <raum>
         <gebucht></gebucht>
@@ -317,8 +317,8 @@ function getPlainRooms($rooms)
     return $room_list;
 }
 
-function getWeekday($day_num, $short = null)
+function getWeekday($day_num, $short = false)
 {
-    $day = array('1' => 'Mo', '3' => 'Mi');
+    $day = array('1' => $short ? 'Mo' : 'Montag', '3' => $short ? 'Mi' : 'Mittwoch');
     return $day[$day_num];
 }

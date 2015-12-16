@@ -263,7 +263,7 @@ class User extends AuthUserMd5
             return $this->vorname . ' ' . $this->nachname;
         }
         if ($format == 'no_title_rev') {
-            return $this->nachname . ' ' . $this->vorname;
+            return $this->nachname . ', ' . $this->vorname;
         }
         if ($concat === null) {
             $concat = function() {return join('', func_get_args());};

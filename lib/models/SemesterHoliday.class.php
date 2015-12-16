@@ -99,7 +99,7 @@ class SemesterHoliday extends SimpleORMap
         }
         return self::$holiday_cache;
     }
-    
+
     /**
      * Returns whether we currently have this holidays (yay).
      *
@@ -109,4 +109,36 @@ class SemesterHoliday extends SimpleORMap
     {
         return $this->beginn < time() && $this->ende > time();
     }
+
+    /**
+     * Returns if a given date is a holiday.
+     *
+     * @param int  $time                Timestamp to check
+     * @param bool $check_vacation_only Defines whether to check only vacation
+     *                                  times or against all holidays
+     * @return mixed false if no holiday was found, an array with the name and
+     *               the "col" value of the holiday otherwise
+     */
+    public static function isHoliday($time, $check_vacation_only = true)
+    {
+        // Check all defined vaciation times
+        foreach (SemesterHoliday::getAll() as $val) {
+            if ($val->beginn <= $time && $val->ende >= $time) {
+                return array(
+                    'name' => $val->name,
+                    'col' => 3,
+                );
+            }
+        }
+
+        // Check all other holidays
+        if (!$check_vacation_only) {
+            return holiday($time);
+            $holiday_entry = holiday($time);
+        }
+
+        // Nothing found
+        return false;
+    }
+
 }

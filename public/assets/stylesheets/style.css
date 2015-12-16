@@ -101,6 +101,9 @@ h1 span {
 p {
   margin: 0 0 10px;
 }
+.text-center {
+  text-align: center;
+}
 /* --- Links ---------------------------------------------------------------- */
 a,
 a:link,
@@ -171,6 +174,34 @@ a.link-extern::before {
   height: 16px;
   margin-right: 2px;
   background-image: url("../images/icons/blue/link-extern.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+a.link-add::before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 2px;
+  background-image: url("../images/icons/blue/add.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+a.link-edit::before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 2px;
+  background-image: url("../images/icons/blue/edit.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1000,6 +1031,7 @@ form.default select {
   color: #3c434e;
   max-width: 48em;
   padding: 5px;
+  vertical-align: middle;
   width: 100%;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -1044,20 +1076,20 @@ form.default input[type=number] {
 form.default textarea {
   min-height: 6em;
 }
-form.default label {
+form.default label:not(.undecorated) {
   display: block;
   margin-top: 1ex;
   max-width: 100%;
   text-indent: 0.25ex;
 }
-form.default label input[type=date],
-form.default label input[type=email],
-form.default label input[type=number],
-form.default label input[type=password],
-form.default label input[type=text],
-form.default label input[type=url],
-form.default label textarea,
-form.default label select {
+form.default label:not(.undecorated) input[type=date],
+form.default label:not(.undecorated) input[type=email],
+form.default label:not(.undecorated) input[type=number],
+form.default label:not(.undecorated) input[type=password],
+form.default label:not(.undecorated) input[type=text],
+form.default label:not(.undecorated) input[type=url],
+form.default label:not(.undecorated) textarea,
+form.default label:not(.undecorated) select {
   display: block;
   margin-top: 1ex;
 }
@@ -2945,9 +2977,10 @@ section.contentbox header h1 > a svg {
   margin-right: 5px;
 }
 section.contentbox header nav {
-  vertical-align: middle;
-  margin-right: 4px;
+  vertical-align: text-top;
+  padding: 2px 5px 0 5px;
   text-align: right;
+  line-height: inherit;
 }
 section.contentbox header nav * {
   padding: 3px;
@@ -2980,7 +3013,6 @@ section.contentbox article > p,
 section.contentbox article > section,
 section.contentbox article > footer,
 section.contentbox article > div {
-  padding: 0 10px 0 10px;
   max-height: 0px;
   opacity: 0;
   overflow: auto;
@@ -2989,12 +3021,23 @@ section.contentbox article > div {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
+section.contentbox article > p,
+section.contentbox article > footer,
+section.contentbox article > div {
+  padding: 0 10px 0 10px;
+}
 section.contentbox article div,
 section.contentbox article p {
   margin: 0;
 }
 section.contentbox article section {
   border-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+section.contentbox article section article {
+  border: none;
 }
 section.contentbox article section header {
   background: transparent;
@@ -3030,11 +3073,20 @@ section.contentbox article header h1 a:before {
   -moz-transition: all 200ms ease 0s;
   -o-transition: all 200ms ease 0s;
   transition: all 200ms ease 0s;
-  vertical-align: bottom;
+  margin-top: 2px;
 }
 section.contentbox article header nav * {
   display: inline-block;
   vertical-align: middle;
+}
+section.contentbox article header nav span {
+  display: inline-block;
+  border-right: 1px solid #899ab9;
+  padding: 0px 5px;
+}
+section.contentbox article header nav span:last-child {
+  border-right: none;
+  padding-right: 0px;
 }
 section.contentbox article footer {
   text-align: center;
@@ -5606,22 +5658,83 @@ body#wiki #main_content td.printcontent:last-child:not(:first-child) {
 .no-js #wiki button[name="submit-and-edit"] {
   display: none;
 }
-#raumzeit ul.termin_related {
+ul.termin_related {
   padding: 0;
   margin: 5px 0 10px 0;
 }
-#raumzeit ul.termin_related li {
+ul.termin_related li {
   padding: 0;
   margin: 0;
   list-style: none;
   position: relative;
   width: 325px;
 }
-#raumzeit div.at_least_one_teacher {
+div.at_least_one_teacher {
   width: 325px;
 }
-#raumzeit a.bookable_rooms_action {
+a.bookable_rooms_action {
   display: none;
+}
+.is_ex_termin {
+  color: #636971;
+  text-decoration: line-through;
+}
+.contentbox.timesrooms article header.red {
+  border-left: 3px solid #d60000;
+}
+.contentbox.timesrooms article header.yellow {
+  border-left: 3px solid #ffbd33;
+}
+.contentbox.timesrooms article header.green {
+  border-left: 3px solid #6ead10;
+}
+.contentbox.timesrooms article header.red .tooltip-icon::before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/red/radiobutton-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+.contentbox.timesrooms article header.yellow .tooltip-icon::before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/yellow/radiobutton-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+.contentbox.timesrooms article header.green .tooltip-icon::before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/green/radiobutton-checked.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
+  vertical-align: text-top;
+  width: 16px;
+}
+.contentbox.timesrooms form.default td label {
+  margin-top: 0;
+}
+.contentbox.timesrooms form.default tfoot select {
+  max-width: 30em;
 }
 .opengraph-area {
   margin: 10px auto 5px;
@@ -7601,16 +7714,16 @@ ul.clean > li {
   padding: 5px;
 }
 /* --- StudipForm selectbox control------------------------------------------ */
-div.selectbox {
+.selectbox {
   background-color: #ffffff;
-  border: 1px solid;
+  border: 1px solid #28497c;
   margin-top: 5px;
   margin-bottom: 5px;
   padding: 5px;
   max-height: 200px;
   overflow: auto;
 }
-div.selectbox fieldset {
+.selectbox fieldset {
   border: none;
   margin: 0px;
   padding: 0px;
@@ -7730,6 +7843,36 @@ img.plugin_preview {
 /* --- User Administration -------------------------------------------------- */
 .user_form {
   width: 250px;
+}
+.times-rooms-grid {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  margin: 0 -0.5em;
+}
+.times-rooms-grid section {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  -moz-box-flex: 1;
+  flex: 1;
+  min-width: 23em;
+  max-width: 100%;
+  padding: 0 0.5em;
+}
+.times-rooms-grid section:empty {
+  height: 0;
+}
+.times-rooms-grid section section {
+  padding: 0;
 }
 /* --- Veranstaltungsverwaltung --------------------------------------------- */
 .boxed-grid {

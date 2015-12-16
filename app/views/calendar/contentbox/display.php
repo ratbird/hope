@@ -12,7 +12,7 @@
             <?= Assets::img('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
         </a>
         <? else: ?>
-        <a href="<?= URLHelper::getLink("raumzeit.php", array('cid' => $range_id)) ?>">
+        <a href="<?= URLHelper::getLink("dispatch.php/course/timesrooms", array('cid' => $range_id)) ?>">
             <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
         </a>
         <? endif; ?>

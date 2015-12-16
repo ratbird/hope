@@ -23,7 +23,7 @@ if (is_array($cycle['assigned_rooms'])){
 <raumzeit>
     <startwoche><?= $cycle['week_offset'] ? $cycle['week_offset'] : 0 ?></startwoche>
     <datum><?= $turnus_list[$cycle['cycle']] ?></datum>
-    <wochentag><?= getWeekDay($cycle['day']) ?></wochentag>
+    <wochentag><?= getWeekDay($cycle['day'], false) ?></wochentag>
     <zeit><?= $cycle['start_hour'] ?>:<?= $cycle['start_minute'] ?>-<?= $cycle['end_hour'] ?>:<?= $cycle['end_minute'] ?></zeit>
     <raum>
         <gebucht><?= htmlReady($plainRooms) ?></gebucht>
@@ -35,7 +35,7 @@ if (is_array($cycle['assigned_rooms'])){
 <? if (is_array($dates['irregular'])) foreach ($dates['irregular'] as $date) : ?>
 <raumzeit>
     <datum><?= date('d.m.Y', $date['start_time']) ?></datum>
-    <wochentag><?= getWeekDay(date('w', $date['start_time'])) ?></wochentag>
+    <wochentag><?= getWeekDay(date('w', $date['start_time']),false) ?></wochentag>
     <zeit><?= date('H:i', $date['start_time']) ?>-<?= date('H:i', $date['end_time']) ?></zeit>
     <raum>
         <gebucht><?= htmlReady(implode(', ', getPlainRooms(array($date['resource_id'] => 1)))) ?></gebucht>

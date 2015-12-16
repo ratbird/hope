@@ -183,7 +183,7 @@ function shrink_dates($dates) {
         }
 
         if ((!$dates[$i]["conjuncted"]) || (!$dates[$i+1]["conjuncted"])) {
-            $return_string .= ' ' . getWeekday(date('w', $dates[$i]['start_time'])) .'.';
+            $return_string .= ' ' . strftime('%A', $dates[$i]['start_time']) .'.';
             $return_string .= date (" d.m.", $dates[$i]["start_time"]);
         }
 
@@ -312,32 +312,6 @@ function get_semester($seminar_id, $start_sem_only=FALSE)
         }
     }
     return $return_string;
-}
-
-
-function getCorrectedSemesterVorlesBegin ($semester_num) {
-    $all_semester = SemesterData::GetInstance()->getAllSemesterData();
-
-    $vorles_beginn=$all_semester[$semester_num]["vorles_beginn"];
-
-    //correct the vorles_beginn to match monday, if necessary
-    $dow = date("w", $vorles_beginn);
-
-    if ($dow <= 5)
-        $corr = ($dow -1) * -1;
-    elseif ($dow == 6)
-        $corr = 2;
-    elseif ($dow == 0)
-        $corr = 1;
-    else
-        $corr = 0;
-
-    if ($corr) {
-        $vorles_beginn_uncorrected = $vorles_beginn;
-        $vorles_beginn = mktime(date("G",$vorles_beginn), date("i",$vorles_beginn), 0, date("n",$vorles_beginn), date("j",$vorles_beginn)+$corr,  date("Y",$vorles_beginn));
-    }
-
-    return $vorles_beginn;
 }
 
 /*

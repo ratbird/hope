@@ -45,7 +45,7 @@ use Studip\Button,
                         <br>
                         <?= sprintf(_("Um die Belegung zu verändern, ändern Sie diese auf der Seite %sZeiten / Räume%s der Veranstaltung"),
                                     Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
-                                    "<a href=\"raumzeit.php?cid=". $seminarID ."\" onClick=\"return check_opener(this)\">",
+                                    "<a href=" . URLHelper::getURL("dispatch.php/course/timesrooms", array('cid' => $seminarID)) . "onClick=\"return check_opener(this)\">",
                                     "</a>");
                         ?>
                     <? endif; ?>
@@ -59,7 +59,7 @@ use Studip\Button,
                         <br>
                         <?= sprintf(_("Um die Belegung zu verändern, ändern Sie bitte den Termin auf der Seite %sZeiten / Räume%s der Veranstaltung"),
                                    Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
-                                   "<a href=\"raumzeit.php?cid=" . $seminarID . "#irregular_dates\" onClick=\"return check_opener(this)\">",
+                                   "<a href=" . URLHelper::getURL("dispatch.php/course/timesrooms", array('cid' => $seminarID)) ." onClick=\"return check_opener(this)\">",
                                    "</a>");
                         ?>
                     <? endif ?>

@@ -9,12 +9,14 @@
 
     // Use a checkbox as a proxy for a set of other checkboxes. Define
     // proxied elements by a css selector in attribute "data-proxyfor".
-    $(document).on('change', ':checkbox[data-proxyfor]', function (event) {
+    $(document).on('change', ':checkbox[data-proxyfor]', function (event, force) {
         // Detect if event was triggered natively (triggered events have no
         // originalEvent)
-        if (event.originalEvent !== undefined) {
+        if (event.originalEvent !== undefined || !!force) {
             var proxied = $(this).data('proxyfor');
-            $(proxied).filter(':not(:disabled)').prop('checked', this.checked);
+            $(proxied).filter(':not(:disabled)')
+                      .prop('checked', this.checked)
+                      .filter('[data-proxyfor]').trigger('change', [true]);
         }
     }).on('update.proxy', ':checkbox[data-proxyfor]', function () {
         var proxied = $(this).data('proxyfor'),

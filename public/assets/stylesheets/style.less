@@ -169,21 +169,22 @@ ul.clean {
 }
 
 /* --- StudipForm selectbox control------------------------------------------ */
-div.selectbox {
+.selectbox {
     background-color:#ffffff;
-    border:1px solid;
+    border:1px solid @base-color;
     margin-top:5px;
     margin-bottom:5px;
     padding:5px;
     max-height:200px;
     overflow:auto;
+
+    fieldset {
+        border:none;
+        margin:0px;
+        padding:0px;
+    }
 }
 
-div.selectbox fieldset {
-    border:none;
-    margin:0px;
-    padding:0px;
-}
 
 .minor {
     color: gray;
@@ -287,6 +288,27 @@ img.plugin_preview {
 /* --- User Administration -------------------------------------------------- */
 
 .user_form { width: 250px; }
+
+.times-rooms-grid {
+    .flex();
+    .flex-wrap(wrap);
+    .flex-justify-content(space-between);
+    margin: 0 -0.5em;
+    section {
+        .flex-item(1);
+        min-width: 23em;
+        max-width: 100%;
+        padding: 0 0.5em;
+
+        &:empty {
+            height: 0;
+        }
+
+        section {
+            padding: 0;
+        }
+    }
+}
 
 /* --- Veranstaltungsverwaltung --------------------------------------------- */
 .boxed-grid {

@@ -12,6 +12,7 @@ form.default {
         color: @dark-gray-color;
         max-width: @max-width-m;
         padding: 5px;
+        vertical-align: middle;
         width: 100%;
         .transition(all 0.3s ease-out);
 
@@ -39,7 +40,7 @@ form.default {
         min-height: 6em;
     }
 
-    label {
+    label:not(.undecorated) {
         display: block;
         margin-top: 1ex;
         max-width: 100%;

@@ -184,6 +184,13 @@ class Course extends SimpleORMap
             'on_delete' => 'delete',
             'on_store' => 'store',
         );
+
+        $config['has_many']['room_requests'] = array(
+            'class_name'        => 'RoomRequest',
+            'assoc_foreign_key' => 'seminar_id',
+            'on_delete'         => 'delete',
+        );
+
         $config['default_values']['beschreibung'] = '';
         $config['default_values']['lesezugriff'] = 1;
         $config['default_values']['schreibzugriff'] = 1;

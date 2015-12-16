@@ -162,7 +162,11 @@ class SeminarDB
         return $statement->fetchColumn();
     }
 
-    // removes all singleDates which are NOT between $start and $end
+    /**
+     * @deprecated since 3.4 use SeminarCycleDate::removeOutRangedSingleDates($start, $end, $seminar_id)
+     * 
+     * removes all singleDates which are NOT between $start and $end
+     */
     function removeOutRangedSingleDates($start, $end, $seminar_id)
     {
         $query = "SELECT termin_id

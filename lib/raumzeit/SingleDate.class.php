@@ -19,44 +19,47 @@
  */
 require_once 'lib/dates.inc.php';
 
-class SingleDate {
-    var $termin_id = '';
-    var $date_typ = 1;
-    var $metadate_id = '';
-    var $date = 0;
-    var $end_time = 0;
-    var $mkdate = 0;
-    var $chdate = 0;
-    var $orig_ex = FALSE;
-    var $ex_termin = FALSE;
-    var $range_id = '';
-    var $author_id = '';
-    var $resource_id = '';
-    var $raum = '';
-    var $request_id = NULL;
-    var $requestData = NULL;
-    var $update = FALSE;
-    var $issues = NULL;
-    var $messages = NULL;
-    var $content = '';
-    var $room_request = NULL;
+class SingleDate
+{
+    var $termin_id       = '';
+    var $date_typ        = 1;
+    var $metadate_id     = '';
+    var $date            = 0;
+    var $end_time        = 0;
+    var $mkdate          = 0;
+    var $chdate          = 0;
+    var $orig_ex         = false;
+    var $ex_termin       = false;
+    var $range_id        = '';
+    var $author_id       = '';
+    var $resource_id     = '';
+    var $raum            = '';
+    var $request_id      = NULL;
+    var $requestData     = NULL;
+    var $update          = false;
+    var $issues          = NULL;
+    var $messages        = NULL;
+    var $content         = '';
+    var $room_request    = NULL;
     var $related_persons = array();
-    var $related_groups = array();
-    
+    var $related_groups  = array();
+
     /**
      * Return the SingleDate instance of the given id
      *
      * @param string      the id of the instance
      * @return SingleDate the SingleDate instance
      */
-    function getInstance($singledate_id) {
+    function getInstance($singledate_id)
+    {
         static $singledate_object_pool;
 
-        if ($singledate_id){
-            if (is_object($singledate_object_pool[$singledate_id]) && $singledate_object_pool[$singledate_id]->getTerminId() == $singledate_id){
+        if ($singledate_id) {
+            if (is_object($singledate_object_pool[$singledate_id]) && $singledate_object_pool[$singledate_id]->getTerminId() == $singledate_id) {
                 return $singledate_object_pool[$singledate_id];
             } else {
                 $singledate_object_pool[$singledate_id] = new SingleDate($singledate_id);
+
                 return $singledate_object_pool[$singledate_id];
             }
         } else {
@@ -65,7 +68,8 @@ class SingleDate {
 
     }
 
-    function SingleDate ($data = '') {
+    function SingleDate($data = '')
+    {
         global $user, $id;
         if (is_array($data)) {
             if ($data['termin_id']) $termin_id = $data['termin_id'];
@@ -75,24 +79,26 @@ class SingleDate {
         }
         if ($termin_id != '') {
             $this->termin_id = $termin_id;
-            $this->update = TRUE;
+            $this->update = true;
             $this->restore();
         } else {
-            $this->termin_id = md5(uniqid('SingleDate',1));
+            $this->termin_id = md5(uniqid('SingleDate', 1));
             $this->author_id = $user->id;
             $this->range_id = $id;
             $this->mkdate = time();
             $this->chdate = time();
-            $this->update = FALSE;
+            $this->update = false;
         }
     }
 
-    function getStartTime() {
+    function getStartTime()
+    {
         return $this->date;
     }
 
-    function setTime($start, $end) {
-        if (($start == 0) || ($end == 0)) return FALSE;
+    function setTime($start, $end)
+    {
+        if (($start == 0) || ($end == 0)) return false;
 
         if (($this->date != $start) || ($this->end_time != $end)) {
             // validate the passed variables: they have to be ints and $start
@@ -116,109 +122,136 @@ class SingleDate {
                 $after = $this->toString();
                 // logging
                 if ($before) {
-                    log_event("SINGLEDATE_CHANGE_TIME", $this->range_id, $before, $before.' -> '.$after);
+                    StudipLog::log("SINGLEDATE_CHANGE_TIME", $this->range_id, $before, $before . ' -> ' . $after);
+                } else {
+                    StudipLog::log("SEM_ADD_SINGLEDATE", $this->range_id, $after);
                 }
-                else {
-                    log_event("SEM_ADD_SINGLEDATE", $this->range_id, $after);
-                }
-                return TRUE;
+
+                return true;
             }
-            return FALSE;
+
+            return false;
         }
 
-        return FALSE;
+        return false;
     }
 
-    function getEndTime() {
+    function getEndTime()
+    {
         return $this->end_time;
     }
 
-    function setComment($comment) {
+    function setComment($comment)
+    {
         $this->content = $comment;
     }
 
-    function getComment() {
+    function getComment()
+    {
         if (!$this->isExTermin()) return '';
+
         return $this->content;
     }
 
-    function getMetaDateID() {
+    function getMetaDateID()
+    {
         return $this->metadate_id;
     }
 
-    function setMetaDateID($id) {
+    function setMetaDateID($id)
+    {
         if ($id != '') {
             $this->metadate_id = $id;
-            return TRUE;
+
+            return true;
         } else {
             $this->metadate_id = 0;
-            return FALSE;
+
+            return false;
         }
     }
 
-    function getRangeID() {
+    function getRangeID()
+    {
         return $this->range_id;
     }
 
-    function setDateType($typ) {
+    function setDateType($typ)
+    {
         $this->date_typ = $typ;
-        return TRUE;
+
+        return true;
     }
 
-    function getDateType() {
+    function getDateType()
+    {
         return $this->date_typ;
     }
 
-    function getTypeName() {
+    function getTypeName()
+    {
         global $TERMIN_TYP;
+
         return $TERMIN_TYP[$this->date_typ]['name'];
     }
 
-    function getAuthorID() {
+    function getAuthorID()
+    {
         return $this->author_id;
     }
 
-    function getChDate() {
+    function getChDate()
+    {
         return $this->chdate;
     }
 
-    function getMkDate() {
+    function getMkDate()
+    {
         return $this->mkdate;
     }
 
-    function setSeminarID($seminar_id) {
+    function setSeminarID($seminar_id)
+    {
         $this->range_id = $seminar_id;
     }
 
-    function getSeminarID() {
+    function getSeminarID()
+    {
         return $this->range_id;
     }
 
-    function getSingleDateID() {
+    function getSingleDateID()
+    {
         return $this->termin_id;
     }
 
-    function getResourceID() {
+    function getResourceID()
+    {
         return $this->resource_id;
     }
 
-    function getTerminID() {
+    function getTerminID()
+    {
         return $this->termin_id;
     }
 
-    function getFreeRoomText() {
+    function getFreeRoomText()
+    {
         return $this->raum;
     }
 
-    function setFreeRoomText($freeRoomText) {
+    function setFreeRoomText($freeRoomText)
+    {
         $this->raum = $freeRoomText;
     }
 
-    function getCycleID() {
+    function getCycleID()
+    {
         return $this->metadate_id;
     }
 
-    function killIssue() {
+    function killIssue()
+    {
         // We delete the issue, cause there is no chance anybody can get to it without the expert view
         if (!Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
             if ($issue_ids = $this->getIssueIDs()) {
@@ -232,9 +265,10 @@ class SingleDate {
         }
     }
 
-    function delete($keepIssues = false) {
+    function delete($keepIssues = false)
+    {
         $cache = StudipCacheFactory::getCache();
-        $cache->expire('course/undecorated_data/'. $this->range_id);
+        $cache->expire('course/undecorated_data/' . $this->range_id);
 
         $this->chdate = time();
         $this->killAssign();
@@ -245,10 +279,11 @@ class SingleDate {
         return SingleDateDB::deleteSingleDate($this->termin_id, $this->ex_termin);
     }
 
-    function store() {
+    function store()
+    {
 
         $cache = StudipCacheFactory::getCache();
-        $cache->expire('course/undecorated_data/'. $this->range_id);
+        $cache->expire('course/undecorated_data/' . $this->range_id);
 
         $this->chdate = time();
         if ($this->ex_termin) {
@@ -262,40 +297,49 @@ class SingleDate {
         if ($this->orig_ex != $this->ex_termin) {
             SingleDateDB::deleteSingleDate($this->termin_id, $this->orig_ex);
         }
+
         return SingleDateDB::storeSingleDate($this);
     }
 
-    function restore() {
+    function restore()
+    {
         if (!($data = SingleDateDB::restoreSingleDate($this->termin_id))) {
-            return FALSE;
+            return false;
         }
         $this->fillValuesFromArray($data);
-        return TRUE;
+
+        return true;
     }
 
-    function setExTermin($ex) {
+    function setExTermin($ex)
+    {
         if ($ex != $this->ex_termin) {
             $this->update = false;
             $this->ex_termin = $ex;
-            return TRUE;
+
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
-    function isExTermin() {
+    function isExTermin()
+    {
         return $this->ex_termin;
     }
 
-    function isPresence() {
+    function isPresence()
+    {
         return $GLOBALS['TERMIN_TYP'][$this->date_typ]['sitzung'] ? true : false;
     }
 
-    function isUpdate() {
+    function isUpdate()
+    {
         return $this->update;
     }
 
-    function isHoliday() {
+    function isHoliday()
+    {
         foreach (HolidayData::GetAllHolidaysArray() as $val) {
             if (($val['beginn'] <= $this->date) && ($val['ende'] >= $this->end_time)) {
                 $name = $val['name'];
@@ -310,11 +354,12 @@ class SingleDate {
         if ($name) {
             return $name;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    function fillValuesFromArray($daten) {
+    function fillValuesFromArray($daten)
+    {
         $this->metadate_id = $daten['metadate_id'];
         $this->termin_id = $daten['termin_id'];
         if ($daten['date_typ'] != 0) {
@@ -334,23 +379,32 @@ class SingleDate {
         $this->resource_id = $daten['resource_id'];
         $this->raum = $daten['raum'];
         $this->content = $daten['content'];
-        $this->update = TRUE;
+        $this->update = true;
         $this->related_persons = is_array($daten['related_persons']) ? $daten['related_persons'] : array();
         $this->related_groups = is_array($daten['related_groups']) ? $daten['related_groups'] : array();
-        return TRUE;
+
+        return true;
     }
 
-    function toString() {
+    function toString()
+    {
+        $end_hours = strtotime(strftime('%H:%M', $this->end_time));
+        $start_hours = strtotime(strftime('%H:%M', $this->date));
         if (!$this->date) {
             return null;
-        } elseif ((($this->end_time - $this->date) / 60 / 60) > 23) {
-            return getWeekDay(date('w', $this->date)).'., '.date('d.m.Y', $this->date). ' ('._('ganztägig') .')';
+        } elseif ((($end_hours - $start_hours) / 60 / 60) > 23) {
+            return sprintf('%s , %s (%s)',strftime('%a', $this->date),
+                strftime('%d.%m.%Y', $this->date),
+                _('ganztägig'));
         } else {
-            return getWeekDay(date('w', $this->date)).'., '.date('d.m.Y, H:i', $this->date).' - '.date('H:i', $this->end_time);
+            return sprintf('%s , %s - %s',strftime('%a', $this->date),
+                strftime('%d.%m.%Y %H:%M', $this->date),
+                strftime('%H:%M', $this->end_time));
         }
     }
 
-    function bookRoom($roomID) {
+    function bookRoom($roomID)
+    {
         if ($this->ex_termin || !$roomID) return false;
 
         // create a resource-object of the passed room
@@ -381,43 +435,48 @@ class SingleDate {
         return $resObj;
     }
 
-    private function insertAssign($roomID) {
-        $createAssign = AssignObject::Factory(FALSE, $roomID, $this->termin_id, '',
-                $this->date, $this->end_time, $this->end_time,
-                0, 0, 0, 0, 0, 0);
+    private function insertAssign($roomID)
+    {
+        $createAssign = AssignObject::Factory(false, $roomID, $this->termin_id, '',
+            $this->date, $this->end_time, $this->end_time,
+            0, 0, 0, 0, 0, 0);
 
-        $overlaps = $createAssign->checkOverlap(TRUE);
+        $overlaps = $createAssign->checkOverlap(true);
         if (is_array($overlaps) && (sizeof($overlaps) > 0)) {
             $resObj = ResourceObject::Factory($roomID);
-            $raum = $resObj->getFormattedLink( $this->date );
-            $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum).'<br>';
+            $raum = $resObj->getFormattedLink($this->date);
+            $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum) . '<br>';
             foreach ($overlaps as $tmp_assign_id => $val) {
                 if ($val["lock"])
-                    $msg .= sprintf(_("%s, %s Uhr bis %s, %s Uhr (Sperrzeit)")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+                    $msg .= sprintf(_("%s, %s Uhr bis %s, %s Uhr (Sperrzeit)") . "\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
                 else
-                    $msg .= sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
+                    $msg .= sprintf(_("%s von %s bis %s Uhr") . "\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
             }
             $this->messages['error'][] = $msg;
-            return FALSE;
+
+            return false;
         }
 
         if ($createAssign->create()) {
             $resObj = ResourceObject::Factory($roomID);
-            $raum = $resObj->getFormattedLink( $this->date );
+            $raum = $resObj->getFormattedLink($this->date);
             $msg = sprintf(_("Für den Termin %s wurde der Raum %s gebucht."), $this->toString(), $raum);
             $this->messages['success'][] = $msg;
             $this->resource_id = $roomID;
-            return TRUE;
+
+            return true;
         }
-        return FALSE;
+
+        return false;
     }
 
-    private function changeAssign($roomID) {
+    private function changeAssign($roomID)
+    {
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
             $changeAssign = AssignObject::Factory($assign_id);
             $changeAssign->setResourceId($roomID);
 
-            $changeAssign->chng_flag = TRUE;
+            $changeAssign->chng_flag = true;
 
             $changeAssign->setBegin($this->date);
             $changeAssign->setEnd($this->end_time);
@@ -429,45 +488,42 @@ class SingleDate {
             $changeAssign->setRepeatWeekOfMonth(0);
             $changeAssign->setRepeatDayOfWeek(0);
 
-            $overlaps = $changeAssign->checkOverlap(TRUE);
+            $overlaps = $changeAssign->checkOverlap(true);
             if (is_array($overlaps) && (sizeof($overlaps) > 0)) {
                 $resObj = ResourceObject::Factory($roomID);
-                $raum = $resObj->getFormattedLink( $this->date );
-                $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum).'<br>';
+                $raum = $resObj->getFormattedLink($this->date);
+                $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum) . '<br>';
                 foreach ($overlaps as $tmp_assign_id => $val) {
                     if ($val["lock"])
-                        $msg .= sprintf(_("%s, %s Uhr bis %s, %s Uhr (Sperrzeit)")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+                        $msg .= sprintf(_("%s, %s Uhr bis %s, %s Uhr (Sperrzeit)") . "\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
                     else
-                        $msg .= sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
+                        $msg .= sprintf(_("%s von %s bis %s Uhr") . "\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
                 }
                 $this->messages['error'][] = $msg;
-                return FALSE;
+
+                return false;
             }
 
             $this->resource_id = $roomID;
             $changeAssign->store();
-            /*if (!$changeAssign->getId())
-                $changeAssign->createId();*/
             $resObj = ResourceObject::Factory($roomID);
-      $raum = $resObj->getFormattedLink( $this->date );
+            $raum = $resObj->getFormattedLink($this->date);
             $msg = sprintf(_("Für den Termin %s wurde der Raum %s gebucht."), $this->toString(), $raum);
             $this->messages['success'][] = $msg;
-            return TRUE;
+
+            return true;
         }
-        return FALSE;
+
+        return false;
     }
 
-    function killAssign() {
+    function killAssign()
+    {
         $this->resource_id = '';
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
             $killAssign = AssignObject::Factory($assign_id);
             $killAssign->delete();
         }
-
-        /*if ($request_id = SingleDateDB::getRequestID($this->termin_id)) {
-            $killRequest = new RoomRequest ($request_id);
-            $killRequest->delete();
-        }*/
     }
 
     /**
@@ -476,14 +532,15 @@ class SingleDate {
      * may happen...
      *
      * @param int $start the start-time to set for the assign
-     * @param int $end the end-time to set for the assign
+     * @param int $end   the end-time to set for the assign
      */
-    private function shrinkAssign($start, $end) {
+    private function shrinkAssign($start, $end)
+    {
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
             $changeAssign = AssignObject::Factory($assign_id);
             $changeAssign->setResourceId($this->resource_id);
 
-            $changeAssign->chng_flag = TRUE;
+            $changeAssign->chng_flag = true;
 
             $changeAssign->setBegin($start);
             $changeAssign->setEnd($end);
@@ -492,85 +549,106 @@ class SingleDate {
         }
     }
 
-    function hasRoom() {
-        return ($this->resource_id) ? TRUE : FALSE;
+    function hasRoom()
+    {
+        return ($this->resource_id) ? true : false;
     }
 
-    function getRoom() {
+    function getRoom()
+    {
         if (!$this->resource_id) {
             return null;
         } else {
             $resObj = ResourceObject::Factory($this->resource_id);
+
             return $resObj->getName();
         }
     }
 
-    function hasRoomRequest() {
+    function hasRoomRequest()
+    {
         if (getDateRoomRequest($this->termin_id)) {
             if (!$this->request_id) {
                 $this->request_id = SingleDateDB::getRequestID($this->termin_id);
             }
             $rD = new RoomRequest($this->request_id);
             if (($rD->getClosed() == 1) || ($rD->getClosed() == 2)) {
-                return FALSE;
+                return false;
             }
-            return TRUE;
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     /**
-   * this function returns a human-readable status of a room-request, if any, false otherwise
-   *
-   * the int-values of the states are:
-   *  0 - room-request is open
-   *  1 - room-request has been edited, but no confirmation has been sent
-   *  2 - room-request has been edited and a confirmation has been sent
-   *  3 - room-request has been declined
-   *
-   * they are mapped with:
-   *  0 - open
-   *  1 - pending
-   *  2 - closed
-   *  3 - declined
-   *
-   * @return string the mapped text
-   */
-    function getRoomRequestStatus() {
+     * this function returns a human-readable status of a room-request, if any, false otherwise
+     *
+     * the int-values of the states are:
+     *  0 - room-request is open
+     *  1 - room-request has been edited, but no confirmation has been sent
+     *  2 - room-request has been edited and a confirmation has been sent
+     *  3 - room-request has been declined
+     *
+     * they are mapped with:
+     *  0 - open
+     *  1 - pending
+     *  2 - closed
+     *  3 - declined
+     *
+     * @return string the mapped text
+     */
+    function getRoomRequestStatus()
+    {
         // check if there is any room-request
-        $this->request_id = RoomRequest::existsByDate($this->termin_id);
-        if (!$this->request_id) {
-            return FALSE;
+        $this->room_request = $this->getRoomRequest();
+        if (!$this->room_request) {
+            return false;
         }
 
-       // room-request found, parse int-status and return string-status
-       $this->room_request = RoomRequest::find($this->request_id);
-       return $this->room_request->getStatus();
+        return $this->room_request->getStatus();
     }
 
-    function getRequestedRoom() {
+
+    function getRoomRequest()
+    {
+        if ($request = RoomRequest::findByDate($this->termin_id)) {
+            $this->room_request = $request;
+
+            return $this->room_request;
+        }
+        return false;
+    }
+
+    function getRequestedRoom()
+    {
         if ($this->hasRoomRequest()) {
             $rD = new RoomRequest($this->request_id);
             $resObject = ResourceObject::Factory($rD->resource_id);
+
             return $resObject->getName();
         }
-        return FALSE;
+
+        return false;
     }
 
-    function getRoomRequestInfo() {
+    function getRoomRequestInfo()
+    {
         if ($this->room_request) {
             return jsReady($this->room_request->getInfo(), 'inline-single');
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    function removeRequest() {
+    function removeRequest()
+    {
         return SingleDateDB::deleteRequest($this->termin_id);
     }
 
-    function readIssueIDs() {
+    function readIssueIDs()
+    {
         if (!$this->issues) {
             if ($data = SingleDateDB::getIssueIDs($this->termin_id)) {
                 foreach ($data as $val) {
@@ -578,35 +656,45 @@ class SingleDate {
                 }
             }
         }
-        return TRUE;
+
+        return true;
     }
 
-    function getIssueIDs() {
+    function getIssueIDs()
+    {
         $this->readIssueIDs();
+
         return $this->issues;
     }
 
-    function addIssueID($issue_id) {
+    function addIssueID($issue_id)
+    {
         $this->readIssueIDs();
         $this->issues[$issue_id] = $issue_id;
-        return TRUE;
+
+        return true;
     }
 
-    function deleteIssueID($issue_id) {
+    function deleteIssueID($issue_id)
+    {
         $this->readIssueIDs();
         unset($this->issues[$issue_id]);
         SingleDateDB::deleteIssueID($issue_id, $this->termin_id);
-        return TRUE;
+
+        return true;
     }
 
-    function getMessages() {
+    function getMessages()
+    {
         $temp = $this->messages;
         $this->messages = NULL;
+
         return $temp;
     }
 
     // checks, if the single-date has plausible values
-    function validate($start = 0, $end = 0) {
+    function validate($start = 0, $end = 0)
+    {
         if ($start == 0) {
             $start = $this->date;
         }
@@ -614,13 +702,15 @@ class SingleDate {
             $end = $this->end_time;
         }
 
-        if ($start < 100000) return FALSE;
-        if ($end < 100000)  return FALSE;
+        if ($start < 100000) return false;
+        if ($end < 100000) return false;
         if ($start > $end) {
             $this->messages['error'][] = _("Die Endzeitpunkt darf nicht vor dem Anfangszeitpunkt liegen!");
-            return FALSE;
+
+            return false;
         }
-        return TRUE;
+
+        return true;
     }
 
 
@@ -669,6 +759,7 @@ class SingleDate {
     {
         $template = $GLOBALS['template_factory']->open('dates/date_xml.php');
         $template->set_attributes($params);
+
         return $this->getDatesTemplate($template);
     }
 
@@ -687,23 +778,26 @@ class SingleDate {
         }
 
         $template->set_attribute('date', $this);
+
         return $template->render();
     }
 
     /**
      * adds a given user_id as a related person to the date
-     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     * @param string $user_id user_id from auth_user_md5 of the person to be added
      */
-    public function addRelatedPerson($user_id) {
+    public function addRelatedPerson($user_id)
+    {
         $this->related_persons[] = $user_id;
         $this->related_persons = array_unique($this->related_persons);
     }
 
     /**
      * unsets a given user_id from the array of related persons
-     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     * @param string $user_id user_id from auth_user_md5 of the person to be added
      */
-    public function deleteRelatedPerson($user_id) {
+    public function deleteRelatedPerson($user_id)
+    {
         if (!$this->related_persons) {
             $sem = Seminar::getInstance($this->getSeminarID());
             $this->related_persons = array_keys($sem->getMembers('dozent'));
@@ -719,11 +813,13 @@ class SingleDate {
      * gets all user_ids of related persons of this date
      * @return array of user_ids
      */
-    public function getRelatedPersons() {
+    public function getRelatedPersons()
+    {
         if (count($this->related_persons)) {
             return $this->related_persons;
         } else {
             $sem = Seminar::getInstance($this->getSeminarID());
+
             return array_keys($sem->getMembers('dozent'));
         }
     }
@@ -732,28 +828,32 @@ class SingleDate {
      * clears all related persons (in the interface this means that all dozents are
      * marked as related to the date)
      */
-    public function clearRelatedPersons() {
+    public function clearRelatedPersons()
+    {
         $this->related_persons = array();
     }
-    
+
     /**
      * adds a given statusgruppe_id as a related group to the date
-     * @param string $statusgruppe_id  statusgruppe_id from statusgruppen of the group to be added
+     * @param string $statusgruppe_id statusgruppe_id from statusgruppen of the group to be added
      */
-    public function addRelatedGroup($statusgruppe_id) {
+    public function addRelatedGroup($statusgruppe_id)
+    {
         $this->related_groups[] = $statusgruppe_id;
         $this->related_groups = array_unique($this->related_groups);
     }
 
     /**
      * unsets a given statusgruppe_id from the array of related statusgruppen
-     * @param string $statusgruppe_id  statusgruppe_id from statusgruppen of the group to be removed
+     * @param string $statusgruppe_id statusgruppe_id from statusgruppen of the group to be removed
      */
-    public function deleteRelatedGroup($statusgruppe_id) {
+    public function deleteRelatedGroup($statusgruppe_id)
+    {
         if (!$this->related_groups) {
-            $sem = Seminar::getInstance($this->getSeminarID());
             $groups = Statusgruppen::findBySeminar_id($this->getSeminarID());
-            $this->related_groups = array_map(function ($g) { return $g->getId(); }, $groups);
+            $this->related_groups = array_map(function ($g) {
+                return $g->getId();
+            }, $groups);
         }
         foreach ($this->related_groups as $key => $related_group) {
             if ($related_group === $statusgruppe_id) {
@@ -766,19 +866,25 @@ class SingleDate {
      * gets all statusgruppe_ids of related groups of this date
      * @return array of statusgruppe_ids
      */
-    public function getRelatedGroups() {
+    public function getRelatedGroups()
+    {
         if (count($this->related_groups)) {
             return $this->related_groups;
         } else {
             $groups = Statusgruppen::findBySeminar_id($this->getSeminarID());
-            return array_map(function ($g) { return $g->getId(); }, $groups);
+
+            return array_map(function ($g) {
+                return $g->getId();
+            }, $groups);
         }
     }
 
     /**
      * clears all related groups
      */
-    public function clearRelatedGroups() {
+    public function clearRelatedGroups()
+    {
         $this->related_groups = array();
+        $this->messages['success'][] = _('Die beteiligten Gruppen wurden zurückgesetzt!');
     }
 }

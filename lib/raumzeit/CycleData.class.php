@@ -90,6 +90,9 @@ class CycleData
         return $this->cycle_date->description;
     }
 
+    function getCycleDate() {
+        return $this->cycle_date;
+    }
     function setDescription($description)
     {
         $this->cycle_date->description = $description;
@@ -135,6 +138,16 @@ class CycleData
     function getDay()
     {
         return $this->cycle_date->weekday;
+    }
+
+    function getStartTime()
+    {
+        return sprintf('%02d:%02d',$this->getStartStunde(), $this->getStartMinute());
+    }
+
+    function getEndTime()
+    {
+        return sprintf('%02d:%02d',$this->getEndStunde(), $this->getEndMinute());
     }
 
     function setDay($day)

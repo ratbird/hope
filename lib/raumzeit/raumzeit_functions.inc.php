@@ -192,7 +192,7 @@ function raumzeit_get_semesters(&$sem, &$semester, $filter) {
     // this function works like raumzeit_get_semester_chooser() but it
     // returns a data structure for a selectionlist template instead of html code
 
-    $all_semester = $semester->getAllSemesterData();
+    $all_semester = array_reverse($semester->getAllSemesterData());
     $passed = false;
     $semester_chooser['all'] = _("Alle Semester");
     foreach ($all_semester as $val) {

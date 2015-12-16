@@ -107,7 +107,11 @@ function sort_groups($group_field, &$groups)
         'if ($a["gruppe"] != $b["gruppe"]){
             return (int)($a["gruppe"] - $b["gruppe"]);
         } else {
-            return strnatcmp($a["name"], $b["name"]);
+            if (Config::get()->IMPORTANT_SEMNUMBER) {
+                return strnatcasecmp($a["sem_nr"], $b["sem_nr"]);
+            } else {
+                return strnatcmp($a["name"], $b["name"]);
+            }
         }'));
         $groups[$key] = $value;
     }

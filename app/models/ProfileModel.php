@@ -108,13 +108,18 @@ class ProfileModel
         $semester[] = Semester::findNext();
         $semester[] = Semester::findCurrent();
         $semester[] = Semester::findByTimestamp(Semester::findCurrent()->beginn - 1);
+        if (Config::get()->IMPORTANT_SEMNUMBER) {
+            $field = 'veranstaltungsnummer';
+        } else {
+            $field = 'name';
+        }
         $allcourses = new SimpleCollection(Course::findBySQL("INNER JOIN seminar_user USING(Seminar_id) WHERE user_id=? AND seminar_user.status='dozent' AND seminare.visible=1", array($this->current_user->id)));
         foreach (array_filter($semester) as $one) {
             $courses[$one->name] =
                 $allcourses->filter(function ($c) use ($one) {
                     return $c->start_time <= $one->beginn &&
                         ($one->beginn <= ($c->start_time + $c->duration_time) || $c->duration_time == -1);
-                })->orderBy('name');
+                })->orderBy($field);
             if (!$courses[$one->name]->count()) {
                 unset($courses[$one->name]);
             }

@@ -520,7 +520,11 @@ class MyRealmModel
         $ordering          = '';
         // create ordering
         if (!$order_by) {
-            $ordering .= 'name asc';
+            if (Config::get()->IMPORTANT_SEMNUMBER) {
+                $ordering = 'veranstaltungsnummer asc, name asc';
+            } else {
+                $ordering .= 'name asc';
+            }
         } else {
             $ordering .= $order_by . ' ' . $order;
         }

@@ -147,7 +147,7 @@ class AdminCourseFilter
             )
         );
         $this->settings['query']['where'] = array();
-        $this->settings['query']['orderby'] = "seminare.name";
+        $this->settings['query']['orderby'] = Config::get()->IMPORTANT_SEMNUMBER ? "seminare.veranstaltungsnummer, seminare.name" : "seminare.name";
     }
 
     /**

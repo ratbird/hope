@@ -464,7 +464,7 @@ class SemBrowse {
                                                                                              'send_from_search_page' => $send_from_search));
                         echo '<td width="66%" colspan="2">';
                         echo '<a href="' . $send_from_search_link . '">';
-                        if (Config::get()->IMPORTANT_SEMNUMBER) {
+                        if (Config::get()->IMPORTANT_SEMNUMBER && $seminar_number) {
                             echo htmlReady($seminar_number) ." ";
                         }
                         echo htmlReady($sem_name) . '</a><br>';
@@ -792,6 +792,9 @@ class SemBrowse {
                 $name = str_replace("ä","ae",$name);
                 $name = str_replace("ö","oe",$name);
                 $name = str_replace("ü","ue",$name);
+                if (Config::get()->IMPORTANT_SEMNUMBER && key($sem_data[$seminar_id]['VeranstaltungsNummer'])) {
+                    $name = key($sem_data[$seminar_id]['VeranstaltungsNummer']).' '.$name;
+                }
                 $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
             }
             uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');

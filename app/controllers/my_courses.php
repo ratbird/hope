@@ -117,6 +117,9 @@ class MyCoursesController extends AuthenticatedController
 
         $this->group_field = $group_field === 'not_grouped' ? 'sem_number' : $group_field;
 
+        if (Config::get()->IMPORTANT_SEMNUMBER) {
+            $order_by .= 'veranstaltungsnummer, name';
+        }
 
         // Needed parameters for selecting courses
         $params = array('group_field'         => $this->group_field,
@@ -282,6 +285,7 @@ class MyCoursesController extends AuthenticatedController
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $my_sem[$row['Seminar_id']] = array(
                 'obj_type'       => 'sem',
+                'sem_nr'         => $row['sem_nr'],
                 'name'           => $row['Name'],
                 'visible'        => $row['visible'],
                 'gruppe'         => $row['gruppe'],
@@ -292,6 +296,7 @@ class MyCoursesController extends AuthenticatedController
             if ($group_field) {
                 fill_groups($groups, $row[$group_field], array(
                     'seminar_id' => $row['Seminar_id'],
+                    'sem_nr'     => $row['sem_nr'],
                     'name'       => $row['Name'],
                     'gruppe'     => $row['gruppe']
                 ));

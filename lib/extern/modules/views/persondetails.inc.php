@@ -409,8 +409,12 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
               LEFT JOIN seminare AS s USING (seminar_id)
               WHERE user_id = :user_id AND su.status = 'dozent'
                 AND start_time <= :beginn AND (:beginn <= start_time + duration_time OR duration_time = -1)
-                AND s.status IN (:types) AND s.visible = 1
-              ORDER BY Name";
+                AND s.status IN (:types) AND s.visible = 1";
+    if (Config::get()->IMPORTANT_SEMNUMBER) {
+        $query .= " ORDER BY s.`VeranstaltungsNummer`, s.`Name`";
+    } else {
+        $query .= " ORDER BY s.`Name`";
+    }
     $statement = DBManager::get()->prepare($query);
     $statement->bindValue(':user_id', $row['user_id']);
     $statement->bindValue(':types', $types ?: '');
@@ -447,9 +451,13 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
                 $out .= "$list_div<ul" . $module->config->getAttributes("List", "ul") . ">\n";
                 foreach ($data as $item) {
                     $out .= "<li" . $module->config->getAttributes("List", "li") . ">";
+                    $name = $item['Name'];
+                    if (Config::get()->IMPORTANT_SEMNUMBER && $item['VeranstaltungsNummer']) {
+                        $name = $item['VeranstaltungsNummer'].' '.$name;
+                    }
                     $out .= $module->elements["LinkIntern"]->toString(array("module" => "Lecturedetails",
                             "link_args" => "seminar_id=" . $item['Seminar_id'],
-                            "content" => htmlReady($item['Name'], TRUE)));
+                            "content" => htmlReady($name, TRUE)));
                     if ($item['Untertitel'] != '') {
                         $out .= "<font" . $module->config->getAttributes("TableParagraphText", "font") . "><br>";
                         $out .= htmlReady($item['Untertitel'], TRUE) . "</font>\n";

@@ -313,7 +313,7 @@ class Seminar_Auth
     function auth_loginform()
     {
         if (Request::isXhr()) {
-            if (isset($_SERVER['HTTP_X_DIALOG'])) {
+            if (Request::isDialog()) {
                 header('X-Location: ' . URLHelper::getURL($_SERVER['REQUEST_URI']));
                 page_close();
                 die();

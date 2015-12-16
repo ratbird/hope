@@ -245,7 +245,7 @@ abstract class StudipController extends Trails_Controller
      */
     public function relocate($to)
     {
-        $from_dialog = Request::isXhr() && isset($_SERVER['HTTP_X_DIALOG']);
+        $from_dialog = Request::isXhr() && Request::isDialog();
 
         if (func_num_args() > 1 || $from_dialog) {
             $to = call_user_func_array(array($this, 'url_for'), func_get_args());
@@ -298,7 +298,7 @@ abstract class StudipController extends Trails_Controller
     {
         // Trigger deprecated warning
         trigger_error('Use Sidebar instead', E_USER_DEPRECATED);
-        
+
         $this->populateInfobox();
 
         $this->infobox['picture'] = $image;
@@ -323,7 +323,7 @@ abstract class StudipController extends Trails_Controller
     {
         // Trigger deprecated warning
         trigger_error('Use Sidebar instead', E_USER_DEPRECATED);
-        
+
         $this->populateInfobox();
 
         $infobox = $this->infobox;

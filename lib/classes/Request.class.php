@@ -514,14 +514,14 @@ class Request implements ArrayAccess, IteratorAggregate
     {
         return self::isXhr();
     }
-    
+
     /**
      * extracts some params from request, the desired params must be a comma separated list
-     * for each param, the type of used extraction method can be specified after the name, 
+     * for each param, the type of used extraction method can be specified after the name,
      * default is get
      * null values are not returned
-     * 
-     * e.g.: 
+     *
+     * e.g.:
      * $data = Request::extract('admission_prelim int, admission_binding submitted, admission_prelim_txt');
      * will yield
      * array(3) {
@@ -553,5 +553,15 @@ class Request implements ArrayAccess, IteratorAggregate
             }
         }
         return $return;
+    }
+
+    /**
+     * returns true if http header indicates that the response will be rendered as dialog
+     *
+     * @return bool
+     */
+    public static function isDialog()
+    {
+        return isset($_SERVER['HTTP_X_DIALOG']);
     }
 }

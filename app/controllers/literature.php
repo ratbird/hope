@@ -61,29 +61,21 @@ class LiteratureController extends AuthenticatedController
      */
     public function import_list_action()
     {
-        if (Request::option('return_range')){
-            $this->return_range = Request::option('return_range');
-            URLHelper::addLinkParam('return_range', $this->return_range);
-        }
-        $o_type = get_object_type($this->return_range, array('sem', 'inst'));
-        //checking rights
-        if (($o_type == "sem" && !$GLOBALS['perm']->have_studip_perm("tutor", $this->return_range)) ||
-            (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->return_range))){
-                throw new AccessDeniedException();
-        }
+
+        $this->return_range = Request::option('return_range');
 
         PageLayout::setTitle(_("Literatur importieren"));
 
-        $this->plugin_name  = Request::quoted('plugin_name');
         $plugin = array();
 
-        if ($this->plugin_name)
+        if (Request::get('plugin_name')) {
             foreach ($GLOBALS['LIT_IMPORT_PLUGINS'] as $p) {
-                if ($p["name"] == $this->plugin_name) {
+                if ($p["name"] == Request::get('plugin_name')) {
                     $this->plugin = $p;
                     break;
                 }
             }
+        }
     }
 
     /**
@@ -128,7 +120,7 @@ class LiteratureController extends AuthenticatedController
         $xmlfile      = $_FILES['xmlfile']['tmp_name'];
         $xmlfile_name = $_FILES['xmlfile']['name'];
         $xmlfile_size = $_FILES['xmlfile']['size'];
-        $this->plugin_name  = Request::quoted('plugin_name');
+        $this->plugin_name  = Request::get('plugin_name');
         if ($cmd=="import_lit_list" && $xmlfile) {
             StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $this->plugin_name, $this->_range_id);
         }

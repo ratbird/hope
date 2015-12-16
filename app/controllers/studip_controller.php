@@ -245,7 +245,7 @@ abstract class StudipController extends Trails_Controller
      */
     public function relocate($to)
     {
-        $from_dialog = Request::isXhr() && Request::isDialog();
+        $from_dialog = Request::isDialog();
 
         if (func_num_args() > 1 || $from_dialog) {
             $to = call_user_func_array(array($this, 'url_for'), func_get_args());

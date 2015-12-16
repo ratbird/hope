@@ -60,7 +60,7 @@ class Course_AdmissionController extends AuthenticatedController
      */
     function index_action()
     {
-        URLHelper::addLinkParam('return_to_dialog', Request::isXhr() && Request::isDialog());
+        URLHelper::addLinkParam('return_to_dialog', Request::isDialog());
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage("sidebar/seminar-sidebar.png");
         if ($GLOBALS['perm']->have_perm('admin')) {

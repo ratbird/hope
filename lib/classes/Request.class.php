@@ -562,6 +562,6 @@ class Request implements ArrayAccess, IteratorAggregate
      */
     public static function isDialog()
     {
-        return isset($_SERVER['HTTP_X_DIALOG']);
+        return self::isXhr() && isset($_SERVER['HTTP_X_DIALOG']);
     }
 }

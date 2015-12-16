@@ -60,7 +60,6 @@ class Course_TimesroomsController extends AuthenticatedController
         $this->checkFilter();
 
         $this->selection = $this->getSemestersForCourse($this->course, $_SESSION['raumzeitFilter']);
-        PageLayout::postInfo($_SESSION['raumzeitFilter']);
 
         if (!Request::isXhr()) {
             $this->setSidebar();
@@ -1134,7 +1133,6 @@ class Course_TimesroomsController extends AuthenticatedController
             $semester = reset($semesters);
             $selected = $semester->beginn;
         }
-        PageLayout::postInfo($selected);
 
         // Step 3: Normalize semesters array (with option 'all' this needs
         // to be in a pretty simple format)

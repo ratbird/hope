@@ -76,7 +76,7 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 2.5 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 3.3 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
 /* $SEM_CLASS and $SEM_TYPE configuration moved to database
@@ -116,10 +116,10 @@ $SEM_TREE_TYPES[0] = array("name" => "", "editable" => true); //default type, mu
 $UPLOAD_TYPES=array(    "default" =>
                 array(  "type"=>"allow",
                         "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
+                        "file_sizes" => array ( "root" => 30 * 1048576,
+                                    "admin" => 30 * 1048576,
+                                    "dozent" => 30 * 1048576,
+                                    "tutor" => 30 * 1048576,
                                     "autor" => 7 * 1048576,
                                     "nobody" => 1.38 * 1048576
                                     )

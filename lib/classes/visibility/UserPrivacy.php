@@ -42,7 +42,7 @@ class UserPrivacy
      * Returns all the categorys and it's items
      * @return array categorys and it's items
      */
-    function getProfileSettings()
+    public function getProfileSettings()
     {
         if (!isset($this->profileSettings)) {
             // if the default categories have not been created, do this now
@@ -58,6 +58,7 @@ class UserPrivacy
                     unset($this->profileSettings[$i]);
                 }
             }
+
             $about = new about($GLOBALS['user']->username, '');
             $elements = $about->get_homepage_elements();
 
@@ -67,7 +68,6 @@ class UserPrivacy
                         foreach ($vis->children as $child) {
                             if ($child->identifier === $key) {
                                 $child->name = $element['name'];
-                                $child->setDisplayed();
                                 break 2;
                             }
                         }
@@ -143,7 +143,7 @@ class UserPrivacy
      * Returns all Arguments for the SettingsPage
      * @return array Arguments for the SettingsPage
      */
-    function getHTMLArgs()
+    public function getHTMLArgs()
     {
         $privacy_states = VisibilitySettings::getInstance();
         $result['header_colspan'] = $privacy_states->count() + 1;
@@ -157,4 +157,3 @@ class UserPrivacy
         return $result;
     }
 }
-?>

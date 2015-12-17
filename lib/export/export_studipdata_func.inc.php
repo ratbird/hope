@@ -880,7 +880,7 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag, $object
     $localEntries = DataFieldEntry::getDataFieldEntries($range_id, $object_type, $object_class_hint);
     if(is_array($localEntries )){
         foreach ($localEntries as $entry){
-            if ($entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id) && $entry->getDisplayValue()) {
+            if ($entry->isVisible() && $entry->getDisplayValue()) {
                 if (!$d_fields) $ret .= xml_open_tag( $childgroup_tag );
                 $ret .= xml_open_tag($childobject_tag , $entry->getName());
                 $ret .= xml_escape($entry->getDisplayValue(false));

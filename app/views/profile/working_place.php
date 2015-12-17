@@ -37,7 +37,7 @@
                             <td style="padding-right: 5px"><?= htmlReady($datafield['name']) ?>:</td>
                             <td>
                                 <?= $datafield['value'] ?>
-                                <? if ($datafield['show_start']) echo '*'; ?>
+                                <? if ($datafield['show_star']) echo '*'; ?>
                             </td>
                         </tr>
                     <? endforeach; ?>

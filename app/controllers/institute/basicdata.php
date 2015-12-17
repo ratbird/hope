@@ -81,7 +81,7 @@ class Institute_BasicdataController extends AuthenticatedController
         if ($localEntries) {
             $invalidEntries = $this->flash['invalid_entries'] ?: array();
             foreach ($localEntries as $entry) {
-                if (!$entry->structure->accessAllowed($GLOBALS['perm'])) {
+                if (!$entry->isVisible()) {
                     continue;
                 }
 
@@ -92,7 +92,7 @@ class Institute_BasicdataController extends AuthenticatedController
                 $datafields[] = array(
                     'color' => $color,
                     'title' => $entry->getName(),
-                    'value' => ($GLOBALS['perm']->have_perm($entry->structure->getEditPerms())
+                    'value' => ($GLOBALS['perm']->have_perm($entry->isEditable())
                                 && !LockRules::Check($institute['Institut_id'], $entry->getId()))
                              ? $entry->getHTML('datafields')
                              : $entry->getDisplayValue(),

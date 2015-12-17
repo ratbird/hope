@@ -290,7 +290,7 @@ class Course_BasicdataController extends AuthenticatedController
                               || LockRules::Check($this->course_id, $datenfeld->getID());
                     $this->descriptions[] = array(
                         'title' => $datenfeld->getName(),
-                        'must' =>  $datenfeld->structure->getIsRequired(),
+                        'must' =>  $datenfeld->isRequired(),
                         'name' => "datafield_".$datenfeld->getID(),
                         'type' => "datafield",
                         'html_value' => $datenfeld->getHTML("datafields"),

@@ -514,9 +514,12 @@ use Studip\Button, Studip\LinkButton;
     <? if ($entry->isVisible()) : ?>
         <tr>
             <td>
-                <label for="datafields_<?= $entry->structure->getID() ?>">
+                <label for="datafields_<?= $entry->getID() ?>">
                     <?= htmlReady($entry->getName()) ?>:
                 </label>
+            <? if (!$entry->isVisible($user['perms'])): ?>
+                <?= tooltipIcon(_('Systemfeld (für die Person selbst nicht sichtbar)'), true) ?>
+            <? endif; ?>
             </td>
             <td colspan="2">
             <? if ($entry->isEditable() && !LockRules::Check($user['user_id'], $entry->getId())) : ?>

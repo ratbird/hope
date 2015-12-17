@@ -23,7 +23,7 @@ class DatafieldCondition extends UserFilterField
     {
         $ret = array();
         try {
-            foreach (Datafield::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) AND is_userfilter = 1 ORDER BY priority") as $df) {
+            foreach (DataField::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) AND is_userfilter = 1 ORDER BY priority") as $df) {
                 $ret[__CLASS__ . '_' . $df->id] = chr(160) . _("Datenfeld") . ': ' . $df->name;
             }
         } catch (PDOException $e) {} //migration 128 chokes on this...
@@ -48,13 +48,13 @@ class DatafieldCondition extends UserFilterField
             $this->datafield_id = $typeparam;
         }
 
-        $df = Datafield::find($this->datafield_id);
+        $df = DataField::find($this->datafield_id);
         if ($df) {
             $this->datafield_name = $df->name;
         } else {
             throw new UnexpectedValueException('datafield not found, id: ' . $typeparam);
         }
-        $typed_df = DataFieldEntry::createDataFieldEntry(new DataFieldStructure($df->toArray()));
+        $typed_df = DataFieldEntry::createDataFieldEntry($df);
         if ($typed_df instanceof DataFieldBoolEntry) {
             $this->validValues = array(1 => _('Ja'), 0 => _('Nein'));
             unset($this->validCompareOperators['>=']);

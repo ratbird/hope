@@ -163,16 +163,11 @@ class Settings_StatusgruppenController extends Settings_SettingsController
             $value = $defaults[$datafield_id]->getValue();
         }
 
-        $query = "INSERT INTO datafields_entries (datafield_id, range_id, sec_range_id, content, chdate, mkdate)
-                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
-                  ON DUPLICATE KEY UPDATE content = VALUES(content), chdate = UNIX_TIMESTAMP()";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $datafield_id,
-            $this->user->user_id,
-            $role_id,
-            $value,
-        ));
+        $entry = new DatafieldEntryModel($datafield_id);
+        $entry->range_id     = $this->user->user_id;
+        $entry->sec_range_id = $role_id;
+        $entry->content      = $value;
+        $entry->store();
 
         $this->redirect('settings/statusgruppen#' . $role_id);
     }
@@ -394,8 +389,7 @@ class Settings_StatusgruppenController extends Settings_SettingsController
                 $errors = array();
 
                 foreach ($datafields as $key => $value) {
-                    $struct = new DataFieldStructure(array('datafield_id' => $key));
-                    $struct->load();
+                    $struct = new DataField($key);
                     $entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->user->user_id, $id));
                     $entry->setValueFromSubmit($value);
                     if ($entry->isValid()) {

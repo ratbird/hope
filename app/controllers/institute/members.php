@@ -381,7 +381,7 @@ class Institute_MembersController extends AuthenticatedController
                 }
             }
 
-            $this->datafields_list = DataFieldStructure::getDataFieldStructures("userinstrole");
+            $this->datafields_list = DataField::getDataFields('userinstrole');
 
             $dview = array();
             if ($this->extend == 'yes') {
@@ -409,9 +409,9 @@ class Institute_MembersController extends AuthenticatedController
                 }
             } else {
                 foreach ($this->datafields_list as $entry) {
-                    if (in_array($entry->getId(), $dview) === TRUE) {
-                        $this->struct[$entry->getId()] = array (
-                            'name' => $entry->getName(),
+                    if (in_array($entry->id, $dview) === TRUE) {
+                        $this->struct[$entry->id] = array (
+                            'name' => $entry->name,
                             'width' => '10%'
                         );
                     }

@@ -157,50 +157,6 @@ function edit_email($user, $email, $force=False) {
     return array(True, $msg);
 }
 
-/*
-function parse_datafields($user_id) {
-    global $datafield_id, $datafield_type, $datafield_content;
-    global $my_about;
-
-    if (is_array($datafield_id)) {
-        $ffCount = 0; // number of processed form fields
-        foreach ($datafield_id as $i=>$id) {
-            $struct = new DataFieldStructure($zw = array("datafield_id"=>$id, 'type'=>$datafield_type[$i]));
-            $entry  = DataFieldEntry::createDataFieldEntry($struct, $user_id);
-            $numFields = $entry->numberOfHTMLFields(); // number of form fields used by this datafield
-            if ($datafield_type[$i] == 'bool' && $datafield_content[$ffCount] != $id) { // unchecked checkbox?
-                $entry->setValue('');
-                $ffCount -= $numFields;  // unchecked checkboxes are not submitted by GET/POST
-            }
-            elseif ($numFields == 1)
-                $entry->setValue($datafield_content[$ffCount]);
-            else
-                $entry->setValue(array_slice($datafield_content, $ffCount, $numFields));
-            $ffCount += $numFields;
-
-            $entry->structure->load();
-            if ($entry->isValid()) {
-                $entry->store();
-            }   else {
-                $invalidEntries[$struct->getID()] = $entry;
-            }
-        }
-        // change visibility of role data
-            foreach ($group_id as $groupID)
-            setOptionsOfStGroup($groupID, $u_id, ($visible[$groupID] == '0') ? '0' : '1');
-        $my_about->msg .= 'msg§'. _("Die Daten wurden gespeichert!").'§';
-        if (is_array($invalidEntries)) {
-            foreach ($invalidEntries as $field) {
-                $name = $field->structure->getName();
-                $my_about->msg .= 'error§'. sprintf(_("Fehlerhafte Eingabe im Datenfeld %s (wurde nicht gespeichert)!"), "<b>$name</b>") .'§';
-            }
-        }
-    }
-
-    return $invalidEntries;
-}
-*/
-
 // class definition
 class about extends messaging
 {
@@ -569,7 +525,7 @@ class about extends messaging
      * together with their visibility settings in the form
      * $name => $visibility.
      */
-    function get_homepage_elements()
+    public function get_homepage_elements()
     {
         global $NOT_HIDEABLE_FIELDS;
 
@@ -667,10 +623,17 @@ class about extends messaging
             $homepage_elements["publi"] = array("name" => _("Publikationen"), "visibility" => $homepage_visibility["publi"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($my_data["schwerp"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['schwerp'])
             $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
+
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
-                if ($field->getValue() && $field->structure->editAllowed($this->auth_user['perms']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
-                    $homepage_elements[$key] = array("name" => $field->structure->data['name'], "visibility" => $homepage_visibility[$key] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Zusätzliche Datenfelder');
+                if ($field->getValue() && $field->isEditable($this->auth_user['perms']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
+                    $homepage_elements[$key] = array(
+                        'name'       => $field->getName(),
+                        'visibility' => $homepage_visibility[$key]
+                                     ?: get_default_homepage_visibility($this->auth_user['user_id']),
+                        'extern'     => true,
+                        'category'   => 'Zusätzliche Datenfelder'
+                    );
                 }
             }
         }

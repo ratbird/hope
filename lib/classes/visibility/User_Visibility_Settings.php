@@ -43,7 +43,7 @@ class User_Visibility_Settings extends SimpleORMap
             $userid = $userid ? : $GLOBALS['user']->id;
 
             // Return the first (and only) matching visibility setting
-            return current(self::findBySQL('user_id = ? AND identifier = ? LIMIT 1', array($userid, $id)));
+            return self::findOneBySQL('user_id = ? AND identifier = ? LIMIT 1', array($userid, $id));
         }
     }
 

@@ -84,9 +84,9 @@ class Admin_UserController extends AuthenticatedController
         }
 
         //Datafields
-        $datafields = DataFieldStructure::getDataFieldStructures("user");
+        $datafields = DataField::getDataFields("user");
         foreach ($datafields as $datafield) {
-            if ($datafield->accessAllowed($this->perm)) {
+            if ($datafield->accessAllowed()) {
                 $this->datafields[] = $datafield;
             }
         }
@@ -96,7 +96,7 @@ class Admin_UserController extends AuthenticatedController
             //suche mit datafields
             foreach ($datafields as $id => $datafield) {
                 if (strlen($request[$id]) > 0
-                    && !(in_array($datafield->getType(), words('selectbox radio')) && $request[$id] === '---ignore---')) {
+                    && !(in_array($datafield->type, words('selectbox radio')) && $request[$id] === '---ignore---')) {
                     $search_datafields[$id] = $request[$id];
                 }
             }
@@ -469,6 +469,8 @@ class Admin_UserController extends AuthenticatedController
             $umdetails = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
             $details = array_reverse(array_merge((array)$details,(array)$umdetails));
             PageLayout::postMessage(MessageBox::info(_('Hinweise:'), $details));
+            
+            $this->redirect('admin/user/edit/' . $user_id);
         }
 
         //get user informations
@@ -486,7 +488,7 @@ class Admin_UserController extends AuthenticatedController
         $this->student_institutes = UserModel::getUserInstitute($user_id, true);
         $this->institutes = UserModel::getUserInstitute($user_id);
         $this->available_institutes = Institute::getMyInstitutes();
-        $this->datafields = DataFieldStructure::getDataFieldStructures("user");
+//        $this->datafields = DataField::getDataFields('user');
         $this->userfields = DataFieldEntry::getDataFieldEntries($user_id, 'user');
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);
         if (LockRules::CheckLockRulePermission($user_id) && LockRules::getObjectRule($user_id)->description) {
@@ -839,9 +841,8 @@ class Admin_UserController extends AuthenticatedController
             //change datafields
             $datafields = Request::getArray('datafields');
             foreach ($datafields as $id => $data) {
-                $struct = new DataFieldStructure(array("datafield_id" => $id));
-                $struct->load();
-                $entry  = DataFieldEntry::createDataFieldEntry($struct, array($user_id, $institute_id));
+                $datafield = DataField::find($id);
+                $entry  = DataFieldEntry::createDataFieldEntry($datafield, array($user_id, $institute_id));
                 $entry->setValueFromSubmit($data);
                 if ($entry->isValid()) {
                     $entry->store();

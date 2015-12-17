@@ -45,7 +45,9 @@ class Settings_DetailsController extends Settings_SettingsController
     {
         //add the free administrable datafields
         $userEntries = DataFieldEntry::getDataFieldEntries($this->user->user_id);
-        $userEntries = array_filter($userEntries, function ($entry) { return $entry->isVisible(); });
+        $userEntries = array_filter($userEntries, function ($entry) {
+            return $entry->isVisible();
+        });
 
         $this->locked_info     = LockRules::CheckLockRulePermission($this->user->user_id)
                                ? LockRules::getObjectRule($this->user->user_id)->description
@@ -132,10 +134,8 @@ class Settings_DetailsController extends Settings_SettingsController
         $data       = Request::getArray('datafields');
         foreach ($datafields as $id => $entry) {
             if (isset($data[$id]) && $data[$id] != $entry->getValue()) {
-                
                 // i really dont know if this is correct but it works
-                $visibility = $datafields[$id]->structure->data;
-                Visibility::updatePrivacySettingWithTest($data[$id], $visibility['name'], $visibility['datafield_id'], 'additionaldata', 1, $this->user->user_id);
+                Visibility::updatePrivacySettingWithTest($data[$id], $entry->getName(), $entry->getID(), 'additionaldata', 1, $this->user->user_id);
                 $entry->setValueFromSubmit($data[$id]);
                 if ($entry->isValid()) {
                     if ($entry->store()) {

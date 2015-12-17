@@ -106,34 +106,36 @@ use Studip\Button, Studip\LinkButton;
     
     <? foreach ($datafields as $datafield): ?>
         <label>
-            <?= htmlReady($datafield->getName()) ?>
+            <?= htmlReady($datafield->name) ?>
 
-        <? if ($datafield->getType() === 'bool'): ?>
+        <? if ($datafield->type === 'bool'): ?>
             <section class="hgroup size-m">
                 <label>
-                    <input type="radio" name="<?= $datafield->getID() ?>" value="" <? if (strlen($user[$datafield->getID()]) === 0) echo 'checked'; ?>>
+                    <input type="radio" name="<?= $datafield->id ?>" value="" <? if (strlen($user[$datafield->id]) === 0) echo 'checked'; ?>>
                     <?= _('egal') ?>
                 </label>
                 <label>
-                    <input type="radio" name="<?= $datafield->getID()?>" value="1" <? if ($user[$datafield->getID()] === '1') echo 'checked'; ?>>
+                    <input type="radio" name="<?= $datafield->id ?>" value="1" <? if ($user[$datafield->id] === '1') echo 'checked'; ?>>
                     <?= _('ja') ?>
                 </label>
                 <label>
-                    <input type="radio" name="<?= $datafield->getID()?>" value="0" <? if ($user[$datafield->getID()] === '0') echo 'checked'; ?>>
+                    <input type="radio" name="<?= $datafield->id ?>" value="0" <? if ($user[$datafield->id] === '0') echo 'checked'; ?>>
                     <?= _('nein') ?>
                 </label>
             </section>
-        <? elseif ($datafield->getType() === 'selectbox' || $datafield->getType() === 'radio') : ?>
+        <? elseif ($datafield->type === 'selectbox' || $datafield->type === 'radio') : ?>
             <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
-            <select name="<?= $datafield->getID()?>">
+            <select name="<?= $datafield->id ?>">
                 <option value="---ignore---"><?= _('alle') ?></option>
-                <? foreach ($datafield_entry->type_param as $pkey => $pval) :?>
+            <? foreach ($datafield_entry->type_param as $pkey => $pval) :?>
                 <? $value = $datafield_entry->is_assoc_param ? (string) $pkey : $pval; ?>
-                <option value="<?= $value ?>" <?= ($user[$datafield->getID()] === $value) ? 'selected' : '' ?>><?= htmlReady($pval) ?></option>
-                <? endforeach ?>
+                <option value="<?= $value ?>" <?= ($user[$datafield->id] === $value) ? 'selected' : '' ?>>
+                    <?= htmlReady($pval) ?>
+                </option>
+            <? endforeach ?>
             </select>
         <? else : ?>
-            <input type="text" name="<?= $datafield->getID()?>" value="<?= htmlReady($user[$datafield->getID()]) ?>">
+            <input type="text" name="<?= $datafield->id ?>" value="<?= htmlReady($user[$datafield->id]) ?>">
         <? endif ?>
         </label>
     <? endforeach; ?>

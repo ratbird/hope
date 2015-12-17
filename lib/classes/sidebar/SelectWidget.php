@@ -38,30 +38,30 @@ class SelectWidget extends SidebarWidget
         $this->template_variables['params'] = $query_params;
     }
 
-    public function setSelectParameterName($name) 
+    public function setSelectParameterName($name)
     {
         $this->template_variables['name'] = $name;
     }
 
-    public function setSelection($value) 
+    public function setSelection($value)
     {
         $this->template_variables['value'] = $value;
     }
-    
+
     public function setRequestMethod($method)
     {
         $this->template_variables['method'] = $method;
     }
-    
-    public function setOptions(Array $options)
+
+    public function setOptions(Array $options, $selected = false)
     {
-        $selected = Request::get($this->template_variables['name']);
+        $selected = $selected ?: Request::get($this->template_variables['name']);
         foreach ($options as $key => $label) {
             $element = new SelectElement($key, $label, $selected === $key);
             $this->addElement($element);
         }
     }
-    
+
     public function render($variables = array())
     {
         $attributes = array();

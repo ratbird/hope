@@ -1,47 +1,57 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TEST
-# Lifter010: TODO
-/*
-* DataFieldEntry.class.php - <short-description>
-*
-* Copyright (C) 2005 - Martin Gieseking  <mgieseki@uos.de>
-* Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License as
-* published by the Free Software Foundation; either version 2 of
-* the License, or (at your option) any later version.
-*/
-
 /**
- * Enter description here...
+ * DataFieldEntry.class.php
  *
+ * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  Marcus Lunzenauer <mlunzena@uos.de>
+ * @author  Martin Gieseking <mgieseki@uos.de>
+ * @license GPL2 or any later version
  */
 abstract class DataFieldEntry
 {
-    public $value;
-    public $structure;
-    public $rangeID;
+    protected static $supported_types = array(
+        'bool',
+        'textline',
+        'textarea',
+        'selectbox',
+        'selectboxmultiple',
+        'date',
+        'time',
+        'email',
+        'phone',
+        'radio',
+        'combo',
+        'link',
+    );
 
     /**
-     * Enter description here...
+     * Returns all supported datafield types
      *
-     * @param unknown_type $structure
-     * @param unknown_type $rangeID
-     * @param unknown_type $value
+     * @return array of supported types
      */
-    function __construct($structure = null, $rangeID = '', $value = null)
+    public static function getSupportedTypes()
     {
-        $this->structure = $structure;
-        $this->rangeID = $rangeID;
-        $this->value = $value;
+        return self::$supported_types;
     }
 
-    function getDescription()
+    /**
+     * Factory method that returns the appropriate datafield object
+     * for the given parameters.
+     *
+     * @param DataField $datafield Underlying structure
+     * @param String    $rangeID   Range id
+     * @param mixed     $value     Value of the entry
+     * @return DataFieldEntry instance of appropriate type
+     */
+    public static function createDataFieldEntry(DataField $datafield, $rangeID = '', $value = '')
     {
-        return $this->structure->getDescription();
+        $type = $datafield->type;
+        if (!in_array($type, self::getSupportedTypes())) {
+            return false;
+        }
+
+        $entry_class = 'DataField' . ucfirst($type) . 'Entry';
+        return new $entry_class($datafield, $rangeID, $value);
     }
 
     /**
@@ -54,8 +64,9 @@ abstract class DataFieldEntry
      */
     public static function getDataFieldEntries($range_id, $object_type = '', $object_class_hint = '')
     {
-        if(! $range_id)
+        if (!$range_id) {
             return false; // we necessarily need a range ID
+        }
 
         $parameters = array();
         if(is_array($range_id)) {
@@ -77,7 +88,7 @@ abstract class DataFieldEntry
         if($object_type) {
             switch ($object_type) {
                 case 'sem':
-                    if($object_class_hint) {
+                    if ($object_class_hint) {
                         $object_class = SeminarCategories::GetByTypeId($object_class_hint);
                     } else {
                         $object_class = SeminarCategories::GetBySeminarId($rangeID);
@@ -87,7 +98,7 @@ abstract class DataFieldEntry
                     break;
                 case 'inst':
                 case 'fak':
-                    if($object_class_hint) {
+                    if ($object_class_hint) {
                         $object_class = $object_class_hint;
                     } else {
                         $query = "SELECT type FROM Institute WHERE Institut_id = ?";
@@ -105,7 +116,7 @@ abstract class DataFieldEntry
                 case 'user':
                 case 'userinstrole':
                 case 'usersemdata':
-                    $object_class = is_object($GLOBALS['perm']) ? DataFieldStructure::permMask($GLOBALS['perm']->get_perm($rangeID)) : 0;
+                    $object_class = is_object($GLOBALS['perm']) ? DataField::permMask($GLOBALS['perm']->get_perm($rangeID)) : 0;
                     $clause2 = "((object_class & :object_class) OR object_class IS NULL)";
                     $parameters[':object_class'] = (int) $object_class;
                     break;
@@ -123,135 +134,124 @@ abstract class DataFieldEntry
             $rs->execute($parameters);
 
             $entries = array();
-            while($data = $rs->fetch(PDO::FETCH_ASSOC)) {
-                $struct = new DataFieldStructure($data);
-                $entries[$data['datafield_id']] = DataFieldEntry::createDataFieldEntry($struct, $range_id, $data['content']);
+            while ($data = $rs->fetch(PDO::FETCH_ASSOC)) {
+                $datafield = DataField::find($data['datafield_id']);
+                $entries[$data['datafield_id']] = DataFieldEntry::createDataFieldEntry($datafield, $range_id, $data['content']);
             }
         }
         return $entries;
     }
 
-    // @static
-    //hmm wird das irgendwo gebraucht (und wenn ja wozu)?
-    /*
-    public static function getDataFieldEntriesBySecondRangeID ($secRangeID) {
-        $db = new DB_Seminar;
-        $query  = "SELECT *, a.datafield_id AS id ";
-        $query .= "FROM datafields a JOIN datafields_entries b ON a.datafield_id=b.datafield_id ";
-        $query .= "AND sec_range_id = '$secRangeID'";
-        $db->query($query);
-        while ($db->next_record()) {
-            $data = array('datafield_id' => $db->f('id'), 'name' => $db->f('name'), 'type' => $db->f('type'),
-            'typeparam' => $db->f('typeparam'), 'object_type' => $db->f('object_type'), 'object_class' => $db->f('object_class'),
-            'edit_perms' => $db->f('edit_perms'), 'priority' => $db->f('priority'), 'view_perms' => $db->f('view_perms'));
-            $struct = new DataFieldStructure($data);
-            $entry = DataFieldEntry::createDataFieldEntry($struct, array($db->f('range_id'), $secRangeID), $db->f('content'));
-            $entries[$db->f("id")] = $entry;
-        }
-        return $entries;
-    }
-    */
-
     /**
-     * Enter description here...
+     * Removes all datafields from a given range_id (and secondary range
+     * id if passed as array)
      *
-     * @return unknown
-     */
-    function store()
-    {
-        $df = new DatafieldEntryModel(array($this->structure->getID(), $this->getRangeID(), $this->getSecondRangeID()));
-        $old_value = $df->content;
-        $df->content = $this->getValue();
-
-        if ($this->isEmpty()) {
-            $ret = $df->delete();
-        } else {
-            $ret = $df->store();
-        }
-
-        if ($ret) {
-            NotificationCenter::postNotification('DatafieldDidUpdate', $this, array('changed' => $ret, 'old_value' => $old_value));
-        }
-
-        return $ret;
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @param unknown_type $range_id
-     * @return unknown
+     * @param mixed $range_id Range id (or array with range id and secondary
+     *                        range id)
+     * @return int representing the number of deleted entries
      */
     public static function removeAll($range_id)
     {
-        if(is_array($range_id))
-        {
+        if (is_array($range_id)) {
             list ($rangeID, $secRangeID) = $range_id;
-        }
-        else
-        {
+        } else {
             $rangeID = $range_id;
             $secRangeID = "";
         }
-        if($rangeID && ! $secRangeID)
-        {
-            $where = "range_id = ?";
-            $param = array($rangeID);
+
+        if (!$rangeID && !$secRangeID) {
+            return;
         }
-        if($rangeID && $secRangeID)
-        {
-            $where = "range_id = ? AND sec_range_id = ?";
-            $param = array($rangeID , $secRangeID);
+
+        $conditions = array();
+        $parameters = array();
+
+        if ($rangeID) {
+            $conditions[] = 'range_id = ?';
+            $parameters[] = $rangeID;
         }
-        if(! $rangeID && $secRangeID)
-        {
-            $where = "sec_range_id = ?";
-            $param = array($secRangeID);
+        if ($secRangeID) {
+            $conditions[] = 'sec_range_id = ?';
+            $parameters[] = $secRangeID;
         }
-        if($where)
-        {
-            $st = DBManager::get()->prepare("DELETE FROM datafields_entries WHERE $where");
-            $ret = $st->execute($param);
-            return $ret;
-        }
+
+        $where = implode(' AND ', $conditions);
+
+        return DataFieldEntry::deleteBySQL($where, $parameters);
     }
 
+    public $value;
+    public $model;
+    public $rangeID;
+
     /**
-     * Enter description here...
+     * Constructs this datafield
      *
-     * @return array() of supported types
+     * @param DataField $datafield Underlying model
+     * @param String    $rangeID   Range id
+     * @param mixed     $value     Value
      */
-    public static function getSupportedTypes()
+    public function __construct(DataField $datafield = null, $rangeID = '', $value = null)
     {
-        return array("bool" , "textline" , "textarea" , "selectbox" , "selectboxmultiple", "date" , "time" , "email" , "phone" , "radio" , "combo" , "link");
+        $this->model   = $datafield;
+        $this->rangeID = $rangeID;
+        $this->value   = $value;
     }
 
     /**
-     * "statische" Methode: liefert neues Datenfeldobjekt zu gegebenem Typ
+     * Stores this datafield entry
      *
-     * @param unknown_type $structure
-     * @param unknown_type $rangeID
-     * @param unknown_type $value
-     * @return unknown
+     * @return int representing the number of changed entries
      */
-    public static function createDataFieldEntry($structure, $rangeID = '', $value = '')
+    public function store()
     {
-        if(! is_object($structure))
-            return false;
-        $type = $structure->getType();
-        if(in_array($type, DataFieldEntry::getSupportedTypes()))
-        {
-            $entry_class = 'DataField' . ucfirst($type) . 'Entry';
-            return new $entry_class($structure, $rangeID, $value);
+        $entry = new DatafieldEntryModel(array(
+            $this->model->id,
+            (string)$this->getRangeID(),
+            (string)$this->getSecondRangeID(),
+        ));
+
+        $old_value = $entry->content;
+        $entry->content = $this->getValue();
+
+        if ($this->isEmpty()) {
+            $result = $entry->delete();
+        } else {
+            $result = $entry->store();
         }
-        else
-        {
-            return false;
+
+        if ($result) {
+            NotificationCenter::postNotification('DatafieldDidUpdate', $this, array(
+                'changed'   => $result,
+                'old_value' => $old_value,
+            ));
         }
+
+        return $result;
     }
 
     /**
-     * Enter description here...
+     * Returns whether this datafield is required
+     *
+     * @return bool indicating whether the datafield is required or not
+     */
+    public function isRequired()
+    {
+        return $this->model->is_required;
+    }
+
+    /**
+     * Returns the description of this datafield
+     *
+     * @return String containing the description
+     */
+    public function getDescription()
+    {
+        return $this->model->description;
+    }
+
+    /**
+     * Returns the type of this datafield
      *
      * @return string type of entry
      */
@@ -262,22 +262,23 @@ abstract class DataFieldEntry
     }
 
     /**
-     * Enter description here...
+     * Returns the display/rendered value of this datafield
      *
-     * @param unknown_type $entities
-     * @return unknown
+     * @param bool $entities Should html entities be encoded (defaults to true)
+     * @return String containg the rendered value
      */
     public function getDisplayValue($entities = true)
     {
-        if($entities)
+        if ($entities) {
             return htmlReady($this->getValue());
+        }
         return $this->getValue();
     }
 
     /**
-     * Enter description here...
+     * Returns the value of the datafield
      *
-     * @return unknown
+     * @return mixed containing the value
      */
     public function getValue()
     {
@@ -285,50 +286,57 @@ abstract class DataFieldEntry
     }
 
     /**
-     * Enter description here...
+     * Returns the name of the datafield
      *
-     * @return string name
+     * @return String containing the name
      */
     public function getName()
     {
-        return $this->structure->getName();
+        return $this->model->name;
     }
 
     /**
-     * Enter description here...
+     * Returns the id of the datafield
      *
-     * @return unknown
+     * @return String containing the id
      */
     public function getId()
     {
-        return $this->structure->getID();
+        return $this->model->id;
     }
 
     /**
-     * Enter description here...
+     * Returns the according input elements as html for this datafield
      *
-     * @param unknown_type $name
-     * @return unknown
+     * @param String $name      Name prefix of the associated input
+     * @param Array  $variables Additional variables
+     * @return String containing the required html
      */
-    function getHTML($name)
+    public function getHTML($name = '', $variables = array())
     {
-        return $name;
+        $variables = array_merge(array(
+            'name'  => $name,
+            'model' => $this->model,
+            'value' => $this->value,
+        ), $variables);
+
+        return $GLOBALS['template_factory']->render('datafields/' . $this->template, $variables);
     }
 
     /**
-     * Enter description here...
+     * Sets the value
      *
-     * @param unknown_type $v
+     * @param mixed $value The value
      */
-    public function setValue($v)
+    public function setValue($value)
     {
-        $this->value = $v;
+        $this->value = $value;
     }
 
     /**
-     * Enter description here...
+     * Sets the value from a post request
      *
-     * @param unknown_type $submitted_value
+     * @param mixed $submitted_value The value from request
      */
     public function setValueFromSubmit($submitted_value)
     {
@@ -336,103 +344,23 @@ abstract class DataFieldEntry
     }
 
     /**
-     * Enter description here...
+     * Sets the range id
      *
-     * @param unknown_type $v
+     * @param String $range_id Range id
      */
-    public function setRangeID($v)
+    public function setRangeID($range_id)
     {
-        $this->rangeID = $v;
+        $this->rangeID = $range_id;
     }
 
     /**
-     * Enter description here...
+     * Sets the secondary range id
      *
-     * @param unknown_type $v
+     * @param String $sec_range_id Secondary range id
      */
-    public function setSecondRangeID($v)
+    public function setSecondRangeID($sec_range_id)
     {
-        $this->rangeID = array(is_array($this->rangeID) ? $this->rangeID[0] : $this->rangeID , $v);
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return boolean
-     */
-    public function isValid()
-    {
-        if(!trim($this->getValue()) && $this->structure->getIsRequired())
-           return false;
-        else
-           return true;
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return unknown
-     */
-    function numberOfHTMLFields()
-    {
-        return 1;
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return unknown
-     */
-    function getRangeID()
-    {
-        if(is_array($this->rangeID))
-        {
-            list ($rangeID, ) = $this->rangeID;
-        }
-        else
-        {
-            $rangeID = $this->rangeID;
-        }
-        return $rangeID;
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return unknown
-     */
-    function getSecondRangeID()
-    {
-        if(is_array($this->rangeID))
-        {
-            list (, $secRangeID) = $this->rangeID;
-        }
-        else
-        {
-            $secRangeID = "";
-        }
-        return $secRangeID;
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return boolean
-     */
-    function isVisible()
-    {
-        $users_own_range = ($this->getRangeID() == $GLOBALS['user']->id ? $GLOBALS['user']->id : '');
-        return $this->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id, $users_own_range);
-    }
-
-    /**
-     * Enter description here...
-     *
-     * @return boolean
-     */
-    function isEditable()
-    {
-        return $this->structure->editAllowed($GLOBALS['perm']->get_perm());
+        $this->rangeID = array($this->getRangeID(), $sec_range_id);
     }
 
     /**
@@ -440,464 +368,132 @@ abstract class DataFieldEntry
      *
      * @return bool true if empty, else false
      */
-    function isEmpty()
+    public function isEmpty()
     {
         return $this->getValue() == '';
     }
-}
 
-class DataFieldBoolEntry extends DataFieldEntry
-{
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        if($this->getValue())
-            $checked = 'checked';
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        return "<input type=\"hidden\" name=\"$field_name\" value=\"0\">
-        <input type=\"checkbox\" name=\"$field_name\" id=\"$field_id\" value=\"1\" $checked $require>";
-    }
-
-    function getDisplayValue($entities = true) //wofür ist $entities? wird nicht benutzt?!?
-    {
-        return $this->getValue() ? _('Ja') : _('Nein');
-    }
-
-    function setValueFromSubmit($submitted_value)
-    {
-        $this->setValue((int) $submitted_value);
-    }
-}
-
-class DataFieldTextlineEntry extends DataFieldEntry
-{
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $valattr = 'value="' . $this->getDisplayValue() . '"';
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        return "<input type=\"text\" name=\"$field_name\" id=\"$field_id\" $valattr $require>";
-    }
-}
-
-class DataFieldTextareaEntry extends DataFieldEntry
-{
-    public function getDisplayValue($entities = true)
-    {
-        if ($entities) {
-            return htmlReady($this->getValue(), true, true);
-        }
-
-        return $this->getValue();
-    }
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58" %s>%s</textarea>', $field_name, $field_id,  $require, htmlReady($this->getValue()));
-    }
-
-}
-
-class DataFieldEmailEntry extends DataFieldEntry
-{
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        return sprintf('<input type="email" name="%s" id="%s" value="%s" size="30" %s>', $field_name, $field_id, $this->getDisplayValue(), $require);
-    }
-
-    function isValid()
-    {
-        if($this->getValue())
-            return (preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/", strtolower($this->getValue())) && parent::isValid());
-        return  parent::isValid();
-    }
-}
-
-class DataFieldLinkEntry extends DataFieldEntry
-{
-
-    public function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        return sprintf('<input type="url" name="%s" id="%s" value="%s" size="30" placeholder="http://" %s>', $field_name, $field_id, htmlready($this->getValue()), $require);
-    }
-
-    public function getDisplayValue($entities = true)
-    {
-        if ($entities) {
-            return formatLinks($this->getValue());
-        }
-        else {
-            return $this->getValue();
-        }
-    }
-
-    public function setValueFromSubmit($submitted_value)
-    {
-        if ($submitted_value == 'http://') {
-            $this->setValue('');
-        }
-        else {
-            $this->setValue($submitted_value);
-        }
-    }
-
+    /**
+     * Returns whether the datafield contents are valid
+     *
+     * @return boolean indicating whether the datafield contents are valid
+     */
     public function isValid()
     {
-        return (preg_match('%^(https?|ftp)://%', $this->getValue()) || $this->getValue() == '')  && parent::isValid();
-    }
-}
-
-class DataFieldSelectboxEntry extends DataFieldEntry
-{
-
-    function __construct($struct, $range_id, $value)
-    {
-        parent::__construct($struct, $range_id, $value);
-        list ($values, $is_assoc) = $this->getParams();
-        $this->is_assoc_param = $is_assoc;
-        $this->type_param = $values;
-        $this->init();
+        return trim($this->getValue())
+            || !$this->model->is_required;
     }
 
-    function init()
+    /**
+     * Returns the number of html fields this datafield uses for input.
+     *
+     * @return int representing the number of html fields
+     */
+    public function numberOfHTMLFields()
     {
-        $is_assoc = $this->is_assoc_param;
-        $values = $this->type_param;
-        reset($values);
-        if (is_null($this->getValue())) {
-            if (!$is_assoc) {
-                $this->setValue(current($values)); // first selectbox entry is default
-            } else {
-                $this->setValue((string) key($values));
-            }
+        return 1;
+    }
+
+    /**
+     * Returns the range id
+     *
+     * @return String containing the range id
+     */
+    public function getRangeID()
+    {
+        if (is_array($this->rangeID)) {
+            return reset($this->rangeID);
         }
+        return $this->rangeID;
     }
 
-    function getHTML($name)
+    /**
+     * Returns the secondary range id
+     *
+     * @return String containing the secondary range id
+     */
+    public function getSecondRangeID()
     {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = "<select name=\"$field_name\" id=\"$field_id\" $require>";
-        foreach($this->type_param as $pkey => $pval)
-        {
-            $value = $this->is_assoc_param ? (string) $pkey : $pval;
-            $sel = $value == $this->getValue() ? 'selected' : '';
-            $ret .= sprintf('<option value="%s" %s>%s</option>', htmlReady($value), $sel, htmlReady($pval));
+        if (is_array($this->rangeID)) {
+            list (, $secRangeID) = $this->rangeID;
+            return $secRangeID;
         }
-        return $ret . "</select>";
-    }
-
-    function getParams()
-    {
-        $ret = array();
-        $i = 0;
-        $is_assoc = false;
-        foreach(array_map('trim', explode("\n", $this->structure->getTypeParam())) as $p)
-        {
-            if(strpos($p, '=>') !== false)
-            {
-                $is_assoc = true;
-                list ($key, $value) = array_map('trim', explode('=>', $p));
-                $ret[$key] = $value;
-            }
-            else
-            {
-                $ret[$i] = $p;
-            }
-            ++ $i;
-        }
-        return array($ret , $is_assoc);
-    }
-
-    function getDisplayValue($entities = true)
-    {
-        $value = $this->is_assoc_param ? $this->type_param[$this->getValue()] : $this->getValue();
-        return $entities ? htmlReady($value) : $value;
-    }
-}
-
-class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
-{
-
-    function init()
-    {
-        if (is_null($this->getValue())) {
-            $this->setValue('');
-        }
-    }
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . '][]';
-        $field_id = $name . '_' . $this->structure->getID();
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = "<input type=\"hidden\" name=\"$field_name\" value=\"\">\n";
-        $ret .= "<select multiple name=\"$field_name\" id=\"$field_id\" $require>";
-        $values = $this->getValue() ? array_map('trim', explode('|', $this->getValue())) : array();
-        foreach($this->type_param as $pkey => $pval)
-        {
-            $value = $this->is_assoc_param ? (string) $pkey : $pval;
-            $sel = in_array($value, $values) ? 'selected' : '';
-            $ret .= sprintf('<option value="%s" %s>%s</option>', htmlReady($value), $sel, htmlReady($pval));
-        }
-        return $ret . "</select>";
-    }
-
-    function getDisplayValue($entities = true)
-    {
-        $value = $this->getValue();
-        if ($value) {
-            $type_param = $this->type_param;
-            $mapper = !$this->is_assoc_param ?
-                'trim' :
-                function ($a) use ($type_param) {
-                    return $type_param[trim($a)];
-                };
-            $value = join('; ', (array_map($mapper, explode('|', $value))));
-        }
-        return $entities ? htmlReady($value) : $value;
-    }
-
-    function setValueFromSubmit($value)
-    {
-        if (is_array($value)) {
-            parent::setValueFromSubmit(join('|', array_unique(array_filter(array_map('trim',$value)))));
-        } else {
-            parent::setValueFromSubmit('');
-        }
-    }
-}
-
-class DataFieldRadioEntry extends DataFieldSelectboxEntry
-{
-    function numberOfHTMLFields()
-    {
-        return count($this->type_param);
-    }
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $ret = '';
-        foreach($this->type_param as $pkey => $pval)
-        {
-            $value = $this->is_assoc_param ? (string) $pkey : $pval;
-            $require = $this->structure->getIsRequired() ? "required" : "";
-            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s" %s %s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '',  $require, htmlReady($pval))."</label>";
-        }
-        return $ret;
-    }
-}
-
-class DataFieldComboEntry extends DataFieldEntry
-{
-
-    function __construct($struct, $range_id, $value)
-    {
-        parent::__construct($struct, $range_id, $value);
-        if(is_null($this->getValue()))
-        {
-            $values = explode("\n", $this->structure->getTypeParam());
-            $this->setValue(trim($values[0])); // first selectbox entry is default
-        }
-    }
-
-    function numberOfHTMLFields()
-    {
-        return 2;
-    }
-
-    function setValueFromSubmit($value)
-    {
-        parent::setValueFromSubmit($value[$value['combo']]);
-    }
-
-    function getHTML($name)
-    {
-        $field_name = $name . '[' . $this->structure->getID() . ']';
-        $field_id = $name . '_' . $this->structure->getID();
-        $values = array_map('trim', explode("\n", $this->structure->getTypeParam()));
-        $id = $this->structure->getID();
-        $ret = sprintf('<input type="radio" value="select" id="combo_%s_select" name="%s"%s>', $id, $field_name . '[combo]', ($select = in_array($this->value, $values)) ? ' checked="checked"' : '');
-        $ret .= sprintf('<select onFocus="$(\'#combo_%s_select\').attr(\'checked\', true);" name="%s">', $id, $field_name . '[select]');
-        foreach($values as $val)
-        {
-            $val = trim(htmlReady($val));
-            $sel = $val == $this->getValue() ? 'selected' : '';
-            $ret .= "<option value=\"$val\" $sel>$val</option>";
-        }
-        $ret .= "</select> ";
-        $ret .= sprintf('<input type="radio" value="text" id="combo_%s_text" name="%s"%s>', $id, $field_name . '[combo]', $select ? '' : ' checked="checked"');
-        if($this->value && ! $select)
-            $valattr = 'value="' . $this->getDisplayValue() . '"';
-        $ret .= sprintf('<input name="%s" onFocus="$(\'#combo_%s_text\').attr(\'checked\', true);" %s>', $field_name . '[text]', $id, $valattr);
-        return $ret;
-    }
-}
-
-class DataFieldPhoneEntry extends DataFieldEntry
-{
-
-    function numberOfHTMLFields()
-    {
-        return 3;
-    }
-
-    function setValueFromSubmit($value)
-    {
-        if(is_array($value))
-        {
-            parent::setValueFromSubmit(str_replace(' ', '', implode("\n", array_slice($value, 0, 3))));
-        }
-    }
-
-    function getDisplayValue($entities = true)
-    {
-        list ($country, $area, $phone) = explode("\n", $this->value);
-        if($country != '' || $area != '' || $phone != '')
-        {
-            if($country)
-                $country = "+$country";
-            return "$country $area $phone";
-        }
-        else
-        {
-            return '';
-        }
-    }
-
-    function getHTML($name)
-    {
-        $name = $name . '[' . $this->structure->getID() . '][]';
-        $parts = explode("\n", $this->value);
-        for($i = 3 - count($parts); $i > 0; $i --)
-            array_unshift($parts, '');
-        $size = array(3 , 6 , 10);
-        $title = array(_('Landesvorwahl ohne führende Nullen') , _('Ortsvorwahl ohne führende Null') , _('Rufnummer'));
-        $prefix = array('+' ,' ' ,' ');
-        $ret = '';
-        foreach($parts as $i => $part)
-        {
-            $require = ($this->structure->getIsRequired() && $i > 0) ? "required" : "";
-            $ret .= sprintf('<span>%s</span><input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s" %s>', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i], $require);
-        }
-        $ret .= ' ' . tooltipIcon(_('Beispiel: +49 541 969-0000'));
-        return $ret;
-    }
-
-    function isValid()
-    {
-        if(trim($this->value) == '')
-            return  parent::isValid();;
-        return (preg_match('/^[1-9][0-9]*\n[1-9][0-9]+\n[1-9][0-9]+(-[0-9]+)?$/', $this->value)  && parent::isValid());
-    }
-
-    function isEmpty()
-    {
-        return $this->getValue() == "\n\n";
-    }
-}
-
-class DataFieldDateEntry extends DataFieldEntry
-{
-
-    function numberOfHTMLFields()
-    {
-        return 3;
-    }
-
-    function setValueFromSubmit($value)
-    {
-        if(is_array($value))
-        {
-            parent::setValueFromSubmit("$value[2]-$value[1]-$value[0]");
-        }
-    }
-
-    function getDisplayValue($entries = true)
-    {
-        if(preg_match('/(\d+)-(\d+)-(\d+)/', $this->value, $m))
-            return "$m[3].$m[2].$m[1]";
         return '';
     }
 
-    function getHTML($name)
+    /**
+     * Returns whether the datafield is visible for the current user
+     *
+     * @param bool $test_deep
+     * @return boolean indicating whether the datafield is visible
+     */
+    public function isVisible($perm = null, $test_ownership = true)
     {
-        $field_name = $name . '[' . $this->structure->getID() . '][]';
-        $parts = explode('-', $this->value);
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Tag").'" %s>', $field_name, $parts[2], $require);
-        $ret .= ". ";
-        //TODO: was ist, wenn studip auf englisch eingestellt ist?!? lieber srfttime oder so benutzen...
-        $months = array('' , 'Januar' , 'Februar' , 'März' , 'April' , 'Mai' , 'Juni' , 'Juli' , 'August' , 'September' , 'Oktober' , 'November' , 'Dezember');
-        $ret .= "<select name=\"$field_name\" title=\""._("Monat")."\" $require>";
-        foreach($months as $i => $m)
-            $ret .= sprintf('<option %s value="%s">%s</option>', ($parts[1] == $i ? 'selected' : ''), $i, $m);
-        $ret .= "</select> ";
-        $ret .= sprintf('<input name="%s" maxlength="4" size="3" value="%s" title="'._("Jahr").'" %s>', $field_name, $parts[0], $require);
-        return '<div style="white-space: nowrap">' . $ret . '</div>';
-    }
-
-    function isValid()
-    {
-        if(trim($this->value) == '')
-            return parent::isValid();
-        $parts = explode("-", $this->value);
-        $valid = preg_match('/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/', $this->value);
-        return trim($this->value) != '' && $valid  && parent::isValid() && checkdate($parts[1], $parts[2], $parts[0]);
-    }
-}
-
-class DataFieldTimeEntry extends DataFieldEntry
-{
-
-    function numberOfHTMLFields()
-    {
-        return 2;
-    }
-
-    function setValueFromSubmit($value)
-    {
-        if(is_array($value))
-        {
-            parent::setValueFromSubmit("$value[0]:$value[1]");
+        if ($test_ownership) {
+            return $this->model->accessAllowed($perm,
+                                               $GLOBALS['user']->id,
+                                               $this->getRangeID());
         }
+        return $this->model->accessAllowed($perm);
     }
 
-    function getHTML($name)
+    /**
+     * Returns whether the datafield is editable for the current user
+     *
+     * @param mixed $perms Perms to test against (optional, defaults to logged
+     *                     in user's perms)
+     * @return boolean indicating whether the datafield is editable
+     */
+    public function isEditable($perms = null)
     {
-        $name = $name . '[' . $this->structure->getID() . '][]';
-        $parts = explode(':', $this->value);
-        $require = $this->structure->getIsRequired() ? "required" : "";
-        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Stunden").'" %s>:', $name, $parts[0], $require);
-        $ret .= sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Minuten").'" %s>', $name, $parts[1], $require);
-        return '<div style="white-space: nowrap">' . $ret . '</div>';
+        return $this->model->editAllowed($perms ?: $GLOBALS['perm']->get_perm());
     }
 
-    function isValid()
+    /**
+     * Returns a human readable string describing the view permissions
+     *
+     * @return String containing the descriptons of the view permissions
+     */
+    public function getPermsDescription()
     {
-        $parts = explode(':', $this->value);
-        return (($parts[0] >= 0 && $parts[0] <= 24 && $parts[1] >= 0 && $parts[1] <= 59)  && parent::isValid());
+        if ($this->model->view_perms === 'all') {
+            return _('sichtbar für alle');
+        }
+        return sprintf(_('sichtbar nur für Sie und alle %s'),
+                       $this->prettyPrintViewPerms());
     }
 
-    function isEmpty()
+    /**
+     * Generates a full status description depending on the the perms
+     *
+     * @return string
+     */
+    protected function prettyPrintViewPerms()
     {
-        return $this->getValue() == ':';
+        switch ($this->model->view_perms) {
+            case 'all':
+                return _('alle');
+                break;
+            case 'root':
+                return _('Systemadministrator/-innen');
+                break;
+            case 'admin':
+                return _('Administrator/-innen');
+                break;
+            case 'dozent':
+                return _('Lehrenden');
+                break;
+            case 'tutor':
+                return _('Tutor/-innen');
+                break;
+            case 'autor':
+                return _('Studierenden');
+                break;
+            case 'user':
+                return _('Nutzer/-innen');
+                break;
+        }
+        return '';
     }
+
 }
-?>

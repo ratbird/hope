@@ -110,7 +110,7 @@ class AuxLockRules
 
     static function checkLockRule($fields)
     {
-        $entries = DataFieldStructure::getDataFieldStructures('usersemdata');
+        $entries = DataField::getDataFields('usersemdata');
         foreach ($entries as $id => $entry) {
             if ($fields[$id] == 1) return true;
         }

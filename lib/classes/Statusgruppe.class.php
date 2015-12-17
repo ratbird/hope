@@ -272,14 +272,13 @@ class Statusgruppe {
         if (!$this->isSeminar()) {
             // check the datafields
             foreach (Request::quotedArray('datafields') as $id=>$data) {
-                $struct = new DataFieldStructure(array("datafield_id"=>$id));
-                $struct->load();
+                $struct = DataField::find($id);
                 $entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->range_id, $this->statusgruppe_id));
                 $entry->setValueFromSubmit($data);
                 if ($entry->isValid()) {
                     $entry->store();
                 } else {
-                    $invalidEntries[$struct->getID()] = $entry;
+                    $invalidEntries[$struct->id] = $entry;
                 }
             }
 

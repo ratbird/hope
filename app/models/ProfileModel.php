@@ -136,32 +136,27 @@ class ProfileModel
     {
         $institutes = UserModel::getUserInstitute($this->current_user->user_id);
 
-        foreach($institutes as $id =>$inst_result) {
+        foreach ($institutes as $id =>$inst_result) {
 
             if($inst_result['visible'] == 1) {
                 $entries = DataFieldEntry::getDataFieldEntries(array($this->current_user->user_id, $inst_result['Institut_id']));
 
                 if (!empty($entries)) {
                     foreach ($entries as $entry) {
-                        $perms = $entry->structure->getViewPerms();
+                        $view = $entry->isVisible(null, false);
+                        $show_star = false;
 
-                        if($perms) {
-                            $view = DataFieldStructure::permMask($this->user->perms) >= DataFieldStructure::permMask($perms);
-                            $show_star = false;
+                        if (!$view && $entry->isVisible()) {
+                            $view = true;
+                            $show_star = true;
+                        }
 
-                            if (!$view && ($this->current_user->user_id == $this->user->user_id)) {
-                                $view = true;
-                                $show_star = true;
-                            }
-
-                            if (trim($entry->getValue()) && $view) {
-                                $institutes[$id]['datafield'][] = array(
-                                    'name'  => $entry->getName(),
-                                    'value' => $entry->getDisplayValue()
-                                );
-
-                                if ($show_star) $institutes[$id]['datafield'][]['show_star'] = true;
-                            }
+                        if (trim($entry->getValue()) && $view) {
+                            $institutes[$id]['datafield'][] = array(
+                                'name'      => $entry->getName(),
+                                'value'     => $entry->getDisplayValue(),
+                                'show_star' => $show_star,
+                            );
                         }
                     }
                 }
@@ -185,9 +180,9 @@ class ProfileModel
         $short_datafields = array();
         $long_datafields  = array();
         foreach (DataFieldEntry::getDataFieldEntries($this->current_user->user_id, 'user') as $entry) {
-            if (($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id)
-                    && Visibility::verify($entry->structure->getID(), $this->current_user->user_id))
-                            && $entry->getDisplayValue()) {
+            if ($entry->isVisible() && $entry->getDisplayValue()
+                && Visibility::verify($entry->getID(), $this->current_user->user_id))
+            {
                 if ($entry instanceof DataFieldTextareaEntry) {
                     $long_datafields[] = $entry;
                 } else {
@@ -216,12 +211,10 @@ class ProfileModel
             return null;
         }
         foreach ($datafields['long'] as $entry) {
-            $vperms = $entry->structure->getViewPerms();
-            $visible = ('all' == $vperms)
-                     ? '(' . _('sichtbar für alle') . ')'
-                     : '(' . sprintf(_('sichtbar nur für Sie und alle %s'), $this->prettyViewPermString($vperms)) . ')';
-            $array[$entry->getName()]['content'] = $entry->getDisplayValue();
-            $array[$entry->getName()]['visible'] = $visible;
+            $array[$entry->getName()] = array(
+                'content' => $entry->getDisplayValue(),
+                'visible' => '(' . $entry->getPermsDescription() . ')',
+            );
         }
 
         return $array;
@@ -242,52 +235,13 @@ class ProfileModel
         }
 
         foreach ($shortDatafields['short'] as $entry) {
-            $vperms = $entry->structure->getViewPerms();
-            $visible = ('all' == $vperms)
-                     ? '(' . _('sichtbar für alle') . ')'
-                     : '(' . sprintf(_('sichtbar nur für Sie und alle %s'), $this->prettyViewPermString($vperms)) . ')';
             $array[$entry->getName()] = array(
                 'content' => $entry->getDisplayValue(),
-                'visible' => $visible,
+                'visible' => '(' . $entry->getPermsDescription() . ')',
             );
         }
         return $array;
     }
-
-    /**
-     * Generates a full status description depending on the the perms
-     *
-     * @param String $viewPerms
-     * @return string
-     */
-    function prettyViewPermString ($viewPerms)
-    {
-        switch ($viewPerms) {
-            case 'all':
-                return _('alle');
-                break;
-            case 'root':
-                return _('Systemadministrator/-innen');
-                break;
-            case 'admin':
-                return _('Administrator/-innen');
-                break;
-            case 'dozent':
-                return _('Lehrenden');
-                break;
-            case 'tutor':
-                return _('Tutor/-innen');
-                break;
-            case 'autor':
-                return _('Studierenden');
-                break;
-            case 'user':
-                return _('Nutzer/-innen');
-                break;
-        }
-        return '';
-    }
-
 
     /**
      * Get the decorated StudIP-Kings information

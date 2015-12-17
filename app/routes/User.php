@@ -112,10 +112,10 @@ class User extends \RESTAPI\RouteMap
         // Data fields
         $datafields = array();
         foreach (\DataFieldEntry::getDataFieldEntries($user_id, 'user') as $entry) {
-            if (!$entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id, $user_id)) {
+            if (!$entry->isVisible()) {
                 continue;
             }
-            if (!\Visibility::verify($entry->structure->getID(), $user_id)) {
+            if (!\Visibility::verify($entry->getID(), $user_id)) {
                 continue;
             }
             $datafields[] = array(

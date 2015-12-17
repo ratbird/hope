@@ -112,7 +112,7 @@ function get_start_item_id ($object_id) {
 
 function get_generic_datafields ($object_type) {
 //  $datafields_obj = new DataFields();
-    $fieldStructs = DataFieldStructure::getDataFieldStructures($object_type);
+    $fieldStructs = DataField::getDataFields($object_type);
 //  $generic_datafields = $datafields_obj->getFields($object_type);
     
     if (sizeof($fieldStructs)) {

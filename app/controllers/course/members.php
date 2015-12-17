@@ -596,13 +596,12 @@ class Course_MembersController extends AuthenticatedController
 
     public function import_autorlist_action()
     {
-        global $perm;
         if (!Request::isXhr()) {
             Navigation::activateItem('/course/members/view');
         }
-        $datafields = DataFieldStructure::getDataFieldStructures('user', (1 | 2 | 4 | 8), true);
+        $datafields = DataField::getDataFields('user', 1 | 2 | 4 | 8, true);
         foreach ($datafields as $df) {
-            if ($df->accessAllowed($perm) && in_array($df->getId(), $GLOBALS['TEILNEHMER_IMPORT_DATAFIELDS'])) {
+            if ($df->accessAllowed() && in_array($df->getId(), $GLOBALS['TEILNEHMER_IMPORT_DATAFIELDS'])) {
                 $accessible_df[] = $df;
             }
         }
@@ -612,13 +611,11 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Old version of CSV import (copy and paste from teilnehmer.php
-     * @global Object $perm
      * @return type
      * @throws AccessDeniedException
      */
     public function set_autor_csv_action()
     {
-        global $perm;
         // Security Check
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -634,8 +631,8 @@ class Course_MembersController extends AuthenticatedController
         $datafield_id = null;
 
         if (Request::get('csv_import_format') && !in_array(Request::get('csv_import_format'), words('realname username'))) {
-            foreach (DataFieldStructure::getDataFieldStructures('user', (1 | 2 | 4 | 8), true) as $df) {
-                if ($df->accessAllowed($perm) && in_array($df->getId(), $GLOBALS['TEILNEHMER_IMPORT_DATAFIELDS']) && $df->getId() == Request::quoted('csv_import_format')) {
+            foreach (DataField::getDataFields('user', 1 | 2 | 4 | 8, true) as $df) {
+                if ($df->accessAllowed() && in_array($df->getId(), $GLOBALS['TEILNEHMER_IMPORT_DATAFIELDS']) && $df->getId() == Request::quoted('csv_import_format')) {
                     $datafield_id = $df->getId();
                     break;
                 }

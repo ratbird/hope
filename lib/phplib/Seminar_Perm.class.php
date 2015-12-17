@@ -57,17 +57,25 @@ class Seminar_Perm
      * @param bool $user_id
      * @return string
      */
-    function get_perm($user_id = false)
+    public function get_perm($user_id = false)
     {
         global $user;
-        if (!$user_id) $user_id = $user->id;
+        if (!$user_id) {
+            $user_id = $user->id;
+        }
         if ($user_id && $user_id == $user->id) {
             return $user->perms;
-        } else if ($user_id && isset($this->studip_perms['studip'][$user_id])) {
+        }
+        if ($user_id && isset($this->studip_perms['studip'][$user_id])) {
             return $this->studip_perms['studip'][$user_id];
-        } else if ($user_id && $user_id !== 'nobody') {
-            $db = DbManager::get();
-            $perms = $db->query("SELECT perms FROM auth_user_md5 WHERE user_id = " . $db->quote($user_id))->fetchColumn();
+        }
+        if ($user_id && $user_id !== 'nobody') {
+            $query = "SELECT perms FROM auth_user_md5 WHERE user_id = :user_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':user_id', $user_id);
+            $statement->execute();
+            $perms = $statement->fetchColumn();
+
             return $this->studip_perms['studip'][$user_id] = $perms;
         }
     }

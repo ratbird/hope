@@ -383,11 +383,12 @@ td.tree-elbow-end svg {
 .collapsable .empty .toggle-indicator {
   padding-left: 20px;
 }
-.collapsable > .collapsed > tr {
+.collapsable > .collapsed tr:not(.header-row) {
   display: none;
 }
-.collapsable .collapsed .header-row {
-  display: table-row !important;
+.collapsable > .collapsed .toggle-indicator ~ * {
+  overflow: hidden;
+  text-indent: 200%;
 }
 * + html .collapsable .collapsed .header-row {
   display: inline-block !important;

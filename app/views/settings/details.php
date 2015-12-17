@@ -147,9 +147,9 @@
     <? if (count($user_entries) > 0): ?>
         <tbody>
             <tr>
-                <td colspan="3">
+                <th colspan="3">
                     <?= _('Zusätzliche Datenfelder') ?>
-                </td>
+                </th>
             </tr>
         <? foreach ($user_entries as $id => $entry): ?>
             <tr>
@@ -159,13 +159,16 @@
             <? else: ?>
                 <td>
             <? endif; ?>
-                    <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
+                <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
                     <label for="datafields_<?= $entry->getId() ?>">
-                    <? endif ?>
+                <? endif ?>
                     <?= htmlReady($entry->getName()) ?>
-                    <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
+                <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
                     </label>
-                    <? endif ?>
+                <? endif ?>
+                <? if (!$entry->isVisible($user->perms)): ?>
+                    <?= tooltipIcon(_('Systemfeld (für die Person selbst nicht sichtbar)'), true) ?>
+                <? endif; ?>
                 </td>
                 <td colspan="2">
                 <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId())): ?>

@@ -270,7 +270,7 @@ function InsertPersonStatusgruppe ($user_id, $statusgruppe_id, $is_institute_gro
 function MakeDatafieldsDefault($user_id, $statusgruppe_id, $default = 'default_value')
 {
     global $auth;
-    $fields = DataFieldStructure::getDataFieldStructures('userinstrole');
+    $fields = DataField::getDataFields('userinstrole');
 
     $query = "SELECT datafield_id FROM datafields WHERE object_type = 'userinstrole'";
     $ids = DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN);
@@ -874,92 +874,6 @@ function GetRoleNames($roles, $level = 0, $pred = '', $all = false) {
     }
 
     return (sizeof($out) > 0 ? $out : null);
-}
-
-function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = null, $level = 0, $pred = '') {
-    global $auth, $user, $has_denoted_fields;
-
-    $out = '';
-    $out_table = array();
-
-    if (is_array($roles))
-    foreach ($roles as $role_id => $role) {
-
-        $role['name'] = $role['role']->getName();
-        $out_zw = '';
-
-        if ($pred != '') {
-            $new_pred = $pred.' > '.$role['name'];
-        } else {
-            $new_pred = $role['name'];
-        }
-
-      $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $role_id));
-
-        if ($role['user_there']) {
-            $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                    .  Assets::img('forumgrau2.png')
-                    .  '&nbsp;</td><td colspan="2"><b>'. htmlReady($new_pred) .'</b></td></tr>';
-            $zw = '<td %class%></td><td %class%><font size="-1">'. htmlReady($new_pred) .'</font></td>';
-        }
-
-        $zw2 = '';
-        $has_value = false;
-
-        if (is_array($entries))
-        foreach ($entries as $id => $entry) {
-            $default = false;
-            if ($filter == null || in_array($id, $filter) === TRUE) {
-                if ($entry->getValue() == 'default_value') {
-                    $value = $default_entries[$id]->getDisplayValue();
-                    $default = true;
-                } else {
-                    $value = $entry->getDisplayValue();
-                }
-
-                $name = $entry->structure->getName();
-                if ($role['user_there']) {
-                    $view = (DataFieldStructure::permMask($auth->auth['perm']) >= DataFieldStructure::permMask($entry->structure->getViewPerms()));
-                    $show_star = false;
-                    if (!$view && ($user_id == $user->id)) {
-                        $view = true;
-                        $show_star = true;
-                        $has_denoted_fields = true;
-                    }
-
-                    if ($view) { // Sichtbarkeitsberechtigung
-                        $zw2 .= '<td %class%><font size="-1">'. trim($value);
-                        if ($show_star) $zw2 .= ' *';
-                        $zw2 .= '</font></td>';
-
-                        if (trim($value)) {
-                            $has_value = true;
-                            if (!$default) {
-                                $out_zw .= '<tr><td></td><td>'. htmlReady($name) .':&nbsp;&nbsp;</td><td>'.trim($value);
-                                if ($show_star) $out_zw .= ' *';
-                                $out_zw .= '</td></tr>';
-                            }
-                        }
-                    }   // Ende Sichtbarkeitsberechtigung
-
-                }
-            }
-
-        }
-
-        if ($role['user_there'] && $role['visible']) {
-            $out_table[] = $zw.$zw2;
-            $out .= $out_zw;
-        }
-
-        if ($role['child']) {
-            $back = get_role_data_recursive($role['child'], $user_id, $default_entries, $filter, $level+1, $new_pred);
-            $out .= $back['standard'];
-            $out_table = array_merge((array)$out_table, (array)$back['table']);
-        }
-    }
-
-    return array('standard' => $out, 'table' => $out_table);
 }
 
 function getPersonsForRole($role_id)

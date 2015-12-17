@@ -179,7 +179,7 @@
                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
                         <?= htmlReady(trim($values['Name'])) ?>
                     </a>
-                    <a data-dialog="buttons=false;size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $semid)) ?>">
+                    <a data-dialog="buttons=false" href="<?= $controller->url_for(sprintf('course/details/index/%s', $semid)) ?>">
                         <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
                         <? $params['style'] = 'cursor: pointer'; ?>
                         <?= Icon::create('info-circle', 'inactive')->asImg($params) ?>

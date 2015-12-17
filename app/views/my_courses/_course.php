@@ -38,7 +38,7 @@
         </td>
         <td>
             <? if (!$sem_class['studygroup_mode']) : ?>
-                <a data-dialog="size=50%" href="<?= $controller->url_for(sprintf('course/details/index/%s', $course['seminar_id'])) ?>">
+                <a data-dialog href="<?= $controller->url_for(sprintf('course/details/index/%s', $course['seminar_id'])) ?>">
                     <? $params = tooltip2(_("Veranstaltungsdetails")); ?>
                     <? $params['style'] = 'cursor: pointer'; ?>
                     <?= Icon::create('info-circle', 'inactive')->asImg(20, $params) ?>

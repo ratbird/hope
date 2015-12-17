@@ -117,10 +117,6 @@ class MyCoursesController extends AuthenticatedController
 
         $this->group_field = $group_field === 'not_grouped' ? 'sem_number' : $group_field;
 
-        if (Config::get()->IMPORTANT_SEMNUMBER) {
-            $order_by .= 'veranstaltungsnummer, name';
-        }
-
         // Needed parameters for selecting courses
         $params = array('group_field'         => $this->group_field,
                         'order_by'            => $order_by,

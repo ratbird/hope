@@ -688,6 +688,7 @@ class MyRealmModel
                 $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
                 $_course['name']           = $course->name;
                 $_course['temp_name']      = $course->name;
+                $_course['number']         = $course->veranstaltungsnummer;
                 $_course['is_deputy']      = $is_deputy;
                 if ($show_semester_name && $course->duration_time != 0 && !$course->getSemClass()->offsetGet('studygroup_mode')) {
                     $_course['name'] .= ' (' . $course->getFullname('sem-duration-name') . ')';
@@ -726,7 +727,11 @@ class MyRealmModel
         if ($group_field == 'sem_number' && !$params['order_by']) {
             foreach ($sem_courses as $index => $courses) {
                 uasort($courses, function ($a, $b) {
-                    return $a['gruppe'] == $b['gruppe'] ? strcmp($a['temp_name'], $b['temp_name']) : $a['gruppe'] - $b['gruppe'];
+                    if (Config::get()->IMPORTANT_SEMNUMBER) {
+                        return $a['gruppe'] == $b['gruppe'] ? strcmp($a['number'], $b['number']) : $a['gruppe'] - $b['gruppe'];
+                    } else {
+                        return $a['gruppe'] == $b['gruppe'] ? strcmp($a['temp_name'], $b['temp_name']) : $a['gruppe'] - $b['gruppe'];
+                    }
                 });
                 $sem_courses[$index] = $courses;
             }

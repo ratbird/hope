@@ -4,7 +4,7 @@
 <? if ($withButton): ?>
 <div class="quicksearch_frame <?= ($extendedLayout === true) ? 'extendedLayout' : ''; ?>" id="<?= $id ?>_frame">
     <? if ($box_align === 'left'): ?>
-        <?= Assets::input('icons/16/blue/search.png', array('class' => 'text-bottom')) ?>
+        <?= Icon::create('search', 'clickable')->asInput(["class" => 'text-bottom']) ?>
     <? endif; ?>
 <? endif; ?>
     <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= htmlReady($defaultID) ?>">

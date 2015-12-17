@@ -6,11 +6,11 @@
         <td><?= htmlReady($user->name()) ?></td>
         <td class="actions">
             <a href="<?= $controller->url_for("settings/statusgruppen/switch/{$group->id}/1?username={$user->user->username}") ?>">
-                <?= Assets::img('icons/16/blue/edit.png', tooltip2(_('Benutzer in dieser Rolle bearbeiten'))) ?>
+                <?= Icon::create('edit', 'clickable', ['title' => _('Benutzer in dieser Rolle bearbeiten')])->asImg() ?>
             </a>
             <? if ($tutor) : ?>
                 <a data-dialog="size=auto" href="<?= $controller->url_for("admin/statusgroups/delete/{$group->id}/{$user->user_id}") ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', tooltip2(_('Person aus Gruppe austragen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Person aus Gruppe austragen')])->asImg() ?>
                 </a>
             <? endif ?>
         </td>

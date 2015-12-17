@@ -21,7 +21,7 @@ class AdminController extends ForumController
     {
         ForumPerm::check('admin', $this->getId());
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/admin');
 
         $list = ForumEntry::getList('flat', $this->getId());

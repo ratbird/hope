@@ -14,7 +14,7 @@
             <div class="bread-crumbs">
         <? endif; ?>
                 <a href="<?= $controller->url_for('document/files/index/' . $last_crumb['id']) ?>">
-                    <?= Assets::img('icons/24/blue/folder-parent.png') ?>
+                    <?= Icon::create('folder-parent', 'clickable')->asImg(24) ?>
                 </a>
             <? if (count($breadcrumbs) > 1): ?>
                 <ul>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="caption-actions">
-                <?= Assets::img('icons/16/black/stat.png', tooltip2(_('Speicherplatz'))) ?>
+                <?= Icon::create('stat', 'info', ['title' => _('Speicherplatz')])->asImg() ?>
                 <?= sprintf(_('%0.1f%% belegt'), $space_used / $space_total * 100) ?>
                 (<?= relsize($space_used, false) ?>
                 /<?= relsize($space_total, false) ?>)
@@ -82,7 +82,7 @@
             <td>&nbsp;</td>
             <td class="document-icon">
                 <a href="<?= $controller->url_for('document/files/index/' . $parent_id, $parent_page ) ?>">
-                    <?= Assets::img('icons/24/blue/arr_1up.png', tooltip2(_('Ein Verzeichnis nach oben wechseln'))) ?>
+                    <?= Icon::create('arr_1up', 'clickable', ['title' => _('Ein Verzeichnis nach oben wechseln')])->asImg(24) ?>
                 </a>
             </td>
             <td>
@@ -113,9 +113,9 @@
             <td class="document-icon" data-sort-value="0">
                 <a href="<?= $controller->url_for('document/files/index/' . $file->id) ?>">
                 <? if ($file->file->isEmpty()): ?>
-                    <?= Assets::img('icons/24/blue/folder-empty.png') ?>
+                    <?= Icon::create('folder-empty', 'clickable')->asImg(24) ?>
                 <? else: ?>
-                    <?= Assets::img('icons/24/blue/folder-full.png') ?>
+                    <?= Icon::create('folder-full', 'clickable')->asImg(24) ?>
                 <? endif; ?>
                 </a>
             </td>
@@ -146,28 +146,28 @@
             <td class="options">
             <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/folder/edit/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Ordner bearbeiten') ?>">
-                    <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable')->asImg(16, ["alt" => _('bearbeiten')]) ?>
                 </a>
             <? endif; ?>
                 <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Ordner herunterladen') ?>">
-                    <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
+                    <?= Icon::create('download', 'clickable')->asImg(16, ["alt" => _('herunterladen')]) ?>
                 </a>
             <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Ordner verschieben') ?>">
-                    <?= Assets::img('icons/16/blue/move_right/folder-empty.png', array('alt' => _('verschieben'))) ?>
+                    <?= Icon::create('folder-empty+move_right', 'clickable')->asImg(16, ["alt" => _('verschieben')]) ?>
                 </a>
                  <a href="<?= $controller->url_for('document/files/copy/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Ordner kopieren') ?>">
-                    <?= Assets::img('icons/16/blue/add/folder-empty.png', array('alt' => _('kopieren'))) ?>
+                    <?= Icon::create('folder-empty+add', 'clickable')->asImg(16, ["alt" => _('kopieren')]) ?>
                 </a>
                 <a href="<?= $controller->url_for('document/folder/delete/' . $file->id) ?>" title="<?= _('Ordner löschen') ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', array('alt' => _('löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable')->asImg(16, ["alt" => _('löschen')]) ?>
                 </a>
             <? endif; ?>
             </td>
         <? else: ?>
             <td class="document-icon" data-sort-value="1">
                 <a href="<?= $file->getDownloadLink(true) ?>">
-                    <?= Assets::img('icons/24/blue/'. get_icon_for_mimetype($file->file->mime_type)) ?>
+                    <?= Icon::create(get_icon_for_mimetype($file->file->mime_type), 'clickable')->asImg(24) ?>
                 </a>
             </td>
             <td>
@@ -175,7 +175,7 @@
                     <?= htmlReady($file->name) ?>
                 </a>
             <? if ($file->file->restricted): ?>
-                <?= Assets::img('icons/16/blue/lock-locked.png', array('class' => 'text-top') + tooltip2(_('Diese Datei ist nicht frei von Rechten Dritter.'))) ?>
+              <?= Icon::create('lock-locked', 'clickable',['title' => _('Diese Datei ist nicht frei von Rechten Dritter.')])->asImg(['class' => 'text-top']) ?>
             <? endif; ?>
             <? if ($file->description): ?>
                 <small><?= htmlReady($file->description) ?></small>
@@ -199,21 +199,21 @@
             <td class="options">
             <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/edit/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Datei bearbeiten') ?>">
-                    <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable')->asImg(16, ["alt" => _('bearbeiten')]) ?>
                 </a>
             <? endif; ?>
                 <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Datei herunterladen') ?>">
-                    <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
+                    <?= Icon::create('download', 'clickable')->asImg(16, ["alt" => _('herunterladen')]) ?>
                 </a>
             <? if ($full_access): ?>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Datei verschieben') ?>">
-                    <?= Assets::img('icons/16/blue/move_right/file.png', array('alt' => _('verschieben'))) ?>
+                    <?= Icon::create('file+move_right', 'clickable')->asImg(16, ["alt" => _('verschieben')]) ?>
                 </a>
                 <a href="<?= $controller->url_for('document/files/copy/' . $file->id) ?>" data-dialog="size=auto" title="<?= _('Datei kopieren') ?>">
-                    <?= Assets::img('icons/16/blue/add/file.png', array('alt' => _('kopieren'))) ?>
+                    <?= Icon::create('file+add', 'clickable')->asImg(16, ["alt" => _('kopieren')]) ?>
                 </a>
                 <a href="<?= $controller->url_for('document/files/delete/' . $file->id) ?>" title="<?= _('Datei löschen') ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', array('alt' => _('löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable')->asImg(16, ["alt" => _('löschen')]) ?>
                 </a>
             <? endif; ?>
             </td>

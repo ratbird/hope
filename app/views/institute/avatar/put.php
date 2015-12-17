@@ -11,7 +11,7 @@
 
 <p>
     <a href="<?= URLHelper::getLink('dispatch.php/institute/basicdata/index?i_view=' . $institute_id) ?>">
-      <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: baseline;')) ?>
+      <?= Icon::create('arr_1left', 'clickable')->asImg(16, ["style" => 'vertical-align: baseline;']) ?>
       <?= _("zurück zur Einrichtungsadministration") ?>
     </a>
 </p>

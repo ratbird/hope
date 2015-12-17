@@ -92,7 +92,7 @@ if (!CheckParamXSLT())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => _("Die Parameter, mit denen diese Seite aufgerufen wurde, sind fehlerhaft oder unvollständig.")
                              )
                         )
@@ -262,7 +262,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $infobox = array    (
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 3/3 %s"), "<br><i>", "</i>")
                              )
                         )
@@ -272,12 +272,12 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $infobox[1]["kategorie"] = _("Aktionen:");
 
     $infobox[1]["eintrag"][] = array (
-        "icon" => "icons/16/black/download.png" ,
+        "icon" => Icon::create('download', 'clickable'),
         "text"  => _("Sie können sich die XML-Daten und das XSLT-Skript herunterladen.")
     );
 
     if ($XSLT_ENABLE) {
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => Icon::create('info', 'clickable'),
                                     "text"  => _("Wenn Sie auf 'weiter' klicken, wird mit dem installierten XSLT-Prozessor die Ausgabedatei erzeugt.")
                                 );
     }

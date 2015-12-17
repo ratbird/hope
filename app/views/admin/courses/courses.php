@@ -164,7 +164,7 @@
                 <?=
                 CourseAvatar::getAvatar($semid)->is_customized()
                     ? CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
-                    : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($values["Name"]))) ?>
+                    : Icon::create('seminar', 'clickable', ['title' => trim($values["Name"])])->asImg(20) ?>
             <? endif; ?>
             </td>
             <? if (in_array('number', $view_filter)) : ?>
@@ -182,7 +182,7 @@
                     <a data-dialog="buttons=false;size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $semid)) ?>">
                         <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
                         <? $params['style'] = 'cursor: pointer'; ?>
-                        <?= Assets::img('icons/16/grey/info-circle.png', $params) ?>
+                        <?= Icon::create('info-circle', 'inactive')->asImg($params) ?>
                     </a>
                     <? if ($values["visible"] == 0) : ?>
                         <?= _("(versteckt)") ?>
@@ -237,12 +237,11 @@
                 <? if (!empty($values['navigation'])) : ?>
                     <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
                         <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                            <? $image = $nav->getImage(); ?>
                             <a href="<?=
                             UrlHelper::getLink('seminar_main.php',
                                 array('auswahl'     => $semid,
                                       'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                                <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>
+                                <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
                             </a>
                         <? elseif (is_string($key)) : ?>
                             <?=

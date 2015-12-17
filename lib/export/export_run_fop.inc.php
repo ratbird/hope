@@ -74,7 +74,7 @@ if (!CheckParamRUN_FOP())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => _("Die Parametern, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
                              )
                         )
@@ -83,7 +83,7 @@ if (!CheckParamRUN_FOP())
 }
 elseif ($FOP_ENABLE != true)
 {
-    $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/admin.png",
+    $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('admin', 'clickable'),
                                 "text"  => sprintf(_("Die Erweiterung zum Erzeugen von PDF-Dateien ist nicht aktiviert, es konnten daher nur Formatting Objects erzeugt werden."))
                             );
 }
@@ -150,7 +150,7 @@ else
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "icons/16/black/info.png",
+                            array ( "icon" => Icon::create('info', 'clickable'),
                                     "text"  => $xslt_info
                                  )
                             )
@@ -158,7 +158,7 @@ else
         );
         {
             $infobox[1]["kategorie"] = _("Aktionen:");
-                $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
+                $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('download', 'clickable'),
                                             "text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %s hier %s."), $link2, "</a>")
                                         );
         }

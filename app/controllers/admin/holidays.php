@@ -167,7 +167,7 @@ class Admin_HolidaysController extends AuthenticatedController
         $links = new ActionsWidget();
         $links->addLink(_('Neue Ferien anlegen'),
                         $this->url_for('admin/holidays/edit', array('filter' => null)),
-                        'icons/16/blue/add.png')
+                        Icon::create('add', 'clickable'))
               ->asDialog('size=auto');
         $sidebar->addWidget($links);
     }

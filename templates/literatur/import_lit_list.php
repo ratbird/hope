@@ -20,7 +20,7 @@ use Studip\Button, Studip\LinkButton;
             </select>
             <? if ($plugin_name) : ?>
                 <br>
-                <?= strlen($plugin["description"]) > 0 ? Assets::img('icons/16/grey/info-circle.png') : '' ?>
+                <?= strlen($plugin["description"]) > 0 ? Icon::create('info-circle', 'inactive')->asImg() : '' ?>
                 <?= formatReady($plugin["description"]) ?><br>
                 <br>
                 <?= _("1. Wählen Sie mit <b>Durchsuchen</b> eine Datei von Ihrer Festplatte aus.") ?><br>

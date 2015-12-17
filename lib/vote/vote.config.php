@@ -33,22 +33,22 @@ define ("INSTANCEOF_VOTEDB", "VoteDB");
 define ("VOTE_FILE_ADMIN", "admin_vote.php");
 define ("VOTE_FILE_SHOW", "lib/vote/vote_show.inc.php");
 
-define ("VOTE_ICON_BIG",     Assets::image_path('icons/16/white/vote.png'));
-define ("VOTE_ICON_VOTE",    Assets::image_path('icons/16/grey/vote.png'));
-define ("VOTE_ICON_TEST",    Assets::image_path('icons/16/grey/test.png'));
-define ("VOTE_ICON_STOPPED", Assets::image_path('icons/16/grey/vote-stopped.png'));
-define ("VOTE_ICON_ARROW",   Assets::image_path('icons/16/white/admin.png'));
-define ("VOTE_ICON_SUCCESS", Assets::image_path("icons/16/green/accept.png"));
-define ("VOTE_ICON_ERROR",   Assets::image_path("icons/16/red/decline.png"));
-define ("VOTE_ICON_INFO",    Assets::image_path("icons/16/grey/exclaim.png"));
-define ("VOTE_ICON_LIST",    Assets::image_path("icons/16/grey/file-generic.png"));
+define ("VOTE_ICON_BIG",     Icon::create('vote', 'info_alt')->asImagePath());
+define ("VOTE_ICON_VOTE",    Icon::create('vote', 'inactive')->asImagePath());
+define ("VOTE_ICON_TEST",    Icon::create('test', 'inactive')->asImagePath());
+define ("VOTE_ICON_STOPPED", Icon::create('vote-stopped', 'inactive')->asImagePath());
+define ("VOTE_ICON_ARROW",   Icon::create('admin', 'info_alt')->asImagePath());
+define ("VOTE_ICON_SUCCESS", Icon::create('accept', 'accept')->asImagePath());
+define ("VOTE_ICON_ERROR",   Icon::create('decline', 'attention')->asImagePath());
+define ("VOTE_ICON_INFO",    Icon::create('exclaim', 'inactive')->asImagePath());
+define ("VOTE_ICON_LIST",    Icon::create('file-generic', 'inactive')->asImagePath());
 
 define ("VOTE_BAR_LEFT",   Assets::image_path("bar_l.gif"));
 define ("VOTE_BAR_MIDDLE",  "vote_bar_");
 define ("VOTE_BAR_RIGHT",  Assets::image_path("bar_r.gif"));
 
-define ("VOTE_ANSWER_CORRECT", Assets::image_path("icons/16/green/accept.png"));
-define ("VOTE_ANSWER_WRONG",   Assets::image_path("icons/16/red/decline.png"));
+define ("VOTE_ANSWER_CORRECT", Icon::create('accept', 'accept')->asImagePath());
+define ("VOTE_ANSWER_WRONG",   Icon::create('decline', 'attention')->asImagePath());
 
 define ("VOTE_COLOR_SUCCESS", "#008000");
 define ("VOTE_COLOR_ERROR",   "#E00000");

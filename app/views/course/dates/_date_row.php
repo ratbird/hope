@@ -1,13 +1,13 @@
 <tr id="date_<?= $date->getId() ?>" class="<?= $date instanceof CourseExDate ? "ausfall" : "" ?><?= $is_next_date ? 'nextdate' : ""?>"<?= $is_next_date ? ' title="'._("Der nächste Termin").'"' : ""?> data-termin_id="<?= htmlReady($date->id) ?>">
     <td data-timestamp="<?=htmlReady($date['date']);?>" class="date_name">
-        <? $is_new = $date['chdate'] > $last_visitdate ? 'new/' : '';?>
+        <? $icon = 'date+' . ($date['chdate'] > $last_visitdate ? 'new/' : '');?>
         <? if (is_a($date, "CourseExDate")) : ?>
-                <?= Assets::img("icons/16/black/{$is_new}date", array('class' => "text-bottom")) ?>
-                <?= htmlReady($date->getFullname()) ?>
-                <?= tooltipIcon($date->content)?>
+            <?= Icon::create($icon, 'info')->asImg(['class' => "text-bottom"]) ?>
+            <?= htmlReady($date->getFullname()) ?>
+            <?= tooltipIcon($date->content)?>
         <? else : ?>
             <a href="<?= URLHelper::getLink('dispatch.php/course/dates/details/' . $date->getId()) ?>" data-dialog>
-                <?= Assets::img("icons/16/blue/{$is_new}date", array('class' => 'text-bottom')) ?>
+                <?= Icon::create($icon, 'clickable')->asImg(['class' => "text-bottom"]) ?>
                 <?= htmlReady($date->getFullname()) ?>
             </a>
         <? endif ?>
@@ -31,7 +31,7 @@
                 </ul>
                 <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
                     <a href="<?= URLHelper::getLink("dispatch.php/course/dates/new_topic", array('termin_id' => $date->getId())) ?>" style="align-self: flex-end;" title="<?= _("Thema hinzufügen") ?>" data-dialog>
-                        <?= Assets::img("icons/12/blue/add") ?>
+                        <?= Icon::create('add', 'clickable')->asImg(12) ?>
                     </a>
                 <? endif ?>
             </div>

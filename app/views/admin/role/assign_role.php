@@ -49,10 +49,10 @@ use Studip\Button, Studip\LinkButton;
                     </select>
                 </td>
                 <td style="text-align: center;">
-                    <?= Assets::input("icons/16/yellow/arr_2left.png", array('type' => "image", 'class' => "middle", 'name' => "assign_role", 'title' => _('Markierte Rollen dem Benutzer zuweisen'))) ?>
+                    <?= Icon::create('arr_2left', 'sort', ['title' => _('Markierte Rollen dem Benutzer zuweisen')])->asInput(["type" => "image", "class" => "middle", "name" => "assign_role"]) ?>
                     <br>
                     <br>
-                    <?= Assets::input("icons/16/yellow/arr_2right.png", array('type' => "image", 'class' => "middle", 'name' => "remove_role", 'title' => _('Markierte Rollen entfernen'))) ?>
+                    <?= Icon::create('arr_2right', 'sort', ['title' => _('Markierte Rollen entfernen')])->asInput(["type" => "image", "class" => "middle", "name" => "remove_role"]) ?>
                 </td>
                 <td>
                     <select size="10" name="rolesel[]" multiple style="width: 300px;">
@@ -77,7 +77,7 @@ use Studip\Button, Studip\LinkButton;
         <li>
               <?= htmlReady($assignedrole->getRolename()) ?>
               <?= tooltipIcon(join("\n", $assignedroles_institutes[$assignedrole->getRoleid()]))?>
-              <a href="<?= $controller->link_for('/assign_role_institutes/' . $assignedrole->getRoleid() . '/' . $currentuser->getUserid()) ?>" data-lightbox><?= Assets::img('icons/16/blue/edit.png') ?></a>
+              <a href="<?= $controller->link_for('/assign_role_institutes/' . $assignedrole->getRoleid() . '/' . $currentuser->getUserid()) ?>" data-lightbox><?= Icon::create('edit', 'clickable')->asImg() ?></a>
         </li>
         <? endif ?>
     <? endforeach ?>

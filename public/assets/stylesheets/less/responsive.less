@@ -35,7 +35,7 @@
 
     .nav-label {
         .hide-text();
-        .icon-before('white/arr_1right.svg', 24);
+        .icon('before', 'arr_1right', 'info_alt', 24);
         &:before {
             .transition(transform 300ms);
             vertical-align: text-bottom;
@@ -51,7 +51,7 @@
 }
 
 label[for="responsive-toggle"] {
-    .icon-before('white/hamburger-icon.svg', 20);
+    .icon('before', 'hamburger-icon', 'info_alt', 20);
     &:before {
         background-position: left 3px;
     }
@@ -124,10 +124,10 @@ label[for="responsive-toggle"] {
         }
     }
     input:checked + label {
-        .icon-before('white/arr_1down.svg', 24);
+        .icon('before', 'arr_1down', 'info_alt', 24);
     }
     .csstransforms & input:checked + label {
-        .icon-before('white/arr_1right.svg', 24);
+        .icon('before', 'arr_1right', 'info_alt', 24);
         &:before {
             .rotate(90deg);
         }
@@ -143,7 +143,7 @@ label[for="responsive-toggle"] {
 
 // Responsive sidebar menu (small hamburger menu to the right)
 #barBottomright #sidebar-menu {
-    .icon-before('white/hamburger-icon-small.svg', 20);
+    .icon('before', 'hamburger-icon-small', 'info_alt', 20);
     cursor: pointer;
     display: none;
     margin: 0 5px;

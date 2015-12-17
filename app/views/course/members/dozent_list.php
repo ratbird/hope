@@ -9,8 +9,7 @@
                         'who' => 'dozent',
                         'course_id' => $course_id,
                         'default_subject' => $subject)) ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/inbox.png',
-                            tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['dozent']))) ?>
+                    <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'),$status_groups['dozent'])])->asImg(16) ?>
                 </a>
         </span>
     <? endif ?>
@@ -55,7 +54,7 @@
             <td style="text-align: right">
                 <? if ($is_tutor) : ?>
                     <a data-dialog title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $dozent['user_id']) ?>">
-                        <?= Assets::img('icons/16/blue/comment.png') ?>
+                        <?= Icon::create('comment', 'clickable')->asImg() ?>
                     </a>
                 <? endif ?>
                 <? if($user_id != $dozent['user_id']) : ?>
@@ -65,14 +64,12 @@
                             'default_subject' => $subject))
                         ?>
                 " data-dialog>
-                    <?= Assets::img('icons/16/blue/mail.png',
-                            tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
+                    <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                 </a>
                 <? endif ?>
             <? if (!$dozent_is_locked && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
                 <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s',$dozent['user_id'])) ?>">
-                    <?= Assets::img('icons/16/blue/door-leave.png',
-                        tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
+                    <?= Icon::create('door-leave', 'clickable', ['title' => sprintf(_('%s austragen'),htmlReady($fullname))])->asImg(16) ?>
                 </a>
             <? else : ?>
                 <?= Assets::img('blank.gif', array('style' => 'padding-right: 10px'))?>

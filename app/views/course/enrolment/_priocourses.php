@@ -62,8 +62,7 @@ tatsächlich belegen wollen') ?>
             <td align="center">
 
                 <?=
-                Assets::input('icons/16/yellow/arr_2right',
-                    array('type' => 'submit', 'class' => 'hidden-js'))
+                Icon::create('arr_2right', 'sort')->asInput(["type" => 'submit', "class" => 'hidden-js'])
                 ?>
 
 
@@ -84,23 +83,20 @@ tatsächlich belegen wollen') ?>
                             <li class="<?= $id ?>">
                                 <?= $prios[$id]['name'] . '&nbsp;' . $prios[$id]['info'] ?>
                                 <input type="hidden" value="<?= $prio ?>" name="admission_prio[<?= $id ?>]"> <a class="<?=$id?> delete hidden-no-js" href="#"><?=
-                                Assets::img('icons/16/black/trash')
+                                Icon::create('trash', 'info')->asImg()
                                 ?></a>
                                 <?=
-                                Assets::input('icons/16/black/trash',
-                                    array('name' => 'admission_prio_delete[' . $id . ']', 'type' => 'submit', 'class' => 'hidden-js delete'))
+                                Icon::create('trash', 'info')->asInput(["name" => 'admission_prio_delete['.$id.']', "type" => 'submit', "class" => 'hidden-js delete'])
                                 ?>
 
                                 <?php if ($prio != 1): ?>
                                     <?=
-                                    Assets::input('icons/16/yellow/arr_1up',
-                                        array('name' => 'admission_prio_order_up[' . $id . ']', 'type' => 'submit', 'class' => 'hidden-js delete'))
+                                    Icon::create('arr_1up', 'sort')->asInput(["name" => 'admission_prio_order_up['.$id.']', "type" => 'submit', "class" => 'hidden-js delete'])
                                     ?>
                                 <?php endif; ?>
                                 <?php if ($prio != count($user_prio)): ?>
                                     <?=
-                                    Assets::input('icons/16/yellow/arr_1down',
-                                        array('name' => 'admission_prio_order_down[' . $id . ']', 'type' => 'submit', 'class' => 'hidden-js delete'))
+                                    Icon::create('arr_1down', 'sort')->asInput(["name" => 'admission_prio_order_down['.$id.']', "type" => 'submit', "class" => 'hidden-js delete'])
                                     ?>
                                 <?php endif; ?>
                             </li>
@@ -115,7 +111,7 @@ tatsächlich belegen wollen') ?>
     </table>
     <div class="icons" style="display: none">
     <a class="delete" href="#">
-        <?= Assets::img('icons/16/black/trash') ?>
+        <?= Icon::create('trash', 'info')->asImg() ?>
     </a>
     </div>
 

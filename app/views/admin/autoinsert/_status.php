@@ -8,11 +8,11 @@
 
             <? if (isset($auto_sem['status'][$domain['id']]) && in_array($status, $auto_sem['status'][$domain['id']])) : ?>
                 <a href="<?= $controller->url_for('admin/autoinsert/edit/' . $auto_sem['seminar_id'], array('domain_id' => $domain['id'], 'status' => $status, 'remove' => true)) ?>">
-                    <?= Assets::img('icons/16/blue/checkbox-checked.png') ?>
+                    <?= Icon::create('checkbox-checked', 'clickable')->asImg() ?>
                 </a>
             <? else : ?>
                 <a href="<?= $controller->url_for('admin/autoinsert/edit/' . $auto_sem['seminar_id'], array('domain_id' => $domain['id'], 'status' => $status)) ?>">
-                    <?= Assets::img('icons/16/blue/checkbox-unchecked.png') ?>
+                    <?= Icon::create('checkbox-unchecked', 'clickable')->asImg() ?>
                 </a>
             <? endif ?>
             <?= htmlReady($domain['name']) ?></div>

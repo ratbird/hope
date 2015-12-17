@@ -62,7 +62,7 @@ use Studip\Button, Studip\LinkButton;
                 </td>
                 <td class="plugin_score">
                     <? for ($i = 0; $i < $plugin['score']; ++$i): ?>
-                        <?= Assets::img('icons/16/grey/star.png') ?>
+                        <?= Icon::create('star', 'inactive')->asImg() ?>
                     <? endfor ?>
                 </td>
                 <td class="plugin_install">
@@ -70,7 +70,7 @@ use Studip\Button, Studip\LinkButton;
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="plugin_url" value="<?= htmlReady($plugin['url']) ?>">
                         <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
-                        <?= Assets::input("icons/16/blue/install.png", array('type' => "image", 'class' => "middle", 'name' => "install", 'title' => _('Plugin installieren'))) ?>
+                        <?= Icon::create('install', 'clickable', ['title' => _('Plugin installieren')])->asInput(["type" => "image", "class" => "middle", "name" => "install"]) ?>
                     </form>
                 </td>
             </tr>
@@ -106,7 +106,7 @@ use Studip\Button, Studip\LinkButton;
             <td class="plugin_install">
                 <form action="<?= $controller->url_for('admin/plugin/register/' . $n) ?>" method="post">
                     <?= CSRFProtection::tokenTag() ?>
-                    <?= Assets::input("icons/16/blue/install.png", array('type' => "image", 'class' => "middle", 'name' => "install", 'title' => _('Plugin registrieren'))) ?>
+                    <?= Icon::create('install', 'clickable', ['title' => _('Plugin registrieren')])->asInput(["type" => "image", "class" => "middle", "name" => "install"]) ?>
                 </form>
             </td>
         </tr>
@@ -134,7 +134,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'icons/16/black/plugin.png',
+                'icon' => Icon::create('plugin', 'clickable'),
                 'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
@@ -142,7 +142,7 @@ $infobox_content = array(
         'kategorie' => _('Links:'),
         'eintrag'   => array(
             array(
-                'icon' => 'icons/16/black/info.png',
+                'icon' => Icon::create('info', 'clickable'),
                 'text' => '<a href="http://plugins.studip.de/" target="_blank">'._('Alle Plugins im Plugin-Marktplatz').'</a>'
             )
         )
@@ -150,10 +150,10 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                "icon" => "icons/16/black/info.png",
+                "icon" => Icon::create('info', 'clickable'),
                 'text' => _('In der Liste "Empfohlene Plugins" finden Sie von anderen Betreibern empfohlene Plugins.')
             ), array(
-                "icon" => "icons/16/black/info.png",
+                "icon" => Icon::create('info', 'clickable'),
                 'text' => _('Alternativ können Plugins und Plugin-Updates auch als ZIP-Datei hochgeladen werden.')
             )
         )

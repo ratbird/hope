@@ -37,35 +37,21 @@
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
             <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] != $GLOBALS['user']->id): ?>
                 <? $jump_to_topic_id = $entry['topic_id'] ?>
-                <?= Assets::img('icons/16/red/new/forum.png', array(
-                    'title' => _('Dieser Eintrag ist neu!')
-                )) ?>
+                <?= Icon::create('forum+new', 'attention', ['title' => _('Dieser Eintrag ist neu!')])->asImg(16) ?>
             <? else : ?>
                 <? $num_postings = ForumVisit::getCount($entry['topic_id'], $visitdate) ?>
                 <? $text = ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth']) ?>
                 <? if ($num_postings > 0) : ?>
-                    <?= Assets::img('icons/16/red/forum.png', array(
-                        'title' => $text
-                    )) ?>
+                    <?= Icon::create('forum', 'attention', ['title' => $text])->asImg(16) ?>
                 <? else : ?>
-                    <?= Assets::img('icons/16/black/forum.png', array(
-                        'title' => $text
-                    )) ?>
+                    <?= Icon::create('forum', 'info', ['title' => $text])->asImg(16) ?>
                 <? endif ?>
             <? endif ?>
 
             <br>
-            <?= Assets::img('icons/16/black/lock-locked.png', array(
-                    'title' => _('Dieses Thema ist geschlossen, es können keine neuen Beiträge erstellt werden.'),
-                    'id'    => 'img-locked-' . $entry['topic_id'],
-                    'style' => $entry['closed'] ? '' : 'display: none'
-            )) ?>
+            <?= Icon::create('lock-locked', 'info', ['title' => _('Dieses Thema ist geschlossen, es können keine neuen Beiträge erstellt werden.')])->asImg(16, ["id" => 'img-locked-'.$entry['topic_id'], "style" => $entry['closed']?'':'display: none']) ?>
             
-            <?= Assets::img('icons/16/black/staple.png', array(
-                    'title' => _('Dieses Thema wurde hervorgehoben.'),
-                    'id'    => 'img-sticky-' . $entry['topic_id'],
-                    'style' => $entry['sticky'] ? '' : 'display: none'
-            )) ?>
+            <?= Icon::create('staple', 'info', ['title' => _('Dieses Thema wurde hervorgehoben.')])->asImg(16, ["id" => 'img-sticky-'.$entry['topic_id'], "style" => $entry['sticky']?'':'display: none']) ?>
             </a>
         </td>
 
@@ -78,8 +64,7 @@
                 <span class="action-icons">
                     <? if (ForumPerm::has('move_thread', $seminar_id)) : ?>
                     <a href="javascript:STUDIP.Forum.moveThreadDialog('<?= $entry['topic_id'] ?>');" class="js">
-                        <?= Assets::img('icons/16/blue/move_right/folder-full.png',
-                            array('class' => 'move-thread', 'title' => _('Dieses Thema verschieben'))) ?>
+                        <?= Icon::create('folder-full+move_right', 'clickable', ['title' => _('Dieses Thema verschieben')])->asImg(16, ["class" => 'move-thread']) ?>
                     </a>
                     
                     <div id="dialog_<?= $entry['topic_id'] ?>" style="display: none" title="<?= _('Bereich, in den dieser Thread verschoben werden soll:') ?>">
@@ -90,7 +75,7 @@
                         <? if ($area_id != $parent['id']) : ?>
                         <div style="font-size: 16px; margin-bottom: 5px;">
                             <a href="<?= PluginEngine::getLink('coreforum/index/move_thread/'. $entry['topic_id'].'/'. $area_id) ?>">
-                            <?= Assets::img('icons/16/yellow/arr_2right.png') ?>
+                            <?= Icon::create('arr_2right', 'sort')->asImg() ?>
                             <?= htmlReady($area['name_raw']) ?>
                             </a>
                         </div>
@@ -104,8 +89,7 @@
                         onClick="STUDIP.Forum.showDialog('<?= _('M?chten Sie dieses Thema wirklich löschen?') ?>',
                        '<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id'] .'?approve_delete=1&page='. ForumHelpers::getPage()) ?>',
                        'tr[data-area-id=<?= $entry['topic_id'] ?>] td.areaentry'); return false;">
-                        <?= Assets::img('icons/16/blue/trash.png', 
-                            array('class' => 'move-thread', 'title' => _('Dieses Thema löschen'))) ?>
+                        <?= Icon::create('trash', 'clickable', ['title' => _('Dieses Thema löschen')])->asImg(16, ["class" => 'move-thread']) ?>
                     </a>
                     <? endif ?>
                     
@@ -115,16 +99,14 @@
                                 . $constraint['topic_id'] .'/'. ForumHelpers::getPage()) ?>" 
                                 onclick="STUDIP.Forum.closeThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
-                                <?= Assets::img('icons/16/blue/lock-locked.png', 
-                                    array('title' => _('Thema schließen'))) ?>
+                                <?= Icon::create('lock-locked', 'clickable', ['title' => _('Thema schließen')])->asImg(16) ?>
                             </a>
                         <? else : ?>
                             <a href="<?= PluginEngine::getURL('coreforum/index/open_thread/' . $entry['topic_id'] . '/' 
                                 . $constraint['topic_id'] . '/' . ForumHelpers::getPage()) ?>"
                                 onclick="STUDIP.Forum.openThreadFromOverview('<?= $entry['topic_id'] ?>', '<?= $constraint['topic_id'] ?>', <?= ForumHelpers::getPage() ?>); return false;"
                                 id="closeButton-<?= $entry['topic_id']; ?>">
-                                <?= Assets::img('icons/16/blue/lock-unlocked.png', 
-                                    array('title' => _('Thema öffnen'))) ?>
+                                <?= Icon::create('lock-unlocked', 'clickable', ['title' => _('Thema öffnen')])->asImg(16) ?>
                             </a>
                         <? endif ?>
                     <? endif ?>
@@ -134,15 +116,13 @@
                             <a href="<?= PluginEngine::getURL('coreforum/index/make_sticky/' . $entry['topic_id'] . '/' 
                                 . $constraint['topic_id'] . '/0'); ?>" 
                                 id="stickyButton-<?= $entry['topic_id']; ?>">
-                                <?= Assets::img('icons/16/blue/staple.png', 
-                                    array('title' => _('Thema hervorheben'))) ?>
+                                <?= Icon::create('staple', 'clickable', ['title' => _('Thema hervorheben')])->asImg(16) ?>
                             </a>
                         <? else : ?>
                             <a href="<?= PluginEngine::getURL('coreforum/index/make_unsticky/' . $entry['topic_id'] . '/' 
                                 . $constraint['topic_id'] . '/0'); ?>" 
                                 id="stickyButton-<?= $entry['topic_id']; ?>">
-                                <?= Assets::img('icons/16/blue/staple.png', 
-                                    array('title' => _('Hervorhebung aufheben'))) ?>
+                                <?= Icon::create('staple', 'clickable', ['title' => _('Hervorhebung aufheben')])->asImg(16) ?>
                             </a>
                         <? endif ?>
                     <? endif ?>
@@ -186,7 +166,7 @@
             <br>
             <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['last_posting']['date']) ?>
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $entry['last_posting']['topic_id']) ?>#<?= $entry['last_posting']['topic_id'] ?>" alt="<?= $infotext ?>" title="<?= $infotext ?>">
-                <?= Assets::img('icons/16/blue/link-intern.png', array('title' => $infotext = _("Direkt zum Beitrag..."))) ?>
+                <?= Icon::create('link-intern', 'clickable', ['title' => $infotext = _("Direkt zum Beitrag...")])->asImg() ?>
             </a>
             <? else: ?>
             <br>

@@ -10,21 +10,21 @@
         <? foreach ($widgets as $index => $widget): ?>
             <li>
             <? if ($widget->icon): ?>
-                <?= Assets::img($widget->icon, array('class' => 'helpbar-widget-icon')) ?>
+                <?= is_string($widget->icon) ? Assets::img($widget->icon, array('class' => 'helpbar-widget-icon')) : $widget->icon->asImg(['class' => 'helpbar-widget-icon']) ?>
             <? endif; ?>
                 <?= $widget->render(array('base_class' => 'helpbar'))?>
                 <div class="helpbar-widget-admin-icons">
                 <? if ($widget->edit_link): ?>
                     <a href="<?=$widget->edit_link?>" data-dialog="size=auto;reload-on-close">
-                    <?= Assets::img('icons/16/white/edit.png') ?></a>
+                    <?= Icon::create('edit', 'info_alt')->asImg() ?></a>
                 <? endif; ?>
                 <? if ($widget->delete_link): ?>
                     <a href="<?=$widget->delete_link?>" data-dialog="size=auto;reload-on-close">
-                    <?= Assets::img('icons/16/white/trash.png') ?></a>
+                    <?= Icon::create('trash', 'info_alt')->asImg() ?></a>
                 <? endif; ?>
                 <? if ($widget->add_link): ?>
                     <a href="<?=$widget->add_link?>" data-dialog="size=auto;reload-on-close">
-                    <?= Assets::img('icons/16/white/add.png') ?></a>
+                    <?= Icon::create('add', 'info_alt')->asImg() ?></a>
                 <? endif; ?>
                 </div>
             </li>

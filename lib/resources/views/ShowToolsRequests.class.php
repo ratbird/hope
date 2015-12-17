@@ -253,8 +253,8 @@ class ShowToolsRequests
                     //echo "<font size=\"-1\">";
                     echo $zt->cell("&nbsp;");
                     echo $zt->cell("<font size=\"-1\">$i.</font>");
-                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Assets::img('icons/16/blue/edit.png', array('title' => _("Anfrage bearbeiten")))."</a>");
-                    echo $zt->cell((($_SESSION['resources_data']['requests_open'][$val['request_id']]) ? '' : Assets::img('icons/16/green/accept.png'))."</font>");
+                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Icon::create('edit', 'clickable', ['title' => _("Anfrage bearbeiten")])->asImg()."</a>");
+                    echo $zt->cell((($_SESSION['resources_data']['requests_open'][$val['request_id']]) ? '' : Icon::create('accept', 'accept')->asImg())."</font>");
                     echo $zt->cell("<font size=\"-1\">".htmlReady($semObj->seminar_number)."</font>");
                     echo $zt->cell("<font size=\"-1\"><a href=\"dispatch.php/course/details/?sem_id=".$semObj->getId()."&send_from_search=true&send_from_search_page=".urlencode($CANONICAL_RELATIVE_PATH_STUDIP."resources.php?view=list_requests")."\">".my_substr(htmlReady($semObj->getName()),0,50)."</a><br></font>");
                     echo $zt->openCell();
@@ -415,7 +415,7 @@ class ShowToolsRequests
                                 print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                 if ($request_resource_id) {
                                     if ($request_resource_id == $val["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
+                                        print Icon::create('accept', 'accept', ['title' => _("Dieser Raum ist augenblicklich gebucht"), TRUE])->asImg();
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $request_resource_id .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$request_resource_id], $val["events_count"], $val["overlap_events_count"][$request_resource_id], $val["termin_ids"]);
@@ -502,7 +502,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
+                                        print Icon::create('accept', 'accept', ['title' => _("Dieser Raum ist augenblicklich gebucht"), TRUE])->asImg();
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $key .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
@@ -581,7 +581,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/green/accept.png', tooltip2(_("Dieser Raum ist augenblicklich gebucht"), TRUE));
+                                        print Icon::create('accept', 'accept', ['title' => _("Dieser Raum ist augenblicklich gebucht"), TRUE])->asImg();
                                         echo '<input type="radio" name="selected_resource_id['. $i .']" value="'. $key .'" checked="checked">';
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
@@ -628,9 +628,7 @@ class ShowToolsRequests
                                     <input type="text" name="search_rooms_limit_high" size="1" value="<?=$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]?>">
                                     <a href="<?=URLHelper::getLink('?inc_limit_high=1') ?>">+</a>
 
-                                    <?= Assets::input('icons/16/yellow/arr_2up.png', tooltip2('ausgewählten Bereich anzeigen') + array(
-                                            'name' => 'matching_rooms_limit_submit',
-                                    )) ?>
+                                    <?= Icon::create('arr_2up', 'sort', ['title' => 'ausgewählten Bereich anzeigen'])->asInput(array('name'=>'matching_rooms_limit_submit',)) ?>
                                 </font>
                             </td>
                         </tr>
@@ -668,7 +666,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print Assets::img('icons/16/blue/accept.png', tooltip2(_('Dieser Raum ist augenblicklich gebucht'), TRUE));
+                                        print Icon::create('accept', 'clickable', ['title' => _('Dieser Raum ist augenblicklich gebucht'), TRUE])->asImg();
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                         print $overlap_status["html"];
@@ -896,7 +894,7 @@ class ShowToolsRequests
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE);
-                $html = Assets::img('icons/16/red/radiobutton-checked.png', tooltip2($desc));
+                $html = Icon::create('radiobutton-checked', 'attention', ['title' => $desc])->asImg();
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -908,11 +906,11 @@ class ShowToolsRequests
                             else
                                 $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val2["begin"]), date("H:i", $val2["begin"]), date("H:i", $val2["end"]));
                 }
-                $html = Assets::img('icons/16/yellow/radiobutton-checked.png', tooltip2($desc));
+                $html = Icon::create('radiobutton-checked', 'sort', ['title' => $desc])->asImg();
                 $status = 1;
             }
         } else {
-            $html = Assets::img('icons/16/green/radiobutton-checked.png', tooltip2(_('Es existieren keine Überschneidungen')));
+            $html = Icon::create('radiobutton-checked', 'accept', ['title' => _('Es existieren keine Überschneidungen')])->asImg();
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);
@@ -942,7 +940,7 @@ class ShowToolsRequests
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE);
-                $html = Assets::img('icons/16/red/decline.png', tooltip2($desc));
+                $html = Icon::create('decline', 'attention', ['title' => $desc])->asImg();
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -952,11 +950,11 @@ class ShowToolsRequests
                     else
                         $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
                 }
-                $html = Assets::img('icons/16/grey/exclaim-circle.png', tooltip2($desc));
+                $html = Icon::create('exclaim-circle', 'inactive', ['title' => $desc])->asImg();
                 $status = 1;
             }
         } else {
-            $html = Assets::img('icons/16/green/accept.png', tooltip2(_('Es existieren keine Überschneidungen')));
+            $html = Icon::create('accept', 'accept', ['title' => _('Es existieren keine Überschneidungen')])->asImg();
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);

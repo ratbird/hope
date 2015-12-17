@@ -66,7 +66,7 @@
         <tr>
             <td width="33%" class="<?= $stream['pool_courses'] && count($stream['pool_courses']) ? "selected " : "" ?>">
                 <div class="label">
-                    <?= Assets::img("icons/32/black/seminar.png") ?>
+                    <?= Icon::create('seminar', 'info')->asImg(32) ?>
                     <br>
                     <?= _("Veranstaltungen") ?>
                 </div>
@@ -81,14 +81,14 @@
                     <? endforeach ?>
                 </select>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="pool_courses_check" id="pool_courses_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_courses'] && count($stream['pool_courses']) ? " checked" : "" ?>>
             </td>
             <td width="33%" class="<?= $stream['pool_groups'] && count($stream['pool_groups']) ? "selected " : "" ?>">
                 <div class="label">
-                    <?= Assets::img("icons/32/black/community.png") ?>
+                    <?= Icon::create('community', 'info')->asImg(32) ?>
                     <br>
                     <?= _("Kontaktgruppen") ?>
                 </div>
@@ -103,8 +103,8 @@
                     <? endforeach ?>
                 </select>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="pool_groups_check" id="pool_groups_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_groups'] && count($stream['pool_groups'])? " checked" : "" ?>>
             </td>
@@ -123,8 +123,8 @@
                           ><?= $stream['pool_hashtags'] ? htmlReady("#".implode(" #", $stream['pool_hashtags'])) : "" ?></textarea>
                 </div>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="pool_hashtags_check" id="pool_hashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_hashtags'] ? " checked" : "" ?>>
             </td>
@@ -142,7 +142,7 @@
         <tr>
             <td width="20%" class="<?= $stream['filter_type'] && count($stream['filter_type']) ? "selected " : "" ?>">
                 <div class="label">
-                    <?= Assets::img("icons/32/black/doit.png") ?>
+                    <?= Icon::create('doit', 'info')->asImg(32) ?>
                     <br>
                     <?= _("Blubber-Typen") ?>
                 </div>
@@ -156,14 +156,14 @@
                     <option value="course"<?= in_array("course", (array) $stream['filter_type']) ? " selected" : "" ?>><?= _("Veranstaltungsblubber") ?></option>
                 </select>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="filter_type_check" id="filter_type_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_type'] && count($stream['filter_type']) ? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_courses'] && count($stream['filter_courses']) ? "selected " : "" ?>">
                 <div class="label">
-                    <?= Assets::img("icons/32/black/seminar.png") ?>
+                    <?= Icon::create('seminar', 'info')->asImg(32) ?>
                     <br>
                     <?= _("Veranstaltungen") ?>
                 </div>
@@ -178,14 +178,14 @@
                     <? endforeach ?>
                 </select>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="filter_courses_check" id="filter_courses_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_courses'] && count($stream['filter_courses']) ? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_groups'] && count($stream['filter_groups']) ? "selected " : "" ?>">
                 <div class="label">
-                    <?= Assets::img("icons/32/black/community.png") ?>
+                    <?= Icon::create('community', 'info')->asImg(32) ?>
                     <br>
                     <?= _("Kontaktgruppen") ?>
                 </div>
@@ -200,8 +200,8 @@
                     <? endforeach ?>
                 </select>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="filter_groups_check" id="filter_groups_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_groups'] && count($stream['filter_groups'])? " checked" : "" ?>>
             </td>
@@ -220,8 +220,8 @@
                           ><?= $stream['filter_hashtags'] ? htmlReady("#".implode(" #", $stream['filter_hashtags'])) : "" ?></textarea>
                 </div>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="filter_hashtags_check" id="filter_hashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_hashtags'] ? " checked" : "" ?>>
             </td>
@@ -240,8 +240,8 @@
                           ><?= $stream['filter_nohashtags'] ? htmlReady("#".implode(" #", $stream['filter_nohashtags'])) : "" ?></textarea>
                 </div>
                 <div class="checkicons">
-                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                    <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "uncheck text-bottom"]) ?>
+                    <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "check text-bottom"]) ?>
                 </div>
                 <input type="checkbox" name="filter_nohashtags_check" id="filter_nohashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_nohashtags'] ? " checked" : "" ?>>
             </td>
@@ -263,6 +263,6 @@ if ($streamAvatar->is_customized()) {
 
 $actions = new ActionsWidget();
 if (!$stream->isNew()) {
-    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), "icons/16/blue/trash", array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
+    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), Icon::create("trash", "clickable"), array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
 }
 $sidebar->addWidget($actions);

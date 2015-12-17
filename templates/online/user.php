@@ -7,8 +7,7 @@
         <? if (!$is_buddy) : ?>
             <a href="<?= URLHelper::getLink('online.php', array('cmd' => 'add_user',
                                                                 'add_uname' => $tmp_online_uname)) ?>">
-                <?= Assets::img('icons/16/yellow/arr_2left.png', array('title' => _("zu den Buddies hinzufügen"),
-                                                       'style' => 'padding-right: 0.33em;', 'class' => 'middle')) ?>
+                <?= Icon::create('arr_2left', 'sort', ['title' => _("zu den Buddies hinzufügen")])->asImg(16, ["style" => 'padding-right: 0.33em;', "class" => 'middle']) ?>
             </a>
         <? else : ?>
             &nbsp;
@@ -26,7 +25,7 @@
             <?= htmlReady($fullname) ?>
         </a>
             <? foreach (StudipKing::is_king($tmp_user_id, TRUE) as $type => $text) : ?>
-                <?= Assets::img("icons/16/yellow/crown.png", array('title' => $text, 'title' => $text, 'class' => 'text-bottom')) ?>
+                <?= Icon::create('crown', 'sort', ['title' => $text, 'title' => $text, 'class' => 'text-bottom'])->asImg() ?>
             <? endforeach ?>
     </td>
 
@@ -37,14 +36,14 @@
     <td width="3%" align="center">
         <? if (class_exists("Blubber")) : ?>
         <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/global', array('mention' => $tmp_online_uname)) ?>">
-            <?= Assets::img('icons/16/blue/blubber.png', array('title' => _("Blubber diesen Nutzer an"), 'class' => 'text-bottom')) ?>
+            <?= Icon::create('blubber', 'clickable', ['title' => _("Blubber diesen Nutzer an"), 'class' => 'text-bottom'])->asImg() ?>
         </a>
         <? endif ?>
     </td>
 
     <td width="3%" align="center">
         <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $tmp_online_uname)) ?>">
-            <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Benutzer verschicken"), 'class' => 'text-bottom')) ?>
+            <?= Icon::create('mail', 'clickable', ['title' => _("Nachricht an Benutzer verschicken"), 'class' => 'text-bottom'])->asImg() ?>
         </a>
     </td>
 
@@ -53,7 +52,7 @@
             <a href="<?= URLHelper::getLink("online.php",
                                             array("cmd" => "delete_user",
                                                   "delete_uname" => $tmp_online_uname)) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('title' => _("aus der Buddy-Liste entfernen"), 'class' => 'text-bottom')) ?>
+                <?= Icon::create('trash', 'clickable', ['title' => _("aus der Buddy-Liste entfernen"), 'class' => 'text-bottom'])->asImg() ?>
             </a>
         <? else : ?>
             &nbsp;

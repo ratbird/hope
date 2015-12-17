@@ -161,7 +161,7 @@ function createBoxLine ($title, $imgURL, $userName, $userID, $date) {
       "  <td bgcolor=\"".$timecolor."\" class=\"printhead3\" nowrap ".
       "      width=\"1%\" align=\"left\" valign=\"top\">\n".
       "   &nbsp;".
-      Assets::img('icons/16/red/arr_1down.png').
+      Icon::create('arr_1down', 'attention')->asImg().
       " </td>";
 
    $htmlIcon =

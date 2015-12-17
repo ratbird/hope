@@ -446,11 +446,11 @@ class StudipLitListViewAdmin extends TreeView
         $content .= "\n<tr><td class=\"table_row_even\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">";
 
         if ($this->tree->tree_data[$item_id]['visibility']){
-            $content .= Assets::img('icons/16/black/visibility-visible.png', array('style' => 'vertical-align: bottom'));
+            $content .= Icon::create('visibility-visible', 'info')->asImg(16, ["style" => 'vertical-align: bottom']);
             $content .= "&nbsp;" . _("Sichtbar");
         }
         else{
-            $content .= Assets::img('icons/16/black/visibility-invisible.png', array('style' => 'vertical-align: bottom'));
+            $content .= Icon::create('visibility-invisible', 'info')->asImg(16, ["style" => 'vertical-align: bottom']);
             $content .= "&nbsp;" . _("Unsichtbar");
         }
 
@@ -577,21 +577,21 @@ class StudipLitListViewAdmin extends TreeView
             $head .= "</td><td align=\"right\" valign=\"bottom\" nowrap class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
-                "\">".Assets::img("icons/16/yellow/arr_2up.png", array('alt' => _("Element nach oben verschieben"), 'title' =>  _("Element nach oben verschieben")))."</a>";
+                "\">".Icon::create('arr_2up', 'sort', ['title' => _("Element nach oben verschieben")])->asImg(16, ["alt" => _("Element nach oben verschieben")])."</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
-               "\">".Assets::img("icons/16/yellow/arr_2down.png", array('alt' => _("Element nach unten verschieben"), 'title' =>  _("Element nach unten verschieben")))."</a>";
+               "\">".Icon::create('arr_2down', 'sort', ['title' => _("Element nach unten verschieben")])->asImg(16, ["alt" => _("Element nach unten verschieben")])."</a>";
             }
             if ($this->tree->isElement($item_id)){
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))
-                        ? Assets::img('icons/16/red/exclaim.png', tooltip2(_('Dieser Eintrag ist bereits in Ihrer Merkliste')))
+                        ? Icon::create('exclaim', 'attention', ['title' => _('Dieser Eintrag ist bereits in Ihrer Merkliste')])->asImg()
                         : "<a href=\"". URLHelper::getLink($this->getSelf("cmd=InClipboard&item_id=$item_id")) ."\">"
-                        . Assets::img('icons/16/blue/exclaim.png', tooltip2(_('Eintrag in Merkliste aufnehmen')))
+                        . Icon::create('exclaim', 'clickable', ['title' => _('Eintrag in Merkliste aufnehmen')])->asImg()
                         . "</a>";
             } else {
                 $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=InClipboard&item_id=$item_id")) . "\">";
-                $head .= Assets::img('icons/16/blue/exclaim.png', tooltip2(_('Komplette Liste in Merkliste aufnehmen')));
+                $head .= Icon::create('exclaim', 'clickable', ['title' => _('Komplette Liste in Merkliste aufnehmen')])->asImg();
                 $head .= "</a>";
             }
             $head .= "";
@@ -608,13 +608,10 @@ class StudipLitListViewAdmin extends TreeView
                 $head .= "<a href=\"";
                 $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
                 $head .= "\"> ";
-                $head .= Assets::img('icons/16/blue/folder-full.png',
-                                     tooltip2($this->open_ranges[$item_id]
-                                             ? _('Alle Unterelemente schließen')
-                                             : _('Alle Unterelemente öffnen')));
+                $head .= Icon::create('folder-full', 'clickable', ['title' => $this->open_ranges[$item_id]?_('Alle Unterelemente schließen'):_('Alle Unterelemente öffnen')])->asImg(16);
                 $head .= "</a>";
             } else {
-                $head .= Assets::img('icons/16/blue/folder-full.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
+                $head .= Icon::create('folder-full', 'clickable', ['title' => _('Dieses Element hat keine Unterelemente')])->asImg();
             }
             if ($item_id != "root"){
                 $head .= " <a href=\"" . URLHelper::getLink($this->getSelf("cmd=ToggleVisibility&item_id={$item_id}")) . "\">";
@@ -625,7 +622,7 @@ class StudipLitListViewAdmin extends TreeView
                 $head . "</a>";
             }
         } else {
-            $head .= Assets::img('icons/16/blue/literature.png');
+            $head .= Icon::create('literature', 'clickable')->asImg();
         }
     return $head . "</td>";
     }
@@ -648,7 +645,7 @@ class StudipLitListViewAdmin extends TreeView
             $edit_name = "format";
             $rows = 2;
             $content .= "\n<tr><td class=\"table_row_odd\" style=\"border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Formatierung der Liste bearbeiten:") . "</b>&nbsp;";
-            $content .= Assets::img('icons/16/grey/info-circle.png', tooltip2($this->format_info) + array('class' => 'text-top'));
+            $content .= Icon::create('info-circle', 'inactive', ['title' => $this->format_info])->asImg(['class' => 'text-top']);
             $content .= "</td></tr>";
             $content .= "<tr><td class=\"table_row_even\" align=\"center\" style=\"border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:99%\" rows=\"$rows\">" . htmlReady($this->tree->tree_data[$this->edit_item_id][$edit_name])
                 . "</textarea></td></tr>";

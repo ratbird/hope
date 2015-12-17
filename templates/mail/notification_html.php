@@ -35,7 +35,7 @@
             <a href="<?= URLHelper::getLink($module['url']) ?>"><?= htmlReady($module['text']) ?></a>
           </td>
           <td>
-            <a href="<?= URLHelper::getLink($module['url']) ?>"><?= Assets::img($module['icon'], array('title' => htmlReady($module['text']))) ?></a>
+            <a href="<?= URLHelper::getLink($module['url']) ?>"><?= $module['icon']->asImg(['title' => htmlReady($module['text'])]) ?></a>
           </td>
         </tr>
         <? endforeach ?>

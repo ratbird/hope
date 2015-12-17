@@ -34,7 +34,7 @@ use Studip\Button,
 
             <? if ($lockedAssign) : ?>
                 <br>
-                <?= Assets::img('icons/16/grey/info-circle.png') ?>
+                <?= Icon::create('info-circle', 'inactive')->asImg() ?>
                 <? if ($owner_type == "sem") : ?>
                     <?= sprintf ( _("Diese Belegung ist ein regelmäßiger Termin der Veranstaltung %s, die in diesem Raum stattfindet."),
                         ($perm->have_studip_perm("user", $seminarID)) ?
@@ -44,7 +44,7 @@ use Studip\Button,
                     <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                         <br>
                         <?= sprintf(_("Um die Belegung zu verändern, ändern Sie diese auf der Seite %sZeiten / Räume%s der Veranstaltung"),
-                                    Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
+                                    Icon::create('schedule', 'info')->asImg() . "&nbsp;" .
                                     "<a href=" . URLHelper::getURL("dispatch.php/course/timesrooms", array('cid' => $seminarID)) . "onClick=\"return check_opener(this)\">",
                                     "</a>");
                         ?>
@@ -58,7 +58,7 @@ use Studip\Button,
                     <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                         <br>
                         <?= sprintf(_("Um die Belegung zu verändern, ändern Sie bitte den Termin auf der Seite %sZeiten / Räume%s der Veranstaltung"),
-                                   Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
+                                   Icon::create('schedule', 'info')->asImg() . "&nbsp;" .
                                    "<a href=" . URLHelper::getURL("dispatch.php/course/timesrooms", array('cid' => $seminarID)) ." onClick=\"return check_opener(this)\">",
                                    "</a>");
                         ?>

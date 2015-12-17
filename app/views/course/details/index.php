@@ -224,9 +224,7 @@
                             <a class="module-info" href="<?= URLHelper::getLink($module['nav']->getUrl())?>">
                                 <?= htmlReady($module['title']) ?>
                                 <? if ($module['nav']->getImage()) : ?>
-                                    <img
-                                    <? array_walk($module['nav']->getImage(), function (&$v,$k) {printf('%s="%s" ', $k, htmlReady($v));});?>
-                                    >
+                                    <?= $module['nav']->getImage()->asImg($module['nav']->getLinkAttributes()) ?>
                                 <? endif ?>
                                 <span><?= htmlReady($module['nav']->getTitle())?></span>
                             </a>

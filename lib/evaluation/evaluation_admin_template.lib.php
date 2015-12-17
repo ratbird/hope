@@ -427,7 +427,7 @@ class EvalTemplateGUI {
 
     if($onthefly!=1){
        $img = new HTMpty( "img" );
-       $img->attr( "src", Assets::image_path('icons/16/grey/info-circle.png'));
+       $img->attr( "src", Icon::create('info-circle', 'inactive')->asImagePath(16));
        $img->attr( "class", "middle" );
        $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Wenn Sie eine systemweite Vorlage bearbeiten, und speichern, wird eine neue Vorlage für Sie persönlich angelegt."),
                 FALSE, TRUE ) );
@@ -853,7 +853,7 @@ class EvalTemplateGUI {
      $form->cont( $input );
 
      $img = new HTMpty( "img" );
-     $img->attr( "src", Assets::image_path("icons/16/grey/info-circle.png"));
+     $img->attr( "src", Icon::create('info-circle', 'inactive')->asImagePath(16));
      $img->attr( "class", "middle" );
      $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Ändern Sie den Namen, um eine neue Vorlage anzulegen." ),
            FALSE, TRUE ) );
@@ -969,7 +969,7 @@ class EvalTemplateGUI {
       switch( $level ) {
       case "0":
       case "Evaluation":
-     $infoMain =  array ("icon" => Assets::image_path('icons/16/black/test.png'),
+     $infoMain =  array ("icon" => Icon::create('test', 'info')->asImagePath(16),
                "text" => _("Links können Sie die Grundattribute der Evaluation definieren und neue Gruppierungsblöcke anlegen."));
      break;
 
@@ -993,10 +993,10 @@ class EvalTemplateGUI {
       $previewLink = EvalCommon::createEvalShowLink( $evalID, _("Vorschau"), YES, NO );
       $previewLink .= (" " . _("der Evaluation"));
 
-      $infoTemplates =  array ("icon" => Assets::image_path('icons/16/black/info.png'),
+      $infoTemplates =  array ("icon" => Icon::create('info', 'info')->asImagePath(16),
                 "text" => _("Der rechte Bereich dient der Bearbeitung von Antwortenvorlagen."));
 
-      $infoPreview =  array ("icon" => Assets::image_path('icons/16/black/question-circle.png'),
+      $infoPreview =  array ("icon" => Icon::create('question-circle', 'info')->asImagePath(16),
               "text" => $previewLink);
 
       if (get_Username($rangeID))
@@ -1011,7 +1011,7 @@ class EvalTemplateGUI {
                   "\">",
                   "</a>");
 
-      $infoOverview =  array ("icon" => Assets::image_path('icons/16/black/link-intern.png'),
+      $infoOverview =  array ("icon" => Icon::create('link-intern', 'info')->asImagePath(16),
                 "text" => $infoOverviewText);
       if($command){
       $infobox = array (array ("kategorie" => _("Aktionen:"),

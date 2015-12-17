@@ -146,7 +146,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id)){
             $new_item_id = DbView::get_uniqid();
-            $this->tree->storeItem($new_item_id,$item_id,_("Neuer Eintrag") , $this->tree->getNumKids($item_id) +1);
+            $this->tree->storeItem($new_item_id,$item_id,_("Neuer Eintrag"), $this->tree->getNumKids($item_id) +1);
             $this->openItem($new_item_id);
             $this->edit_item_id = $new_item_id;
             if ($this->mode != "NewItem") $this->msg[$new_item_id] = "info§" . _("Hier können Sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben.");
@@ -312,7 +312,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                     $sem_entries = $this->tree->getSemIds($items_to_copy[$i], false);
                     if ($sem_entries){
                         for ($j = 0; $j < count($sem_entries); ++$j){
-                            $num_entries += $this->tree->InsertSemEntry(md5($items_to_copy[$i] . $seed) , $sem_entries[$j]);
+                            $num_entries += $this->tree->InsertSemEntry(md5($items_to_copy[$i] . $seed), $sem_entries[$j]);
                         }
                     }
                 }
@@ -386,7 +386,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                 if(count($not_deleted)){
                     $this->msg[$item_id] .= '<br>'
                                          . sprintf(_("Für folgende Veranstaltungen wurde die Zuordnung nicht aufgehoben, da es die einzige Zuordnung ist: %s")
-                                         , '<br>'.htmlready(join(', ', $not_deleted)));
+, '<br>'.htmlready(join(', ', $not_deleted)));
                 }
             }
             $this->anchor = $item_id;
@@ -457,13 +457,9 @@ class StudipSemTreeViewAdmin extends TreeView {
         $head = $this->getItemHeadFrontPic($item_id);
         $head .= "\n<td  class=\"printhead\" nowrap  align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
-            $head .= Assets::img('icons/16/blue/folder-full.png',
-                                 tooltip2($this->open_ranges[$item_id]
-                                          ? _('Alle Unterelemente schliessen')
-                                          : _('Alle Unterelemente öffnen')) +
-                                 array('class' => 'text-top'));
+            $head .= Icon::create('folder-full', 'clickable', ['title' => $this->open_ranges[$item_id]?_('Alle Unterelemente schliessen'):_('Alle Unterelemente öffnen')])->asImg(16, ['class' => 'text-top']);
         } else {
-            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
+            $head .= Icon::create('folder-empty', 'clickable', ['title' => _('Dieses Element hat keine Unterelemente')])->asImg();
         }
         return $head . "</td>";
     }
@@ -475,7 +471,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->msg[$item_id] = "info§" . sprintf(_("Der Typ dieses Elementes verbietet eine Bearbeitung."));
         }
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), Assets::img("icons/16/yellow/arr_2right", array('alt' => "Einfügesymbol", 'title' => "Einfügesymbol")));
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), Icon::create('arr_2right', 'sort', ['title' => "Einfügesymbol"])->asImg(16, ["alt" => "Einfügesymbol"]));
         }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt;\">";
         $content .= $this->getItemMessage($item_id);
@@ -694,7 +690,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         . Button::createAccept(_('Absenden'), array('title' => _('Einstellungen übernehmen')))
         . "&nbsp;"
         . LinkButton::createCancel(_('Abbrechen'),
-                URLHelper::getURL($this->getSelf('cmd=Cancel&item_id='.$buttonlink_id)) ,
+                URLHelper::getURL($this->getSelf('cmd=Cancel&item_id='.$buttonlink_id)),
                 array('title' => _('Aktion abbrechen')))
         . "</td></tr>";
 
@@ -736,7 +732,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
         && !$this->tree->isChildOf($this->move_item_id,$item_id)){
             $head .= "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=Do" . $this->mode . "&item_id=$item_id")) . "\">"
-            . Assets::img("icons/16/yellow/arr_2right.png", array('alt' => _("An dieser Stelle einfügen"), 'title' => _("An dieser Stelle einfügen")))."</a>&nbsp;";
+            . Icon::create('arr_2right', 'sort', ['title' => _("An dieser Stelle einfügen")])->asImg(16, ["alt" => _("An dieser Stelle einfügen")])."</a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
         if ($item_id != "root"){
@@ -746,12 +742,12 @@ class StudipSemTreeViewAdmin extends TreeView {
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
-                "\">" .  Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Element nach oben"))) .
+                "\">" .  Icon::create('arr_2up', 'sort')->asImg(['class' => 'text-top', 'title' => _("Element nach oben")]) .
                 "</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
-                "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Element nach unten"))) .
+                "\">" . Icon::create('arr_2down', 'sort')->asImg(['class' => 'text-top', 'title' => _("Element nach unten")]) .
                 "</a>";
             }
             $head .= "&nbsp;";

@@ -94,9 +94,9 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             <? endif ?>
             <span class="reshare_link">
         <? if (!in_array($GLOBALS['user']->id, $sharing_user_ids) && $GLOBALS['user']->id !== $thread['user_id']) : ?>
-            <?= Assets::img("icons/16/blue/blubber", array('class' => "text-bottom reshare_blubber", 'title' => _("Diesen Blubber weitersagen"))) ?>
+            <?= Icon::create('blubber', 'clickable')->asImg(['class' => "text-bottom reshare_blubber", 'title' => _("Diesen Blubber weitersagen")]) ?>
         <? elseif($GLOBALS['user']->id !== $thread['user_id']) : ?>
-            <a href="#" class="open_reshare_context"><?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen"))) ?></a>
+            <a href="#" class="open_reshare_context"><?= Icon::create('blubber', 'inactive')->asImg(['class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen")]) ?></a>
         <? endif ?>
         </span>
         </div>
@@ -122,7 +122,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             <? if (($thread['Seminar_id'] !== $thread['user_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $thread['Seminar_id']))
                 or ($thread['user_id'] === $GLOBALS['user']->id)) : ?>
                 <a href="#" class="edit icon" onClick="return false;">
-                    <?= Assets::img('icons/16/grey/tools.png', tooltip2(_('Bearbeiten')) + array('size' => 14)) ?>
+                    <?= Icon::create('tools', 'inactive', ['title' => _('Bearbeiten')])->asImg(14) ?>
                 </a>
             <? endif ?>
         </div>
@@ -168,7 +168,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                        style="display: none;"
                        multiple>
                 <?= Assets::img('ajax-indicator-black.svg', array('class' => "text-bottom uploading", 'width' => "16px", 'height' => "16px")) ?>
-                <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom upload")) ?>
+                <?= Icon::create('upload', 'clickable')->asImg(['class' => "text-bottom upload"]) ?>
             </label>
         </div>
     <? endif ?>

@@ -303,14 +303,14 @@ if($eval) {
       $arrowlink .= ($isHomepage) ? "&" : "?";
       $arrowlink .= "openAllEvals=1&openStoppedEvals=1#votetop";
       $html.=URLHelper::getLink($arrowlink)."\">\n";
-      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Evaluationen öffnen!")));
+      $html .= Icon::create('arr_1down', 'inactive', ['title' => _("Alle Evaluationen öffnen!")])->asImg(16);
    }
    /* ---------------------------------------------------------------------- */
 
    /* Show closeAll-buton -------------------------------------------------- */
    else {
       $html .= URLHelper::getLink($arrowlink)."\">\n";
-      $html .= Assets::img('icons/16/grey/arr_1up.png', tooltip(_("Alle Evaluationen schließen!")));
+      $html .= Icon::create('arr_1up', 'inactive', ['title' => _("Alle Evaluationen schließen!")])->asImg(16);
    }
 
 } else {
@@ -319,14 +319,14 @@ if($eval) {
       $arrowlink .= ($isHomepage) ? "&" : "?";
       $arrowlink .= "openAllVotes=1&openStoppedVotes=1#votetop";
       $html.=URLHelper::getLink($arrowlink)."\">\n";
-      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Umfragen und Tests öffnen!")));
+      $html .= Icon::create('arr_1down', 'inactive', ['title' => _("Alle Umfragen und Tests öffnen!")])->asImg(16);
    }
    /* ---------------------------------------------------------------------- */
 
    /* Show closeAll-buton -------------------------------------------------- */
    else {
       $html .= URLHelper::getLink($arrowlink)."\">\n";
-      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Umfragen und Tests schließen!")));
+      $html .= Icon::create('arr_1down', 'inactive', ['title' => _("Alle Umfragen und Tests schließen!")])->asImg(16);
    }
    /* ---------------------------------------------------------------------- */
 }

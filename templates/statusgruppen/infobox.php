@@ -26,7 +26,7 @@
 
       <tr>
         <td align="center" width="1%" valign="top">
-            <?= Assets::img('icons/16/black/info.png') ?>
+            <?= Icon::create('info', 'info')->asImg() ?>
         </td>
         <td width="99%" align="left">
             <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>" target="_blank">
@@ -37,7 +37,7 @@
       <? if (!LockRules::Check($range_id, 'groups')) :?>
       <tr>
           <td align="center" width="1%" valign="top">
-            <?= Assets::img('icons/16/black/add/community.png') ?>
+            <?= Icon::create('community+add', 'info')->asImg() ?>
           </td>
           <td width="99%" align="left">
 
@@ -48,7 +48,7 @@
 
       <tr>
           <td align="center" width="1%" valign="top">
-            <?= Assets::img('icons/16/black/refresh.png') ?>
+            <?= Icon::create('refresh', 'info')->asImg() ?>
           </td>
           <td width="99%" align="left">
 

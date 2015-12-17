@@ -135,16 +135,16 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                 <? if ($perm_dozent && !$dozent_is_locked): ?>
                     <? if ($num > 0) : ?>
                         <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent['user_id'], 'dozent') ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/yellow/arr_2up.svg', array('class' => 'middle')) ?>
+                            <?= Icon::create('arr_2up', 'sort')->asImg(["class" => 'middle']) ?>
                         </a>
                     <? endif; ?>
                     <? if ($num < count($dozenten) - 1): ?>
                         <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $dozent['user_id'], 'dozent') ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/yellow/arr_2down.svg', array('class' => 'middle')) ?>
+                            <?= Icon::create('arr_2down', 'sort')->asImg(["class" => 'middle']) ?>
                         </a>
                     <? endif; ?>
                         <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent['user_id']) ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/blue/trash.svg') ?>
+                            <?= Icon::create('trash', 'clickable')->asImg() ?>
                         </a>
                 <? endif; ?>
                     </td>
@@ -203,7 +203,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                     <td class="actions">
                     <? if ($perm_dozent && !$dozent_is_locked): ?>
                         <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/blue/trash.svg') ?>
+                            <?= Icon::create('trash', 'clickable')->asImg() ?>
                         </a>
                     <? endif; ?>
                     </td>
@@ -270,16 +270,16 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                 <? if ($perm_dozent && !$tutor_is_locked): ?>
                     <? if ($num > 0) : ?>
                         <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor['user_id'], 'tutor') ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/yellow/arr_2up.svg', array('class' => 'middle')) ?>
+                            <?= Icon::create('arr_2up', 'sort')->asImg(["class" => 'middle']) ?>
                         </a>
                     <? endif; ?>
                     <? if ($num < count($tutoren) - 1) : ?>
                         <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $tutor['user_id'], 'tutor') ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/yellow/arr_2down.svg', array('class' => 'middle')) ?>
+                            <?= Icon::create('arr_2down', 'sort')->asImg(["class" => 'middle']) ?>
                         </a>
                     <? endif; ?>
                         <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor['user_id']) ?>" <?= $dialog_attr ?>>
-                            <?= Assets::img('icons/blue/trash.svg') ?>
+                            <?= Icon::create('trash', 'clickable')->asImg() ?>
                         </a>
                 <? endif; ?>
                     </td>

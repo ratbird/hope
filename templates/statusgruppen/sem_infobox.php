@@ -25,7 +25,7 @@
       </tr>
       <tr>
         <td align="center" width="1%" valign="top">
-            <?= Assets::img('icons/16/black/info.png') ?>
+            <?= Icon::create('info', 'info')->asImg() ?>
         </td>
         <td width="99%" align="left">
             <?= _("Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.")?>
@@ -33,7 +33,7 @@
       </tr>
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= Assets::img('icons/16/black/info.png') ?>
+                    <?= Icon::create('info', 'info')->asImg() ?>
                 </td>
                 <td width="99%" align="left">
                     <?
@@ -54,7 +54,7 @@
 
       <tr>
                 <td align="center" width="1%" valign="top">
-                     <?= ($self_assign_all) ? Assets::img('icons/16/black/checkbox-checked.png') : Assets::img('icons/16/black/checkbox-unchecked.png') ?>
+                     <?= ($self_assign_all) ? Icon::create('checkbox-checked', 'info')->asImg() : Icon::create('checkbox-unchecked', 'info')->asImg() ?>
                 </td>
                 <td width="99%" align="left">
                     <? if ($self_assign_all) : ?>
@@ -69,7 +69,7 @@
 
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= ($self_assign_exclusive) ? Assets::img('icons/16/black/checkbox-checked.png') : Assets::img('icons/16/black/checkbox-unchecked.png') ?>
+                    <?= ($self_assign_exclusive) ? Icon::create('checkbox-checked', 'info')->asImg() : Icon::create('checkbox-unchecked', 'info')->asImg() ?>
                 </td>
                 <td width="99%" align="left">
                     <? if ($self_assign_exclusive) : ?>

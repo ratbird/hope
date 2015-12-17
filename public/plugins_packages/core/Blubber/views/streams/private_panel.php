@@ -21,7 +21,7 @@
     <? endif ?>
     <? endforeach ?>
     <li class="want_to_share">
-        <?= Assets::img("icons/24/blue/add", array('title' => _("Weitersagen / teilen"))) ?>
+        <?= Icon::create('add', 'clickable', ['title' => _("Weitersagen / teilen")])->asImg(24) ?>
     </li>
 </ul>
 <hr>

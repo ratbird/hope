@@ -56,7 +56,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         $this->setupAutoload();
 
         $navigation = new Navigation(_('Forum'), PluginEngine::getURL($this, array(), 'index'));
-        $navigation->setImage('icons/16/white/forum.png');
+        $navigation->setImage(Icon::create('forum', 'info_alt'));
 
         // add main third-level navigation-item
         $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index')));
@@ -96,9 +96,9 @@ class CoreForum extends StudipPlugin implements ForumModule
         $navigation->setBadgeNumber($num_entries);
 
         if ($num_entries > 0) {
-            $navigation->setImage('icons/20/red/new/forum.png', array('title' => $text));
+            $navigation->setImage(Icon::create('forum+new', 'attention', ["title" => $text]));
         } else {
-            $navigation->setImage('icons/20/grey/forum.png', array('title' => $text));
+            $navigation->setImage(Icon::create('forum', 'inactive', ["title" => $text]));
         }
 
         return $navigation;

@@ -8,7 +8,7 @@
             <li id="template_adressee" style="display: none;" class="adressee">
                 <input type="hidden" name="message_to[]" value="">
                 <span class="visual"></span>
-                <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                <a class="remove_adressee"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
             </li>
             <? foreach ($default_message->getRecipients() as $user) : ?>
             <li style="padding: 0px;" class="adressee">
@@ -16,7 +16,7 @@
                 <span class="visual">
                     <?= htmlReady($user['fullname']) ?>
                 </span>
-                <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                <a class="remove_adressee"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
             </li>
             <? endforeach ?>
         </ul>
@@ -73,7 +73,7 @@
         <? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENTS']): ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('attachments'); return false;">
-                    <?= Assets::img("icons/40/blue/staple") ?>
+                    <?= Icon::create('staple', 'clickable')->asImg(40) ?>
                     <br>
                     <strong><?= _("Anhänge") ?></strong>
                 </a>
@@ -81,21 +81,21 @@
         <? endif; ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('tags'); return false;">
-                    <?= Assets::img("icons/40/blue/star") ?>
+                    <?= Icon::create('star', 'clickable')->asImg(40) ?>
                     <br>
                     <strong><?= _("Schlagworte") ?></strong>
                 </a>
             </li>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('settings'); return false;">
-                    <?= Assets::img("icons/40/blue/admin") ?>
+                    <?= Icon::create('admin', 'clickable')->asImg(40) ?>
                     <br>
                     <strong><?= _("Optionen") ?></strong>
                 </a>
             </li>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('preview'); STUDIP.Messages.previewComposedMessage(); return false;">
-                    <?= Assets::img("icons/40/blue/visibility-visible") ?>
+                    <?= Icon::create('visibility-visible', 'clickable')->asImg(40) ?>
                     <br>
                     <strong><?= _("Vorschau") ?></strong>
                 </a>
@@ -112,7 +112,7 @@
                     <span class="icon"></span>
                     <span class="name"></span>
                     <span class="size"></span>
-                    <a class="remove_attachment"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                    <a class="remove_attachment"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
                 </li>
                 <? if ($default_attachments) : ?>
                     <? foreach ($default_attachments as $a) : ?>
@@ -120,7 +120,7 @@
                     <span class="icon"><?=$a['icon']?></span>
                     <span class="name"><?=$a['name']?></span>
                     <span class="size"><?=$a['size']?></span>
-                    <a class="remove_attachment"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                    <a class="remove_attachment"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
                     </li>
                     <? endforeach ?>
                 <? endif ?>
@@ -133,7 +133,7 @@
             </div>
             <label style="cursor: pointer;">
                 <input type="file" id="fileupload" multiple onChange="STUDIP.Messages.upload_from_input(this);" style="display: none;">
-                <?= Assets::img("icons/20/blue/upload", array('title' => _("Datei hochladen"), 'class' => "text-bottom")) ?>
+                <?= Icon::create('upload', 'clickable', ['title' => _("Datei hochladen"), 'class' => "text-bottom"])->asImg(20) ?>
                 <?= _("Datei hochladen") ?>
             </label>
 

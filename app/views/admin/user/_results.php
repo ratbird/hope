@@ -100,10 +100,10 @@ use Studip\Button, Studip\LinkButton;
         <td><?= htmlReady($user['auth_plugin'] == 'preliminary' ? _("vorläufig") : $user['auth_plugin']) ?></td>
         <td class="actions" nowrap>
             <a href="<?= $controller->url_for('admin/user/edit/'.$user['user_id']) ?>" title="<?= _('Detailansicht des Benutzers anzeigen')?>">
-                <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diesen Benutzer bearbeiten'))) ?>
+                <?= Icon::create('edit', 'clickable', ['title' => _('Diesen Benutzer bearbeiten')])->asImg() ?>
             </a>
             <a href="<?= $controller->url_for('admin/user/delete/'.$user['user_id']) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diesen Benutzer löschen'))) ?>
+                <?= Icon::create('trash', 'clickable', ['title' => _('Diesen Benutzer löschen')])->asImg() ?>
             </a>
         </td>
     </tr>

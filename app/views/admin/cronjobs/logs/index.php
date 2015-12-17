@@ -119,19 +119,19 @@
             <td><?= htmlReady($logs[$i]->schedule->title ?: $logs[$i]->schedule->task->name) ?></td>
             <td>
             <? if ($logs[$i]->duration == -1): ?>
-                <?= Assets::img('icons/16/grey/question', tooltip2(_('Läuft noch'))) ?>
+                <?= Icon::create('question', 'inactive', ['title' => _('Läuft noch')])->asImg() ?>
             <? elseif ($logs[$i]->exception === null): ?>
-                <?= Assets::img('icons/16/green/accept', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('accept', 'accept', ['title' => _('Ja')])->asImg() ?>
             <? else: ?>
-                <?= Assets::img('icons/16/red/decline', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('decline', 'attention', ['title' => _('Nein')])->asImg() ?>
             <? endif; ?>
             </td>
             <td style="text-align: right">
                 <a data-dialog href="<?= $controller->url_for('admin/cronjobs/logs/display', $logs[$i]->log_id, $page) ?>">
-                    <?= Assets::img('icons/16/blue/admin', tooltip2(_('Logeintrag anzeigen'))) ?>
+                    <?= Icon::create('admin', 'clickable', ['title' => _('Logeintrag anzeigen')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/logs/delete', $logs[$i]->log_id, $page) ?>">
-                    <?= Assets::img('icons/16/blue/trash', tooltip2(_('Logeintrag löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Logeintrag löschen')])->asImg() ?>
                 </a>
             </td>
         </tr>

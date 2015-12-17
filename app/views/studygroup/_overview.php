@@ -51,12 +51,12 @@
                 </td>
                 <td align="center">
                     <? if (StudygroupModel::isMember($this->userid,$group['Seminar_id'] )) :?>
-                        <?=Assets::img("icons/16/grey/person.png", array('title' => _('Sie sind Mitglied in dieser Gruppe')))?>
+                        <?=Icon::create('person', 'inactive', ['title' => _('Sie sind Mitglied in dieser Gruppe')])->asImg()?>
                     <? endif;?>
                 </td>
                 <td align="center">
                     <? if ($group['admission_prelim'] == 1) :?>
-                        <?=Assets::img("icons/16/grey/lock-locked.png", array('title' => _('Mitgliedschaft muss beantragt werden')))?>
+                        <?=Icon::create('lock-locked', 'inactive', ['title' => _('Mitgliedschaft muss beantragt werden')])->asImg()?>
                     <? endif;?>
                 </td>
             </tr>

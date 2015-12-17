@@ -124,7 +124,7 @@ class SearchWidget extends SidebarWidget
     {
         $query = parse_url($this->url, PHP_URL_QUERY);
         if ($query) {
-            $this->url = str_replace('?' . $query , '', $this->url);
+            $this->url = str_replace('?' . $query, '', $this->url);
             parse_str(html_entity_decode($query) ?: '', $query_params);
         } else {
             $query_params = array();
@@ -151,7 +151,7 @@ class SearchWidget extends SidebarWidget
         if ($this->hasData()) {
             $reset_link = sprintf('<a href="%s">%s %s</a>',
                                   URLHelper::getLink($this->template_variables['url'], array('reset-search' => 1)),
-                                  Assets::img('icons/blue/decline/search.svg', array('class' => 'text-top')),
+                                  Icon::create('search+decline', 'clickable')->asImg(["class" => 'text-top']),
                                   _('Zurücksetzen'));
             $this->template_variables['reset_search'] = $reset_link;
         }

@@ -347,12 +347,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
             if ($db2->f('neue')) {
                 $nav->setURL('folder.php?cmd=all');
-                $nav->setImage('icons/20/red/new/files.png', array('title' =>
-                    sprintf(_('%s Dokumente, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                $nav->setImage(Icon::create('files+new', 'attention', ["title" => sprintf(_('%s Dokumente, %s neue'),$db2->f('count'),$db2->f('neue'))]));
                 $nav->setBadgeNumber($db2->f('neue'));
             } else if ($db2->f('count')) {
                 $nav->setURL('folder.php?cmd=tree');
-                $nav->setImage('icons/20/grey/files.png', array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
+                $nav->setImage(Icon::create('files', 'inactive', ["title" => sprintf(_('%s Dokumente'),$db2->f('count'))]));
             }
 
             $my_obj[$object_id]['files'] = $nav;
@@ -373,11 +372,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
         if ($db2->f('neue')) {
             $nav->setURL('?new_news=true');
-            $nav->setImage('icons/20/red/new/news.png', array('title' =>
-                sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
+            $nav->setImage(Icon::create('news+new', 'attention', ["title" => sprintf(_('%s Ankündigungen, %s neue'),$db2->f('count'),$db2->f('neue'))]));
             $nav->setBadgeNumber($db2->f('neue'));
         } else if ($db2->f('count')) {
-            $nav->setImage('icons/20/grey/news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
+            $nav->setImage(Icon::create('news', 'inactive', ["title" => sprintf(_('%s Ankündigungen'),$db2->f('count'))]));
         }
 
         $my_obj[$object_id]['news'] = $nav;
@@ -451,11 +449,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $neue = $my_obj[$object_id]["neuetermine"] + $my_obj[$object_id]["neueausfalltermine"];
             $count = $my_obj[$object_id]["termine"] + $my_obj[$object_id]["ausfalltermine"];
             if ($neue) {
-                $nav->setImage('icons/20/red/new/schedule.png', array('title' =>
-                    sprintf(_('%s Termine, %s neue'), $count, $neue)));
+                $nav->setImage(Icon::create('schedule+new', 'attention', ["title" => sprintf(_('%s Termine, %s neue'),$count,$neue)]));
                 $nav->setBadgeNumber($neue);
             } else if ($count) {
-                $nav->setImage('icons/20/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $count)));
+                $nav->setImage(Icon::create('schedule', 'inactive', ["title" => sprintf(_('%s Termine'),$count)]));
             }
 
             $my_obj[$object_id]['schedule'] = $nav;
@@ -478,12 +475,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
                 if ($db2->f('neue')) {
                     $nav->setURL('wiki.php?view=listnew');
-                    $nav->setImage('icons/20/red/new/wiki.png', array('title' =>
-                        sprintf(_('%s WikiSeiten, %s Änderungen'), $db2->f('count_d'), $db2->f('neue'))));
+                    $nav->setImage(Icon::create('wiki+new', 'attention', ["title" => sprintf(_('%s WikiSeiten, %s Änderungen'),$db2->f('count_d'),$db2->f('neue'))]));
                     $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
                     $nav->setURL('wiki.php');
-                    $nav->setImage('icons/20/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count_d'))));
+                    $nav->setImage(Icon::create('wiki', 'inactive', ["title" => sprintf(_('%s WikiSeiten'),$db2->f('count_d'))]));
                 }
 
                 $my_obj[$object_id]['wiki'] = $nav;
@@ -508,11 +504,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $nav = new Navigation('elearning', 'elearning_interface.php?view=show');
 
                 if ($db2->f('neue')) {
-                    $nav->setImage('icons/20/red/new/learnmodule.png', array('title' =>
-                        sprintf(_('%s Lernmodule, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                    $nav->setImage(Icon::create('learnmodule+new', 'attention', ["title" => sprintf(_('%s Lernmodule, %s neue'),$db2->f('count'),$db2->f('neue'))]));
                     $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
-                    $nav->setImage('icons/20/grey/learnmodule.png', array('title' => sprintf(_('%s Lernmodule'), $db2->f('count'))));
+                    $nav->setImage(Icon::create('learnmodule', 'inactive', ["title" => sprintf(_('%s Lernmodule'),$db2->f('count'))]));
                 }
 
                 $my_obj[$object_id]['elearning'] = $nav;
@@ -548,11 +543,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $nav = new Navigation('vote', '#vote');
 
             if ($my_obj[$object_id]['neuevotes']) {
-                $nav->setImage('icons/20/red/new/vote.png', array('title' =>
-                    sprintf(_('%s Umfrage(n), %s neue'), $my_obj[$object_id]['votes'], $my_obj[$object_id]['neuevotes'])));
+                $nav->setImage(Icon::create('vote+new', 'attention', ["title" => sprintf(_('%s Umfrage(n), %s neue'),$my_obj[$object_id]['votes'],$my_obj[$object_id]['neuevotes'])]));
                 $nav->setBadgeNumber($my_obj[$object_id]['neuevotes']);
             } else if ($my_obj[$object_id]['votes']) {
-                $nav->setImage('icons/20/grey/vote.png', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
+                $nav->setImage(Icon::create('vote', 'inactive', ["title" => sprintf(_('%s Umfrage(n)'),$my_obj[$object_id]['votes'])]));
             }
 
             $my_obj[$object_id]['vote'] = $nav;
@@ -574,11 +568,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $nav = new Navigation('literature', 'dispatch.php/course/literature');
 
                 if ($db2->f('neue')) {
-                    $nav->setImage('icons/20/red/new/literature.png', array('title' =>
-                        sprintf(_('%s Literaturlisten, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                    $nav->setImage(Icon::create('literature+new', 'attention', ["title" => sprintf(_('%s Literaturlisten, %s neue'),$db2->f('count'),$db2->f('neue'))]));
                     $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
-                    $nav->setImage('icons/20/grey/literature.png', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
+                    $nav->setImage(Icon::create('literature', 'inactive', ["title" => sprintf(_('%s Literaturlisten'),$db2->f('count'))]));
                 }
 
                 $my_obj[$object_id]['literature'] = $nav;
@@ -640,11 +633,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $neue = $my_obj[$object_id]["newparticipants"] + $my_obj[$object_id]["new_accepted_participants"];
                 $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
                 if ($neue && ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor')))) {
-                    $nav->setImage('icons/20/red/new/persons.png', array('title' =>
-                        sprintf(_('%s Teilnehmende, %s neue'), $count, $neue)));
+                    $nav->setImage(Icon::create('persons+new', 'attention', ["title" => sprintf(_('%s Teilnehmende, %s neue'),$count,$neue)]));
                     $nav->setBadgeNumber($neue);
                 } else if ($count) {
-                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf(_('%s Teilnehmende'), $count)));
+                    $nav->setImage(Icon::create('persons', 'inactive', ["title" => sprintf(_('%s Teilnehmende'),$count)]));
                 }
                 $my_obj[$object_id]['participants'] = $nav;
             }
@@ -669,7 +661,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 } else {
                     $nav = new Navigation('participants', 'dispatch.php/course/members/index');
                 }
-                $nav->setImage('icons/20/grey/persons.png', array('title' => _('Teilnehmende')));
+                $nav->setImage(Icon::create('persons', 'inactive', ["title" => _('Teilnehmende')]));
                 $my_obj[$object_id]['participants'] = $nav;
             }
         }

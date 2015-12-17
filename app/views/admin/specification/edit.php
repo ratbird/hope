@@ -93,7 +93,7 @@ $sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Zusatzangaben'));
 if ($GLOBALS['perm']->have_perm('root')) {
     $actions = new ActionsWidget();
-    $actions->addLink(_('Datenfelder bearbeiten'), URLHelper::getLink('dispatch.php/admin/datafields'), 'icons/16/blue/add.png');
+    $actions->addLink(_('Datenfelder bearbeiten'), URLHelper::getLink('dispatch.php/admin/datafields'), Icon::create('add', 'clickable'));
     $sidebar->addWidget($actions);
 }
 ?>

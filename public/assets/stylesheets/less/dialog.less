@@ -38,7 +38,7 @@
         }
         .ui-icon {
             .square(16px);
-            .retina-background-icon('white/decline.png');
+            .background-icon('decline', 'info_alt');
             background-position: 0;
             display:inline-block;
             margin: 0;
@@ -48,7 +48,7 @@
             top: 1px;
 
             &:hover{
-                .retina-background-icon('white/decline.png');
+              .background-icon('decline', 'info_alt');
             }
         }
     }
@@ -76,11 +76,11 @@
             }
 
             &.accept {
-              .button-with-icon("blue/accept.png", "white/accept.png");
+              .button-with-icon("accept", "clickable", "info_alt");
             }
 
             &.cancel {
-                .button-with-icon("blue/decline.png", "white/decline.png");
+              .button-with-icon("decline", "clickable", "info_alt");
             }
 
             &:before {
@@ -96,7 +96,7 @@
     }
 }
 .ui-dialog-titlebar-wiki {
-    .retina-background-icon('white/question-circle.png', 24);
+    .background-icon('question-circle', 'info_alt', 24);
     background-position: center;
     background-repeat: no-repeat;
     display: inline-block;
@@ -162,13 +162,13 @@
     }
     .ui-dialog-titlebar-close .ui-icon {
         &, &:hover {
-            .retina-background-icon('blue/decline.svg');
+            .background-icon('decline', 'clickable');
         }
     }
 
     .ui-dialog-content {
         .box-sizing(border-box);
-        .retina-background-icon('yellow/question-circle-full.svg');
+        .background-icon('question-circle-full', 'status-yellow');
         background-position: 12px 8px;
         background-repeat: no-repeat;
         background-size: 32px 32px;
@@ -179,5 +179,4 @@
     .ui-dialog-buttonset > * {
         display: inline-block;
     }
-    
 }

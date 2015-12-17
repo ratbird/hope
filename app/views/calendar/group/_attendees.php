@@ -24,7 +24,7 @@
                     <li id="template_adressee" style="display: none;" class="adressee">
                         <input type="hidden" name="attendees[]" value="">
                         <span class="visual"></span>
-                        <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                        <a class="remove_adressee"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
                     </li>
                     <? foreach ($attendees as $attendee) : ?>
                     <? $user = $attendee->user; ?>
@@ -34,7 +34,7 @@
                         <span class="visual">
                             <?= htmlReady($user->getFullname()) ?>
                         </span>
-                        <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
+                        <a class="remove_adressee"><?= Icon::create('trash', 'clickable')->asImg(['class' => "text-bottom"]) ?></a>
                     </li>
                     <? endif; ?>
                     <? endforeach ?>

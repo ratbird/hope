@@ -14,7 +14,7 @@
             <tr>
                 <th colspan="2" nowrap align="center">
                     <a href="<?= URLHelper::getLink('dispatch.php/my_courses/groups') ?>">
-                        <?= Assets::img('icons/20/blue/group.png', array('title' => _('Gruppe ändern'), 'class' => 'middle')) ?>
+                        <?= Icon::create('group', 'clickable', ['title' => _('Gruppe ändern'), 'class' => 'middle'])->asImg(20) ?>
                     </a>
                 </th>
                 <th><?= _('Name') ?></th>

@@ -16,7 +16,7 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
             <td style="text-align: center; width: 10%; height: 40px;">
                 <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
                     <a <?= tooltip(_('einen Tag zurück')) ?> href="<?= $controller->url_for('calendar/group/day', array('atime' => $atime - 86400)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_1left', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                         <?= strftime(_('%x'), strtotime('-1 day', $calendars[0]->getStart())) ?>
                     </a>
                 </div>
@@ -27,7 +27,7 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                 <div style="text-align: right; width: 20%; display: inline-block; white-space: nowrap;">
                     <a <?= tooltip(_('einen Tag vor')) ?> href="<?= $controller->url_for('calendar/group/day', array('atime' => $atime + 86400)) ?>">
                         <?= strftime(_('%x'), strtotime('+1 day', $calendars[0]->getStart())) ?>
-                        <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_1right', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                     </a>
                 </div>
             </td>
@@ -46,7 +46,7 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                         </td>
                         <td class="precol1w" style="text-align: center; width: <?= $width1 ?>%">
                             <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendars[0]->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendars[0]->getStart(), 'isdayevent' => '1')) ?>">
-                                <?= Assets::img('icons/16/blue/schedule.png') ?>
+                                <?= Icon::create('schedule', 'clickable')->asImg() ?>
                             </a>
                         </td>
                         <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
@@ -109,7 +109,7 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                         <td style="width: <?= $width2 ?>%;" class="precol1w"> </td>
                         <td width="<?= $width1 ?>%" class="precol1w" style="text-align: center;">
                             <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendars[0]->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendars[0]->getStart(), 'isdayevent' => '1')) ?>">
-                                <?= Assets::img('icons/16/blue/schedule.png') ?>
+                                <?= Icon::create('schedule', 'clickable')->asImg() ?>
                             </a>
                         </td>
                         <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>

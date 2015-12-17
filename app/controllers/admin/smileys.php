@@ -265,10 +265,10 @@ class Admin_SmileysController extends AuthenticatedController
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neues Smiley hochladen'), $this->url_for('admin/smileys/upload', $view), 'icons/16/blue/add.png')->asDialog('size=auto');
-        $actions->addLink(_('Smileys zählen'), $this->url_for('admin/smileys/count', $view), 'icons/16/blue/code.png');
-        $actions->addLink(_('Tabelle aktualisieren'), $this->url_for('admin/smileys/refresh', $view), 'icons/16/blue/refresh.png');
-        $actions->addLink(_('Smiley-Übersicht öffnen'), URLHelper::getLink('dispatch.php/smileys'), 'icons/16/blue/smiley.png')->asDialog();
+        $actions->addLink(_('Neues Smiley hochladen'), $this->url_for('admin/smileys/upload', $view), Icon::create('add', 'clickable'))->asDialog('size=auto');
+        $actions->addLink(_('Smileys zählen'), $this->url_for('admin/smileys/count', $view), Icon::create('code', 'clickable'));
+        $actions->addLink(_('Tabelle aktualisieren'), $this->url_for('admin/smileys/refresh', $view), Icon::create('refresh', 'clickable'));
+        $actions->addLink(_('Smiley-Übersicht öffnen'), URLHelper::getLink('dispatch.php/smileys'), Icon::create('smiley', 'clickable'))->asDialog();
         $sidebar->addWidget($actions);
 
         $widget = new SidebarWidget();

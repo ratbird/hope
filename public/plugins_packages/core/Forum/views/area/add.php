@@ -7,26 +7,14 @@
 
         <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
         <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] != $GLOBALS['user']->id): ?>
-            <?= Assets::img('icons/16/red/new/forum.png', array(
-                'title' => _('Dieser Eintrag ist neu!'),
-                'id'    => 'tutorNotificationIcon',
-                'style' => 'margin-bottom: 15px;'
-            )) ?>
+            <?= Icon::create('forum+new', 'attention', ['title' => _('Dieser Eintrag ist neu!')])->asImg(16, ["id" => 'tutorNotificationIcon', "style" => 'margin-bottom: 15px;']) ?>
         <? else : ?>
             <? $num_postings = ForumVisit::getCount($entry['topic_id'], $visitdate) ?>
             <? $text = ForumHelpers::getVisitText($num_postings, $entry['topic_id'], $constraint['depth']) ?>
             <? if ($num_postings > 0) : ?>
-                <?= Assets::img('icons/16/red/forum.png', array(
-                    'title' => $text,
-                    'id'    => 'tutorNotificationIcon',
-                    'style' => 'margin-bottom: 15px;'
-                )) ?>
+                <?= Icon::create('forum', 'attention', ['title' => $text])->asImg(16, ["id" => 'tutorNotificationIcon', "style" => 'margin-bottom: 15px;']) ?>
             <? else : ?>
-                <?= Assets::img('icons/16/black/forum.png', array(
-                    'title' => $text,
-                    'id'    => 'tutorNotificationIcon',
-                    'style' => 'margin-bottom: 15px;'
-                )) ?>
+                <?= Icon::create('forum', 'info', ['title' => $text])->asImg(16, ["id" => 'tutorNotificationIcon', "style" => 'margin-bottom: 15px;']) ?>
             <? endif ?>
         <? endif ?>
         </a>
@@ -58,16 +46,14 @@
                 <? if (ForumPerm::has('edit_area', $seminar_id)) : ?>
                 <a href="<?= PluginEngine::getLink('coreforum/index/?edit_area=' . $entry['topic_id']) ?>"
                     onClick="STUDIP.Forum.editArea('<?= $entry['topic_id'] ?>');return false;">
-                    <?= Assets::img('icons/16/blue/edit.png',
-                        array('class' => 'edit-area', 'title' => 'Name/Beschreibung des Bereichs ändern')) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => 'Name/Beschreibung des Bereichs ändern'])->asImg(16, ["class" => 'edit-area']) ?>
                 </a>
                 <? endif ?>
 
                 <? if (ForumPerm::has('remove_area', $seminar_id)) : ?>
                 <a href="<?= PluginEngine::getLink('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
                    onClick="STUDIP.Forum.deleteArea(this, '<?= $entry['topic_id'] ?>'); return false;">
-                    <?= Assets::img('icons/16/blue/trash.png',
-                        array('class' => 'delete-area', 'title' => 'Bereich mitsamt allen Einträgen löschen!')) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => 'Bereich mitsamt allen Einträgen löschen!'])->asImg(16, ["class" => 'delete-area']) ?>
                 </a>
                 <? endif ?>
             </span>
@@ -92,7 +78,7 @@
         </a><br>
         <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['last_posting']['date']) ?>
         <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $entry['last_posting']['topic_id']) ?>#<?= $entry['last_posting']['topic_id'] ?>" alt="<?= $infotext ?>" title="<?= $infotext ?>">
-            <?= Assets::img('icons/16/blue/link-intern.png', array('title' => $infotext = _("Direkt zum Beitrag..."), 'id' => 'tutorLatestAnswer')) ?>
+            <?= Icon::create('link-intern', 'clickable', ['title' => $infotext = _("Direkt zum Beitrag..."), 'id' => 'tutorLatestAnswer'])->asImg() ?>
         </a>
         <? else: ?>
         <br>

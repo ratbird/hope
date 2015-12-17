@@ -132,7 +132,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
             <td align="right">
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $user['username'])) ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' => _('Nachricht an Benutzer verschicken'))) ?>
+                    <?= Icon::create('mail', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Nachricht an Benutzer verschicken')]) ?>
                 </a>
             </td>
         </tr>

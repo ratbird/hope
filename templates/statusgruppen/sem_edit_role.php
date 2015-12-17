@@ -18,10 +18,7 @@
         <? endfor; ?>
     </select>
     <span style="padding: 0px 5px 0px 5px">
-        <?= Assets::input('icons/16/yellow/arr_2right.png', tooltip2(_('in Namensfeld übernehmen')) + array(
-                'name' => 'choosePreset',
-                'value' => 'choosePreset',
-        )) ?>
+        <?= Icon::create('arr_2right', 'sort', ['title' => _('in Namensfeld übernehmen')])->asInput(array('name'=>'choosePreset','value'=>'choosePreset',)) ?>
     </span>
     <? endif; ?>
 

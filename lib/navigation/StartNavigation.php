@@ -73,7 +73,7 @@ class StartNavigation extends Navigation
         }
         $this->setBadgeNumber($vote + $news);
 
-        $this->setImage('icons/lightblue/home.svg', array('title' => $homeinfo));
+        $this->setImage(Icon::create('home', 'navigation', ["title" => $homeinfo]));
     }
 
     /**

@@ -26,7 +26,7 @@
 
       <tr>
           <td align="center" valign="top" width="1%">
-            <?= Assets::img('icons/16/black/info.png') ?>
+            <?= Icon::create('info', 'info')->asImg() ?>
           </td>
           <td width="99%" align="left">
 

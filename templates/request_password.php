@@ -16,7 +16,7 @@ use Studip\Button, Studip\LinkButton;
 <table class="index_box logintable">
 <tr>
     <td class="table_header_bold">
-        <?= Assets::img('icons/16/white/door-enter.png') ?>
+        <?= Icon::create('door-enter', 'info_alt')->asImg() ?>
         <b>&nbsp;<?=sprintf(_("Stud.IP - Neues Passwort anfordern (Schritt %s von 5)"), $step)?></b>
     </td>
 </tr>

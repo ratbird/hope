@@ -26,8 +26,8 @@ class CoreOverview implements StudipModule {
         }
 
         $navigation = new Navigation(_('Übersicht'));
-        $navigation->setImage('icons/16/white/seminar.png');
-        $navigation->setActiveImage('icons/16/black/seminar.png');
+        $navigation->setImage(Icon::create('seminar', 'info_alt'));
+        $navigation->setActiveImage(Icon::create('seminar', 'info'));
         if ($object_type !== 'sem') {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'dispatch.php/institute/overview'));
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$course_id));

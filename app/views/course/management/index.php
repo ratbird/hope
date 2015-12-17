@@ -11,8 +11,7 @@ if (Course::findCurrent()) {
     $links = new ActionsWidget();
     foreach (Navigation::getItem('/course/admin/main') as $nav) {
         if ($nav->isVisible(true)) {
-            $image = $nav->getImage();
-            $links->addLink($nav->getTitle(), URLHelper::getLink($nav->getURL(), array('studip_ticket' => Seminar_Session::get_ticket())), $image['src'], $image);
+            $links->addLink($nav->getTitle(), URLHelper::getLink($nav->getURL(), array('studip_ticket' => Seminar_Session::get_ticket())), $nav->getImage(), $nav->getLinkAttributes());
         }
     }
     $sidebar->addWidget($links);
@@ -36,9 +35,9 @@ if (Course::findCurrent()) {
         <li>
             <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
                 <h3>
-                <? if ($nav->getImage()): ?>
-                    <?= $nav->getImageTag() ?>
-                <? endif; ?>
+                    <? if ($nav->getImage()): ?>
+                        <?= $nav->getImage()->asImg(false, $nav->getLinkAttributes()) ?>
+                    <? endif; ?>
                     <?= htmlReady($nav->getTitle()) ?>
                 </h3>
                 <p>

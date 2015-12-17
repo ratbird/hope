@@ -81,11 +81,11 @@ if (Config::get()->ELEARNING_INTERFACE_ENABLE)
     checkObjectModule("elearning_interface");
 
     $infobox = array    (array ("kategorie"  => _("Information:"),
-            "eintrag" => array  (array (    "icon" => "icons/16/black/info.png",
+            "eintrag" => array  (array (    "icon" => Icon::create('info', 'clickable'),
                                     "text"  => sprintf(_("Auf dieser Seite können Sie nach Lernmodulen im angebundenen ILIAS-System suchen.")) ) ) ) );
 
     $infobox[1]["kategorie"] = _("Aktionen:");
-    $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
+    $infobox[1]["eintrag"][] = array (  "icon" => Icon::create('learnmodule', 'clickable'),
                                     "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suchen'. Die Suche bezieht sich auf den ausgewählten Suchbereich.")));
 
     ?>

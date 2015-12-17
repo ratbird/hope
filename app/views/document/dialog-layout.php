@@ -10,7 +10,7 @@ $formatnumber = function ($number, $digits = 0) {
         <? if ($icon): ?>
             <?= Assets::img($icon) ?>
         <? else: ?>
-            <?= Assets::img('icons/100/lightblue/file-generic.png') ?>
+            <?= Icon::create('file-generic', 'navigation')->asImg(100) ?>
         <? endif; ?>
         </div>
     <? if ($entry): ?>

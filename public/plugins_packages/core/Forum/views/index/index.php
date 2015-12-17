@@ -42,7 +42,7 @@ if ($section == 'index') {
             $abo_url = PluginEngine::getLink('coreforum/index/abo/' . $constraint['topic_id']);
         endif;
         
-        $actions->addLink($abo_text, $abo_url, 'icons/16/blue/link-intern.png');
+        $actions->addLink($abo_text, $abo_url, Icon::create('link-intern', 'clickable'));
     }
 
     if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) {
@@ -110,7 +110,7 @@ if ($section == 'index') {
     }
 
     if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
-        $actions->addLink(_('Neue Kategorie erstellen'), "#create", 'icons/16/blue/link-intern.png');
+        $actions->addLink(_('Neue Kategorie erstellen'), "#create", Icon::create('link-intern', 'clickable'));
     }
 }
 
@@ -120,7 +120,7 @@ if ($section === 'index' && ForumPerm::has('pdfexport', $seminar_id)) {
     $export = new ExportWidget();
     $export->addLink(_('Beiträge als PDF exportieren'),
                      $controller->url_for('index/pdfexport/' . $constraint['topic_id']),
-                     'icons/16/blue/file-pdf.png');
+                     Icon::create('file-pdf', 'clickable'));
     $sidebar->addWidget($export);
 }
 ?>

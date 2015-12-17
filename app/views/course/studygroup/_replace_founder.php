@@ -13,7 +13,7 @@
         </div>
         <? if(!empty($tutors)) :?>
             <div style="width: 50%; float: left; vertiacl-align:middle;">
-                <?= Assets::input("icons/16/yellow/arr_2left.png", array('type' => "image", 'class' => "middle", 'name' => "replace_founder", 'title' => _('Als GruppengründerIn eintragen'))) ?>
+                <?= Icon::create('arr_2left', 'sort', ['title' => _('Als GruppengründerIn eintragen')])->asInput(["type" => "image", "class" => "middle", "name" => "replace_founder"]) ?>
                 <select name="choose_founder">
                     <? foreach($tutors as $uid => $tutor) : ?>
                         <option value="<?=$uid?>"> <?= htmlReady($tutor['fullname']) ?> </option>

@@ -14,7 +14,7 @@ class CoreLiterature implements StudipModule {
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('LITERATURE_ENABLE')) {
             $navigation = new Navigation(_('Teilnehmende'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/members/index");
-            $navigation->setImage('icons/16/grey/persons.png');
+            $navigation->setImage(Icon::create('persons', 'inactive'));
             return $navigation;
         } else {
             return null;
@@ -25,8 +25,8 @@ class CoreLiterature implements StudipModule {
         if (get_config('LITERATURE_ENABLE')) {
             $object_type = get_object_type($course_id);
             $navigation = new Navigation(_('Literatur'));
-            $navigation->setImage('icons/16/white/literature.png');
-            $navigation->setActiveImage('icons/16/black/literature.png');
+            $navigation->setImage(Icon::create('literature', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('literature', 'info'));
 
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), "dispatch.php/course/literature?view=literatur_".$object_type));
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {

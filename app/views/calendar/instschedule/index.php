@@ -17,7 +17,7 @@ $infobox['content'] = array(
     array(
         'kategorie' => _("Information:"),
         'eintrag'   => array(
-            array("text" => $text, "icon" => "icons/16/black/info.png")
+            array("text" => $text, "icon" => Icon::create('info', 'clickable'))
         )
     ),
 
@@ -34,7 +34,7 @@ $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/instschedule/index/'. implode(',', $days) 
            . '?printview=true&semester_id=' . $current_semester['semester_id']) 
            . '" target="_blank">'._("Druckansicht") .'</a>',
-    'icon' => 'icons/16/black/print.png'
+    'icon' => Icon::create('print', 'clickable')
 );
 
 // Infobox-entries for viewport size
@@ -61,7 +61,7 @@ $semester_chooser = $this->render_partial('calendar/schedule/_semester_chooser.p
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $semester_chooser,
-    'icon' => 'icons/16/black/schedule.png'
+    'icon' => Icon::create('schedule', 'clickable')
 );
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">

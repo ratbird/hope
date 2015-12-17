@@ -29,7 +29,7 @@
                 <? foreach ($course->topics as $topic) : ?>
                     <li>
                         <a href="#" onClick="jQuery('#dates_add_topic .topic_title').val('<?= htmlReady($topic['title']) ?>'); jQuery('#dates_add_topic').submit(); return false;">
-                            <?= Assets::img("icons/blue/16/arr_2up") ?>
+                            <?= Icon::create('arr_2up', 'clickable')->asImg() ?>
                             <?= htmlReady($topic['title']) ?>
                         </a>
                     </li>

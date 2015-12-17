@@ -72,7 +72,7 @@
                 </select>
                 <input type="hidden" name="view" value="<?= $view ?>">
                 <span style="font-size: small; color: #555555; white-space: nowrap;">
-                    <input type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" class="text-top">
+                    <?= Icon::create('accept', 'clickable')->asInput(['class' => "text-top"]) ?>
                 </span>
             </td>
         </tr>

@@ -106,8 +106,7 @@ function show_documents($documents, $open = null)
             $addon =  tooltipicon(_('Diese Datei ist urheberrechtlich geschützt!')) . ' ' . $addon;
         }
         if (!empty($document['url'])) {
-            $addon .= ' ' . Assets::img('icons/16/blue/link-extern',
-                                        tooltip2(_('Diese Datei wird von einem externen Server geladen!')));
+            $addon .= ' ' . Icon::create('link-extern', 'clickable', ['title' => _('Diese Datei wird von einem externen Server geladen!')])->asImg(16);
         }
 
         // Attach created variables to document

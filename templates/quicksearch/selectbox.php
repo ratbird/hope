@@ -7,7 +7,7 @@ if ($withButton) : ?>
 <div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
 <? $withAttributes['style'] = "width: ".($box_width-23)."px;"; ?>
     <? if ($box_align === "left") : ?>
-    <?= Assets::input('icons/16/blue/refresh.png', array('class' => 'text-bottom')) ?>
+    <?= Icon::create('refresh', 'clickable')->asInput(["class" => 'text-bottom']) ?>
 <? endif ?>
 <? endif ?>
 <select<? foreach ($withAttributes as $attr_name => $attr_value) {
@@ -24,10 +24,7 @@ if ($withButton) : ?>
 </select>
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-    <?= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Suche zurücksetzen')) + array(
-            'name' => $reset_button_name ?: '',
-            'class' => 'text-bottom', 
-    )) ?>
+    <?= Icon::create('refresh', 'clickable', ['title' => _('Suche zurücksetzen')])->asInput(array('name'=>$reset_button_name?:'','class'=>'text-bottom',)) ?>
 <? endif ?>
     </div>
 <? endif ?>

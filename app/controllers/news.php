@@ -44,10 +44,19 @@ class NewsController extends StudipController
 
         $this->set_content_type('text/html; charset=windows-1252');
 
-        $this->area_structure = array('global' => array('title' => _('Stud.IP (systemweit)'), 'icon' => 'home.png'),
-                                      'inst' => array('title' => _('Einrichtungen'), 'icon' => 'institute.png'),
-                                      'sem' => array('title' => _('Veranstaltungen'), 'icon' => 'seminar.png'),
-                                      'user' => array('title' => _('Profile'), 'icon' => 'person.png'));
+        $this->area_structure = [
+            'global' => [
+                'title' => _('Stud.IP (systemweit)'),
+                'icon' => 'home'],
+            'inst' => [
+                'title' => _('Einrichtungen'),
+                'icon' => 'institute'],
+            'sem' => [
+                'title' => _('Veranstaltungen'),
+                'icon' => 'seminar'],
+            'user' => [
+                'title' => _('Profile'),
+                'icon' => 'person']];
     }
 
     /**
@@ -592,7 +601,7 @@ class NewsController extends StudipController
             $this->sidebar->addWidget($widget);
         }
         $widget = new ActionsWidget();
-        $widget->addLink(_('Ankündigung erstellen'), URLHelper::getLink('dispatch.php/news/edit_news/new'), 'icons/16/blue/add/news.png', array('rel'=>'get_dialog', 'target'=>'_blank'));
+        $widget->addLink(_('Ankündigung erstellen'), URLHelper::getLink('dispatch.php/news/edit_news/new'), Icon::create('news+add', 'clickable'), array('rel'=>'get_dialog', 'target'=>'_blank'));
         $this->sidebar->addWidget($widget);
     }
 

@@ -58,7 +58,7 @@ if (Request::option('com') == 'new') {
             }
             else {
                 $message = sprintf(_("Es wurden bereits %s Konfigurationen angelegt. Sie können für dieses Module keine weiteren Konfigurationen anlegen.")
-                        , $GLOBALS['EXTERN_MAX_CONFIGURATIONS']);
+, $GLOBALS['EXTERN_MAX_CONFIGURATIONS']);
                 my_error($message, "blank", 1);
                 echo "<tr><td class=\"blank\" align=\"center\">\n";
                 echo LinkButton::create("<< " . _("Zurück"), URLHelper::getURL('?list=TRUE'));
@@ -197,13 +197,13 @@ if ($module->getType() != 0) {
     $info_content = array(
             array("kategorie" => "Information:",
                         "eintrag" => array(
-                            array("icon" => "icons/16/black/info.png",
+                            array("icon" => Icon::create('info', 'clickable'),
                                         "text" => $info_edit_element
                             )
             )),
             array("kategorie" => "Aktion:",
                     "eintrag" => array(
-                            array("icon" => "icons/16/black/info.png",
+                            array("icon" => Icon::create('info', 'clickable'),
                                         "text" => $info_preview,
                             )
             )));
@@ -213,7 +213,7 @@ else {
     $info_content = array(
             array("kategorie" => "Information:",
                         "eintrag" => array(
-                            array("icon" => "icons/16/black/info.png",
+                            array("icon" => Icon::create('info', 'clickable'),
                                         "text" => $info_edit_element
                             )
             )));

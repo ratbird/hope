@@ -6,11 +6,11 @@
         <? if ($size_of_book): ?>
             <? if ($open === 'all'): ?>
                 <a href="<?= URLHelper::getLink('', compact('view', 'filter') + array('close' => 'all')) ?>">
-                    <?= Assets::img('icons/16/blue/arr_1up') ?>
+                    <?= Icon::create('arr_1up', 'clickable')->asImg() ?>
                     <?= _('Alle zuklappen') ?>
             <? else: ?>
                 <a href="<?= URLHelper::getLink('', compact('view', 'filter') + array('open' => 'all')) ?>">
-                    <?= Assets::img('icons/16/blue/arr_1down') ?>
+                    <?= Icon::create('arr_1down', 'clickable')->asImg() ?>
                     <?= _('Alle aufklappen') ?>
             <? endif; ?>
                     <?= sprintf($size_of_book == 1 ? _('(%d Eintrag)') : _('(%d Einträge)'), $size_of_book) ?>

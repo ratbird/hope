@@ -2,7 +2,7 @@
     <header>
         <h1>
             <a href="<?= ContentBoxHelper::href($termin['id']) ?>">
-                <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom')) ?>
+                <?= Icon::create('date', 'inactive')->asImg(['class' => 'text-bottom']) ?>
                 <?= htmlReady($termin['title']) ?>
             </a>
         </h1>
@@ -12,7 +12,7 @@
             </span>
             <? if($admin && $isProfile && $termin['type'] === 'CalendarEvent'): ?>
             <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/' . $termin['range_id'] . '/' . $termin['event_id'], array('source_page' => 'dispatch.php/profile')) ?>">
-                <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
+                <?= Icon::create('admin', 'clickable')->asImg(['class' => 'text-bottom']) ?>
             </a>
             <? endif; ?>
         </nav>
@@ -24,7 +24,7 @@
         <? if (count($themen)) : ?>
             <? foreach ($themen as $thema) : ?>
                 <h3>
-                    <?= Assets::img("icons/grey/20/topic", array('class' => "text-bottom")) ?>
+                    <?= Icon::create('topic')->asImg(20, ['class' => "text-bottom"]) ?>
                     <?= htmlReady($thema['title']) ?>
                 </h3>
                 <div>

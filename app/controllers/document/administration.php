@@ -322,12 +322,10 @@ class Document_AdministrationController extends AuthenticatedController {
         $widget = new ActionsWidget();
 
         $widget->addLink(_('Neue Gruppeneinstellungen'),
-                         $this->url_for('document/administration/edit/0/true'),
-                         'icons/16/black/add')
+                         $this->url_for('document/administration/edit/0/true'), Icon::create('add', 'info'))
                ->asDialog();
         $widget->addLink(_('Neue individuelle Einstellungen'),
-                         $this->url_for('document/administration/individual'),
-                         'icons/16/black/add');
+                         $this->url_for('document/administration/individual'), Icon::create('add', 'info'));
 
         $sidebar->addWidget($widget);
     }

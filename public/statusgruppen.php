@@ -259,17 +259,17 @@ if ($rechte) {
     if (groupmail($SessSemName[1], 'all')) {
         $actions->addLink(_('Nachricht an alle (Rundmail)'), 
                           URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=all'),
-                          'icons/16/blue/mail.png')->asDialog();
+                          Icon::create('mail', 'clickable'))->asDialog();
     }
     if (groupmail($SessSemName[1], 'prelim')) {
         $actions->addLink(_('Nachricht an alle Teilnehmer auf der Warteliste'),
                           URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=prelim'),
-                          'icons/16/blue/mail.png')->asDialog();
+                          Icon::create('mail', 'clickable'))->asDialog();
     }
     if (groupmail($SessSemName[1], 'waiting')) {
         $actions->addLink(_('Nachricht an alle vorläufigen Teilnehmer'),
                           URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=waiting'),
-                          'icons/16/blue/mail.png')->asDialog();
+                          Icon::create('mail', 'clickable'))->asDialog();
     }
     $sidebar->addWidget($actions);
 

@@ -54,6 +54,46 @@
         .background-size(@width @height);
     }
 }
+
+// Role to color mapping
+.role2color(@role) when (@role = 'info') {
+  @color: 'black';
+}
+
+.role2color(@role) when (@role = 'clickable'), (@role = 'link') {
+  @color: 'blue';
+}
+
+.role2color(@role) when (@role = 'accept'), (@role = 'status-green') {
+  @color: 'green';
+}
+
+.role2color(@role) when (@role = 'inactive') {
+  @color: 'grey';
+}
+
+.role2color(@role) when (@role = 'navigation') {
+  @color: 'lightblue';
+}
+
+.role2color(@role) when (@role = 'new'), (@role = 'attention'), (@role = 'status-red') {
+  @color: 'red';
+}
+
+.role2color(@role) when (@role = 'info_alt') {
+  @color: 'white';
+}
+
+.role2color(@role) when (@role = 'sort'), (@role = 'status-yellow') {
+  @color: 'yellow';
+}
+
+.background-icon(@icon, @role, @size: 16) {
+  .role2color(@role);
+  .retina-background-icon("@{color}/@{icon}", @size);
+}
+
+// DEPRECATED: will be removed in v3.6
 .retina-background-icon(@icon, @size: 16) {
     @temp-icon: replace(@icon, "\.(png|svg)$", '', g);
     @svg: "@{image-path}/icons/@{temp-icon}.svg";
@@ -62,7 +102,18 @@
     .background-size(unit(@size, px) unit(@size, px));
 }
 
-// Icon before
+.icon(@position, @icon, @role, @size: 16, @padding: 0) when (@position = "before") {
+  .role2color(@role);
+  .icon-before("@{color}/@{icon}", @size, @padding);
+}
+
+.icon(@position, @icon, @role, @size: 16, @padding: 0) when (@position = "after") {
+  .role2color(@role);
+  .icon-after("@{color}/@{icon}", @size, @padding);
+}
+
+// DEPRECATED: will be removed in v3.6
+// Icon 'before'
 .icon-before(@icon, @size: 16, @padding: 0) {
     &::before {
         background-repeat: no-repeat;
@@ -88,6 +139,7 @@
     }
 }
 
+// DEPRECATED: will be removed in v3.6
 // Icon after
 .icon-after(@icon, @size: 16, @padding: 0) {
     &::after {

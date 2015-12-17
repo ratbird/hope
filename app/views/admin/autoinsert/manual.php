@@ -81,7 +81,7 @@ use Studip\Button, Studip\LinkButton;
                       <? endif ?>
                     <? endforeach; ?>
                     </select>
-                    <?= Assets::input("icons/16/blue/add.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzufügen'))) ?>
+                    <?= Icon::create('add', 'clickable', ['title' => _('Filter hinzufügen')])->asInput(["type" => "image", "class" => "middle", "name" => "add_filter"]) ?>
                 </td>
             </tr>
         <? endif ?>
@@ -100,7 +100,7 @@ use Studip\Button, Studip\LinkButton;
           <? endif ?>
                 <td colspan="<?= $index % 2 ? 1 : 2 ?>">
                     <label for="<?= $type ?>"><b><?= $available_filtertypes[$type] ?></b></label>
-                    <?= Assets::input("icons/16/blue/remove.png", array('type' => "image", 'class' => "middle", 'name' => "remove_filter[".$type."]", 'title' => _('Filter entfernen'))) ?>
+                    <?= Icon::create('remove', 'clickable', ['title' => _('Filter entfernen')])->asInput(["type" => "image", "class" => "middle", "name" => "remove_filter[".$type."]"]) ?>
                     <br>
 
                     <select name="filter[<?= $type ?>][]" multiple="multiple" size="5">
@@ -127,7 +127,7 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td colspan="3">
                     <?= Button::create(_('Eintragen'), 'submit') ?>
-                    <?= Assets::input("icons/16/blue/question-circle.png", array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "preview", 'title' => _('Vorschau'))) ?>
+                    <?= Icon::create('question-circle', 'clickable', ['title' => _('Vorschau')])->asInput(["type" => "image", "style" => "vertical-align: middle;", "name" => "preview"]) ?>
                 </td>
             </tr>
         </tfoot>
@@ -171,6 +171,6 @@ jQuery(function ($) {
 $sidebar = Sidebar::Get();
 $sidebar->setTitle('Manuelles Eintragen');
 $links = new ActionsWidget();
-$links->addLink(_('Übersicht'), $controller->url_for('admin/autoinsert'), 'icons/16/blue/edit.png');
+$links->addLink(_('Übersicht'), $controller->url_for('admin/autoinsert'), Icon::create('edit', 'clickable'));
 $sidebar->addWidget($links);
 

@@ -11,15 +11,13 @@
         <tr>
             <th>
                 <a href="<?= URLHelper::getLink('?#anker', array('toggle_group' => $group_id, 'r' => rand())) ?>" class="tree">
-                    <?= Assets::img('icons/16/blue/'. ($open ? 'arr_1down' : 'arr_1right')) ?>
+                    <?= Icon::create($open ? 'arr_1down' : 'arr_1right', 'clickable')->asImg() ?>
                 </a>
             </th>
             <th style="font-weight: bold;">
             <? if ($may_assign): ?>
                 <a href="<?= URLHelper::getLink('?#anker', array('assign' => $group_id)) ?>">
-                    <?= Assets::img('icons/16/yellow/arr_2right', 
-                            array('style' => 'vertical-align:bottom')
-                            + tooltip2(_('In diese Gruppe eintragen'))) ?>
+                    <?= Icon::create('arr_2right', 'sort', ['title' => _('In diese Gruppe eintragen')])->asImg(["style" => 'vertical-align:bottom']) ?>
                 </a>
             <? endif; ?>
                 <a href="<?= URLHelper::getLink('?#anker', array('toggle_group' => $group_id, 'r' => rand())) ?>" class="tree">
@@ -34,15 +32,15 @@
             <th style="text-align: right;">
             <? if ($folder_id): ?>
                 <a href="<?= URLHelper::getLink('folder.php?cmd=tree#anker', array('open' => $folder_id)) ?>">
-                    <?= Assets::img('icons/16/blue/files', tooltip2(_('Dateiordner vorhanden'))) ?>
+                    <?= Icon::create('files', 'clickable', ['title' => _('Dateiordner vorhanden')])->asImg() ?>
                 </a>
             <? endif; ?>
             <? if ($may_mail && $members > 0): ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('emailrequest' => 1, 'group_id' => $group_id, 'default_subject' => $subject)) ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/move_right/mail', tooltip2(_('Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken'))) ?>
+                    <?= Icon::create('mail+move_right', 'clickable', ['title' => _('Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken')])->asImg(16) ?>
                 </a>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('group_id' => $group_id, 'default_subject' => $subject)) ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an alle Gruppenmitglieder verschicken'))) ?>
+                    <?= Icon::create('mail', 'clickable', ['title' => _('Systemnachricht an alle Gruppenmitglieder verschicken')])->asImg() ?>
                 </a>
             <? endif; ?>
             </th>
@@ -68,12 +66,12 @@
             <td style="text-align: right;">
             <? if ($row['user_id'] == $GLOBALS['user']->id && $self_assign): ?>
                 <a href="<?= URLHelper::getLink('', array('delete_id' => $group_id)) ?>">
-                    <?= Assets::img('icons/16/blue/trash', tooltip2(_('Aus dieser Gruppe austragen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Aus dieser Gruppe austragen')])->asImg() ?>
                 </a>
             <? endif; ?>
             <? if (($visio[$row['user_id']] || $rechte) && $row['user_id'] != $GLOBALS['user']->id): ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an Benutzer verschicken'))) ?>
+                    <?= Icon::create('mail', 'clickable', ['title' => _('Systemnachricht an Benutzer verschicken')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>

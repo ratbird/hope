@@ -11,7 +11,7 @@
 <table class="blank" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td class="table_header_bold">
-        <?= Assets::img('icons/16/white/door-enter.png') ?>
+        <?= Icon::create('door-enter', 'info_alt')->asImg() ?>
         <b><?=_("Stud.IP - Login")?></b>
     </td>
 </tr>

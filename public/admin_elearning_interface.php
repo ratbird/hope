@@ -99,17 +99,17 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         {
             if ($msg["error"] != "")
             {
-                echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top', 'title' => _('Fehler'))) . $msg["error"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . $msg["error"] . "</td></tr>";
                 $error_count++;
             }
             else
-                echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/green/accept.png', array('class' => 'text-top', 'title' => _('OK'))) . $msg["info"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Icon::create('accept', 'accept')->asImg(['class' => 'text-top', 'title' => _('OK')]) . $msg["info"] . "</td></tr>";
         }
         echo "<tr><td><br></td></tr>";
         if ($error_count > 0)
         {
             $status_info = "error";
-            echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top', 'title' => _('Fehler'))) . "<b>";
+            echo "<tr><td valign=\"middle\">" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top', 'title' => _('Fehler')]) . "<b>";
             echo _("Beim Laden der Schnittstelle sind Fehler aufgetreten. ");
             if (ELearningUtils::isCMSActive($cms_select))
             {
@@ -119,7 +119,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             echo "</b></td></tr>";
         }
         else
-            echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/green/accept.png', array('class' => 'text-top', 'title' => _('OK'))) . "<b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
+            echo "<tr><td valign=\"middle\">" . Icon::create('accept', 'accept', ['title' =>  _('OK')])->asImg(['class' => 'text-top']) . "<b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
         echo "</table>";
         echo "<br>\n";
         echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
@@ -177,31 +177,31 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "icons/16/black/info.png",
+                            array ( "icon" => Icon::create('info', 'clickable'),
                                     "text"  => _("Hier können Sie angebundene Systeme verwalten.")
                                  )
                             )
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/info.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('info', 'clickable'),
                                         "text"  => _("Nachdem Sie ein angebundenes System ausgewählt haben wird die Verbindung zum System geprüft.")
                                     );
 
         switch($status_info)
         {
             case "active":
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/green/accept.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('accept', 'accept'),
                                         "text"  => sprintf(_("Die Verbindung zum System \"%s\" ist <b>aktiv</b>. Sie können die Einbindung des Systems in Stud.IP jederzeit deaktivieren."), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "not active":
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/exclaim.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('exclaim', 'clickable'),
                                         "text"  => sprintf(_("Die Verbindung zum System \"%s\" steht, das System ist jedoch nicht aktiviert. Sie können die Einbindung des Systems in Stud.IP jederzeit aktivieren. Solange die Verbindung nicht aktiviert wurde, werden die Module des Systems \"%s\" in Stud.IP nicht angezeigt."), $connected_cms[$cms_select]->getName(), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "error":
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/decline.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('decline', 'clickable'),
                                         "text"  => sprintf(_("Bei der Prüfung der Verbindung sind Fehler aufgetreten. Sie müssen zunächst die Einträge in der Konfigurationsdatei korrigieren, bevor das System angebunden werden kann."), $connected_cms[$cms_select]->getName())
                                     );
             break;

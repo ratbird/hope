@@ -322,8 +322,8 @@ class Course_BasicdataController extends AuthenticatedController
 
         $widget = new ActionsWidget();
         $widget->addLink(_('Bild ändern'),
-            $this->url_for('course/avatar/update', $course_id),
-            'icons/16/blue/edit.png');
+                         $this->url_for('course/avatar/update', $course_id),
+                         Icon::create('edit', 'clickable'));
         if ($this->deputies_enabled) {
             if (isDeputy($user->id, $this->course_id)) {
                 $newstatus = 'dozent';
@@ -333,8 +333,8 @@ class Course_BasicdataController extends AuthenticatedController
                 $text = _('Vertretung werden');
             }
             $widget->addLink($text,
-                $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
-                'icons/blue/persons.svg');
+                             $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
+                             Icon::create('persons', 'clickable'));
         }
         $sidebar->addWidget($widget);
         // Entry list for admin upwards.

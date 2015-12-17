@@ -60,7 +60,7 @@ class Admin_LockrulesController extends AuthenticatedController
     {
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neue Sperrebene anlegen'), $this->url_for('admin/lockrules/new'), 'icons/16/blue/add.png');
+        $actions->addLink(_('Neue Sperrebene anlegen'), $this->url_for('admin/lockrules/new'), Icon::create('add', 'clickable'));
         $this->sidebar->addWidget($actions);
         if ($GLOBALS['perm']->have_perm('root')) {
             $list = new SelectWidget(_('Bereichsauswahl'), $this->url_for('admin/lockrules'), 'lock_rule_type');
@@ -99,8 +99,8 @@ class Admin_LockrulesController extends AuthenticatedController
         $info->addElement(new WidgetElement( sprintf(_('Diese Sperrebene wird von %s Objekten benutzt.'), $this->lock_rule->getUsage())));
         $this->sidebar->addWidget($info);
         $actions = new ActionsWidget();
-        $actions->addLink(_('Diese Ebene löschen'), $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid()), 'icons/16/blue/trash.png');
-        $actions->addLink(_('Bearbeiten abbrechen'), $this->url_for('admin/lockrules'), 'icons/16/blue/decline.png');
+        $actions->addLink(_('Diese Ebene löschen'), $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid()), Icon::create('trash', 'clickable'));
+        $actions->addLink(_('Bearbeiten abbrechen'), $this->url_for('admin/lockrules'), Icon::create('decline', 'clickable'));
         $this->sidebar->addWidget($actions);
 
     }
@@ -121,7 +121,7 @@ class Admin_LockrulesController extends AuthenticatedController
            }
         }
         $actions = new ActionsWidget();
-        $actions->addLink(_('Bearbeiten abbrechen'), $this->url_for('admin/lockrules'), 'icons/16/blue/decline.png');
+        $actions->addLink(_('Bearbeiten abbrechen'), $this->url_for('admin/lockrules'), Icon::create('decline', 'clickable'));
         $this->sidebar->addWidget($actions);
     }
 

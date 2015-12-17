@@ -339,14 +339,10 @@ class TreeView {
             $head .= "<a href=\"";
             $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
             $head .= "\">";
-            $head .= Assets::img('icons/16/blue/folder-full.png',
-                                 tooltip2($this->open_ranges[$item_id]
-                                          ? _('Alle Unterelemente schließen')
-                                          : _('Alle Unterelemente öffnen')) + 
-                                 array('class' => 'text-top'));
+            $head .= Icon::create('folder-full', 'clickable', ['title' => $this->open_ranges[$item_id]?_('Alle Unterelemente schließen'):_('Alle Unterelemente öffnen')])->asImg(16, ['class' => 'text-top']);
             $head .= "</a>";
         } else {
-            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
+            $head .= Icon::create('folder-empty', 'clickable', ['title' => _('Dieses Element hat keine Unterelemente')])->asImg();
         }
     return $head . "</td>";
     }

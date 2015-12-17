@@ -344,14 +344,8 @@ function printAnswerFields ( $answers ) {
     if( $pageMode != MODE_RESTRICTED ) {
         if( count($answers) > 1 ) {
         $html .= "<td align=center>";
-        $html .= Assets::input('icons/16/yellow/arr_2up.png', tooltip2(_('Antwort hochschieben')) + array(
-                     'name' => 'move_up[' . $i . ']',
-                     'align' => 'bottom',
-                 ));
-        $html .= Assets::input('icons/16/yellow/arr_2down.png', tooltip2(_('Antwort runterschieben')) + array(
-                     'name' => 'move_down[' . $i . ']',
-                     'align' => 'bottom',
-                 ));
+        $html .= Icon::create('arr_2up', 'sort', ['title' => _('Antwort hochschieben')])->asInput(array('name'=>'move_up['.$i.']','align'=>'bottom',));
+        $html .= Icon::create('arr_2down', 'sort', ['title' => _('Antwort runterschieben')])->asInput(array('name'=>'move_down['.$i.']','align'=>'bottom',));
         $html .= "</td>";
         }
         $html .= "<td align=center><input type=checkbox id=deleteCheckboxes name=\"deleteAnswers[$i]\"></td>";
@@ -370,7 +364,7 @@ function printAnswerFields ( $answers ) {
 
     $html .= "</select>";
 
-    $html .= Button::create(_('Hinzufügen'), 'addAnswersButton' ,array('title' => _('Antwortfelder hinzufügen'))).'</td><td align=right>';
+    $html .= Button::create(_('Hinzufügen'), 'addAnswersButton',array('title' => _('Antwortfelder hinzufügen'))).'</td><td align=right>';
    
     if( count($answers) >= 10 && $auth->auth["jscript"])
         $html .= "(<a href=\"#markAll\" onClick=\"markAllAnswers(document.voteform.deleteCheckboxes);\" title=\""
@@ -446,24 +440,24 @@ function printRightRegion ( ) {
     $action_text3 = _("Wenn Sie zufrieden sind, klicken Sie auf 'speichern'.");
 
     /* -------------------------------------------------------- */
-    $action_array[] = array ( "icon" => "icons/16/black/info.png",
+    $action_array[] = array ( "icon" => Icon::create('info', 'clickable'),
                   "text" => $action_text1 );
 
     if( $type == "test" && $pageMode != MODE_RESTRICTED ) {
         $action_text1_extra =
         _("Deklarieren Sie mindestens eine Antwort als richtig, indem Sie einen Haken in die entsprechende Box setzen.");
-        $action_array[] = array( "icon" => "icons/16/black/checkbox-checked.png",
+        $action_array[] = array( "icon" => Icon::create('checkbox-checked', 'clickable'),
                      "text" => $action_text1_extra );
     }
 
     if( $pageMode != MODE_RESTRICTED )
-    $action_array[] = array ( "icon" => "icons/16/black/visibility-visible.png",
+    $action_array[] = array ( "icon" => Icon::create('visibility-visible', 'clickable'),
                   "text" => $action_text2 );
 
-    $action_array[] = array( "icon" => "icons/16/black/download.png",
+    $action_array[] = array( "icon" => Icon::create('download', 'clickable'),
                  "text" => $action_text3 );
 
-    $info_array[] = array( "icon" => "icons/16/black/info.png",
+    $info_array[] = array( "icon" => Icon::create('info', 'clickable'),
                "text" => $info_text );
 
     $infobox = array( array( "kategorie" => _("Information:" ),
@@ -640,10 +634,7 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $startDate = ($startMode=="immediate") ? time() : $startDate;
 
-    $html .= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Endzeitpunkt neu berechnen')) + array(
-                 'name' => 'updatetimespanbutton',
-                 'class' => 'middle',
-             ));
+    $html .= Icon::create('refresh', 'clickable', ['title' => _('Endzeitpunkt neu berechnen')])->asInput(array('name'=>'updatetimespanbutton','class'=>'middle',));
     $html .= sprintf( _(" (<b>%s</b> um <b>%s</b> Uhr)"),
               strftime( "%d.%m.%Y", $startDate + $timeSpan ),
               strftime( "%H:%M", $startDate + $timeSpan ) );
@@ -900,7 +891,7 @@ function printFormEnd ( ) {
 function image_if_true($option)
 {
     if ($option)
-        return Assets::img('icons/16/grey/decline.png');
+        return Icon::create('decline', 'inactive')->asImg();
     else
         return Assets::img('blank.gif', array('size' => '16@16'));
 }

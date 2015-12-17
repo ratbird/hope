@@ -124,7 +124,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $awidget->setTitle($action);
             $awidget->addLink($infotext, $infolink, $icon, $infolink_options);
             if ($send_from_search_page) {
-                $awidget->addLink(_("zurück zur Suche"), URLHelper::getURL($send_from_search_page), 'icons/16/black/schedule.png');
+                $awidget->addLink(_("zurück zur Suche"), URLHelper::getURL($send_from_search_page), Icon::create('schedule', 'info'));
             }
             $sidebar->addWidget($awidget);
         }
@@ -449,16 +449,13 @@ class Course_StudygroupController extends AuthenticatedController {
             $actions = new ActionsWidget();
             
             $actions->addLink(_('Neue Studiengruppe anlegen'),
-                $this->url_for('course/wizard?studygroup=1'),
-                'icons/16/blue/add/studygroup.png');
+                $this->url_for('course/wizard?studygroup=1'), Icon::create('studygroup+add', 'clickable'));
             if ($GLOBALS['perm']->have_studip_perm('tutor', $id)) {
                 $actions->addLink(_('Bild ändern'),
-                    $this->url_for('course/avatar/update/' . $id),
-                    'icons/16/blue/edit.png');
+                    $this->url_for('course/avatar/update/' . $id), Icon::create('edit', 'clickable'));
             }
             $actions->addLink(_('Diese Studiengruppe löschen'),
-                $this->url_for('course/studygroup/delete/' . $id),
-                'icons/16/blue/trash.png');
+                $this->url_for('course/studygroup/delete/' . $id), Icon::create('trash', 'clickable'));
 
             Sidebar::get()->addWidget($actions);
         }
@@ -769,8 +766,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $actions->addElement($element);
 
             $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),
-                $this->url_for('course/studygroup/message/' . $id),
-                'icons/16/blue/mail.png');
+                $this->url_for('course/studygroup/message/' . $id), Icon::create('mail', 'clickable'));
 
             Sidebar::get()->addWidget($actions);
         }

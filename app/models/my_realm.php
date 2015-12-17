@@ -58,12 +58,11 @@ class MyRealmModel
                 $nav = new Navigation('files');
                 if ($result['neue']) {
                     $nav->setURL(sprintf('folder.php?cmd=all'));
-                    $nav->setImage('icons/20/red/new/files.png',
-                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Dokument(e)'), $result['neue'], _('neue'))));
+                    $nav->setImage(Icon::create('files+new', 'attention', ["title" => sprintf('%s %s, %s %s',$result['count'],_('Dokument(e)'),$result['neue'],_('neue'))]));
                     $nav->setBadgeNumber($result['neue']);
                 } else {
                     $nav->setURL('folder.php?cmd=tree');
-                    $nav->setImage('icons/20/grey/files.png', array('title' => sprintf('%s %s', $result['count'], _('Dokument(e)'))));
+                    $nav->setImage(Icon::create('files', 'inactive', ["title" => sprintf('%s %s',$result['count'],_('Dokument(e)'))]));
                 }
                 return $nav;
             }
@@ -102,12 +101,10 @@ class MyRealmModel
                 }
                 $nav = new Navigation('literature', 'dispatch.php/course/literature');
                 if ((int)$result['neue']) {
-                    $nav->setImage('icons/20/red/new/literature.png',
-                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Literaturliste(n)'), $result['neue'], _('neue'))));
+                    $nav->setImage(Icon::create('literature+new', 'attention', ["title" => sprintf('%s %s, %s %s',$result['count'],_('Literaturliste(n)'),$result['neue'],_('neue'))]));
                     $nav->setBadgeNumber($result['neue']);
                 } elseif ((int)$result['count']) {
-                    $nav->setImage('icons/20/grey/literature.png',
-                        array('title' => sprintf('%s %s', $result['count'], _('Literaturliste(n)'))));
+                    $nav->setImage(Icon::create('literature', 'inactive', ["title" => sprintf('%s %s',$result['count'],_('Literaturliste(n)'))]));
                 }
                 return $nav;
             }
@@ -148,11 +145,10 @@ class MyRealmModel
             $nav = new Navigation('news', '');
             if ($result['neue']) {
                 $nav->setURL('?new_news=true');
-                $nav->setImage('icons/20/red/new/news.png',
-                    array('title' => sprintf('%s %s, %s %s', $result['count'], _('Ankündigung(en)'), $result['neue'], _('neue'))));
+                $nav->setImage(Icon::create('news+new', 'attention', ["title" => sprintf('%s %s, %s %s',$result['count'],_('Ankündigung(en)'),$result['neue'],_('neue'))]));
                 $nav->setBadgeNumber($result['neue']);
             } elseif ($result['count']) {
-                $nav->setImage('icons/20/grey/news.png', array('title' => sprintf('%s %s', $result['count'], _('Ankündigung(en)'))));
+                $nav->setImage(Icon::create('news', 'inactive', ["title" => sprintf('%s %s',$result['count'],_('Ankündigung(en)'))]));
             }
             return $nav;
         }
@@ -290,11 +286,10 @@ class MyRealmModel
             if ($neue || (int)$count > 0) {
                 $nav = new Navigation('schedule', 'dispatch.php/course/dates');
                 if ($neue) {
-                    $nav->setImage('icons/20/red/new/schedule.png',
-                        array('title' => sprintf('%s %s, %s %s', $count, _('Termin(e)'), $neue, _('neue'))));
+                    $nav->setImage(Icon::create('schedule+new', 'attention', ["title" => sprintf('%s %s, %s %s',$count,_('Termin(e)'),$neue,_('neue'))]));
                     $nav->setBadgeNumber($neue);
                 } elseif ($count) {
-                    $nav->setImage('icons/20/grey/schedule.png', array('title' => sprintf('%s %s', $count, _('Termin(e)'))));
+                    $nav->setImage(Icon::create('schedule', 'inactive', ["title" => sprintf('%s %s',$count,_('Termin(e)'))]));
                 }
                 return $nav;
             }
@@ -339,12 +334,11 @@ class MyRealmModel
                 $nav = new Navigation('wiki');
                 if ((int)$result['neue']) {
                     $nav->setURL('wiki.php?view=listnew');
-                    $nav->setImage('icons/20/red/new/wiki.png',
-                        array('title' => sprintf('%s %s, %s %s', $result['count_d'], _('WikiSeite(n)'), $result['neue'], _('Änderungen'))));
+                    $nav->setImage(Icon::create('wiki+new', 'attention', ["title" => sprintf('%s %s, %s %s',$result['count_d'],_('WikiSeite(n)'),$result['neue'],_('Änderungen'))]));
                     $nav->setBadgeNumber($result['neue']);
                 } elseif ((int)$result['count']) {
                     $nav->setURL('wiki.php');
-                    $nav->setImage('icons/20/grey/wiki.png', array('title' => sprintf('%s %s', $result['count_d'], _('WikiSeite(n)'))));
+                    $nav->setImage(Icon::create('wiki', 'inactive', ["title" => sprintf('%s %s',$result['count_d'],_('WikiSeite(n)'))]));
                 }
                 return $nav;
             }
@@ -384,10 +378,9 @@ class MyRealmModel
                 }
                 $nav = new Navigation('elearning', 'dispatch.php/course/elearning/show');
                 if ((int)$result['neue']) {
-                    $nav->setImage('icons/20/red/new/learnmodule.png',
-                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Lernmodul(e)'), $result['neue'], _('neue'))));
+                    $nav->setImage(Icon::create('learnmodule+new', 'attention', ["title" => sprintf('%s %s, %s %s',$result['count'],_('Lernmodul(e)'),$result['neue'],_('neue'))]));
                 } elseif ((int)$result['count']) {
-                    $nav->setImage('icons/20/grey/learnmodule.png', array('title' => sprintf('%s %s', $result['count'], _('Lernmodul(e)'))));
+                    $nav->setImage(Icon::create('learnmodule', 'inactive', ["title" => sprintf('%s %s',$result['count'],_('Lernmodul(e)'))]));
                 }
                 return $nav;
             }
@@ -470,11 +463,10 @@ class MyRealmModel
         if ($neue || $count > 0) {
             $nav = new Navigation('vote', '#vote');
             if ($neue) {
-                $nav->setImage('icons/20/red/new/vote.png',
-                    array('title' => sprintf('%s %s, %s %s', $count, _('Umfrage(n)'), $neue, _('neue'))));
+                $nav->setImage(Icon::create('vote+new', 'attention', ["title" => sprintf('%s %s, %s %s',$count,_('Umfrage(n)'),$neue,_('neue'))]));
                 $nav->setBadgeNumber($neue);
             } else if ($count) {
-                $nav->setImage('icons/20/grey/vote.png', array('title' => sprintf('%s %s', $count, _('Umfrag(en)'))));
+                $nav->setImage(Icon::create('vote', 'inactive', ["title" => sprintf('%s %s',$count,_('Umfrag(en)'))]));
             }
             return $nav;
         }
@@ -834,13 +826,13 @@ class MyRealmModel
                 }
 
                 if ($neue) {
-                    $nav->setImage('icons/20/red/new/persons.png', array('title' => sprintf('%s %s, %s %s', $count, _('Teilnehmende'), $neue, _('neue'))));
+                    $nav->setImage(Icon::create('persons+new', 'attention', ["title" => sprintf('%s %s, %s %s',$count,_('Teilnehmende'),$neue,_('neue'))]));
                     $nav->setBadgeNumber($neue);
                 } else if ($count) {
-                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf('%s %s', $count, _('Teilnehmende'))));
+                    $nav->setImage(Icon::create('persons', 'inactive', ["title" => sprintf('%s %s',$count,_('Teilnehmende'))]));
                 }
             } else {
-                $nav->setImage('icons/20/grey/persons.png', array('title' => _('Teilnehmende')));
+                $nav->setImage(Icon::create('persons', 'inactive', ["title" => _('Teilnehmende')]));
             }
             return $nav;
         }

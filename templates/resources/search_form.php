@@ -1,10 +1,7 @@
 <? if ($search_string): ?>
 
     <input type="hidden" name="search_string_<?= $name ?>" value="<?= htmlReady($search_string) ?>">
-    <?= Assets::input('icons/blue/arr_2down', tooltip2(_('diesen Eintrag übernehmen')) + array(
-            'name' => 'send_' . $name,
-            'value' => _('übernehmen'),
-    )) ?>
+    <?= Icon::create('arr_2down', 'clickable', ['title' => _('diesen Eintrag übernehmen')])->asInput(array('name'=>'send_'.$name,'value'=>_('übernehmen'),)) ?>
 
     <select align="absmiddle" name="submit_<?= $name ?>">
     <? if ($allow_all): ?>
@@ -22,20 +19,12 @@
     <? endforeach; ?>
     </select>
 
-    <?= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Suche zurücksetzen')) + array(
-            'align' => 'absmiddle',
-            'name' => 'reset_' . $name,
-            'value' => _('neue Suche'),
-    )) ?>
+    <?= Icon::create('refresh', 'clickable', ['title' => _('Suche zurücksetzen')])->asInput(array('align'=>'absmiddle','name'=>'reset_'.$name,'value'=>_('neue Suche'),)) ?>
 
 <? else: ?>
 
     <input type="text" align="absmiddle" size="30" maxlength="255"
            name="search_string_<?= $name ?>">
-    <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Starten Sie hier Ihre Suche')) + array(
-            'align' => 'absmiddle',
-            'name' => 'do_' . $name,
-            'value' => _('suchen'),
-    )) ?>
+    <?= Icon::create('search', 'clickable', ['title' => _('Starten Sie hier Ihre Suche')])->asInput(array('align'=>'absmiddle','name'=>'do_'.$name,'value'=>_('suchen'),)) ?>
 
 <? endif; ?>

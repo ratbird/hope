@@ -1,6 +1,9 @@
 <ul class="<?= implode(' ', $css_classes) ?>">
 <? foreach ($elements as $index => $element): ?>
-    <li<?= $element->icon ? ' style="' . Icon::create($element->icon)->render(Icon::CSS_BACKGROUND) .'"' : "" ?><?= $element->active ? ' class="active"' : '' ?> id="<?= htmlReady($index) ?>">
+    <? $icon = is_string($element->icon) ? Icon::create2($element->icon) : $element->icon; ?>
+    <li id="<?= htmlReady($index) ?>"
+        <?= $icon ? 'style="' . $icon->asCSS() .'"' : '' ?>
+        <?= $element->active ? 'class="active"' : '' ?>>
         <?= $element->render() ?>
     </li>
 <? endforeach; ?>

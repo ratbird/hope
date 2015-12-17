@@ -30,7 +30,7 @@ class CalendarNavigation extends Navigation
             $planerinfo = _('Termine');
         }
 
-        $this->setImage('icons/lightblue/schedule.svg', array('title' => $planerinfo));
+        $this->setImage(Icon::create('schedule', 'navigation', ["title" => $planerinfo]));
     }
 
     /**

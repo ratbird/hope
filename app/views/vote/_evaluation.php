@@ -14,25 +14,25 @@
             <?= strftime("%d.%m.%Y", $evaluation->mkdate) ?>
             <? if ($admin): ?>
                 <a title="<?= _("Evaluation bearbeiten") ?>" href="<?= URLHelper::getLink('admin_evaluation.php', array('openID' => $evaluation->id, 'rangeID' => $range_id)) ?>">
-                    <?= Assets::img('icons/16/blue/admin.png') ?>
+                    <?= Icon::create('admin', 'clickable')->asImg() ?>
                 </a>
                 <? if (!$evaluation->enddate || $evaluation->enddate > time()): ?>
                     <a title="<?= _("Evaluation stoppen") ?>" href="<?= URLHelper::getLink('admin_evaluation.php', array('evalID' => $evaluation->id, 'evalAction' => 'stop')) ?>">
-                        <?= Assets::img('icons/16/blue/pause.png') ?>
+                        <?= Icon::create('pause', 'clickable')->asImg() ?>
                     </a>
                 <? else: ?>
                     <a title="<?= _("Evaluation fortsetzen") ?>" href="<?= URLHelper::getLink('admin_evaluation.php', array('evalID' => $evaluation->id, 'evalAction' => 'continue')) ?>">
-                        <?= Assets::img('icons/16/blue/play.png') ?>
+                        <?= Icon::create('play', 'clickable')->asImg() ?>
                     </a>
                 <? endif; ?>
                 <a title="<?= _("Evaluation löschen") ?>" href="<?= URLHelper::getLink('admin_evaluation.php', array('evalID' => $evaluation->id, 'evalAction' => 'delete_request')) ?>">
-                    <?= Assets::img('icons/16/blue/trash.png') ?>
+                    <?= Icon::create('trash', 'clickable')->asImg() ?>
                 </a>
                 <a title="<?= _("Evaluation exportieren") ?>" href="<?= URLHelper::getLink('admin_evaluation.php', array('evalID' => $evaluation->id, 'evalAction' => 'export_request')) ?>">
-                    <?= Assets::img('icons/16/blue/export.png') ?>
+                    <?= Icon::create('export', 'clickable')->asImg() ?>
                 </a>
                 <a title="<?= _("Evaluation auswerten") ?>" href="<?= URLHelper::getLink('eval_summary.php', array('eval_id' => $evaluation->id)) ?>">
-                    <?= Assets::img('icons/16/blue/vote.png') ?>
+                    <?= Icon::create('vote', 'clickable')->asImg() ?>
                 </a>
             <? endif; ?>
         </nav>

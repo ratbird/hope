@@ -109,7 +109,7 @@ if (Request::isXHR()) {
     header('X-Title:' . _("Stud.IP Online-Evaluation"));
 } else {
     // TODO: This should use Assets::img() but on the other hand it should also use templates
-    $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
+    $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Icon::create('test', 'info_alt')->asImagePath() );
     $form->cont( $titlebar );
 }
 /* Surrounding Table ------------------------------------------------------- */

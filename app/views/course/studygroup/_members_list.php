@@ -38,7 +38,7 @@
             <? if (!$moderator_list) : ?>
                 <td class="actions">
                     <a href="<?=$controller->url_for('messages/write', array('rec_uname' => $m['username']))?>" data-dialog="size=50%">
-                        <?= Assets::img('icons/blue/mail', tooltip2(_('Nachricht schreiben')))?>
+                        <?= Icon::create('mail', 'clickable', ['title' => _('Nachricht schreiben')])->asImg()?>
                     </a>
                     <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent')
                            || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)

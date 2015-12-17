@@ -10,10 +10,10 @@
                             &nbsp;
                         <? else : ?>
                             <a href="<?= $controller->url_for($href, array('imt' => mktime(12, 0, 0, date('n', $imt), 1, date('Y', $imt) - 1))) ?>">
-                               <?= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("ein Jahr zurück"))) ?>
+                               <?= Icon::create('arr_2left', 'clickable', ['title' => _("ein Jahr zurück")])->asImg() ?>
                             </a>
                             <a href="<?= $controller->url_for($href, array('imt' => mktime(12, 0, 0, date('n', $imt) - 1, 1, date('Y', $imt)))) ?>">
-                                <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) ?>
+                                <?= Icon::create('arr_1left', 'clickable', ['title' => _("einen Monat zurück")])->asImg() ?>
                             </a>
                         <? endif; ?>
                         </div>
@@ -25,10 +25,10 @@
                             &nbsp;
                         <? else : ?>
                             <a href="<?= $controller->url_for($href, array('imt' => mktime(12, 0, 0, date('n', $imt) + 1, 1, date('Y', $imt)))) ?>">
-                                <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) ?>
+                                <?= Icon::create('arr_1right', 'clickable', ['title' => _("einen Monat vor")])->asImg() ?>
                             </a>
                             <a href="<?= $controller->url_for($href, array('imt' => mktime(12, 0, 0, date('n', $imt), 1, date('Y', $imt) + 1))) ?>">
-                                <?= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("ein Jahr vor"))) ?>
+                                <?= Icon::create('arr_2right', 'clickable', ['title' => _("ein Jahr vor")])->asImg() ?>
                             </a>
                         <? endif; ?>
                         </div>

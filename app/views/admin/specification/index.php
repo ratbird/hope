@@ -38,10 +38,10 @@
         </td>
         <td class="actions">
             <a href="<?=$controller->url_for('admin/specification/edit/'.$rule['lock_id']) ?>">
-                <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Regel bearbeiten'))) ?>
+                <?= Icon::create('edit', 'clickable', ['title' => _('Regel bearbeiten')])->asImg() ?>
             </a>
             <a href="<?=$controller->url_for('admin/specification/delete/'.$rule['lock_id'])?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Regel löschen'))) ?>
+                <?= Icon::create('trash', 'clickable', ['title' => _('Regel löschen')])->asImg() ?>
             </a>
         </td>
     </tr>
@@ -55,7 +55,7 @@ $sidebar = Sidebar::Get();
 $sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Zusatzangaben'));
 $actions = new ActionsWidget();
-$actions->addLink(_('Neue Regel anlegen'), $controller->url_for('admin/specification/edit'), 'icons/16/blue/add.png');
+$actions->addLink(_('Neue Regel anlegen'), $controller->url_for('admin/specification/edit'), Icon::create('add', 'clickable'));
 $sidebar->addWidget($actions);
 
 ?>

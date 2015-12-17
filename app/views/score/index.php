@@ -41,7 +41,7 @@
                     <?= htmlReady($person['fullname']) ?>
                 </a>
             <? foreach ($person['is_king'] as $type => $text): ?>
-                <?= Assets::img('icons/16/yellow/crown.png', array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
+                <?= Icon::create('crown', 'sort', ['title' => $text])->asImg(16, ["alt" => $text, "class" => 'text-top']) ?>
             <? endforeach ?>
             </td>
             <td>
@@ -53,7 +53,7 @@
                 $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $news), $news);
                 $content .= sprintf('<a href="%s">%s</a> ',
                                     URLHelper::getLink('dispatch.php/profile', compact('username')),
-                                    Assets::img('icons/16/blue/news.png', tooltip2($tmp)));
+                                    Icon::create('news', 'clickable', ['title' => $tmp])->asImg());
             } else {
                 $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
             }
@@ -63,7 +63,7 @@
                 $tmp = sprintf(ngettext('Eine Umfrage', '%s Umfragen', $vote), $vote);
                 $content .= sprintf('<a href="%s">%s</a> ',
                                     URLHelper::getLink('dispatch.php/profile', compact('username')),
-                                    Assets::img('icons/16/blue/vote.png', tooltip2($tmp)));
+                                    Icon::create('vote', 'clickable', ['title' => $tmp])->asImg());
             } else {
                 $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
             }
@@ -73,7 +73,7 @@
                 $tmp = sprintf(ngettext('Ein Termin', '%s Termine', $termin), $termin);
                 $content .= sprintf('<a href="%s">%s</a> ',
                                     URLHelper::getLink('dispatch.php/profile#a', compact('username')),
-                                    Assets::img('icons/16/blue/schedule.png', tooltip2($tmp)));
+                                    Icon::create('schedule', 'clickable', ['title' => $tmp])->asImg());
             } else {
                 $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
             }
@@ -83,7 +83,7 @@
                 $tmp = sprintf(ngettext('Eine Literaturangabe', '%s Literaturangaben', $lit), $lit);
                 $content .= sprintf('<a href="%s">%s</a> ',
                                     URLHelper::getLink('dispatch.php/profile', compact('username')),
-                                    Assets::img('icons/16/blue/literature.png', tooltip2($tmp)));
+                                    Icon::create('literature', 'clickable', ['title' => $tmp])->asImg());
             } else {
                 $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
             }
@@ -96,9 +96,7 @@
             <td style="text-align: right">
             <? if($person['user_id'] == $GLOBALS['user']->id): ?>
                 <a href="<?= $controller->url_for('score/unpublish') ?>">
-                    <?= Assets::img('icons/16/blue/trash.png',
-                                    array('title' => _('Ihren Wert von der Liste löschen'),
-                                          'class' => 'text-top')) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Ihren Wert von der Liste löschen')])->asImg(16, ["class" => 'text-top']) ?>
                 </a>
             <? endif; ?>
             </td>

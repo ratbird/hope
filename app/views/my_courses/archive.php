@@ -43,28 +43,28 @@ if ($message) parse_msg($message);
                     <td align="center">
                         <? if ($row['forumdump']): ?>
                             <a href="<?= URLHelper::getLink('archiv.php?forum_dump_id=' . $row['seminar_id']) ?>" target="_blank">
-                                <?= Assets::img('icons/20/blue/forum', tooltip2(_('Beiträge des Forums der Veranstaltung'))) ?>
+                                <?= Icon::create('forum', 'clickable', ['title' => _('Beiträge des Forums der Veranstaltung')])->asImg(20) ?>
                             </a>
                         <? else: ?>
-                            <?= Assets::img('icons/20/grey/forum', array('style' => 'visibility: hidden;')) ?>
+                            <?= Icon::create('forum', 'inactive')->asImg(20, ["style" => 'visibility: hidden;']) ?>
                         <? endif; ?>
 
                         <? if ($row['archiv_file_id']):
                             $filename = _('Dateisammlung') . '-' . substr($row['name'], 0, 200) . '.zip';
                             ?>
                             <a href="<?= URLHelper::getLink(GetDownloadLink($row['archiv_file_id'], $filename, 1)) ?>">
-                                <?= Assets::img('icons/20/blue/download', tooltip2(_('Dateisammlung der Veranstaltung herunterladen'))) ?>
+                                <?= Icon::create('download', 'clickable', ['title' => _('Dateisammlung der Veranstaltung herunterladen')])->asImg(20) ?>
                             </a>
                         <? else: ?>
-                            <?= Assets::img('icons/20/grey/download', array('style' => 'visibility: hidden;')) ?>
+                            <?= Icon::create('download', 'inactive')->asImg(20, ["style" => 'visibility: hidden;']) ?>
                         <? endif; ?>
 
                         <? if ($row['wikidump']): ?>
                             <a href="<?= URLHelper::getLink('archiv.php?wiki_dump_id=' . $row['seminar_id']) ?>" target="_blank">
-                                <?= Assets::img('icons/20/blue/wiki', tooltip2(_('Beiträge des Wikis der Veranstaltung'))) ?>
+                                <?= Icon::create('wiki', 'clickable', ['title' => _('Beiträge des Wikis der Veranstaltung')])->asImg(20) ?>
                             </a>
                         <? else: ?>
-                            <?= Assets::img('icons/20/grey/wiki', array('style' => 'visibility: hidden;')) ?>
+                            <?= Icon::create('wiki', 'inactive')->asImg(20, ["style" => 'visibility: hidden;']) ?>
                         <? endif; ?>
                     </td>
                     <td style="text-align: center"><?= $row['status'] ?></td>
@@ -81,7 +81,7 @@ $sidebar->setTitle(_('Meine archivierten Veranstaltungen'));
 
 $links = new LinksWidget();
 $links->setTitle(_('Aktionen'));
-$links->addLink(_('Suche im Archiv'),URLHelper::getLink('archiv.php'),'icons/16/black/search.png');
+$links->addLink(_('Suche im Archiv'),URLHelper::getLink('archiv.php'), Icon::create('search', 'info'));
 
 $sidebar->addWidget($links, 'actions');
 ?>

@@ -151,24 +151,24 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
         $export->addLink(
             _("Diese Daten exportieren"),
             URLHelper::getLink("export.php", array('range_id' => $SessSemName[1], 'o_mode' => 'choose', 'ex_type' => "veranstaltung", 'xslt_filename' => $SessSemName[0], 'ex_sem' => $show_semester)),
-            "icons/16/black/download.png"
+            Icon::create('download', 'info')
         );
         $export->addLink(
             _("Download als Excel Tabelle"),
             URLHelper::getLink('?send_excel=1&group_by=' . (int)$group_by),
-            'icons/16/black/file-xls.png'
+            Icon::create('file-xls', 'info')
         );
     }
     if ($level == "sbb") {
         $export->addLink(
             _("Diese Daten exportieren"),
             URLHelper::getLink("export.php", array('range_id' => $id, 'o_mode' => 'choose', 'ex_type' => "veranstaltung", 'xslt_filename' => $id, 'ex_sem' => $show_semester)),
-            "icons/16/black/download.png"
+            Icon::create('download', 'info')
         );
         $export->addLink(
             _("Download als Excel Tabelle"),
             URLHelper::getLink('?send_excel=1&group_by=' . (int)$group_by),
-            'icons/16/black/file-xls.png'
+            Icon::create('file-xls', 'info')
         );
     }
     $sidebar->addWidget($export);

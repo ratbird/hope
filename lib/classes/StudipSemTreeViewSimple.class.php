@@ -74,7 +74,7 @@ class StudipSemTreeViewSimple {
         echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
             echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
-            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zurück'))). "</a>";
+            Icon::create('arr_2left', 'clickable')->asImg(['class' => 'text-top', 'title' =>_('eine Ebene zurück')]). "</a>";
         } else {
             echo "&nbsp;";
         }
@@ -128,9 +128,7 @@ class StudipSemTreeViewSimple {
             $nav = $this->studienmodulmanagement->getModuleInfoNavigation($item_id, SemesterData::GetSemesterIdByIndex($this->tree->sem_number[0]));
             if ($nav->isVisible(true)) {
                 $ret = '<a class="module-info" href="' . URLHelper::getLink($nav->getURL()) . '">';
-                $ret .= '<img ';
-                foreach ($nav->getImage() as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
-                $ret .= '>';
+                $ret .= $nav->getImage()->asImg($nav->getLinkAttributes());
                 $ret .= '<span>' .htmlready($nav->getTitle()) . '</span>';
                 $ret .= '</a>';
             }
@@ -151,10 +149,10 @@ class StudipSemTreeViewSimple {
             if ($this->tree->hasKids($item_id) && $num_all_entries){
                 if ($this->show_entries != "sublevels"){
                     if ($num_all_entries <= 100) echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen"), false) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id={$this->start_item_id}_withkids")) ."\">";
-                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo Icon::create('arr_1right', 'clickable')->asImg();
                     echo '&nbsp;';
                 } else {
-                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo Icon::create('arr_1down', 'clickable')->asImg();
                     echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Einträge in allen Unterebenen vorhanden"), $num_all_entries);
@@ -166,10 +164,10 @@ class StudipSemTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen"), false) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id=$item_id")) ."\">";
-                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo Icon::create('arr_1right', 'clickable')->asImg();
                     echo '&nbsp;';
                 } else {
-                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo Icon::create('arr_1down', 'clickable')->asImg();
                     echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Einträge auf dieser Ebene.&nbsp;"),$num_entries);

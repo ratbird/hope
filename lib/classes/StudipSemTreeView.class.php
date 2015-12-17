@@ -126,13 +126,9 @@ class StudipSemTreeView extends TreeView {
         $head .= (!$this->open_items[$item_id]) ? Assets::img('forumleer.gif', array('size' => '5')) : "";
         $head .= "</a>";
         if ($this->tree->hasKids($item_id)){
-            $head .= Assets::img('icons/16/blue/folder-full.png',
-                                 tooltip2($this->open_ranges[$item_id]
-                                          ? _('Alle Unterelemente schliessen')
-                                          : _('Alle Unterelemente öffnen')) +
-                                 array('class' => 'text-top'));
+            $head .= Icon::create('folder-full', 'clickable', ['title' => $this->open_ranges[$item_id]?_('Alle Unterelemente schliessen'):_('Alle Unterelemente öffnen')])->asImg(16, ['class' => 'text-top']);
         } else {
-            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
+            $head .= Icon::create('folder-empty', 'clickable', ['title' => _('Dieses Element hat keine Unterelemente')])->asImg();
         }
     return $head;
     }

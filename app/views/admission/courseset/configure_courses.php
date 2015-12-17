@@ -39,14 +39,14 @@
     <?=_("Anzahl aller Teilnehmenden:")?> <?=$count_distinct_members?>
     <?  if ($count_distinct_members) : ?>
         <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_all_members')?>" title="<?= _("Download")?>">
-        <?= Assets::img('icons/16/blue/file-office.png')?></a>
+        <?= Icon::create('file-office', 'clickable')->asImg()?></a>
     <? endif ?>
 </div>
 <div>
     <?=_("Mehrfachteilnahmen:")?> <?=$count_multi_members?>
     <?  if ($count_multi_members) : ?>
         <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_multi_members')?>" title="<?= _("Download")?>">
-        <?= Assets::img('icons/16/blue/file-office.png')?></a>
+        <?= Icon::create('file-office', 'clickable')->asImg()?></a>
     <? endif ?>
 </div>
 <div data-dialog-button>

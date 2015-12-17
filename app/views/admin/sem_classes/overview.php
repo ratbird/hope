@@ -30,7 +30,7 @@
             <td><?= date("j.n.Y G:i", $sem_class['chdate']) ?> <?= _("Uhr") ?></td>
             <td class="actions">
                 <a href="<?= URLHelper::getLink("dispatch.php/admin/sem_classes/details", array('id' => $id)) ?>" title="<?= _("Editieren dieser Veranstaltungskategorie") ?>">
-                <?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?>
+                <?= Icon::create('edit', 'clickable')->asImg(['class' => "text-bottom"]) ?>
                 </a>
             </td>
         </tr>
@@ -85,6 +85,6 @@ $sidebar = Sidebar::Get();
 $sidebar->setTitle(PageLayout::getTitle());
 $sidebar->setImage('sidebar/plugin-sidebar.png');
 $links = new ActionsWidget();
-$links->addLink(_('Neue Kategorie anlegen'), '#', 'icons/16/blue/add.png', array('onClick' => 'STUDIP.sem_classes.add(); return false;'));
+$links->addLink(_('Neue Kategorie anlegen'), '#', Icon::create('add', 'clickable'), array('onClick' => 'STUDIP.sem_classes.add(); return false;'));
 $sidebar->addWidget($links);
 

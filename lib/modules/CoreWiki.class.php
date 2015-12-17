@@ -14,7 +14,7 @@ class CoreWiki implements StudipModule {
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('WIKI_ENABLE')) {
             $navigation = new Navigation(_('Wiki'), "seminar_main.php?auswahl=".$course_id."&redirect_to=wiki.php");
-            $navigation->setImage('icons/16/grey/wiki.png');
+            $navigation->setImage(Icon::create('wiki', 'inactive'));
             return $navigation;
         } else {
             return null;
@@ -24,8 +24,8 @@ class CoreWiki implements StudipModule {
     function getTabNavigation($course_id) {
         if (get_config('WIKI_ENABLE')) {
             $navigation = new Navigation(_('Wiki'));
-            $navigation->setImage('icons/16/white/wiki.png');
-            $navigation->setActiveImage('icons/16/black/wiki.png');
+            $navigation->setImage(Icon::create('wiki', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('wiki', 'info'));
 
             $navigation->addSubNavigation('show', new Navigation(_('WikiWikiWeb'), 'wiki.php?view=show'));
             $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));

@@ -41,7 +41,7 @@ class IndexController extends ForumController
     function index_action($topic_id = null, $page = null)
     {
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/index');
 
         // check, if the root entry is present
@@ -170,7 +170,7 @@ class IndexController extends ForumController
     function newest_action($page = null)
     {
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/newest');
         
         // set page to which we shall jump
@@ -208,7 +208,7 @@ class IndexController extends ForumController
     function latest_action($page = null)
     {
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/latest');
         
         // set page to which we shall jump
@@ -246,7 +246,7 @@ class IndexController extends ForumController
     function favorites_action($page = null)
     {
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/favorites');
 
         // set page to which we shall jump
@@ -286,7 +286,7 @@ class IndexController extends ForumController
         ForumPerm::check('search', $this->getId());
         
         $nav = Navigation::getItem('course/forum2');
-        $nav->setImage('icons/16/black/forum.png');
+        $nav->setImage(Icon::create('forum', 'info'));
         Navigation::activateItem('course/forum2/index');
 
         // set page to which we shall jump

@@ -2,36 +2,36 @@
     <?= _('Bedienung:') ?>
     <ul>
         <li>
-            <?= Assets::img('icons/16/blue/mail') ?>
+            <?= Icon::create('mail', 'clickable')->asImg() ?>
             <?= _('Nachricht an Kontakt') ?>
         </li>
     <? if ($open): ?>
         <li>
-            <?= Assets::img('icons/16/blue/arr_1up') ?>
+            <?= Icon::create('arr_1up', 'clickable')->asImg() ?>
             <?= _('Kontakt zuklappen') ?>
         </li>
         <li>
-            <?= Assets::img('icons/16/blue/person') ?>
+            <?= Icon::create('person', 'clickable')->asImg() ?>
             <?= _('Buddystatus') ?>
         </li>
         <li>
-            <?= Assets::img('icons/16/blue/edit') ?>
+            <?= Icon::create('edit', 'clickable')->asImg() ?>
             <?= _('Eigene Rubriken') ?>
         </li>
         <li>
-            <?= Assets::img('icons/16/blue/trash') ?>
+            <?= Icon::create('trash', 'clickable')->asImg() ?>
             <?= _('Kontakt löschen') ?>
         </li>
     <? else: ?>
         <li>
-            <?= Assets::img('icons/16/blue/arr_1down') ?>
+            <?= Icon::create('arr_1down', 'clickable')->asImg() ?>
             <?= _('Kontakt aufklappen') ?>
         </li>
     <? endif; ?>
 
     <? if ($open || $contact['view'] == 'gruppen'): ?>
         <li>
-            <?= Assets::img('icons/16/blue/export/vcard') ?>
+            <?= Icon::create('vcard+export', 'clickable')->asImg() ?>
             <?= _('als vCard exportieren') ?>
         </li>
     <? endif; ?>

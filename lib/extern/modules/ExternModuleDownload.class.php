@@ -176,25 +176,25 @@ class ExternModuleDownload extends ExternModule {
                 switch ($file_suffix[1]) {
                     case "txt" :
                         if (!$picture_file = $this->config->getValue("Main", "icontxt"))
-                            $icon = "icons/16/blue/file-text.png";
+                            $icon = Icon::create("file-text", "clickable");
                         break;
                     case "xls" :
                         if (!$picture_file = $this->config->getValue("Main", "iconxls"))
-                            $icon = "icons/16/blue/file-archive.png";
+                            $icon = Icon::create("file-archive", "clickable");
                         break;
                     case "ppt" :
                         if (!$picture_file = $this->config->getValue("Main", "iconppt"))
-                            $icon = "icons/16/blue/file-presentation.png";
+                            $icon = Icon::create("file-presentation", "clickable");
                         break;
                     case "rtf" :
                         if (!$picture_file = $this->config->getValue("Main", "iconrtf"))
-                            $icon = "icons/16/blue/file-text.png";
+                            $icon = Icon::create("file-text", "clickable");
                         break;
                     case "zip" :
                     case "tgz" :
                     case "gz" :
                         if (!$picture_file = $this->config->getValue("Main", "iconzip"))
-                            $icon = "icons/16/blue/file-archive.png";
+                            $icon = Icon::create("file-archive", "clickable");
                         break;
                     case "jpg" :
                     case "png" :
@@ -202,15 +202,15 @@ class ExternModuleDownload extends ExternModule {
                     case "jpeg" :
                     case "tif" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpic"))
-                            $icon = "icons/16/blue/file-pic.png";
+                            $icon = Icon::create("file-pic", "clickable");
                         break;
                     case "pdf" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpdf"))
-                            $icon = "icons/16/blue/file-pdf.png";
+                            $icon = Icon::create("file-pdf", "clickable");
                         break;
                     default :
                         if (!$picture_file = $this->config->getValue("Main", "icondefault"))
-                            $icon = "icons/16/blue/file-generic.png";
+                            $icon = Icon::create("file-generic", "clickable");
                 }
 
                 if ($icon) {
@@ -223,7 +223,9 @@ class ExternModuleDownload extends ExternModule {
                 $table_row_data["content"] = array(
                     "icon"        => sprintf("<a href=\"%s\">%s</a>",
                                              $download_link,
-                                             Assets::img($picture_file)),
+                                             is_string($picture_file)
+                                             ? Assets::img($picture_file)
+                                             : $picture_file->asImg()),
                                                                              
                     "filename"    => $this->elements["Link"]->toString(array("content" =>
                                                         htmlReady($row['filename']), "link" => $download_link)),
@@ -302,25 +304,25 @@ class ExternModuleDownload extends ExternModule {
             switch ($file_suffix[1]) {
                 case "txt" :
                     if (!$picture_file = $this->config->getValue("Main", "icontxt"))
-                        $icon = "icons/16/blue/file-text.png";
+                        $icon = Icon::create("file-text", "clickable");
                     break;
                 case "xls" :
                     if (!$picture_file = $this->config->getValue("Main", "iconxls"))
-                        $icon = "icons/16/blue/file-xls.png";
+                        $icon = Icon::create("file-xls", "clickable");
                     break;
                 case "ppt" :
                     if (!$picture_file = $this->config->getValue("Main", "iconppt"))
-                        $icon = "icons/16/blue/file-presentation.png";
+                        $icon = Icon::create("file-presentation", "clickable");
                     break;
                 case "rtf" :
                     if (!$picture_file = $this->config->getValue("Main", "iconrtf"))
-                        $icon = "icons/16/blue/file-text.png";
+                        $icon = Icon::create("file-text", "clickable");
                     break;
                 case "zip" :
                 case "tgz" :
                 case "gz" :
                     if (!$picture_file = $this->config->getValue("Main", "iconzip"))
-                        $icon = "icons/16/blue/file-archive.png";
+                        $icon = Icon::create("file-archive", "clickable");
                     break;
                 case "jpg" :
                 case "png" :
@@ -328,15 +330,15 @@ class ExternModuleDownload extends ExternModule {
                 case "jpeg" :
                 case "tif" :
                     if (!$picture_file = $this->config->getValue("Main", "iconpic"))
-                        $icon = "icons/16/blue/file-image.png";
+                        $icon = Icon::create("file-image", "clickable");
                     break;
                 case "pdf" :
                     if (!$picture_file = $this->config->getValue("Main", "iconpdf"))
-                        $icon = "icons/16/blue/file-pdf.png";
+                        $icon = Icon::create("file-pdf", "clickable");
                     break;
                 default :
                     if (!$picture_file = $this->config->getValue("Main", "icondefault"))
-                        $icon = "icons/16/blue/file-generic.png";
+                        $icon = Icon::create("file-generic", "clickable");
             }
 
             if ($icon)
@@ -344,8 +346,12 @@ class ExternModuleDownload extends ExternModule {
 
             // Aufbereiten der Daten
             $table_row_data["content"] = array(
-                "icon"        => $this->elements["Link"]->toString(array("content" =>
-                                                    Assets::img($picture_file), "link" => "")),
+                "icon"        => $this->elements["Link"]->toString(
+                    [
+                        "content" => is_string($picture_file)
+                                     ? Assets::img($picture_file)
+                                     : $picture_file->asImg(),
+                        "link"    => ""]),
 
                 "filename"    => $this->elements["Link"]->toString(array("content" =>
                                                     htmlReady($db["filename"]), "link" => "")),

@@ -676,7 +676,7 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
         if ($addon!="") {
             if (substr($addon,0,5)=="open:") { // es wird der öffnen-Pfeil mit Link ausgegeben
                 $print .= "</td><td valign=\"middle\" class=\"table_row_even\" nowrap><a href=\"".substr($addon,5)."\">";
-                $print .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_('Bewertungsbereich öffnen')));
+                $print .= Icon::create('arr_1left', 'clickable', ['title' => _('Bewertungsbereich öffnen')])->asImg();
                 $print .= "</a>&nbsp;";
             } else {              // es wird erweiterter Inhalt ausgegeben
                 $print .= "</td><td class=\"content_body_panel\" nowrap>";
@@ -910,27 +910,27 @@ function display_exception(Exception $exception, $as_html = false, $deep = false
 function get_icon_for_mimetype($mime_type)
 {
     if (strpos($mime_type, 'image/') === 0) {
-        return 'file-pic.png';
+        return 'file-pic';
     }
     if (strpos($mime_type, 'audio/') === 0) {
-        return 'file-audio.png';
+        return 'file-audio';
     }
     if (strpos($mime_type, 'video/') === 0) {
-        return 'file-video.png';
+        return 'file-video';
     }
     if ($mime_type === 'application/pdf') {
-        return 'file-pdf.png';
+        return 'file-pdf';
     }
     if ($mime_type === 'application/vnd.ms-powerpoint') {
-        return 'file-presentation.png';
+        return 'file-presentation';
     }
 
     $parts = explode('/', $mime_type);
     if (reset($parts) === 'application' && in_array(end($parts), words('vnd.ms-excel msexcel x-msexcel x-ms-excel x-excel x-dos_ms_excel xls x-xls'))) {
-        return 'file-xls.png';
+        return 'file-xls';
     }
     if (reset($parts) === 'application' && in_array(end($parts), words('7z arj rar zip'))) {
-        return 'file-archive.png';
+        return 'file-archive';
     }
-    return 'file.png';
+    return 'file';
 }

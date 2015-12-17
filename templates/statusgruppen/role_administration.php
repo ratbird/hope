@@ -64,8 +64,8 @@
                             &nbsp;
                         </td>
                         <td class="content_seperator" width="1%" nowrap>
-                            <?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
-                            <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='. $role_id ) ?>"><?= Assets::img('icons/16/blue/arr_eol-down.png') ?></a>
+                            <?= ($role->getSelfassign()) ? Icon::create('info-circle', 'inactive', ['title' => _("Personen können sich dieser Gruppe selbst zuordnen")])->asImg() : '' ?>
+                            <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='. $role_id ) ?>"><?= Icon::create('arr_eol-down', 'clickable')->asImg() ?></a>
                         </td>
                     </tr>
                     <!-- Persons assigned to this role -->
@@ -79,15 +79,13 @@
                         </td>
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap>
-                            <?= Assets::input('icons/16/yellow/arr_eol-right.png', array(
-                                    'name' => 'do_person_sort[' . $person['username'] . ']'
-                            )) ?>
+                            <?= Icon::create('arr_eol-right', 'sort')->asInput(["name" => 'do_person_sort['.$person['username'].']']) ?>
                         </td>
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 6px;">
                             <? if ($pos < sizeof($persons)) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_down&role_id='. $role_id .'&username='. $person['username']) ?>">
-                                <?= Assets::img('icons/16/yellow/arr_2down.png') ?>
+                                <?= Icon::create('arr_2down', 'sort')->asImg() ?>
                             </a>
                             <? endif; ?>
                         </td>
@@ -95,7 +93,7 @@
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 4px;">
                             <? if ($pos > 1) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_up&role_id='. $role_id .'&username='. $person['username']) ?>">
-                                <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
+                                <?= Icon::create('arr_2up', 'sort')->asImg() ?>
                             </a>
                             <? endif; ?>
                         </td>
@@ -116,7 +114,7 @@
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" colspan="2" align="right">
                             <a href="<?= URLHelper::getLink('?role_id='. $role_id .'&cmd=removePerson&username='. $person['username']) ?>">
-                            <?= Assets::img('icons/16/blue/trash.png') ?>
+                            <?= Icon::create('trash', 'clickable')->asImg() ?>
                             </a>
                         </td>
                     </tr>

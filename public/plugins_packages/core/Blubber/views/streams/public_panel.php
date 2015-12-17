@@ -22,7 +22,7 @@
     <? endforeach ?>
     <? if (!$i_shared) : ?>
     <li class="want_to_share" data-thread_id="<?= htmlReady($thread->getId()) ?>">
-        <?= Assets::img("icons/24/blue/add", array('title' => _("Weitersagen"))) ?>
+        <?= Icon::create('add', 'clickable', ['title' => _("Weitersagen")])->asImg(24) ?>
     </li>
     <? endif ?>
 </ul>

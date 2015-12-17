@@ -93,7 +93,7 @@
             <td>
             <? if (in_array($val->type, words('selectbox selectboxmultiple radio combo'))): ?>
                 <a data-dialog="size=auto" href="<?= $controller->url_for('admin/datafields/config/'. $val->id) ?>">
-                    <?= Assets::img('icons/16/blue/edit.png', array('class'=> 'text-top', 'title' => 'Einträge bearbeiten')) ?>
+                    <?= Icon::create('edit', 'clickable')->asImg(['class'=> 'text-top', 'title' => 'Einträge bearbeiten']) ?>
                 </a>
             <? endif; ?>
                  <span><?= htmlReady($val->type) ?></span>
@@ -146,10 +146,10 @@
             <td><?= count($val) ?></td>
             <td class="actions">
                 <a href="<?=$controller->url_for('admin/datafields/edit/' . $val->id)?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Datenfeld ändern')) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => 'Datenfeld ändern'])->asImg() ?>
                 </a>
                 <a href="<?=$controller->url_for('admin/datafields/delete/' . $val->id)?>">
-                    <?= Assets::img('icons/16/blue/trash.png', array('title' => 'Datenfeld löschen')) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => 'Datenfeld löschen'])->asImg() ?>
                 </a>
             </td>
         </tr>

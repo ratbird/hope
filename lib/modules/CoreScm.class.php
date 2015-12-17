@@ -14,7 +14,7 @@ class CoreScm implements StudipModule {
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('SCM_ENABLE')) {
             $navigation = new Navigation(_('Ablaufplan'), URLHelper::getURL("seminar_main.php", array('auswahl' => $course_id, 'redirect_to' => "dispatch.php/course/dates")));
-            $navigation->setImage('icons/16/grey/schedule.png');
+            $navigation->setImage(Icon::create('schedule', 'inactive'));
             return $navigation;
         } else {
             return null;
@@ -27,8 +27,8 @@ class CoreScm implements StudipModule {
             $scms = SimpleORMapCollection::createFromArray($temp);
 
             $navigation = new Navigation($scms->first()->tab_name ?: _('Informationen'));
-            $navigation->setImage('icons/16/white/infopage.png');
-            $navigation->setActiveImage('icons/16/black/infopage.png');
+            $navigation->setImage(Icon::create('infopage', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('infopage', 'info'));
 
             foreach ($scms as $scm) {
                 $scm_link = 'dispatch.php/course/scm/' . $scm->id;

@@ -23,7 +23,7 @@ class LinksWidget extends ListWidget
      *
      * @param String $label  Label/content of the link
      * @param String $url    URL/Location of the link
-     * @param String $icon   Icon for the link, defaults to blank.gif
+     * @param Icon   $icon   instance of class Icon for the link
      * @param bool   $active Pass true if the link is currently active,
      *                       defaults to false
      */

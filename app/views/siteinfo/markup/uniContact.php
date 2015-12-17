@@ -2,6 +2,6 @@
 # Lifter010: TODO
 ?>
 <a href="mailto:<?= $contact ?>">
-    <?= Assets::img('icons/16/blue/link-extern.png') ?>
+    <?= Icon::create('link-extern', 'clickable')->asImg() ?>
     <?= $contact ?>
 </a>

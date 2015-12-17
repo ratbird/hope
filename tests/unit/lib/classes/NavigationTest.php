@@ -12,6 +12,7 @@
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/Assets.class.php';
+require_once 'lib/classes/Icon.class.php';
 require_once 'lib/classes/NotificationCenter.class.php';
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';
@@ -48,25 +49,28 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $navigation = new Navigation('test', 'foo.php');
         $this->assertNull($navigation->getImage());
 
-        $navigation->setImage('foo.png', array('alt' => 'foo'));
-        $assets_img = Assets::url('images/foo.png');
+        $icon = Icon::create('foo', 'clickable');
+        $link_attrs = ['alt' => 'foo'];
+
+        $navigation->setImage($icon, $link_attrs);
+
         $this->assertTrue($navigation->isVisible(true));
-        $this->assertEquals(array('src' => $assets_img, 'alt' => 'foo'),
-                            $navigation->getImage());
+        $this->assertEquals($icon, $navigation->getImage());
+        $this->assertEquals($link_attrs, $navigation->getLinkAttributes());
     }
 
     public function testActiveImage ()
     {
+        $foo = Icon::create('foo', 'clickable');
+        $bar = Icon::create('bar', 'clickable');
+
         $navigation = new Navigation('test', 'foo.php');
-        $navigation->setImage('foo.png');
-        $navigation->setActiveImage('bar.png');
+        $navigation->setImage($foo);
+        $navigation->setActiveImage($bar);
 
-        $this->assertEquals(array('src' => Assets::url('images/foo.png')),
-                            $navigation->getImage());
-
+        $this->assertEquals($foo, $navigation->getImage());
         $navigation->setActive(true);
-        $this->assertEquals(array('src' => Assets::url('images/bar.png')),
-                            $navigation->getImage());
+        $this->assertEquals($bar, $navigation->getImage());
     }
 
     public function testURL ()

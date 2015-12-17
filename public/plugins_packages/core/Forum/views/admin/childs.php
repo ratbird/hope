@@ -3,7 +3,7 @@
     <li data-id="<?= $area['topic_id'] ?>">
         <? if ($area['content_raw']) : ?>
         <a class="tooltip2">
-            <?= Assets::img('icons/16/grey/info-circle.png', array('class' => 'text-top')) ?>
+            <?= Icon::create('info-circle', 'inactive')->asImg(['class' => 'text-top']) ?>
             <span><?= nl2br(htmlReady($area['content_raw'])) ?></span>
         </a>
         <? endif ?>
@@ -15,16 +15,16 @@
         <? endif ?>
 
         <a href="javascript:STUDIP.Forum.cut('<?= $area['topic_id'] ?>');" data-role="cut">
-        <?= Assets::img('icons/16/blue/export.png') ?>
+        <?= Icon::create('export', 'clickable')->asImg() ?>
         </a>
 
 
         <a href="javascript:STUDIP.Forum.cancelCut('<?= $area['topic_id'] ?>');" data-role="cancel_cut" style="display: none">
-        <?= Assets::img('icons/16/red/export.png') ?>
+        <?= Icon::create('export', 'attention')->asImg() ?>
         </a>
 
         <a href="javascript:STUDIP.Forum.paste('<?= $area['topic_id'] ?>');" data-role="paste" style="display: none">
-        <?= Assets::img('icons/16/yellow/arr_2left.png') ?>
+        <?= Icon::create('arr_2left', 'sort')->asImg() ?>
         </a>
     </li>
 </ul>

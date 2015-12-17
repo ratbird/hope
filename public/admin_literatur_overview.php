@@ -351,11 +351,11 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
         echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><th align=\"left\">";
         if (is_array($_SESSION['_open']) && count($_SESSION['_open'])){
             echo "\n<a href=\"".URLHelper::getLink('?cmd=close_all')."\" class=\"tree\">";
-            echo Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-top'));
+            echo Icon::create('arr_1down', 'clickable')->asImg(['class' => 'text-top']);
             echo " " . _("Alle Einträge zuklappen") . "</a>";
         } else {
             echo "\n<a href=\"".URLHelper::getLink('?cmd=open_all')."\" class=\"tree\">";
-            echo Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top'));
+            echo Icon::create('arr_1right', 'clickable')->asImg(['class' => 'text-top']);
             echo " " . _("Alle Einträge aufklappen") . "</a>";
         }
         echo "</tr></table>";
@@ -364,10 +364,10 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             if ($element->getValue('catalog_id')){
                 if ($_SESSION['_anker_id'] == $element->getValue('catalog_id')){
                     $icon = "<a name=\"anker\">";
-                    $icon .= Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
+                    $icon .= Icon::create('literature', 'inactive')->asImg(['class' => 'text-top']);
                     $icon .= "</a>";
                 } else {
-                    $icon = Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
+                    $icon = Icon::create('literature', 'inactive')->asImg(['class' => 'text-top']);
                 }
                 $ampel = "";
                 if ($_SESSION['_check_plugin'] && isset($_SESSION['_lit_data'][$cid]['check_accession'][$_SESSION['_check_plugin']])){
@@ -509,8 +509,7 @@ Navigation::activateItem('/tools/literature/overview');
 $sidebar = Sidebar::Get();
 $links = new ActionsWidget();
 $links->addLink(_("Druckansicht"),
-    URLHelper::getScriptLink("lit_overview_print_view.php"),
-    'icons/16/blue/print.png',
+    URLHelper::getScriptLink("lit_overview_print_view.php"), Icon::create('print', 'clickable'),
     array('class' => 'print_action', 'target' => '_blank'));
 $sidebar->addWidget($links);
 $layout = $GLOBALS['template_factory']->open('layouts/base');

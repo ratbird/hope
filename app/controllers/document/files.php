@@ -276,7 +276,7 @@ class Document_FilesController extends DocumentController
             return;
         }
 
-        $this->setDialogLayout('icons/100/lightblue/' . get_icon_for_mimetype($entry->file->mime_type));
+        $this->setDialogLayout('icons/100/lightblue/' . get_icon_for_mimetype($entry->file->mime_type) . '.png');
 
         $this->entry = $entry;
     }
@@ -544,8 +544,7 @@ class Document_FilesController extends DocumentController
             $widget = new ActionsWidget();
         
             $widget->addLink(_('Datei hochladen'),
-                             $this->url_for('document/files/upload/' . $current_entry . '/' . $page),
-                             'icons/16/blue/upload.png',
+                             $this->url_for('document/files/upload/' . $current_entry . '/' . $page), Icon::create('upload', 'clickable'),
                              $this->userConfig['forbidden']
                                  ? array('disabled' => '',
                                          'title' => _('Ihre Upload-Funktion wurde gesperrt.'))
@@ -553,8 +552,7 @@ class Document_FilesController extends DocumentController
                    ->asDialog('size=auto');
         
             $widget->addLink(_('Neuen Ordner erstellen'),
-                             $this->url_for('document/folder/create/' . $current_entry),
-                             'icons/16/blue/add/folder-empty.png')
+                             $this->url_for('document/folder/create/' . $current_entry), Icon::create('folder-empty+add', 'clickable'))
                    ->asDialog('size=auto');
         
             $attributes = $root_count > 0
@@ -565,8 +563,7 @@ class Document_FilesController extends DocumentController
                           );
         
             $widget->addLink(_('Dateibereich leeren'),
-                             $this->url_for('document/folder/delete/all'),
-                             'icons/16/blue/trash.png',
+                             $this->url_for('document/folder/delete/all'), Icon::create('trash', 'clickable'),
                              $attributes);
         
             $sidebar->addWidget($widget);
@@ -597,8 +594,7 @@ class Document_FilesController extends DocumentController
                             'title'    => _('Dieser Ordner enthält keine Dateien'),
                           );
             $widget->addLink(_('Inhalt dieses Ordners herunterladen'),
-                             $this->url_for('document/download/' . $current_dir),
-                             'icons/16/blue/file-archive.png',
+                             $this->url_for('document/download/' . $current_dir), Icon::create('file-archive', 'clickable'),
                              $attributes);
 
             $attributes = $root_count > 0
@@ -608,8 +604,7 @@ class Document_FilesController extends DocumentController
                             'title'    => _('Ihr Dateibereich enthält keine Dateien'),
                           );
             $widget->addLink(_('Alle Dateien herunterladen'),
-                             $this->url_for('document/download/' . $this->context_id),
-                             'icons/16/blue/download.png',
+                             $this->url_for('document/download/' . $this->context_id), Icon::create('download', 'clickable'),
                              $attributes);
 
             $sidebar->addWidget($widget);

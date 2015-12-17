@@ -494,12 +494,12 @@ if ($_SESSION['archiv_data']["perform_search"]) {
             // schon aufgeklappt?
             if ($_SESSION['archiv_data']["open"]==$result['seminar_id']) {
                 echo "<a name=\"anker\"></a><a href=\"". URLHelper::getLink("?close=yes") ."\">";
-                echo Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('Zuklappen')) + array('valign' => 'top'));
+                echo Icon::create('arr_1down', 'clickable', ['title' => _('Zuklappen')])->asImg(['valign' => 'top']);
                 echo "</a></td>";
                 echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><b><a href=\"". URLHelper::getLink("?close=yes") ."\">".htmlReady($result['name'])."</a></b></font></td>";
             } else {
                 echo "<a href=\"". URLHelper::getLink("?open=" . $result['seminar_id']) . "#anker\">";
-                echo Assets::img('icons/16/blue/arr_1right.png', tooltip2(_('Aufklappen')) + array('valign' => 'top'));
+                echo Icon::create('arr_1right', 'clickable', ['title' => _('Aufklappen')])->asImg(['valign' => 'top']);
                 echo "</a></td>";
                 echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><a href=\"". URLHelper::getLink("?open=" . $result['seminar_id']) . "#anker\">".htmlReady($result['name'])."</a></font></td>";
             }
@@ -510,19 +510,19 @@ if ($_SESSION['archiv_data']["perform_search"]) {
             if (archiv_check_perm($result['seminar_id']))
                 $view = 1;
             if ($view == 1) {
-                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', 'title' =>_('Komplettansicht'))) . "</a></td>";
+                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank>" .  Icon::create('info', 'clickable')->asImg(['class' => 'text-top', 'title' =>_('Komplettansicht')]) . "</a></td>";
                 echo "<td class=\"$class\" width=\"3%\" style=\"white-space: nowrap\">&nbsp;";
                 if (!$result['archiv_file_id']=='') {
-                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
+                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'"> ' .  Icon::create('download', 'clickable')->asImg(['class' => 'text-top', 'title' =>_('Dateisammlung')]) . '</a>';
                 }
                 if ($result['archiv_protected_file_id'] && in_array(archiv_check_perm($result['seminar_id']), words("tutor dozent admin"))) {
-                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_protected_file_id'], _("Geschützte-") . $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Geschützte Dateisammlung'))) . '</a>';
+                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_protected_file_id'], _("Geschützte-") . $file_name, 1)) .'"> ' .  Icon::create('download', 'clickable')->asImg(['class' => 'text-top', 'title' =>_('Geschützte Dateisammlung')]) . '</a>';
                 }
 
                 echo "</td><td class=\"$class\" width=\"3%\">&nbsp;";
                 if (archiv_check_perm($result['seminar_id']) == "admin") {
                     echo '<a href="' . URLHelper::getLink('?delete_id=' . $result['seminar_id']) . '">';
-                    echo Assets::img('icons/16/blue/trash.png', tooltip2(_('Diese Veranstaltung aus dem Archiv entfernen')));
+                    echo Icon::create('trash', 'clickable', ['title' => _('Diese Veranstaltung aus dem Archiv entfernen')])->asImg();
                     echo '</a>';
                 }
                 echo "</td>";
@@ -580,7 +580,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                         echo "<font size=\"-1\">".htmlReady($row['fullname']). " (" . _("Status:") . " ". $row['status']. ")</font>";
                         if ($row['status'] != "dozent") {
                             echo "<a href=\"". URLHelper::getLink("?delete_user=".$row['user_id']."&d_sem_id=".$result['seminar_id']) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> ";
-                            echo Assets::img('icons/16/blue/trash.png', tooltip2(_('Dieser Person die Zugriffsberechtigung entziehen')));
+                            echo Icon::create('trash', 'clickable', ['title' => _('Dieser Person die Zugriffsberechtigung entziehen')])->asImg();
                             echo '</a>';
                         }
                         echo "<br>";

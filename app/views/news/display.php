@@ -3,24 +3,24 @@
 <section class="contentbox">
     <header>
         <h1>
-            <?= Assets::img('icons/16/black/news.png') ?>
+            <?= Icon::create('news', 'info')->asImg() ?>
 
             <?= _('Ankündigungen') ?>
         </h1>
         <nav>
         <? if ($perm): ?>
             <a href="<?= $controller->link_for('news/edit_news/new/' . $range); ?>" rel="get_dialog">
-                <?= Assets::img('icons/16/blue/add.png'); ?>
+                <?= Icon::create('add', 'clickable')->asImg(); ?>
             </a>
         <? endif; ?>
         <? if ($perm && get_config('NEWS_RSS_EXPORT_ENABLE')): ?>
             <a data-dialog="size=auto;reload-on-close" title="<?=_('RSS-Feed konfigurieren') ?>" href="<?= $controller->link_for('news/rss_config/' . $range); ?>">
-                <?= Assets::img('icons/16/blue/add/rss.png') ?>
+                <?= Icon::create('rss+add')->asImg() ?>
             </a>
         <? endif; ?>
         <? if ($rss_id): ?>
             <a href="<?= URLHelper::getLink('rss.php', array('id' => $rss_id)) ?>">
-                <?= Assets::img('icons/16/blue/rss.png', tooltip2(_('RSS-Feed'))) ?>
+                <?= Icon::create('rss', 'clickable', ['title' => _('RSS-Feed')])->asImg() ?>
             </a>
         <? endif; ?>
         </nav>
@@ -32,7 +32,7 @@
         <header>
             <h1>
                 <a href="<?= ContentBoxHelper::href($new->id, array('contentbox_type' => 'news')) ?>">
-                    <?= Assets::img('icons/16/blue/news.png'); ?>
+                    <?= Icon::create('news', 'clickable')->asImg(); ?>
                     <?= htmlReady($new['topic']); ?>
                 </a>
             </h1>

@@ -216,10 +216,10 @@ ul.widget-list {
         padding-left: 20px;
 
         &.options-checked {
-            .retina-background-icon('blue/checkbox-checked.png');
+            .background-icon('checkbox-checked', 'clickable');
         }
         &.options-unchecked {
-            .retina-background-icon('blue/checkbox-unchecked.png');
+            .background-icon('checkbox-unchecked', 'clickable');
         }
     }
 
@@ -230,10 +230,10 @@ ul.widget-list {
         padding-left: 20px;
 
         &.options-checked {
-            .retina-background-icon('blue/radiobutton-checked.png');
+            .background-icon('radiobutton-checked', 'clickable');
         }
         &.options-unchecked {
-            .retina-background-icon('blue/radiobutton-unchecked.png');
+            .background-icon('radiobutton-unchecked', 'clickable');
         }
     }
 }
@@ -253,7 +253,7 @@ select.sidebar-selectlist {
     input[type=submit] {
         .hide-text();
         .size(20px, 29px);
-        .retina-background-icon('white/search.png');
+        .background-icon('search', 'info_alt');
         float: left;
         background-position: center 3px;
         background-repeat: no-repeat;
@@ -285,10 +285,10 @@ select.sidebar-selectlist {
 // Links inside the sidebar
 .sidebar {
     a.link-intern {
-        .icon-before('blue/link-intern.png', 16, 2px);
+        .icon('before', 'link-intern', 'clickable', 16, 2px);
     }
     a.link-extern {
-        .icon-before('blue/link-extern.png', 16, 2px);
+        .icon('before', 'link-extern', 'clickable', 16, 2px);
     }
 }
 

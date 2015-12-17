@@ -12,6 +12,6 @@
     <? endforeach ?>
     </select>
     <noscript>
-        <?= Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'title' => _('auswählen'))) ?>
+        <?= Icon::create('accept', 'accept', ['title' => _('auswählen')])->asInput(["type" => "image", "class" => "middle"]) ?>
     </noscript>
 </form>

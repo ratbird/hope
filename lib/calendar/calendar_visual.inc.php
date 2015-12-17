@@ -27,11 +27,11 @@ function create_year_view(&$calendar)
     $out = "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
     $out .= "<tr><td align=\"center\" width=\"10%\">\n";
     $out .= '<a href="' . URLHelper::getLink('', array('', 'cmd' => 'showyear', 'atime' => $year->getStart() - 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("zurück"))). "&nbsp;</a></td>\n";
+    $out .= Icon::create('arr_1left', 'clickable', ['title' => _("zurück")])->asImg(). "&nbsp;</a></td>\n";
     $out .= "<td class=\"calhead\" align=\"center\" width=\"80%\">\n";
     $out .= "<font size=\"+2\"><b>" . $year->getYear() . "</b></font></td>\n";
     $out .= '<td align="center" width="10%"><a href="' . URLHelper::getLink('', array('', 'cmd' => 'showyear', 'atime' => $year->getEnd() + 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("vor"))) . '&nbsp;</a></td>';
+    $out .= Icon::create('arr_1right', 'clickable', ['title' => _("vor")])->asImg() . '&nbsp;</a></td>';
     $out .= "</tr>\n";
     $out .= "<tr><td colspan=\"3\" class=\"blank\">";
     $out .= '<table class="steelgroup0" width="100%" border="0" ';
@@ -119,7 +119,7 @@ function create_year_view(&$calendar)
 
                 if ($event_count_txt != '') {
                     $out .= "</td><td$day_class align=\"right\">";
-                    $out .= Assets::img("icons/16/blue/date.png", array('alt' => $event_count_txt, 'title' => $event_count_txt));
+                    $out .= Icon::create('date', 'clickable', ['title' => $event_count_txt])->asImg(16, ["alt" => $event_count_txt]);
                     $out .= "</td></tr></table>\n";
                 }
                 $out .= '</td>';
@@ -253,13 +253,13 @@ function info_icons(&$event)
     }
 
     if ($event->getType() == 'PUBLIC') {
-        $out .= Assets::img("icons/16/blue/visibility-visible.png", array('alt' => $event->toStringAccessibility(), 'title' => $event->toStringAccessibility(), 'border' => "0"));
+        $out .= Icon::create('visibility-visible', 'clickable', ['title' => $event->toStringAccessibility()])->asImg(16, ["alt" => $event->toStringAccessibility(), "border" => "0"]);
     } else if ($event->getType() == 'CONFIDENTIAL') {
-        $out .= Assets::img("icons/16/blue/visibility-invisible.png", array('alt' => $event->toStringAccessibility(), 'title' => $event->toStringAccessibility(), 'border' => "0"));
+        $out .= Icon::create('visibility-invisible', 'clickable', ['title' => $event->toStringAccessibility()])->asImg(16, ["alt" => $event->toStringAccessibility(), "border" => "0"]);
     }
 
     if ($event->getRepeat('rtype') != 'SINGLE') {
-        $out .= Assets::img("icons/16/blue/refresh.png", array('alt' => $event->toStringRecurrence(), 'title' => $event->toStringRecurrence(), 'border' => "0"));
+        $out .= Icon::create('refresh', 'clickable', ['title' => $event->toStringRecurrence()])->asImg(16, ["alt" => $event->toStringRecurrence(), "border" => "0"]);
     }
 
     if ($out != '') {

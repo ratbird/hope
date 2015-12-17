@@ -113,7 +113,7 @@ form.default {
     //Special inputs
 
     label.file-upload {
-        .retina-background-icon('blue/upload.svg');
+        .background-icon('upload', 'clickable');
 
         background-repeat: no-repeat;
         background-position: top left;
@@ -171,7 +171,7 @@ form.default {
     .js &.collapsable fieldset, fieldset.collapsable {
         legend {
             .box-sizing(border-box);
-            .retina-background-icon('blue/arr_1down.svg', 20);
+            .background-icon('arr_1down', 'clickable', 20);
             background-position: 6px center;
             background-repeat: no-repeat;
             cursor: pointer;
@@ -180,7 +180,7 @@ form.default {
 
         &.collapsed {
             legend {
-                .retina-background-icon('blue/arr_1right.svg', 20);
+                .background-icon('arr_1right', 'clickable', 20);
                 margin-bottom: 0;
             }
             padding-bottom: 0;
@@ -223,10 +223,10 @@ form.default {
     opacity: 0;
     position: absolute;
     + label {
-        .icon-before('blue/checkbox-unchecked.png', 16, 5px);
+        .icon('before', 'checkbox-unchecked', 'clickable', 16, 5px);
         cursor: pointer;
     }
     &:checked + label {
-        .icon-before('blue/checkbox-checked.png', 16, 5px);
+        .icon('before', 'checkbox-checked', 'clickable', 16, 5px);
     }
 }

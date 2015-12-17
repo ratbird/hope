@@ -95,7 +95,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         $sidebar->addWidget($views);
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neuen Cronjob registrieren'),$this->url_for('admin/cronjobs/schedules/edit'), 'icons/16/blue/add');
+        $actions->addLink(_('Neuen Cronjob registrieren'),$this->url_for('admin/cronjobs/schedules/edit'), Icon::create('add', 'clickable'));
         $sidebar->addWidget($actions);
     }
 
@@ -202,7 +202,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         $sidebar->setTitle(_('Cronjobs'));
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Zurück zur Übersicht'),$this->url_for('admin/cronjobs/schedules/index/' . $page),'icons/16/blue/link-intern');
+        $actions->addLink(_('Zurück zur Übersicht'),$this->url_for('admin/cronjobs/schedules/index/' . $page), Icon::create('link-intern', 'clickable'));
 
         $sidebar->addWidget($actions);
 

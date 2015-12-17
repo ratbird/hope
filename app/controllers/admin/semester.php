@@ -250,7 +250,7 @@ class Admin_SemesterController extends AuthenticatedController
         $links = new ActionsWidget();
         $links->addLink(_('Neues Semester anlegen'),
                         $this->url_for('admin/semester/edit', array('filter' => null)),
-                        'icons/16/blue/add.png')
+                        Icon::create('add', 'clickable'))
               ->asDialog('size=auto');
         $sidebar->addWidget($links);
     }

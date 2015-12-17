@@ -1,11 +1,6 @@
-<?= Assets::img('icons/16/yellow/arr_2down.png', array(
-    'alt' => _('Einrichtung hinzufügen'),
-    'title' => _('Einrichtung hinzufügen'),
-    'onclick' => "STUDIP.Admission.updateInstitutes($('input[name=&quot;institute_id&quot;]').val(), '".
-        $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
-        $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
+<?= Icon::create('arr_2down', 'sort', ['title' => _('Einrichtung hinzufügen')])->asImg(16, ["alt" => _('Einrichtung hinzufügen'), "onclick" => "STUDIP.Admission.updateInstitutes($('input[name=&quot;institute_id&quot;]').val(), '".$controller->url_for('admission/courseset/institutes',$courseset?$courseset->getId():'')."', '".$controller->url_for('admission/courseset/instcourses',$courseset?$courseset->getId():'')."', 'add')"]) ?>
 <?= $instSearch ?>
-<?= Assets::img('icons/16/blue/search.png', array('title' => _("Suche starten")))?>
+<?= Icon::create('search', 'clickable', ['title' => _("Suche starten")])->asImg()?>
 
 <ul>
     <?php foreach ($selectedInstitutes as $institute => $data) { ?>
@@ -14,14 +9,7 @@
         <span class="hover_box">
             <?= htmlReady($data['Name']) ?>
             <span class="action_icons">
-                <?= Assets::img('icons/16/blue/trash.png', array(
-                            'alt' => _('Einrichtung entfernen'),
-                            'title' => _('Einrichtung entfernen'),
-                            'onclick'=> "STUDIP.Admission.updateInstitutes('".$institute."', '".
-                                $controller->url_for('admission/courseset/institutes', $institute)."', '".
-                                $controller->url_for('admission/courseset/instcourses', $institute)."', 'delete')"
-                        )
-                    ); ?>
+                <?= Icon::create('trash', 'clickable', ['title' => _('Einrichtung entfernen')])->asImg(16, ["alt" => _('Einrichtung entfernen'), "onclick" => "STUDIP.Admission.updateInstitutes('".$institute."', '".$controller->url_for('admission/courseset/institutes',$institute)."', '".$controller->url_for('admission/courseset/instcourses',$institute)."', 'delete')"]); ?>
             </span>
         </span>
     </li>

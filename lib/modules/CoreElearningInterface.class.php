@@ -14,7 +14,7 @@ class CoreElearningInterface implements StudipModule {
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $navigation = new Navigation(_('Lernmodule'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/elearning/show");
-            $navigation->setImage('icons/16/grey/wiki.png');
+            $navigation->setImage(Icon::create('wiki', 'inactive'));
 
             return $navigation;
         } else {
@@ -25,8 +25,8 @@ class CoreElearningInterface implements StudipModule {
     function getTabNavigation($course_id) {
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $navigation = new Navigation(_('Lernmodule'));
-            $navigation->setImage('icons/16/white/learnmodule.png');
-            $navigation->setActiveImage('icons/16/black/learnmodule.png');
+            $navigation->setImage(Icon::create('learnmodule', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('learnmodule', 'info'));
 
             if (ObjectConnections::isConnected($course_id)) {
                 $elearning_nav = new Navigation(_('Lernmodule dieser Veranstaltung'), 'dispatch.php/course/elearning/show?seminar_id=' . $course_id);

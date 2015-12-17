@@ -728,11 +728,11 @@ function listPages($mode, $sortby = NULL) {
         $widget = new ExportWidget();
         $widget->addLink(_('PDF-Ausgabe aller Wiki-Seiten'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=exportall_pdf&version=' . $version . '&sortby=' . $sortby),
-                         'icons/16/blue/file-pdf.png',
+                         Icon::create('file-pdf', 'clickable'),
                          array('target' => '_blank'));
         $widget->addLink(_('Druckansicht aller Wiki-Seiten'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=wikiprintall&version=' . $version),
-                         'icons/16/blue/print.png',
+                         Icon::create('print', 'clickable'),
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     }
@@ -1254,8 +1254,8 @@ function getShowPageInfobox($keyword, $latest_version)
         $extra = sprintf('<a href="%s">%s</a>',
                          URLHelper::getLink('?keyword=toc&view=edit'),
                          $toccont_empty
-                             ? Assets::img('icons/16/blue/add.png', tooltip2(_('erstellen')))
-                             : Assets::img('icons/16/blue/edit.png', tooltip2(_('bearbeiten'))));
+                             ? Icon::create('add', 'clickable', ['title' => _('erstellen')])->asImg()
+                             : Icon::create('edit', 'clickable', ['title' => _('bearbeiten')])->asImg());
         $widget->setExtra($extra);
     }
 
@@ -1278,7 +1278,7 @@ function getShowPageInfobox($keyword, $latest_version)
     $widget = new ViewsWidget();
     $widget->addLink(_('Standard'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=show'),
-                     'icons/16/blue/wiki.png')
+                     Icon::create('wiki', 'clickable'))
            ->setActive(true);
     if (count($versions) >= 1) {
         $widget->addLink(_('Textänderungen anzeigen'),
@@ -1331,11 +1331,11 @@ function getShowPageInfobox($keyword, $latest_version)
     $widget = new ExportWidget();
     $widget->addLink(_('Druckansicht'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=wikiprint'),
-                     'icons/16/blue/print.png',
+                     Icon::create('print', 'clickable'),
                      array('target' => '_blank'));
     $widget->addLink(_('PDF-Ausgabe'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=export_pdf'),
-                     'icons/16/blue/file-pdf.png',
+                     Icon::create('file-pdf', 'clickable'),
                      array('target' => '_blank'));
     $sidebar->addWidget($widget);
 
@@ -1472,7 +1472,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
 
     if ($perm->have_studip_perm("autor", $SessSemName[1])) {
         if (!$latest_version) {
-            $edit  = Assets::img('icons/16/black/lock-locked.png');
+            $edit  = Icon::create('lock-locked', 'info')->asImg();
             $edit .= _("Ältere Version, nicht bearbeitbar!");
         } else {
             $edit="";
@@ -1696,7 +1696,7 @@ function showComboDiff($keyword, $db=NULL) {
                 $col=create_color($idx);
                 echo "<tr bgcolor=$col>";
                 echo "<td width=30 align=center valign=top>";
-                echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_("Änderung von").' ' . get_fullname($last_author)));
+                echo Icon::create('info-circle', 'inactive', ['title' => _("Änderung von").' ' . get_fullname($last_author)])->asImg();
                 echo "</td>";
                 echo "<td><font size=-1>";
                 echo wikiReady($collect);

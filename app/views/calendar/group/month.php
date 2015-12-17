@@ -5,11 +5,11 @@
             <td colspan="8" style="text-align: center; vertical-align: middle;">
                 <div style="text-align: left; display: inline-block; width: 33%; white-space: nowrap;">
                     <a <?= tooltip(_('ein Jahr zurück')) ?> style="padding-right: 2em;" href="<?= $controller->url_for('calendar/group/month', array('atime' => mktime(12, 0, 0, date('n', $calendars[0][15]->getStart()), 15, date('Y', $calendars[0][15]->getStart()) - 1))) ?>">
-                        <?= Assets::img('icons/16/blue/arr_2left.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_2left', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                         <?= strftime('%B %Y', strtotime('-1 year', $calendars[0][15]->getStart())) ?>
                     </a>
                     <a <?= tooltip(_('einen Monat zurück')) ?> href="<?= $controller->url_for('calendar/group/month', array('atime' => $calendars[0][0]->getStart() - 1)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_1left', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                         <?= strftime('%B %Y', strtotime('-1 month', $calendars[0][15]->getStart())) ?>
                     </a>
                 </div>
@@ -19,11 +19,11 @@
                 <div style="text-align: right; display: inline-block; width: 33%; white-space: nowrap;">
                     <a <?= tooltip(_('einen Monat vor')) ?> style="padding-right: 2em;" href="<?= $controller->url_for('calendar/group/month', array('atime' => strtotime('+1 month', $calendars[0][15]->getStart()))) ?>">
                         <?= strftime('%B %Y', strtotime('+1 month', $calendars[0][15]->getStart())) ?>
-                        <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_1right', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                     </a>
                     <a <?= tooltip(_('ein Jahr vor')) ?> href="<?= $controller->url_for('calendar/group/month', array('atime' => mktime(12, 0, 0, date('n', $calendars[0][15]->getStart()), 15, date('Y', $calendars[0][15]->getEnd()) + 1))) ?>">
                         <?= strftime('%B %Y', strtotime('+1 year', $calendars[0][15]->getStart())) ?>
-                        <?= Assets::img('icons/16/blue/arr_2right.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= Icon::create('arr_2right', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                     </a>
                 </div>
             </td>

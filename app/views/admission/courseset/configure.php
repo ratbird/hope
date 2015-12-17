@@ -70,14 +70,9 @@ if ($flash['error']) {
             <?php } else { ?>
                 <?php if ($instSearch) { ?>
                 <div id="institutes">
-                    <?= Assets::img('icons/16/yellow/arr_2down.png', array(
-                        'alt' => _('Einrichtung hinzufügen'),
-                        'title' => _('Einrichtung hinzufügen'),
-                        'onclick' => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '".
-                            $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
-                            $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
+                    <?= Icon::create('arr_2down', 'sort', ['title' => _('Einrichtung hinzufügen')])->asImg(16, ["alt" => _('Einrichtung hinzufügen'), "onclick" => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '".$controller->url_for('admission/courseset/institutes',$courseset?$courseset->getId():'')."', '".$controller->url_for('admission/courseset/instcourses',$courseset?$courseset->getId():'')."', 'add')"]) ?>
                     <?= $instSearch ?>
-                    <?= Assets::img('icons/16/blue/search.png', array('title' => _("Suche starten")))?>
+                    <?= Icon::create('search', 'clickable', ['title' => _("Suche starten")])->asImg()?>
                 </div>
                 <i><?=  _('Sie haben noch keine Einrichtung ausgewählt. Benutzen Sie obige Suche, um dies zu tun.') ?></i>
                 <?php } else { ?>
@@ -108,7 +103,7 @@ if ($flash['error']) {
             <label class="caption">
                 <?= _('Filter auf Name/Nummer/Dozent:') ?><br>
                 <input style="display:inline-block" type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
-                <?=Assets::img('icons/16/blue/search.png', array('title' => _("Veranstaltungen anzeigen"),'onClick' => "return STUDIP.Admission.getCourses('" . $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ."')"))?>
+                <?=Icon::create('search', 'clickable', ['title' => _("Veranstaltungen anzeigen"),'onClick' => "return STUDIP.Admission.getCourses('" . $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ."')"])->asImg()?>
             </label>
             <div id="instcourses">
             <?= $coursesTpl; ?>

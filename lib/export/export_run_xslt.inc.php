@@ -88,7 +88,7 @@ if (!CheckParamRUN())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => _("Die Parameter, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
                              )
                         )

@@ -63,19 +63,21 @@ class LinkElement extends WidgetElement implements ArrayAccess
      *
      * @param String $label      Label/content of the link
      * @param String $url        URL/Location of the link
-     * @param String $icon       Icon for the link, defaults to blank.gif
+     * @param Mixed  $icon       Icon for the link, should be an Icon
+     *                           object; until v3.6 this may be a string
      * @param array  $attributes HTML-attributes for the a-tag in an associative array.
      */
     public function __construct($label, $url, $icon = null, $attributes = array())
     {
         parent::__construct();
-        if ($icon && !$this->isURL($icon)) {
-            $icon = Assets::image_path($icon, true);
-        }
+
         $this->label      = $label;
         $this->url        = $url;
-        $this->icon       = $icon;
         $this->attributes = $attributes;
+
+        // DEPRECATED
+        // TODO icon may be a string until v3.6
+        $this->icon = is_string($icon) ? Icon::create2($icon) : $icon;
     }
     
     public function setActive($active = true)

@@ -145,19 +145,23 @@ class ExternEditModule extends ExternEditHtml {
             if (!in_array("visible", $hide)) {
                 // move left
                 $out .= "<td valign=\"middle\" nowrap=\"nowrap\">";
-                $out .= Assets::input("icons/16/yellow/arr_2up.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_move_left[".$i."]", 'title' => _('Datenfeld verschieben')));
+                $out .= Icon::create('arr_2up', 'sort', ['title' => _('Datenfeld verschieben')])->asInput(["type" => "image", "class" => "middle", "name" => $this->element_name."_move_left[".$i."]"]);
 
                 // move right
                 $out .= "\n";
-                $out .= Assets::input("icons/16/yellow/arr_2down.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_move_right[".$i."]", 'title' => _('Datenfeld verschieben')));
+                $out .= Icon::create('arr_2down', 'sort', ['title' => _('Datenfeld verschieben')])->asInput(["type" => "image", "class" => "middle", "name" => $this->element_name."_move_right[".$i."]"]);
 
                 // visible
                 if ($visible[$order[$i]]) {
                 $out .= "\n";
-                $out .= Assets::input("icons/16/blue/checkbox-checked.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_hide[{$order[$i]}]", 'title' => _('Datenfeld ausblenden')));
+                $out .= Icon::create('checkbox-checked', 'clickable', ['title' => _('Datenfeld ausblenden')])->asInput(["type" => "image", "class" => "middle", "name" => $this->element_name."_hide[{
+$order[$i]}
+]"]);
                 } else {
                     $out .= "\n";
-                    $out .= Assets::input("icons/16/blue/checkbox-unchecked.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_show[{$order[$i]}]", 'title' => _('Datenfeld einblenden')));
+                    $out .= Icon::create('checkbox-unchecked', 'clickable', ['title' => _('Datenfeld einblenden')])->asInput(["type" => "image", "class" => "middle", "name" => $this->element_name."_show[{
+$order[$i]}
+]"]);
                     $out .= "</td>\n";
                 }
            }
@@ -401,16 +405,10 @@ class ExternEditModule extends ExternEditHtml {
 
                     // move up
                 $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-                $out .= Assets::input('icons/16/yellow/arr_2up.png', tooltip2(_('Datenfeld verschieben')) + array(
-                            'name' => $this->element_name . '_move_left[' . $i . ']',
-                            'align' => 'middle',
-                        ));
+                $out .= Icon::create('arr_2up', 'sort', ['title' => _('Datenfeld verschieben')])->asInput(array('name'=>$this->element_name.'_move_left['.$i.']','align'=>'middle',));
 
                 // move down
-                $out .= Assets::input('icons/16/yellow/arr_2down.png', tooltip2(_('Datenfeld verschieben')) + array(
-                            'name' => $this->element_name . '_move_right[' . $i . ']',
-                            'align' => 'middle',
-                        ));
+                $out .= Icon::create('arr_2down', 'sort', ['title' => _('Datenfeld verschieben')])->asInput(array('name'=>$this->element_name.'_move_right['.$i.']','align'=>'middle',));
                 $out .= "</td>\n";
 
                 // visibility

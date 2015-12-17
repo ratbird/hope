@@ -51,7 +51,7 @@
             </td>
             <td valign="middle" align="center">
                 <a href="<?=URLHelper::getLink('?delete_root_user_id=' . $user['user_id']) ?>">
-                    <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Berechtigungen löschen'))) ?>
+                    <?=Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Berechtigungen löschen')]) ?>
                 </a>
             </td>
             <td colspan="2">&nbsp;</td>

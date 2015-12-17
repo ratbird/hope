@@ -58,10 +58,8 @@
                     <td><?=count($tour->steps)?></td>
                     <td>
                     <a href="<?=URLHelper::getURL('dispatch.php/tour/admin_details/'.$tour_id)?>" <?=tooltip(_('Tour bearbeiten'))?>>
-                    <?= Assets::img('icons/16/blue/edit.png') ?></a>
-                    <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Tour löschen')) + array(
-                            'name' => 'tour_remove_' . $tour_id,
-                    )) ?>
+                    <?= Icon::create('edit', 'clickable')->asImg() ?></a>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Tour löschen')])->asInput(array('name'=>'tour_remove_'.$tour_id,)) ?>
                     </td>
                     </tr>
                 <? endforeach ?>
@@ -85,7 +83,7 @@ $widget->addLink(_('Übersicht'), URLHelper::getURL('dispatch.php/tour/admin_over
 $widget->addLink(_('Konflikte'), URLHelper::getURL('dispatch.php/tour/admin_conflicts'));
 $sidebar->addWidget($widget);
 $widget = new ActionsWidget();
-$widget->addLink(_('Tour erstellen'), URLHelper::getLink('dispatch.php/tour/admin_details'), 'icons/16/blue/add.png', array());
+$widget->addLink(_('Tour erstellen'), URLHelper::getLink('dispatch.php/tour/admin_details'), Icon::create('add', 'clickable'), array());
 $sidebar->addWidget($widget);
 $search = new SearchWidget('?apply_tour_filter=1');
 $search->addNeedle(_('Suchbegriff'), 'tour_searchterm');

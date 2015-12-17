@@ -51,7 +51,7 @@ function check_terms($userid, $_language_path) {
 <table align="center" border="0" cellpadding="1" cellspacing="0">
     <tr>
         <td class="table_header_bold">
-            <?= Assets::img('icons/16/white/door-enter.png') ?>
+            <?= Icon::create('door-enter', 'info_alt')->asImg() ?>
             <b><?=_("Nutzungsbedingungen")?></b>
         </td>
     </tr>

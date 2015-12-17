@@ -68,13 +68,13 @@
         <strong><?= _('Anzeige:') ?></strong>
         <? if ($search->start_result > 1) : ?>
             <a href="<?= URLHelper::getLink('', array('change_start_result' => ($search->start_result - 5))) ?>">
-                <?= Assets::img('icons/16/blue/arr_2left.png', array('hspace' => 3)); ?>
+                <?= Icon::create('arr_2left', 'clickable')->asImg(['hspace' => 3]); ?>
             </a>
         <? endif ?>
         <?= $search->start_result . " - " . $end_result; ?>
         <? if ($search->start_result + 4 < $num_hits) : ?>
             <a href="<?= URLHelper::getLink('', array('change_start_result' => ($search->start_result + 5))) ?>">
-                <?= Assets::img('icons/16/blue/arr_2right.png', array('hspace' => 3)); ?>
+                <?= Icon::create('arr_2right', 'clickable')->asImg(['hspace' => 3]); ?>
             </a>
         <? endif ?>
     </p>
@@ -91,7 +91,7 @@
                             <? $addon = tooltipIcon(_('Dieser Eintrag ist bereits in Ihrer Merkliste'), true); ?>
                         <? else : ?>
                             <? $addon = "<a href=\"$link\">"; ?>
-                            <? $addon .= Assets::img('icons/16/blue/exclaim.png', tooltip2(_('Eintrag in Merkliste aufnehmen'))); ?>
+                            <? $addon .= Icon::create('exclaim', 'clickable', ['title' => _('Eintrag in Merkliste aufnehmen')])->asImg(); ?>
                             <? $addon .= "</a>"; ?>
                         <? endif ?>
                         <?= htmlReady(my_substr($element->getShortName(), 0, 85)) ?>
@@ -155,13 +155,13 @@
         <strong><?= _('Anzeige:') ?></strong>
         <? if ($search->start_result > 1) : ?>
             <a href="<?= URLHelper::getLink('', array('change_start_result' => ($search->start_result - 5))) ?>">
-                <?= Assets::img('icons/16/blue/arr_2left.png', array('hspace' => 3)); ?>
+                <?= Icon::create('arr_2left', 'clickable')->asImg(['hspace' => 3]); ?>
             </a>
         <? endif ?>
         <?= $search->start_result . " - " . $end_result; ?>
         <? if ($search->start_result + 4 < $num_hits) : ?>
             <a href="<?= URLHelper::getLink('', array('change_start_result' => ($search->start_result + 5))) ?>">
-                <?= Assets::img('icons/16/blue/arr_2right.png', array('hspace' => 3)); ?>
+                <?= Icon::create('arr_2right', 'clickable')->asImg(['hspace' => 3]); ?>
             </a>
         <? endif ?>
     </p>

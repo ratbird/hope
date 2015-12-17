@@ -53,12 +53,9 @@ $inputs = array(
                 <td style="text-align: right; vertical-align: bottom;">
                     <input type="hidden" name="lock_id[]" value="<?= $lock['lock_id'] ?>">
 
-                    <?= Assets::input('icons/16/blue/accept.png', tooltip2(_('Diesen Eintrag speichern')) + array(
-                            'name' => 'lock_sent',
-                            'class' => 'text-top',
-                    )) ?>
+                    <?= Icon::create('accept', 'clickable', ['title' => _('Diesen Eintrag speichern')])->asInput(array('name'=>'lock_sent','class'=>'text-top',)) ?>
                     <a href="<?= URLHelper::getLink('?kill_lock=' . $lock['lock_id']) ?>">
-                        <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diesen Eintrag löschen'))) ?>
+                        <?= Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Diesen Eintrag löschen')]) ?>
                     </a>
                 </td>
             <? else: ?>
@@ -66,10 +63,10 @@ $inputs = array(
                 <td><?= date('d.m.Y H:i', $lock['lock_end']) ?></td>
                 <td style="text-align: right; vertical-align: bottom;">
                     <a href="<?= URLHelper::getLink('?edit_lock=' . $lock['lock_id']) ?>">
-                        <?= Assets::img('icons/16/blue/edit.png', array('class' => 'text-top') + tooltip2(_('Diesen Eintrag bearbeiten'))) ?>
+                        <?= Icon::create('edit', 'clickable', ['title' => _('Diesen Eintrag bearbeiten')])->asImg(['class' => 'text-top']) ?>
                     </a>
                     <a href="<?= URLHelper::getLink('?kill_lock=' . $lock['lock_id']) ?>">
-                        <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top') + tooltip2(_('Diesen Eintrag löschen'))) ?>
+                        <?= Icon::create('trash', 'clickable', ['title' => _('Diesen Eintrag löschen')])->asImg(['class' => 'text-top']) ?>
                     </a>
                 </td>
             <? endif; ?>

@@ -144,31 +144,25 @@ class ProfileModulesController extends AuthenticatedController
         $widget->setTitle(_("Ansichten"));
         if ($_SESSION['profile_plus']['View'] == 'openall') {
             $widget->addLink(_("Alles zuklappen"),
-                URLHelper::getLink('?', array('mode' => 'closeall')),
-                'icons/16/blue/assessment.png');
+                URLHelper::getLink('?', array('mode' => 'closeall')), Icon::create('assessment', 'clickable'));
         } else {
             $widget->addLink(_("Alles aufklappen"),
-                URLHelper::getLink('?', array('mode' => 'openall')),
-                'icons/16/blue/assessment.png');
+                URLHelper::getLink('?', array('mode' => 'openall')), Icon::create('assessment', 'clickable'));
         }
         
         if ($_SESSION['profile_plus']['displaystyle'] == 'category') {
             $widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
-                    URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
-                    'icons/16/blue/assessment.png');
+                    URLHelper::getLink('?', array('displaystyle' => 'alphabetical')), Icon::create('assessment', 'clickable'));
         } else {
             $widget->addLink(_("Anzeige nach Kategorien"),
-                    URLHelper::getLink('?', array('displaystyle' => 'category')),
-                    'icons/16/blue/assessment.png');
+                    URLHelper::getLink('?', array('displaystyle' => 'category')), Icon::create('assessment', 'clickable'));
         }
 
 
         $widget->addLink(_('Alle Inhaltselemente aktivieren'),
-            $this->url_for('profilemodules/reset/true'),
-            'icons/16/blue/accept.png');
+            $this->url_for('profilemodules/reset/true'), Icon::create('accept', 'clickable'));
         $widget->addLink(_('Alle Inhaltselemente deaktivieren'),
-            $this->url_for('profilemodules/reset'),
-            'icons/16/blue/decline.png');
+            $this->url_for('profilemodules/reset'), Icon::create('decline', 'clickable'));
         $sidebar->addWidget($widget);
         
         $plusconfig['profile_plus'] = $_SESSION['profile_plus'];

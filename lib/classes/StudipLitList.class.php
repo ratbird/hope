@@ -146,7 +146,7 @@ class StudipLitList extends TreeAbstract {
             }
             $this->cat_element->fields['note']['value'] = $this->tree_data[$item_id]['note'];
             $content = preg_replace('/({[a-z0-9_]+})/e', "(\$this->cat_element->getValue(substr('\\1',1,strlen('\\1')-2))) ? \$this->cat_element->getValue(substr('\\1',1,strlen('\\1')-2)) : '???'", $format);
-            $content = preg_replace('/\|.?[^|]*\?\?\?.*?\|/' , "", $content);
+            $content = preg_replace('/\|.?[^|]*\?\?\?.*?\|/', "", $content);
             $content = str_replace('|','', $content);
             return $content;
         } else {
@@ -383,7 +383,7 @@ class StudipLitList extends TreeAbstract {
                 }
                 if ($copy_link){
                     $ret .= "\n<div align=\"right\" style=\"font-size:10pt\"><a href=\"".URLHelper::getLink("dispatch.php/literature/edit_list?cmd=CopyUserList&_range_id=self&user_list=".$lists[$i]."#anchor")."\">";
-                    $ret .= Assets::img('icons/16/blue/add/literature.png', array('class' => 'text-top'));
+                    $ret .= Icon::create('literature+add', 'clickable')->asImg(16, ["class" => 'text-top']);
                     $ret .= " " . _("Literaturliste kopieren") . "</a></div>";
                 } else {
                     $ret .= "\n<br>\n";

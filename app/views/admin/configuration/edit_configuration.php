@@ -27,9 +27,9 @@
             <td><?= _('Standard') ?>:</td>
             <td>
             <? if ($config['is_default'] === '1'): ?>
-                <?= Assets::img('icons/16/black/checkbox-checked.png', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('checkbox-checked', 'info', ['title' => _('Ja')])->asImg() ?>
             <? elseif ($config['is_default'] === '0'): ?>
-                <?= Assets::img('icons/16/black/checkbox-unchecked.png', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'info', ['title' => _('Nein')])->asImg() ?>
             <? elseif ($config['is_default'] === null): ?>
                 <em>- <?= _('kein Eintrag vorhanden') ?> -</em>
             <? endif; ?>

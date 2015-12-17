@@ -27,18 +27,14 @@ if ($coursesets) {
         <td>
         <div style="width:100px;text-align:right;white-space: nowrap">
             <a class="load-in-new-row" href="<?= $controller->link_for('', array('course_set_details' => $courseset->getId())); ?>">
-                <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
+                <?= Icon::create('info', 'clickable', ['title' => _('Weitere Informationen einblenden')])->asImg() ?>
             </a>
             <? if ($courseset->isUserAllowedToEdit($GLOBALS['user']->id)) : ?>
             <a href="<?= $controller->link_for('admission/courseset/copy/'.$courseset->getId()); ?>">
-                    <?= Assets::img('icons/16/blue/add/edit.png',
-                        array('alt' => _('Anmeldeset kopieren'),
-                              'title' => _('Anmeldeset kopieren'))); ?>
+                    <?= Icon::create('edit+add', 'clickable', ['title' => _('Anmeldeset kopieren')])->asImg(16, ["alt" => _('Anmeldeset kopieren')]); ?>
                 </a>
             <a href="<?= $controller->link_for('admission/courseset/configure/'.$courseset->getId()); ?>">
-                    <?= Assets::img('icons/16/blue/edit.png',
-                        array('alt' => _('Anmeldeset bearbeiten'),
-                              'title' => _('Anmeldeset bearbeiten'))); ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Anmeldeset bearbeiten')])->asImg(16, ["alt" => _('Anmeldeset bearbeiten')]); ?>
                 </a>
                 <a href="<?= $controller->link_for('admission/courseset/delete/'.
                     $courseset->getId()) ?>"
@@ -46,9 +42,7 @@ if ($coursesets) {
                         sprintf(_('Soll das Anmeldeset %s wirklich gelöscht werden?'), htmlReady($courseset->getName())) ?>', '<?=
                         URLHelper::getURL('dispatch.php/admission/courseset/delete/'.
                         $courseset->getId(), array('really' => 1)) ?>')">
-                    <?= Assets::img('icons/16/blue/trash.png',
-                        array('alt' => _('Anmeldeset löschen'),
-                              'title' => _('Anmeldeset löschen'))); ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Anmeldeset löschen')])->asImg(16, ["alt" => _('Anmeldeset löschen')]); ?>
                 </a>
              <? endif ?>
         </div>

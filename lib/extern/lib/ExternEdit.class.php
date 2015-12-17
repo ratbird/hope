@@ -210,7 +210,7 @@ class ExternEdit {
     function editElementHeadline ($element_real_name, $module_name, $config_id,
             $open = TRUE) {
 
-        $icon =  Assets::img('icons/16/blue/file-generic.png', array('class' => 'text-top'));
+        $icon =  Icon::create('file-generic', 'clickable')->asImg(['class' => 'text-top']);
 
         if ($open) {
             $link = URLHelper::getLink('?com=close&mod=' . $module_name . '&edit=' . $this->element_name . '&config_id=' . $config_id . '#anker');

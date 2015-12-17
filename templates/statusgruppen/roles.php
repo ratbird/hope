@@ -27,20 +27,20 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     <td class="printhead" valign="bottom" colspan="<?= 19-$indent ?>" height="22" nowrap style="padding-left: 3px" width="<?= 99-$indent ?>%">
         <a name="<?= $id ?>">
         <? if ($open == $id) : ?>
-        <a class="tree" href="<?= URLHelper::getLink('?list=true#'. $id) ?>"><?= Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-top')) ?></a>
+        <a class="tree" href="<?= URLHelper::getLink('?list=true#'. $id) ?>"><?= Icon::create('arr_1down', 'clickable')->asImg(['class' => 'text-top']) ?></a>
         <? else : ?>
-        <a class="tree" href="<?= URLHelper::getLink('?role_id='. $id .'#'. $id) ?>"><?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')); ?></a>
+        <a class="tree" href="<?= URLHelper::getLink('?role_id='. $id .'#'. $id) ?>"><?= Icon::create('arr_1right', 'clickable')->asImg(['class' => 'text-top']); ?></a>
         <? endif; ?>
 
         <? if ($move) : ?>
-        <a href="#"><?= Assets::img('icons/16/yellow/arr_2right.png') ?></a>
+        <a href="#"><?= Icon::create('arr_2right', 'sort')->asImg() ?></a>
         <? endif; ?>
 
         <? if ($sort) :
             if ($pos > 1) : ?>
-        <a href="<?= URLHelper::getLink('?cmd=moveUp&view=sort&role_id='. $id) ?>"><?= Assets::img('icons/16/yellow/arr_2up.png'); ?></a>
+        <a href="<?= URLHelper::getLink('?cmd=moveUp&view=sort&role_id='. $id) ?>"><?= Icon::create('arr_2up', 'sort')->asImg(); ?></a>
         <? endif; if ($pos < sizeof($roles)) : ?>
-        <a href="<?= URLHelper::getLink('?cmd=moveDown&view=sort&role_id='. $id) ?>"><?= Assets::img('icons/16/yellow/arr_2down.png'); ?></a>
+        <a href="<?= URLHelper::getLink('?cmd=moveDown&view=sort&role_id='. $id) ?>"><?= Icon::create('arr_2down', 'sort')->asImg(); ?></a>
         <? endif;
         endif;
         ?>
@@ -55,7 +55,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     </td>
     <td width="1%" class="printhead" align="right" valign="bottom" nowrap>
         <? if ($role['role']->hasFolder()) :
-            echo Assets::img('icons/16/blue/files.png');
+            echo Icon::create('files', 'clickable')->asImg();
         endif; ?>
 
         &nbsp;

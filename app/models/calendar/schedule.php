@@ -240,7 +240,7 @@ class CalendarScheduleModel
 
                     $entry['icons'][] = array(
                         'url'   => $bind_url,
-                        'image' => Assets::image_path('icons/16/white/visibility-invisible.png'),
+                        'image' => Icon::create('visibility-invisible', 'info_alt')->asImagePath(16),
                         'onClick' => "function(id) { window.location = '". $bind_url ."'; }",
                         'title' => _("Diesen Eintrag wieder einblenden"),
                     );
@@ -252,7 +252,7 @@ class CalendarScheduleModel
                                 . $seminar_id . '/' . $cycle->getMetaDateId());
                     $entry['icons'][] = array(
                         'url'     => $unbind_url,
-                        'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
+                        'image'   => Icon::create('visibility-visible', 'info_alt')->asImagePath(16),
                         'onClick' => "function(id) { window.location = '". $unbind_url ."'; }",
                         'title'   => _("Diesen Eintrag ausblenden"),
                     );

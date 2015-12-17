@@ -7,7 +7,7 @@
         <?= _('Vorhandene Schritte im Anlegeassistenten für Veranstaltungen') ?>
         <span class="actions">
             <a href="<?= $controller->url_for('admin/coursewizardsteps/edit') ?>" data-dialog="size=auto">
-                <?= Assets::img('icons/blue/add.svg') ?></a>
+                <?= Icon::create('add', 'clickable')->asImg() ?></a>
         </span>
     </caption>
     <thead>
@@ -23,14 +23,14 @@
             <td><?= htmlReady($step->name) ?></td>
             <td><?= htmlReady($step->classname) ?></td>
             <td><?= $step->number ?></td>
-            <td><?= $step->enabled ? Assets::img('icons/black/checkbox-checked.svg') :
-                    Assets::img('icons/black/checkbox-unchecked.svg') ?></td>
+            <td><?= $step->enabled ? Icon::create('checkbox-checked', 'info')->asImg() :
+                    Icon::create('checkbox-unchecked', 'info')->asImg() ?></td>
             <td>
                 <a href="<?= $controller->url_for('admin/coursewizardsteps/edit', $step->id) ?>" data-dialog="size=auto">
-                    <?= Assets::img('icons/blue/edit.svg') ?></a>
+                    <?= Icon::create('edit', 'clickable')->asImg() ?></a>
                 <a href="<?= $controller->url_for('admin/coursewizardsteps/ask_delete',
                     $step->id) ?>" data-dialog="size=auto">
-                <?= Assets::img('icons/blue/trash.svg') ?>
+                <?= Icon::create('trash', 'clickable')->asImg() ?>
             </td>
         </tr>
     <?php endforeach ?>

@@ -89,7 +89,7 @@
                     <?= get_fullname($user->smsforward_rec, 'full', true) ?>
                 </a>
                 <a href="<?= $controller->url_for('settings/messaging/verify/forward_receiver') ?>">
-                    <?= Assets::img('icons/16/blue/trash.png') ?>
+                    <?= Icon::create('trash', 'clickable')->asImg() ?>
                 </a>
                 <br>
                 <label>

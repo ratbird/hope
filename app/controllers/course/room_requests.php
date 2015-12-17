@@ -441,12 +441,12 @@ class Course_RoomRequestsController extends AuthenticatedController
                         if (isset($check_result[$room_id])) {
                             $details = $check_result[$room_id];
                             if (count($details) >= round(count($events) * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
-                                $overlap_status = 'red';
+                                $overlap_status = 'status-red';
                             } elseif (count($details)) {
-                                $overlap_status = 'yellow';
+                                $overlap_status = 'status-yellow';
                             }
                         } else {
-                            $overlap_status = 'green';
+                            $overlap_status = 'status-green';
                         }
                         $search_result[$room_id] = array('name'           => $name,
                                                          'overlap_status' => $overlap_status

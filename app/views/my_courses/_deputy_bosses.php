@@ -29,14 +29,13 @@
             <td>
                 <? if ($boss['edit_about'] && $deputies_edit_about_enabled) : ?>
                     <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $boss['username'])) ?>">
-                        <?= Assets::img('icons/blue/person.svg', tooltip2(_('Personenangaben bearbeiten'))) ?>
+                        <?= Icon::create('person', 'clickable', ['title' => _('Personenangaben bearbeiten')])->asImg() ?>
                     </a>
                 <? endif ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                     array('filter' => 'send_sms_to_all',
                           'rec_uname' => $boss['username']))?>" data-dialog>
-                    <?= Assets::img('icons/blue/mail.svg', tooltip2(sprintf(_('Nachricht an %s senden'),
-                        htmlReady($boss['fullname'])))) ?>
+                    <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'), htmlReady($boss['fullname']))])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('my_courses/delete_boss',
                         $boss['user_id'])?>" data-confirm="<?=sprintf(

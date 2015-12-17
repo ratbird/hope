@@ -1,5 +1,5 @@
 <div class="messagebox messagebox_warning">
-    <?= Assets::img('icons/16/black/visibility-checked.png', tooltip2(_('Studierendenansicht aktiv'))) ?>
+    <?= Icon::create('visibility-checked', 'info', ['title' => _('Studierendenansicht aktiv')])->asImg() ?>
     <?= sprintf(_('Die Veranstaltung wird in der Ansicht für %s angezeigt. '.
         'Sie können die Ansicht %shier zurücksetzen%s.'),
         get_title_for_status($changed_status, 2),

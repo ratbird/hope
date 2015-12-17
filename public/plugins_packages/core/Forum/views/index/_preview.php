@@ -4,10 +4,7 @@
         <br><br>
     </span>
     
-    <?= Assets::img('icons/16/red/decline.png', array(
-        'style'   => 'position: absolute; top: 5px; right: 5px; cursor: pointer;',
-        'onClick' => 'jQuery(this).parent().hide();',
-        'title'   => _('Vorschaufenster schließen'))) ?>
+    <?= Icon::create('decline', 'attention', ['title' => _('Vorschaufenster schließen')])->asImg(16, ["style" => 'position: absolute; top: 5px; right: 5px; cursor: pointer;', "onClick" => 'jQuery(this).parent().hide();']) ?>
 
     <div class="postbody" id="<?= $preview_id ?>"></div>
     <br style="clear: both">

@@ -62,36 +62,36 @@ a.button, button.button {
     }
 }
 
-.button-with-icon(@icon, @hover-icon: @icon) {
+.button-with-icon(@icon, @role, @roleOnHover) {
     &:extend(.button-with-empty-icon);
     &:before {
         &:extend(.button-with-empty-icon:before);
-        .retina-background-icon(@icon);
+        .background-icon(@icon, @role);
     }
 
     &:hover:before {
-        .retina-background-icon(@hover-icon);
+        .background-icon(@icon, @roleOnHover);
     }
 }
 
 .button.accept {
-  .button-with-icon("blue/accept.png", "white/accept.png");
+  .button-with-icon("accept", "clickable", "info_alt");
 }
 
 .button.cancel {
-  .button-with-icon("blue/decline.png", "white/decline.png");
+  .button-with-icon("decline", "clickable", "info_alt");
 }
 
 .button.edit {
-  .button-with-icon("blue/edit.png", "white/edit.png");
+  .button-with-icon("edit", "clickable", "info_alt");
 }
 
 .button.move-up {
-  .button-with-icon("blue/arr_1up.png", "white/arr_1up.png");
+  .button-with-icon("arr_1up", "clickable", "info_alt");
 }
 
 .button.move-down {
-  .button-with-icon("blue/arr_1down.png", "white/arr_1down.png");
+  .button-with-icon("arr_1down", "clickable", "info_alt");
 }
 
 /* Grouped Buttons */

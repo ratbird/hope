@@ -69,8 +69,7 @@
             </option>
         <?php endforeach ?>
     </select>
-    <?= Assets::input('icons/yellow/arr_2right.svg',
-        array('name' => 'select_institute', 'value' => '1', 'class' => 'hidden-js')) ?>
+    <?= Icon::create('arr_2right', 'sort')->asInput(["name" => 'select_institute', "value" => '1', "class" => 'hidden-js']) ?>
 </section>
 <section>
     <label for="part_inst_id_1">
@@ -80,8 +79,7 @@
         <?= $instsearch ?>
     </div>
     <?php if ($values['part_inst_id_parameter']) : ?>
-        <?= Assets::input('icons/yellow/arr_2down.svg',
-            array('name' => 'add_part_inst', 'value' => '1')) ?>
+        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_part_inst', "value" => '1']) ?>
     <?php endif ?>
     <div id="wizard-participating">
         <div class="description<?= count($values['participating']) ? '' : ' hidden-js' ?>">
@@ -103,8 +101,7 @@
         <?= $lsearch ?>
     </div>
     <?php if ($values['lecturer_id_parameter']) : ?>
-        <?= Assets::input('icons/yellow/arr_2down.svg',
-            array('name' => 'add_lecturer', 'value' => '1')) ?>
+        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_lecturer', "value" => '1']) ?>
     <?php endif ?>
     <div id="wizard-lecturers">
         <div class="description<?= count($values['lecturers']) ? '' : ' hidden-js' ?>">
@@ -127,8 +124,7 @@
         <?= $dsearch ?>
     </div>
     <?php if ($values['deputy_id_parameter']) : ?>
-        <?= Assets::input('icons/yellow/arr_2down.svg',
-            array('name' => 'add_deputy', 'value' => '1')) ?>
+        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_deputy', "value" => '1']) ?>
     <?php endif ?>
     <div id="wizard-deputies">
         <div class="description<?= count($values['deputies']) ? '' : ' hidden-js' ?>">
@@ -153,8 +149,7 @@
         <?= $tsearch ?>
     </div>
     <?php if ($values['tutor_id_parameter']) : ?>
-        <?= Assets::input('icons/yellow/arr_2down.svg',
-            array('name' => 'add_tutor', 'value' => '1')) ?>
+        <?= Icon::create('arr_2down', 'sort')->asInput(["name" => 'add_tutor', "value" => '1']) ?>
     <?php endif ?>
     <div id="wizard-tutors">
         <div class="description<?= count($values['tutors']) ? '' : ' hidden-js' ?>">

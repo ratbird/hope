@@ -22,14 +22,14 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
 
                     <a href="<?= URLHelper::getLink($nav->getURL()) ?>"<?= $badge_attr ?>>
                         <? if ($image = $nav->getImage()) : ?>
-                            <?= Assets::img($image['src'], array('class' => "tab-icon", 'alt' => htmlReady($nav->getTitle()), 'title' => $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()))) ?>
+                            <?= $image->asImg(['class' => "tab-icon", 'title' => $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription())]) ?>
                         <? endif ?>
                         <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) :  htmlReady($nav->getTitle())?>" class="tab-title"><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
                     </a>
                 <? else: ?>
                     <span class="quiet tab-title">
                         <? if ($image = $nav->getImage()) : ?>
-                            <?= Assets::img($image['src'], array('class' => "tab-icon", 'alt' => htmlReady($nav->getTitle()), 'title' => htmlReady($nav->getTitle()))) ?>
+                            <?= $image->asImg(['class' => "tab-icon", 'title' => htmlReady($nav->getTitle())]) ?>
                         <? endif ?>
                         <?= htmlReady($nav->getTitle()) ?>
                     </span>

@@ -25,21 +25,15 @@
         <input type="text" size="40" name="search" id="sem-tree-search"
                value="<?= $values['searchterm'] ?>"/>
         <span id="sem-tree-search-start">
-            <?= Assets::input('icons/blue/search.svg',
-                array('name' => 'start_search',
-                    'onclick' => "return STUDIP.CourseWizard.searchTree()",
-                    'class' => $search_result ? 'hidden-no-js' : '')) ?>
+            <?= Icon::create('search', 'clickable')->asInput(["name" => 'start_search', "onclick" => "return STUDIP.CourseWizard.searchTree()", "class" => $search_result?'hidden-no-js':'']) ?>
         </span>
         <span id="sem-tree-search-reset" class="hidden-js">
-            <?= Assets::input('icons/blue/refresh.svg',
-                array('name' => 'reset_search',
-                    'onclick' => "return STUDIP.CourseWizard.resetSearch()",
-                    'class' => $search_result ? '' : ' hidden-no-js')) ?>
+            <?= Icon::create('refresh', 'clickable')->asInput(["name" => 'reset_search', "onclick" => "return STUDIP.CourseWizard.resetSearch()", "class" => $search_result?'':' hidden-no-js']) ?>
         </span>
     </div>
     <div id="sem-tree-assign-all" class="hidden-js hidden-no-js">
         <a href="" onclick="return STUDIP.CourseWizard.assignAllNodes()">
-            <?= Assets::img('icons/yellow/arr_2left.svg') ?>
+            <?= Icon::create('arr_2left', 'sort')->asImg() ?>
             <?= _('Alle Suchergebnisse zuweisen') ?>
         </a>
     </div>

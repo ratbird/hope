@@ -113,11 +113,11 @@
                 <td><?=htmlReady($step->route)?></td>
                 <td>
                 <a href="<?=URLHelper::getURL('dispatch.php/tour/edit_step/'.$tour->tour_id.'/'.$step->step)?>" target="blank" <?=tooltip(_('Schritt bearbeiten'))?> data-dialog="size=auto;reload-on-close">
-                <img src="<?= Assets::image_path('icons/16/blue/edit.png')?>"></a>
+                <?= Icon::create('edit', 'clickable')->asImg()?></a>
                 <a href="<?=URLHelper::getURL('dispatch.php/tour/admin_details/'.$tour->tour_id.'?delete_tour_step='.$step->step)?>" <?=tooltip(_('Schritt löschen'))?>>
-                <img src="<?= Assets::image_path('icons/16/blue/trash.png')?>"></a>
+                <?= Icon::create('trash', 'clickable')->asImg() ?></a>
                 <a href="<?=URLHelper::getURL('dispatch.php/tour/edit_step/'.$tour->tour_id.'/'.($step->step + 1).'/new')?>" target="blank" <?=tooltip(_('Neuen Schritt hinzufügen'))?> data-dialog="size=auto;reload-on-close">
-                <img src="<?= Assets::image_path('icons/16/blue/add.png')?>"></a>
+                <?= Icon::create('add', 'clickable')->asImg()?></a>
                 </td>
                 </tr>
             <? endforeach ?>
@@ -137,6 +137,6 @@
 $sidebar = Sidebar::get();
 if (count($tour->steps)) {
     $widget = new ActionsWidget();
-    $widget->addLink(_('Schritt hinzufügen'), URLHelper::getLink('dispatch.php/tour/edit_step/'.$tour->tour_id.'/'.(count($tour->steps)+1).'/new'), 'icons/16/blue/add.png', array('data-dialog' => 'size=auto;reload-on-close'));
+    $widget->addLink(_('Schritt hinzufügen'), URLHelper::getLink('dispatch.php/tour/edit_step/'.$tour->tour_id.'/'.(count($tour->steps)+1).'/new'), Icon::create('add', 'clickable'), array('data-dialog' => 'size=auto;reload-on-close'));
     $sidebar->addWidget($widget);
 }

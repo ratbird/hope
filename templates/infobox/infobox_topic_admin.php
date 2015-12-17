@@ -27,7 +27,7 @@
 
                 <tr>
                     <td align="center" valign="top">
-                        <?= Assets::img('icons/16/black/info.png') ?>
+                        <?= Icon::create('info', 'info')->asImg() ?>
                     </td>
                     <td align="left">
                         <?= _('Hier können Sie für die einzelnen Termine Beschreibungen eingeben, Themen im Forum und Dateiordner anlegen.')?>
@@ -37,7 +37,7 @@
 
                 <tr>
                     <td align="center" valign="top">
-                        <?= Assets::img('icons/16/black/info.png') ?>
+                        <?= Icon::create('info', 'info')->asImg() ?>
                     </td>
                     <td align="left">
                         <?= sprintf(_('Zeitänderungen, Raumbuchungen und Termine anlegen können Sie unter %sZeiten%s.'),
@@ -59,7 +59,7 @@
 
                 <tr>
                     <td align="center" valign="top">
-                        <?= Assets::img('icons/16/red/arr_1right.png') ?>
+                        <?= Icon::create('arr_1right', 'attention')->asImg() ?>
                     </td>
                     <td align="left">
                         <a href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=simple') ?>">
@@ -71,7 +71,7 @@
 
                 <tr>
                     <td align="center" valign="top">
-                        <?= Assets::img('icons/16/black/arr_1right.png') ?>
+                        <?= Icon::create('arr_1right', 'info')->asImg() ?>
                     </td>
                     <td align="left">
                         <a href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') ?>">
@@ -95,7 +95,7 @@
 
                 <tr>
                     <td align="center" valign="top">
-                        <?= Assets::img('icons/16/black/schedule.png') ?>
+                        <?= Icon::create('schedule', 'info')->asImg() ?>
                     </td>
                     <td align="left">
                         <a href="<?= URLHelper::getLink('raumzeit.php?cmd=createNewSingleDate#newSingleDate') ?>">

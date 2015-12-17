@@ -40,7 +40,7 @@ class Admin_ApiController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(_('Neue Applikation registrieren'),
                           $this->url_for('admin/api/edit'),
-                          'icons/blue/add.svg')
+                          Icon::create('add', 'clickable'))
                 ->asDialog();
         Sidebar::get()->addWidget($actions);
     }

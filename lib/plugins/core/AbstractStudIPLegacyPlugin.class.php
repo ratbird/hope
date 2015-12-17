@@ -159,7 +159,7 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
         } else if (isset($this->pluginiconname)) {
             return $this->getPluginURL().'/'.$this->pluginiconname;
         } else {
-            return Assets::image_path('icons/16/grey/plugin.png');
+            return Icon::create('plugin', 'inactive')->asImagePath(16);
         }
     }
 

@@ -97,16 +97,13 @@ class SiteinfoController extends StudipController
 
             if ($this->currentrubric) {
                 $actions->addLink(_('Neue Seite anlegen'),
-                                  $this->url_for('siteinfo/new/' . $this->currentrubric),
-                                  'icons/16/blue/add.png');
+                                  $this->url_for('siteinfo/new/' . $this->currentrubric), Icon::create('add', 'clickable'));
             }
             if ($this->currentdetail) {
                 $actions->addLink(_('Seite bearbeiten'),
-                                  $this->url_for('siteinfo/edit/' . $this->currentrubric . '/' . $this->currentdetail),
-                                  'icons/16/blue/edit.png');
+                                  $this->url_for('siteinfo/edit/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('edit', 'clickable'));
                 $actions->addLink(_('Seite löschen'),
-                                  $this->url_for('siteinfo/delete/' . $this->currentrubric . '/' . $this->currentdetail),
-                                  'icons/16/blue/trash.png');
+                                  $this->url_for('siteinfo/delete/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('trash', 'clickable'));
             }
 
             $sidebar->addWidget($actions);
@@ -117,15 +114,12 @@ class SiteinfoController extends StudipController
         $actions->setTitle(_('Rubrik-Aktionen'));
 
         $actions->addLink(_('Neue Rubrik anlegen'),
-                          $this->url_for('siteinfo/new'),
-                          'icons/16/blue/add.png');
+                          $this->url_for('siteinfo/new'), Icon::create('add', 'clickable'));
         if ($this->currentrubric) {
             $actions->addLink(_('Rubrik bearbeiten'),
-                              $this->url_for('siteinfo/edit/' . $this->currentrubric),
-                              'icons/16/blue/edit.png');
+                              $this->url_for('siteinfo/edit/' . $this->currentrubric), Icon::create('edit', 'clickable'));
             $actions->addLink(_('Rubrik löschen'),
-                              $this->url_for('siteinfo/delete/' . $this->currentrubric),
-                              'icons/16/blue/trash.png');
+                              $this->url_for('siteinfo/delete/' . $this->currentrubric), Icon::create('trash', 'clickable'));
         }
 
         $sidebar->addWidget($actions);

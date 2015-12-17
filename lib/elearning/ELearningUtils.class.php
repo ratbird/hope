@@ -558,13 +558,13 @@ class ELearningUtils
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 if (ELearningUtils::getConfigValue("ACTIVE", $cms_type)) {
-                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top')) . "</td><td><b>". sprintf(_("Die Schnittstelle zum System %s ist aktiv."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</b></td></tr>";
+                    $output .= "<tr><td>" .  Icon::create('checkbox-checked', 'clickable')->asImg(['class' => 'text-top']) . "</td><td><b>". sprintf(_("Die Schnittstelle zum System %s ist aktiv."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</b></td></tr>";
                     $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 }
                 elseif ($data["config"] < 1)
-                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle für das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                    $output .= "<tr><td>" .  Icon::create('checkbox-unchecked', 'clickable')->asImg(['class' => 'text-top']) . "</td><td><i>". sprintf(_("Die Schnittstelle für das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
                 elseif ($data["config"] < 1)
-                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                    $output .= "<tr><td>" .  Icon::create('checkbox-unchecked', 'clickable')->asImg(['class' => 'text-top']) . "</td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
 
                 if ($data["accounts"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit Accounts im System %s verknüpft."), $data["accounts"], $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</td></tr>";
@@ -582,7 +582,7 @@ class ELearningUtils
                 $output .= CSRFProtection::tokenTag();
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-                $output .= "<tr><td>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top')) . "</td><td><i>".sprintf(_("Für das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
+                $output .= "<tr><td>" . Icon::create('decline', 'attention')->asImg(['class' => 'text-top']) . "</td><td><i>".sprintf(_("Für das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "<tr><td colspan=\"2\"><b>". _("In der Stud.IP-Datenbank sind noch folgende Informationen zu diesem System gespeichert:") . "</b></td></tr>";
                 if ($data["accounts"])

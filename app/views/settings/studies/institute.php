@@ -47,7 +47,7 @@
             <? if ($allow_change['in']): ?>
                 <input type="checkbox" name="inst_delete[]" id="inst_delete_<?= $inst_id?>" value="<?= $inst_id ?>">
             <? else: ?>
-                <?= Assets::img('icons/16/grey/accept.png', array('class' => 'text-top')) ?>
+                <?= Icon::create('accept', 'inactive')->asImg(['class' => 'text-top']) ?>
             <? endif; ?>
             </td>
         </tr>

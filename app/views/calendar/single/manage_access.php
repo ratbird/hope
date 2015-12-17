@@ -19,7 +19,11 @@
                         <? endforeach; ?>
                     </select>
                 </label>
-                <input id="calendar-group-submit" name="calendar_group_submit" type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" class="text-top">
+                <?= Icon::create('accept', 'clickable')
+                      ->asInput([
+                        'id' => "calendar-group-submit",
+                        'name' => "calendar_group_submit",
+                        'class' => "text-top"]) ?>
                 <span style="padding-left: 1em;">
                     <?= $mps->render() ?>
                 </span>
@@ -78,7 +82,7 @@
                         </td>
                         <td class="actions">
                             <a title="<?= _('Benutzer entfernen') ?>" onClick="STUDIP.CalendarDialog.removeUser(this);" href="<?= $controller->url_for('calendar/single/remove_user/' . $calendar->getRangeId() . $filter, array('user_id' => $user->user_id)) ?>">
-                                <?= Assets::img('icons/16/blue/remove/person.png') ?>
+                                <?= Icon::create('person+remove', 'clickable')->asImg() ?>
                             </a>
                         </td>
                     </tr>

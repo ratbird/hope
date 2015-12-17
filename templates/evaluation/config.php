@@ -126,11 +126,11 @@ $infobox = array(
             'kategorie' => _('Information:'),
             'eintrag'   => array(
                 array(
-                    'icon' => 'icons/16/black/vote.png',
+                    'icon' => Icon::create('vote', 'clickable'),
                     'text' => _('Auf dieser Seite können Sie die Auswertung Ihrer Evaluation konfigurieren.')
                 ),
                 array(
-                    'icon' => 'icons/16/black/info.png',
+                    'icon' => Icon::create('info', 'clickable'),
                     'text' => _('Wählen Sie Ihre Einstellungen und drücken Sie auf "Template speichern". '
                                .'Anschließend kommen Sie mit dem Button unten links zurück zu Ihrer Evaluation.')
                 ),

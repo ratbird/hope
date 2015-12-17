@@ -867,9 +867,7 @@ if ($question) {
             if ($folder_tree->isFolder($folder_system_data["move"])) {
                 echo "\n" . '<td class="blank">&nbsp;</td>';
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
-                echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
-                                          tooltip2(_('Auf die obere Ebene verschieben / kopieren')) +
-                                          array('name' => 'move_to_top_folder', 'class' => 'middle'));
+                echo "\n" . Icon::create('arr_2right', 'sort', ['title' => _('Auf die obere Ebene verschieben / kopieren')])->asInput(array('name'=>'move_to_top_folder','class'=>'middle'));
                 echo '&nbsp;' . _("Auf die obere Ebene verschieben / kopieren") . '</td>';
                 echo "\n" . '<td class="blank">';
                 echo Button::create($button_name, "move_to_top_folder");
@@ -879,18 +877,14 @@ if ($question) {
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Veranstaltung") .':';
             echo '</div></td><td class="blank" width="60%" style="white-space: nowrap;">';
-            echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
-                                      tooltip2(_('In diese Veranstaltung verschieben / kopieren')) +
-                                      array('name' => 'move_to_sem',
-                                            'id' => 'move_to_sem_arrow',
-                                            'class' => 'middle'));
+            echo "\n" . Icon::create('arr_2right', 'sort', ['title' => _('In diese Veranstaltung verschieben / kopieren')])->asInput(array('name'=>'move_to_sem','id'=>'move_to_sem_arrow','class'=>'middle'));
             echo "\n" . '<select id="sem_move_id" name="sem_move_id[]" style="width:60%">';
             foreach ($my_sem as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
             if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
-                echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/add.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
+                echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Icon::create('add', 'clickable', ['title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"])->asImg()."</a>";
             }
             echo "\n</td>";
             echo "\n" . '<td class="blank">';
@@ -900,16 +894,14 @@ if ($question) {
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Einrichtung").':';
             echo '</div></td><td class="blank" width="60%" style="white-space: nowrap;">';
-            echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
-                                      tooltip2(_('In diese Einrichtung verschieben / kopieren')) +
-                                      array('name' => 'move_to_inst', 'id' => 'move_to_inst_arrow', 'class' => 'middle'));
+            echo "\n" . Icon::create('arr_2right', 'sort', ['title' => _('In diese Einrichtung verschieben / kopieren')])->asInput(array('name'=>'move_to_inst','id'=>'move_to_inst_arrow','class'=>'middle'));
             echo "\n" . '<select id="inst_move_id" name="inst_move_id[]" style="width:60%">';
             foreach ($my_inst as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
             if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
-                echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/add.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
+                echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Icon::create('add', 'clickable', ['title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"])->asImg()."</a>";
             }
             echo "\n</td>";
             echo "\n" . '<td class="blank">';
@@ -1290,7 +1282,7 @@ if ($rechte) {
     $actions = new ActionsWidget();
     $actions->addLink(_('Neuer Ordner'),
                       URLHelper::getLink('dispatch.php/folder/create/' . $range_id . '/' . $SessSemName['class']),
-                      'icons/16/blue/add/folder-empty.png',
+                      Icon::create('folder-empty+add', 'clickable'),
                       array('data-dialog' => 'size=auto'));
     $sidebar->addWidget($actions);
 }

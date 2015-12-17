@@ -39,7 +39,7 @@ $sem = Seminar::getInstance($show_entry['id']);
     <b><?= _("Veranstaltungszeiten") ?>:</b><br>
     <?= $sem->getDatesHTML(array('show_room' => true)) ?><br>
 
-    <?= Assets::img('icons/16/blue/link-intern.png') ?>
+    <?= Icon::create('link-intern', 'clickable')->asImg() ?>
     <? if ($show_entry['type'] == 'virtual') : ?>
     <a href="<?= URLHelper::getLink('dispatch.php/course/details/?sem_id='. $show_entry['id']) ?>"><?=_("Zur Veranstaltung") ?></a><br>
     <? else : ?>

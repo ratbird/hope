@@ -73,13 +73,11 @@ class StartController extends AuthenticatedController
 
         if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
             $actions->addLink(_('Neues Widget hinzufügen'),
-                              $this->url_for('start/add'),
-                              'icons/16/blue/add.png')->asDialog();
+                              $this->url_for('start/add'), Icon::create('add', 'clickable'))->asDialog();
         }
 
         $actions->addLink(_('Standard wiederherstellen'),
-                          $this->url_for('start/reset'),
-                          'icons/16/blue/accept.png');
+                          $this->url_for('start/reset'), Icon::create('accept', 'clickable'));
         $sidebar->addWidget($actions);
 
         // Root may set initial positions

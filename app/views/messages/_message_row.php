@@ -1,7 +1,7 @@
 <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
     <td><input type="checkbox" name="bulk[]" value="<?= htmlReady($message->getId()) ?>"></td>
-    <td><?= $message->getNumAttachments() ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
-    <td><?= $message->originator->answered ? Assets::img("icons/20/black/outbox", array("title" => _("Beantwortet"))) : "" ?></td>
+    <td><?= $message->getNumAttachments() ? Icon::create('staple', 'info', ["title" => _("Mit Anhang")])->asImg(20) : "" ?></td>
+    <td><?= $message->originator->answered ? Icon::create('outbox', 'info', ["title" => _("Beantwortet")])->asImg(20) : "" ?></td>
     <td class="title">
         <a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-dialog>
             <?= $message['subject'] ? htmlReady($message['subject']) : htmlReady(mila($message['message'], 40)) ?>

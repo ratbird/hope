@@ -28,7 +28,7 @@ $infobox['content'][] = array(
                 "Veranstaltung aus der Sicht einer Person sehen wollen, ".
                 "die nicht Lehrende ist und somit überprüfen, wie ".
                 "für Ihre Teilnehmende die Veranstaltung aussieht."),
-            "icon" => "icons/16/black/info.png"
+            "icon" => Icon::create('info', 'clickable')
          )
      )
 );

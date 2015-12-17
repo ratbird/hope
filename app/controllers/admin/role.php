@@ -594,7 +594,7 @@ class Admin_RoleController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(_('Neue Rolle anlegen'),
                           $this->url_for('admin/role/add'),
-                          'icons/blue/add.svg')
+                          Icon::create('add', 'clickable'))
                 ->asDialog('size=auto');
         $sidebar->addWidget($actions);
     }

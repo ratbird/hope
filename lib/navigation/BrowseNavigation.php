@@ -40,7 +40,7 @@ class BrowseNavigation extends Navigation
 
         parent::__construct($coursetext, $courselink);
         if (!$_SESSION['SessionSeminar']) {
-            $this->setImage('icons/lightblue/seminar.svg', array('title' => $courseinfo));
+            $this->setImage(Icon::create('seminar', 'navigation', ["title" => $courseinfo]));
         }
     }
 

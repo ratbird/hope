@@ -40,28 +40,35 @@ class Calendar_SingleController extends Calendar_CalendarController
         if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
             $actions = new ActionsWidget();
             $actions->addLink(_('Termin anlegen'),
-                    $this->url_for('calendar/single/edit'), 'icons/16/blue/add.png',
-                    array('data-dialog' => 'size=auto'));
+                              $this->url_for('calendar/single/edit'),
+                              Icon::create('add', 'clickable'),
+                              array('data-dialog' => 'size=auto'));
             if ($calendar->havePermission(Calendar::PERMISSION_OWN) && (get_config('CALENDAR_GROUP_ENABLE'))) {
                 $actions->addLink(_('Kalender freigeben'),
-                        $this->url_for('calendar/single/manage_access'), 'icons/16/blue/community.png',
-                        array('id' => 'calendar-open-manageaccess', 'data-dialog' => '', 'data-dialogname' => 'manageaccess'));
+                                  $this->url_for('calendar/single/manage_access'),
+                                  Icon::create('community', 'clickable'),
+                                  array('id' => 'calendar-open-manageaccess',
+                                        'data-dialog' => '',
+                                        'data-dialogname' => 'manageaccess'));
             }
             $sidebar->addWidget($actions);
         }
         if ($calendar->havePermission(Calendar::PERMISSION_OWN)) {
             $export = new ExportWidget();
             $export->addLink(_('Termine exportieren'),
-                    $this->url_for('calendar/single/export_calendar'),
-                    'icons/16/blue/download.png', array('data-dialog' => 'size=auto'))
+                             $this->url_for('calendar/single/export_calendar'),
+                             Icon::create('download', 'clickable'),
+                             array('data-dialog' => 'size=auto'))
                     ->setActive($active == 'export_calendar');
             $export->addLink(_('Termine importieren'),
                     $this->url_for('calendar/single/import'),
-                    'icons/16/blue/upload.png', array('data-dialog' => 'size=auto'))
+                             Icon::create('upload', 'clickable'),
+                             array('data-dialog' => 'size=auto'))
                     ->setActive($active == 'import');
             $export->addLink(_('Kalender teilen'),
                     $this->url_for('calendar/single/share'),
-                    'icons/16/blue/group2.png', array('data-dialog' => 'size=auto'))
+                             Icon::create('group2', 'clickable'),
+                             array('data-dialog' => 'size=auto'))
                     ->setActive($active == 'share');
             $sidebar->addWidget($export);
         }

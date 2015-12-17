@@ -242,7 +242,7 @@ class EvalOverview {
                 $copyButton->addAttr("style", "vertical-align:middle;");
                 $copyButton->addAttr("type", "image");
                 $copyButton->addAttr("name", "copy_public_template_button");
-                $copyButton->addAttr("src", Assets::image_path('icons/16/yellow/arr_2down.png'));
+                $copyButton->addAttr("src", Icon::create('arr_2down', 'sort')->asImagePath());
                 $copyButton->addAttr("border", "0");
                 $copyButton->addAttr("alt", _("Kopieren"));
                 $copyButton->addAttr("title", _("Diese öffentliche Evaluationsvorlagen zu den eigenen Evaluationsvorlagen kopieren"));
@@ -556,10 +556,10 @@ class EvalOverview {
      */
     function createInfoBox($imgLogo) {
         /* Define infobox text ------------------------------------------------ */
-        $info1 = array("icon" => "icons/16/black/test.png",
+        $info1 = array("icon" => Icon::create('test', 'clickable'),
             "text" => _("Auf dieser Seite haben Sie eine Übersicht aller in dem ausgewählten Bereich existierenden Evaluationen sowie Ihrer eigenen Evaluationsvorlagen."));
 
-        $info2 = array("icon" => "icons/16/black/info.png",
+        $info2 = array("icon" => Icon::create('info', 'clickable'),
             "text" => _("Sie können eine Evaluation aufklappen und dann Bereichen zuordnen und ihre Laufzeit bestimmen."));
 
 
@@ -1691,7 +1691,7 @@ class EvalOverview {
                  ? _('Legen Sie fest, von wann bis wann alle eingehängten und kopierten Instanzen dieser Evaluationsvorlage in Stud.IP öffentlich sichtbar sein sollen.')
                  : _('Legen Sie fest, von wann bis wann die Evaluation in Stud.IP öffentlich sichtbar sein soll.');
         $html .= " ";
-        $html .= Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip) + array('class' => 'middle'));
+        $html .= Icon::create('info-circle', 'inactive', ['title' => $tooltip])->asImg(['class' => 'middle']);
         $html .= "</td></tr>";
         $html .= "<tr>";
 
@@ -1800,10 +1800,7 @@ class EvalOverview {
                 $startDate = ($startMode == "immediate") ? time() : $startDate;
 
                 $html .= "&nbsp;";
-                $html .= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Endzeitpunkt neu berechnen')) + array(
-                             'name' => 'save2_button',
-                             'align' => 'middle',
-                         ));
+                $html .= Icon::create('refresh', 'clickable', ['title' => _('Endzeitpunkt neu berechnen')])->asInput(array('name'=>'save2_button','align'=>'middle',));
                 $html .= sprintf(_(" (<b>%s</b> um <b>%s</b> Uhr)"), strftime("%d.%m.%Y", $startDate + $timeSpan), strftime("%H:%M", $startDate + $timeSpan));
             }
             $html .= "</td></tr>";

@@ -28,25 +28,25 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
 
         if (StudipNews::CountUnread() > 0) {
             $navigation = new Navigation('', PluginEngine::getLink($this, array(), 'read_all'));
-            $navigation->setImage('icons/16/blue/refresh.png', array('title' => _('Alle als gelesen markieren')));
+            $navigation->setImage(Icon::create('refresh', 'clickable', ["title" => _('Alle als gelesen markieren')]));
             $icons[] = $navigation;
         }
 
         if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
             if ($rss_id = StudipNews::GetRssIdFromRangeId('studip')) {
                 $navigation = new Navigation('', 'rss.php', array('id' => $rss_id));
-                $navigation->setImage('icons/16/blue/rss.png', array('title' => _('RSS-Feed')));
+                $navigation->setImage(Icon::create('rss', 'clickable', ["title" => _('RSS-Feed')]));
                 $icons[] = $navigation;
             }
         }
 
         if ($GLOBALS['perm']->have_perm('root')) {
             $navigation = new Navigation('', 'dispatch.php/news/edit_news/new/studip');
-            $navigation->setImage('icons/16/blue/add.png', array('rel' => 'get_dialog', 'title' =>_('Ankündigungen bearbeiten')));
+            $navigation->setImage(Icon::create('add', 'clickable', ["title" => _('Ankündigungen bearbeiten')]), ["rel" => 'get_dialog']);
             $icons[] = $navigation;
             if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
                 $navigation = new Navigation('', 'dispatch.php/news/rss_config/studip');
-                $navigation->setImage('icons/16/blue/add/rss.png', array('data-dialog' => 'size=auto', 'title' =>_('RSS-Feed konfigurieren')));
+                $navigation->setImage(Icon::create('rss+add', 'clickable', ["title" => _('RSS-Feed konfigurieren')]), ["data-dialog" => 'size=auto']);
                 $icons[] = $navigation;
             }
         }

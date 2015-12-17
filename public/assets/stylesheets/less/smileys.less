@@ -19,10 +19,10 @@
         white-space: nowrap;
         
         &.favorites a {
-            .icon-before('white/smiley.png');
+            .icon('before', 'smiley', 'info_alt');
         }
         &.favorites.current a {
-            .icon-before('black/smiley.png');
+            .icon('before', 'smiley', 'info');
         }
     }
     a {
@@ -66,14 +66,14 @@
 .smiley-toggle {
     .square(16px);
     .hide-text;
-    .retina-background-icon('blue/checkbox-unchecked.png');
+    .background-icon('checkbox-unchecked', 'clickable');
     background-position: center;
     background-repeat: no-repeat;
     display: inline-block;
     vertical-align: middle;
 
     &.favorite { 
-        .retina-background-icon('blue/checkbox-checked.png');
+        .background-icon('checkbox-checked', 'clickable');
     }
     &.ajax {
         background-image: url("@{image-path}/ajax_indicator_small.gif");

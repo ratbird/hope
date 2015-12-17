@@ -16,7 +16,7 @@
             <td class="table_header_bold" style="text-align: right;">
                 <? if (isset($admin_url)): ?>
                     <a href="<?= URLHelper::getLink($admin_url) ?>" title="<?= htmlReady($admin_title) ?>">
-                        <?= Assets::img('icons/16/white/admin.png', array('alt' => htmlReady($admin_title))) ?>
+                        <?= Icon::create('admin', 'info_alt')->asImg(16, ["alt" => htmlReady($admin_title)]) ?>
                     </a>
                 <? endif ?>
             </td>

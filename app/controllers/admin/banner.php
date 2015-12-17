@@ -424,8 +424,8 @@ class Admin_BannerController extends AuthenticatedController
         $sidebar->setImage('sidebar/admin-sidebar.png');
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Übersicht'), $this->url_for('admin/banner'),'icons/16/blue/visibility-visible.png');
-        $actions->addLink(_('Neues Banner anlegen'), $this->url_for('admin/banner/new'),'icons/16/blue/add.png');
+        $actions->addLink(_('Übersicht'), $this->url_for('admin/banner'), Icon::create('visibility-visible', 'clickable'));
+        $actions->addLink(_('Neues Banner anlegen'), $this->url_for('admin/banner/new'), Icon::create('add', 'clickable'));
 
         $sidebar->addWidget($actions);
     }

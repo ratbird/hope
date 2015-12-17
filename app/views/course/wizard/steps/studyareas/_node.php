@@ -1,10 +1,7 @@
 <?php if (!$search_result || in_array($node->id, $search_result)) : ?>
 <li class="sem-tree-<?= htmlReady($node->id) ?> keep-node" data-id="<?= $node->id ?>">
     <?php if ($node->isAssignable()) : ?>
-    <?= Assets::input('icons/yellow/arr_2left.svg',
-            array('name' => 'assign['.$node->id.']',
-            'onclick' => "return STUDIP.CourseWizard.assignNode('".$node->id."')",
-            'class' => in_array($node->id, $values['studyareas'] ?: array()) ? 'hidden-no-js' : '')) ?>
+    <?= Icon::create('arr_2left', 'sort')->asInput(["name" => 'assign['.$node->id.']', "onclick" => "return STUDIP.CourseWizard.assignNode('".$node->id."')", "class" => in_array($node->id,$values['studyareas']?:array())?'hidden-no-js':'']) ?>
     <?php endif ?>
     <?php if ($node->hasChildren()) : ?>
     <input type="checkbox" id="<?= htmlReady($node->id) ?>"<?= (in_array($node->id, $open_nodes) && $node->parent_id != $values['open_node']) ? ' checked="checked"' : '' ?>/>

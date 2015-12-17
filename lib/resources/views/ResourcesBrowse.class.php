@@ -434,9 +434,7 @@ class ResourcesBrowse {
                 if ($way_back>=0) : ?>
                 <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode')
                             . '&' . (!$way_back ? "reset=TRUE" : "open_level=$way_back")) ?>">
-                    <?= Assets::img('icons/16/blue/arr_2left.png', array(
-                        'class' => 'text-top',
-                        'title' =>_('eine Ebene zurück'))) ?>
+                    <?= Icon::create('arr_2left', 'clickable', ['title' => _('eine Ebene zurück')])->asImg(16, ["class" => 'text-top']) ?>
                     </a>
                 <? endif ?>
             </td>

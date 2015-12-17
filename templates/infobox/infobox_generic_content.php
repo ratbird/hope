@@ -42,7 +42,7 @@
 
                 <tr>
                   <td width="1%" align="center" valign="top">
-                    <?= Assets::img($item['icon'], array('width' => "16px")) ?>
+                    <?= is_string($item['icon']) ? Icon::create2($item['icon'])->asImg() : $item['icon']->asImg() ?>
                   </td>
                   <td width="99%">
                     <?= $item["text"] ?>

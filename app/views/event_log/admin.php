@@ -61,7 +61,7 @@
                    title="<?= _('0 = keine Ablaufzeit') ?>"> <?= _('Tage') ?>
           </td>
           <td style="font-size: smaller;">
-            <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "save", 'title' => _('Speichern'))) ?>
+            <?= Icon::create('accept', 'clickable', ['title' => _('Speichern')])->asInput(["type" => "image", "class" => "middle", "name" => "save"]) ?>
           </td>
         <? else: ?>
           <td style="font-size: smaller;">
@@ -75,21 +75,21 @@
           </td>
           <td style="font-size: smaller;">
             <? if ($log_action['active']): ?>
-              <?= Assets::img('icons/16/green/accept.png') ?>
+              <?= Icon::create('accept', 'accept')->asImg() ?>
             <? else: ?>
-              <?= Assets::img('icons/16/red/decline.png') ?>
+              <?= Icon::create('decline', 'attention')->asImg() ?>
             <? endif ?>
           </td>
           <td style="font-size: smaller; white-space: nowrap;">
             <? if ($log_action['expires'] > 0): ?>
               <?= $log_action['expires'] / 86400 ?> <?= _('Tage') ?>
             <? else: ?>
-              <?= Assets::img('icons/16/red/decline.png') ?>
+              <?= Icon::create('decline', 'attention')->asImg() ?>
             <? endif ?>
           </td>
           <td style="font-size: smaller;">
             <a href="<?= $controller->url_for('event_log/edit/'.$log_action['action_id']) ?>#edit">
-              <?= Assets::img('icons/16/blue/edit.png') ?>
+              <?= Icon::create('edit', 'clickable')->asImg() ?>
             </a>
           </td>
         <? endif ?>

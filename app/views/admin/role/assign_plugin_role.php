@@ -40,10 +40,10 @@ use Studip\Button, Studip\LinkButton;
                     </select>
                 </td>
                 <td style="text-align: center;">
-                    <?= Assets::input("icons/16/yellow/arr_2left.png", array('type' => "image", 'class' => "middle", 'name' => "assign_role", 'title' => _('Markierte Rollen dem Plugin zuweisen'))) ?>
+                    <?= Icon::create('arr_2left', 'sort', ['title' => _('Markierte Rollen dem Plugin zuweisen')])->asInput(["type" => "image", "class" => "middle", "name" => "assign_role"]) ?>
                     <br>
                     <br>
-                    <?= Assets::input("icons/16/yellow/arr_2right.png", array('type' => "image", 'class' => "middle", 'name' => "remove_role", 'title' => _('Markierte Rollen entfernen'))) ?>
+                    <?= Icon::create('arr_2right', 'sort', ['title' => _('Markierte Rollen entfernen')])->asInput(["type" => "image", "class" => "middle", "name" => "remove_role"]) ?>
                 </td>
                 <td>
                     <select multiple name="rolesel[]" size="10" style="width: 300px;">

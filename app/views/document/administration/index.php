@@ -61,32 +61,32 @@
             <td>
             <? if($config['closed']): ?>
                 <a href="<?= $controller->url_for('document/administration/activateDocumentArea', $config['id']) ?>" data-behaviour="ajax-toggle"> 
-                    <?= Assets::img('icons/16/blue/checkbox-checked.png', tooltip2(_('Dateibereich öffnen'))) ?>
+                    <?= Icon::create('checkbox-checked', 'clickable', ['title' => _('Dateibereich öffnen')])->asImg() ?>
                 </a>
             <? else : ?>
                 <a data-dialog href="<?= $controller->url_for('document/administration/deactivateDocumentArea', $config['id']) ?>">
-                    <?= Assets::img('icons/16/blue/checkbox-unchecked.png', tooltip2(_('Dateibereich sperren'))) ?>
+                    <?= Icon::create('checkbox-unchecked', 'clickable', ['title' => _('Dateibereich sperren')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>
             <td>
             <? if($config['forbidden']): ?>
                 <a href="<?= $controller->url_for('document/administration/activateUpload', $config['id']) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-checked.png', tooltip2(_('Upload aktivieren'))) ?>
+                    <?= Icon::create('checkbox-checked', 'clickable', ['title' => _('Upload aktivieren')])->asImg() ?>
                 </a>
             <? else : ?>
                 <a href="<?= $controller->url_for('document/administration/deactivateUpload', $config['id']) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-unchecked.png', tooltip2(_('Upload deaktivieren'))) ?>
+                    <?= Icon::create('checkbox-unchecked', 'clickable', ['title' => _('Upload deaktivieren')])->asImg() ?>
                 </a>
             <? endif;?>
             </td>
             <td class="actions">
                 <a data-dialog href="<?= $controller->url_for('document/administration/edit/'.$config['id']) ?>">
-                    <?= Assets::img('icons/16/blue/edit.png', tooltip2(_('Konfiguration bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Konfiguration bearbeiten')])->asImg() ?>
                 </a>
             <? if($config['name'] != 'default'): ?>
                 <a href="<?= $controller->url_for('document/administration/delete/'.$config['id']) ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', tooltip2(_('Konfiguration löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Konfiguration löschen')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>

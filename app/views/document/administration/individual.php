@@ -77,11 +77,11 @@
             </td>
             <td>
                  <a data-dialog href="<?= $controller->url_for('document/administration/edit/0/' . $u['user_id']) ?>">
-                    <?= Assets::img('icons/16/blue/edit', tooltip2(_('Einstellung bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Einstellung bearbeiten')])->asImg() ?>
                 </a>
             <?if ($u['deleteIcon'] == 1) :?>
                 <a href="<?= $controller->url_for('document/administration/delete/' . $u['config_id']) ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', tooltip2(_('Einstellungen löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Einstellungen löschen')])->asImg() ?>
                 </a>
             <?  endif;?>
             </td>

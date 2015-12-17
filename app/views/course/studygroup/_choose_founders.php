@@ -12,14 +12,14 @@
                     <option value="<?= $user_id ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>
                     <? endforeach; ?>
                 </select>
-                <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "add_founder", 'title' => _('NutzerIn hinzufügen'))) ?>
-                <?= Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'class' => "middle", 'name' => "new_search", 'title' => _('neue Suche starten'))) ?>
+                <?= Icon::create('accept', 'clickable', ['title' => _('NutzerIn hinzufügen')])->asInput(["type" => "image", "class" => "middle", "name" => "add_founder"]) ?>
+                <?= Icon::create('refresh', 'clickable', ['title' => _('neue Suche starten')])->asInput(["type" => "image", "class" => "middle", "name" => "new_search"]) ?>
                 <? if (sizeof($results_choose_founders) == 500) : ?>
                 <br><span style="color:red"><?= sprintf(_("Es werden nur die ersten %s Treffer angezeigt!"), 500) ?></span>
                 <? endif; ?>
             <? else : ?>
                 <input type="text" name="search_for_founder">
-                <?= Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "search_founder", 'title' => _('Suchen'))) ?>
+                <?= Icon::create('search', 'clickable', ['title' => _('Suchen')])->asInput(["type" => "image", "class" => "middle", "name" => "search_founder"]) ?>
                 <?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
             <? endif; ?>
             </div>
@@ -33,7 +33,7 @@
                     
                     <?= htmlReady(get_fullname($user_id, 'full_rev')) ?> (<?= get_username($user_id) ?>)
                     <input type="hidden" name="founders[]" value="<?= $user_id ?>">
-                    <?= Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'class' => "middle", 'name' => "remove_founder", 'title' => _('NutzerIn entfernen'))) ?>
+                    <?= Icon::create('refresh', 'clickable', ['title' => _('NutzerIn entfernen')])->asInput(["type" => "image", "class" => "middle", "name" => "remove_founder"]) ?>
                     <br>
                 <? endforeach; ?>
             <? endif; ?>

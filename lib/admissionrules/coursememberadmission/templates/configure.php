@@ -10,7 +10,7 @@
     <p>
         <?=htmlReady($mandatory_course->getFullName('number-name-semester'));?>
         <a href="<?=URLHelper::getScriptLink('dispatch.php/course/details/index/' . $mandatory_course->id) ?>"  data-dialog>
-            <?= Assets::img('icons/16/grey/info-circle.png', array('title' =>_('Veranstaltungsdetails aufrufen')))?>
+            <?= Icon::create('info-circle', 'inactive', ['title' =>_('Veranstaltungsdetails aufrufen')])->asImg()?>
         </a>
     </p>
 <? endif ?>

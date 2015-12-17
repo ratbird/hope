@@ -81,7 +81,7 @@ if (!CheckParamXML())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => _("Die Parametern, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
                              )
                         )
@@ -169,7 +169,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
     $infobox = array    (
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
+                        array ( "icon" => Icon::create('info', 'clickable'),
                                 "text"  => $xml_export_text
                              )
                         )
@@ -179,7 +179,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
     {
         $link = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .' ">';
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => Icon::create('download', 'clickable'),
                                         "text"  => sprintf(_("Um die XML-Datei jetzt herunterzuladen klicken Sie %s hier %s."), $link, "</a>")
                                     );
     }

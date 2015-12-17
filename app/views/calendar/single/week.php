@@ -66,7 +66,7 @@ if ($rowspan > 1) {
             <div style="text-align: left; width: 25%; display: inline-block; white-space: nowrap;">
                 <a href="<?= $controller->url_for('calendar/single/week', array('atime' => strtotime('-1 week', $atime))) ?>">
                     <span style="vertical-align: middle;" <?= tooltip(_('eine Woche zurück')) ?>>
-                    <?= Assets::img('icons/16/blue/arr_1left.png') ?>
+                    <?= Icon::create('arr_1left', 'clickable')->asImg() ?>
                     </span>
                     <?= strftime(_('%V. Woche'), strtotime('-1 week', $atime)) ?>
                 </a>
@@ -78,7 +78,7 @@ if ($rowspan > 1) {
                 <a href="<?= $controller->url_for('calendar/single/week', array('atime' => strtotime('+1 week', $atime))) ?>">
                     <?= strftime(_('%V. Woche'), strtotime('+1 week', $atime)) ?>
                     <span style="vertical-align: middle;" <?= tooltip(_('eine Woche vor')) ?>>
-                    <?= Assets::img('icons/16/blue/arr_1right.png') ?>
+                    <?= Icon::create('arr_1right', 'clickable')->asImg() ?>
                     </span>
                 </a>
             </div>
@@ -88,7 +88,7 @@ if ($rowspan > 1) {
         <td style="text-align: center; white-space: nowrap;" <?= $colspan_1 ?>>
             <? if ($start > 0) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
+                <?= Icon::create('arr_1up', 'clickable', ['title' => _('zeig davor')])->asImg() ?>
             </a>
             <? endif ?>
         </td>
@@ -106,7 +106,7 @@ if ($rowspan > 1) {
         <td style="text-align: center; white-space: nowrap;" <?= $colspan_1 ?>>
             <? if ($start > 0) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
+                <?= Icon::create('arr_1up', 'clickable', ['title' => _('zeig davor')])->asImg() ?>
             </a>
             <? endif ?>
         </td>
@@ -183,7 +183,7 @@ if ($rowspan > 1) {
         <td<?= $colspan_1 ?> style="text-align:center;">
         <? if ($end < 23) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($end + 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
+                <?= Icon::create('arr_1down', 'clickable', ['title' => _('zeig danach')])->asImg() ?>
             </a>
         <? endif ?>
         </td>
@@ -191,7 +191,7 @@ if ($rowspan > 1) {
         <td<?= $colspan_1 ?> style="text-align:center;">
         <? if ($end < 23) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($end + 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
+                <?= Icon::create('arr_1down', 'clickable', ['title' => _('zeig danach')])->asImg() ?>
             </a>
         <? endif ?>
         </td>

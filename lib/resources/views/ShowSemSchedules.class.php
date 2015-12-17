@@ -164,7 +164,7 @@ class ShowSemSchedules extends ShowSchedules {
             $end_hour = 22;
         }
 
-        $schedule=new SemScheduleWeek($start_hour, $end_hour ,false , $start_time);
+        $schedule=new SemScheduleWeek($start_hour, $end_hour,false, $start_time);
         $num_rep_events = 0;
         $num_single_events = 0;
         if ($ActualObjectPerms->havePerm("autor"))
@@ -218,7 +218,7 @@ class ShowSemSchedules extends ShowSchedules {
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_sem=1')?>"><?= Assets::img("icons/16/blue/arr_2left.png", array('alt' => _("Vorheriges Semester anzeigen"), 'title' => _("Vorheriges Semester anzeigen"), 'border' => 0)) ?></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_sem=1')?>"><?= Icon::create('arr_2left', 'clickable', ['title' => _("Vorheriges Semester anzeigen")])->asImg(16, ["alt" => _("Vorheriges Semester anzeigen"), "border" => 0]) ?></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
                 <b>
@@ -230,7 +230,7 @@ class ShowSemSchedules extends ShowSchedules {
                 <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_sem=1')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächstes Semester anzeigen"), 'title' => _("Nächstes Semester anzeigen"), 'border' => 0)) ?></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_sem=1')?>"><?= Icon::create('arr_2right', 'clickable', ['title' => _("Nächstes Semester anzeigen")])->asImg(16, ["alt" => _("Nächstes Semester anzeigen"), "border" => 0]) ?></a>
                 </td>
             </tr>
             <tr>
@@ -239,7 +239,7 @@ class ShowSemSchedules extends ShowSchedules {
                     <a href="<?= URLHelper::getLink('', array('quick_view' => $this->used_view,
                                                               'quick_view_mode' => $view_mode,
                                                               'time_range' => $_SESSION['resources_data']['schedule_time_range'] ? 'FALSE' : -1)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_2up.png', array('class' => 'middle') + tooltip2(_('Frühere Belegungen anzeigen'))) ?>
+                        <?= Icon::create('arr_2up', 'clickable', ['title' => _('Frühere Belegungen anzeigen')])->asImg(['class' => 'middle']) ?>
                     </a>
                 <? endif; ?>
                 </td>
@@ -261,7 +261,7 @@ class ShowSemSchedules extends ShowSchedules {
                     printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "single") ? "selected" : "");
                     printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "repeated") ? "selected" : "");
                     print "</select>";
-                    print "&nbsp;".Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'name' => "send_schedule_repeat_mode", 'title' => _('Ansicht umschalten')));
+                    print "&nbsp;".Icon::create('accept', 'accept', ['title' => _('Ansicht umschalten')])->asInput(["type" => "image", "class" => "middle", "name" => "send_schedule_repeat_mode"]);
                     ?>
                 </td>
             </tr>
@@ -280,7 +280,7 @@ class ShowSemSchedules extends ShowSchedules {
                     <a href="<?= URLHelper::getLink('', array('quick_view' => $this->used_view,
                                                               'quick_view_mode' => $view_mode,
                                                               'time_range' => $_SESSION['resources_data']['schedule_time_range'] ? 'FALSE' : 1)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_2down.png', tooltip2(_('Spätere Belegungen anzeigen'))) ?>
+                        <?= Icon::create('arr_2down', 'clickable', ['title' => _('Spätere Belegungen anzeigen')])->asImg() ?>
                     </a>
                 <? endif; ?>
                 </td>

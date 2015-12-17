@@ -14,7 +14,7 @@ class CoreCalendar implements StudipModule {
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('CALENDAR_GROUP_ENABLE')) {
             $navigation = new Navigation(_('Kalender'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/calendar/single/");
-            $navigation->setImage('icons/16/grey/wiki.png');
+            $navigation->setImage(Icon::create('wiki', 'inactive'));
             return $navigation;
         }
     }
@@ -22,8 +22,8 @@ class CoreCalendar implements StudipModule {
     function getTabNavigation($course_id) {
         if (get_config('CALENDAR_GROUP_ENABLE')) {
             $navigation = new Navigation(_('Kalender'), 'dispatch.php/calendar/single/');
-            $navigation->setImage('icons/16/white/schedule.png');
-            $navigation->setActiveImage('icons/16/black/schedule.png');
+            $navigation->setImage(Icon::create('schedule', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('schedule', 'info'));
             return array('calendar' => $navigation);
         } else {
             return null;

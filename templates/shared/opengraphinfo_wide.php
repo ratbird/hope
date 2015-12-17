@@ -19,7 +19,7 @@
            class="flash-embedder"
            style="background-image: url('<?= htmlReady($og['image']) ?>');"
            title="<?= _("Video abspielen") ?>">
-            <?= Assets::img("icons/80/blue/play.svg", array('class' => "play"))?>
+            <?= Icon::create('play', 'clickable')->asImg(80, ["class" => "play"])?>
         </a>
     <? else : ?>
         <video width="100%" height="200px" controls>
@@ -37,7 +37,7 @@
            class="flash-embedder"
            style="background-image: url('<?= htmlReady($og['image']) ?>');"
            title="<?= _("Audio abspielen") ?>">
-            <?= Assets::img("icons/100/blue/play.svg")?>
+            <?= Icon::create('play', 'clickable')->asImg(100)?>
         </a>
     <? else : ?>
         <audio width="100%" height="50px" controls>

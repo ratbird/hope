@@ -39,7 +39,7 @@ class CommunityNavigation extends Navigation
             }
         }
 
-        $this->setImage('icons/lightblue/community.svg', array('title' => $onlinetip));
+        $this->setImage(Icon::create('community', 'navigation', ["title" => $onlinetip]));
     }
 
     /**

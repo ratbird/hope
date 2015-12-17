@@ -66,11 +66,11 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     </td>
                     <td class="actions">
                         <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user=' . $p['username']) ?>">
-                            <?= Assets::img('icons/blue/accept', tooltip2(_('Eintragen'))) ?>
+                            <?= Icon::create('accept', 'clickable', ['title' => _('Eintragen')])->asImg() ?>
                         </a>
 
                         <a data-confirm="<?=_('Wollen Sie die Mitgliedschaft wirklich ablehnen?')?>" href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p['username']) ?>">
-                            <?= Assets::img('icons/blue/decline', tooltip2(_('Wollen Sie die Mitgliedschaft wirklich ablehnen?'))) ?>
+                            <?= Icon::create('decline', 'clickable', ['title' => _('Wollen Sie die Mitgliedschaft wirklich ablehnen?')])->asImg() ?>
                         </a>
                     </td>
                 </tr>
@@ -110,7 +110,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                     </td>
                     <td class="actions">
                         <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user=' . $p['username']) ?>">
-                            <?= Assets::img('icons/blue/decline', tooltip2(_('Verschickte Einladungen löschen'))) ?>
+                            <?= Icon::create('decline', 'clickable', ['title' => _('Verschickte Einladungen löschen')])->asImg() ?>
                         </a>
                     </td>
                 </tr>

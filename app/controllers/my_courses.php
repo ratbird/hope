@@ -168,27 +168,23 @@ class MyCoursesController extends AuthenticatedController
 
         if ($new_contents) {
             $setting_widget->addLink(_('Alles als gelesen markieren'),
-                                     $this->url_for('my_courses/tabularasa/' . $sem . '/', time()),
-                                     'icons/16/blue/accept.png');
+                                     $this->url_for('my_courses/tabularasa/' . $sem . '/', time()), Icon::create('accept', 'clickable'));
         }
         $setting_widget->addLink(_('Farbgruppierung ändern'),
-                                 URLHelper::getLink($this->settings_url),
-                                 'icons/16/blue/group4.png',
+                                 URLHelper::getLink($this->settings_url), Icon::create('group4', 'clickable'),
                                  array('data-dialog' => ''));
 
         if (Config::get()->MAIL_NOTIFICATION_ENABLE) {
             $setting_widget->addLink(_('Benachrichtigungen anpassen'),
-                                     URLHelper::getLink('dispatch.php/settings/notification'),
-                                     'icons/16/blue/mail.png');
+                                     URLHelper::getLink('dispatch.php/settings/notification'), Icon::create('mail', 'clickable'));
         }
 
         if ($sem_create_perm == 'dozent' && $GLOBALS['perm']->have_perm('dozent')) {
             $setting_widget->addLink(_('Neue Veranstaltung anlegen'),
-                                     URLHelper::getLink('dispatch.php/course/wizard'),
-                                     'icons/16/blue/add/seminar.png');
+                                     URLHelper::getLink('dispatch.php/course/wizard'), Icon::create('seminar+add', 'clickable'));
         }
 
-        $setting_widget->addLink(_('Veranstaltung hinzufügen'), URLHelper::getLink('dispatch.php/search/courses'),'icons/16/blue/seminar.png');
+        $setting_widget->addLink(_('Veranstaltung hinzufügen'), URLHelper::getLink('dispatch.php/search/courses'), Icon::create('seminar', 'clickable'));
         $sidebar->addWidget($setting_widget);
         $this->setGroupingSelector($this->group_field);
     }

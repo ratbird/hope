@@ -240,10 +240,10 @@ class Admin_StudycourseController extends AuthenticatedController
         $sidebar->setImage('sidebar/admin-sidebar.png');
 
         $links = new ActionsWidget();
-        $links->addLink(_('Gruppierung nach Fächer'), $this->url_for('admin/studycourse/profession'), 'icons/16/blue/visibility-visible.png');
-        $links->addLink(_('Gruppierung nach Abschlüssen'), $this->url_for('admin/studycourse/degree'), 'icons/16/blue/visibility-visible.png');
-        $links->addLink(_('Neue Fächer anlegen'), $this->url_for('admin/studycourse/newprofession'), 'icons/16/blue/add.png');
-        $links->addLink(_('Neue Abschlüsse anlegen'), $this->url_for('admin/studycourse/newdegree'), 'icons/16/blue/add.png');
+        $links->addLink(_('Gruppierung nach Fächer'), $this->url_for('admin/studycourse/profession'), Icon::create('visibility-visible', 'clickable'));
+        $links->addLink(_('Gruppierung nach Abschlüssen'), $this->url_for('admin/studycourse/degree'), Icon::create('visibility-visible', 'clickable'));
+        $links->addLink(_('Neue Fächer anlegen'), $this->url_for('admin/studycourse/newprofession'), Icon::create('add', 'clickable'));
+        $links->addLink(_('Neue Abschlüsse anlegen'), $this->url_for('admin/studycourse/newdegree'), Icon::create('add', 'clickable'));
         $sidebar->addWidget($links);
     }
 

@@ -57,9 +57,7 @@
                 <? $parent_topic = ForumEntry::getConstraints(ForumEntry::getParentTopicId($post['topic_id'])) ?>
 
                 <? if($constraint['closed']) : ?>
-                <?= Assets::img('icons/16/black/lock-locked.png', array(
-                    'title' => _('Dieses Thema wurde geschlossen. Sie können daher nicht auf diesen Beitrag antworten.')
-                )) ?>
+                <?= Icon::create('lock-locked', 'info', ['title' => _('Dieses Thema wurde geschlossen. Sie können daher nicht auf diesen Beitrag antworten.')])->asImg(16) ?>
                 <? endif ?>
 
                 <span data-edit-topic="<?= $post['topic_id'] ?>">
@@ -184,7 +182,7 @@
                 <? endif ?>
 
                 <? if ($post['user_id'] == 'nobody') : ?>
-                    <?= Assets::img('icons/16/black/community.png') ?>
+                    <?= Icon::create('community', 'info')->asImg() ?>
                     <span class="username" data-profile="<?= $post['topic_id'] ?>">
                         <?= htmlReady($post['author']) ?>
                     </span>
@@ -195,9 +193,9 @@
                     <? if ($status == 'available') : ?>
                         <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
                     <? elseif ($status == 'away') : ?>
-                        <?= Assets::img('icons/16/grey/community.png', array('title' => _('Abwesend'))) ?>
+                        <?= Icon::create('community', 'inactive', ['title' => _('Abwesend')])->asImg() ?>
                     <? elseif ($status == 'offline') : ?>
-                        <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
+                        <?= Icon::create('community', 'info', ['title' => _('Offline')])->asImg() ?>
                     <? endif ?>
 
                     <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => get_username($post['user_id'])))?>">
@@ -234,7 +232,7 @@
                     
                 <!-- Permalink -->
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']) ?>">
-                    <?= Assets::img('icons/16/blue/group.png', array('title' => _('Link zu diesem Beitrag'))) ?>
+                    <?= Icon::create('group', 'clickable', ['title' => _('Link zu diesem Beitrag')])->asImg() ?>
                 </a>
                 <br>
 
@@ -255,9 +253,7 @@
         
         <? if ($is_new): ?>
         <span class="new_posting">
-            <?= Assets::img('icons/16/red/new/forum.png', array(
-                'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
-            )) ?>
+            <?= Icon::create('forum+new', 'attention', ['title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")])->asImg(16) ?>
         </span>
         <? endif ?>  
     </span>

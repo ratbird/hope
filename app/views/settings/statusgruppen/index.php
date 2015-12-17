@@ -34,27 +34,27 @@
             <td style="text-align: right;">
             <? if (!$locked && $inst_count > 0) : ?>
                 <a href="<?= $controller->url_for('settings/statusgruppen/move', $inst_id, 'up') ?>">
-                    <?= Assets::img('icons/16/yellow/arr_2up') ?>
+                    <?= Icon::create('arr_2up', 'sort')->asImg() ?>
                 </a>
             <? elseif (!$locked && count($institutes) > 1): ?>
-                <?= Assets::img('icons/16/grey/arr_2up') ?>
+                <?= Icon::create('arr_2up', 'inactive')->asImg() ?>
             <? endif; ?>
 
             <? if (!$locked && $inst_count + 1 < count($institutes)): ?>
                 <a href="<?= $controller->url_for('settings/statusgruppen/move', $inst_id, 'down') ?>">
-                    <?= Assets::img('icons/16/yellow/arr_2down') ?>
+                    <?= Icon::create('arr_2down', 'sort')->asImg() ?>
                 </a>
             <? elseif (!$locked && count($institutes) > 1): ?>
-                <?= Assets::img('icons/16/grey/arr_2down') ?>
+                <?= Icon::create('arr_2down', 'inactive')->asImg() ?>
             <? endif; ?>
 
             <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
                 <a href="<?= URLHelper::getURL('dispatch.php/institute/members', array('cid' => $inst_id, 'admin_view' => 1)) ?>">
-                    <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Einrichtung'))) ?>
+                    <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Einrichtung')])->asImg() ?>
                 </a>
             <? else: ?>
                 <a href="<?= URLHelper::getURL('dispatch.php/institute/overview', array('auswahl' => $inst_id)) ?>">
-                    <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Einrichtung'))) ?>
+                    <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Einrichtung')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>
@@ -89,11 +89,11 @@
             <td style="text-align: right;">
             <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && !$locked) : ?>
                 <a href="<?= $controller->url_for('settings/statusgruppen/verify/delete', $role_id) ?>#<?= $role_id ?>">
-                    <?= Assets::img('icons/16/blue/trash', tooltip2(_('Löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Löschen')])->asImg() ?>
                 </a>
 
                 <a href="<?= URLHelper::getURL('dispatch.php/admin/statusgroups', array('cid' => $inst_id)) ?>#group-<?= $role_id ?>">
-                    <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Funktion'))) ?>
+                    <?= Icon::create('link-intern', 'clickable', ['title' => _('Zur Funktion')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>

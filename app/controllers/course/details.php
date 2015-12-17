@@ -108,8 +108,7 @@ class Course_DetailsController extends AuthenticatedController
             $sidebar->setTitle(_('Details'));
             $links = new ActionsWidget();
             $links->addLink(_("Drucken"),
-                URLHelper::getScriptLink("dispatch.php/course/details/index/" . $this->course->id),
-                'icons/16/blue/print.png',
+                URLHelper::getScriptLink("dispatch.php/course/details/index/" . $this->course->id), Icon::create('print', 'clickable'),
                 array('class' => 'print_action', 'target' => '_blank'));
             if ($enrolment_info['enrolment_allowed'] && $sidebarlink) {
                 if (in_array($enrolment_info['cause'], words('member root courseadmin'))) {
@@ -118,8 +117,7 @@ class Course_DetailsController extends AuthenticatedController
                     $abo_msg = _("Zugang zur Veranstaltung");
                 }
                 $links->addLink($abo_msg,
-                    URLHelper::getScriptLink("dispatch.php/course/enrolment/apply/" . $this->course->id),
-                    'icons/16/blue/door-enter.png',
+                    URLHelper::getScriptLink("dispatch.php/course/enrolment/apply/" . $this->course->id), Icon::create('door-enter', 'clickable'),
                     array('data-dialog' => ''));
 
             }
@@ -134,12 +132,12 @@ class Course_DetailsController extends AuthenticatedController
                 if (!DBManager::Get()->fetchColumn($query, array($this->course->id,
                     $GLOBALS['user']->id))
                 ) {
-                    $links->addLink(_("Nur im Stundenplan vormerken"), URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/" . $this->course->id), 'icons/16/blue/info.png');
+                    $links->addLink(_("Nur im Stundenplan vormerken"), URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/" . $this->course->id), Icon::create('info', 'clickable'));
                 }
             }
 
             if ($this->send_from_search_page) {
-                $links->addLink(_("Zurück zur letzten Auswahl"), URLHelper::getLink($this->send_from_search_page), 'icons/16/blue/link-intern.png');
+                $links->addLink(_("Zurück zur letzten Auswahl"), URLHelper::getLink($this->send_from_search_page), Icon::create('link-intern', 'clickable'));
             }
 
             if ($links->hasElements()) {

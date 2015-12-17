@@ -43,8 +43,8 @@
             </select>
         </td>
         <td>
-        <?= Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'name' => "ok", 'title' => _('Änderungen speichern'))) ?>
-        <?= Assets::input("iicons/16/red/decline", array('type' => "image", 'class' => "middle", 'name' => "cancel", 'title' => _('Abbrechen'))) ?>
+        <?= Icon::create('accept', 'accept', ['title' => _('Änderungen speichern')])->asInput(["type" => "image", "class" => "middle", "name" => "ok"]) ?>
+        <?= Icon::create('decline', 'attention', ['title' => _('Abbrechen')])->asInput(['type' => "image", 'class' => "middle", 'name' => "cancel"]) ?>
         </td>
     <? else : ?>
         <td>
@@ -61,10 +61,10 @@
         </td>
         <td>
           <a href="<?= $controller->url_for('admin/webservice_access/edit/'.$rule->id.'#edit') ?>">
-            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
+            <?= Icon::create('edit', 'clickable', ['title' => _('bearbeiten')])->asImg() ?>
           </a>
           <a href="<?= $controller->url_for('admin/webservice_access/delete/'.$rule->id) ?>">
-              <?= Assets::img('icons/16/blue/trash.png', array('title' => _('löschen'))) ?>
+              <?= Icon::create('trash', 'clickable', ['title' => _('löschen')])->asImg() ?>
           </a>
         </td>
     <? endif;?>
@@ -78,7 +78,7 @@ $sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Webservices'));
 
 $actions = new ActionsWidget();
-$actions->addLink(_('Regeln testen'),$controller->url_for('admin/webservice_access/test'),'icons/16/blue/add.png');
-$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'),'icons/16/blue/add.png');
+$actions->addLink(_('Regeln testen'),$controller->url_for('admin/webservice_access/test'), Icon::create('add', 'clickable'));
+$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'), Icon::create('add', 'clickable'));
 
 $sidebar->addWidget($actions);

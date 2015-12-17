@@ -22,14 +22,15 @@ class Calendar_GroupController extends Calendar_CalendarController {
         $sidebar = Sidebar::Get();
         $actions = new ActionsWidget();
         $actions->addLink(_('Termin anlegen'),
-            $this->url_for('calendar/group/edit'), 'icons/16/blue/add.png',
+                          $this->url_for('calendar/group/edit'),
+                          Icon::create('add', 'clickable'),
             array('data-dialog' => 'size=auto'));
         $actions->addLink(_('Kalender freigeben'),
                 $this->url_for('calendar/single/manage_access/' . $GLOBALS['user']->id,
-                        array('group_filter' => $this->range_id)),
-                'icons/16/blue/community.png',
-                array('id' => 'calendar-open-manageaccess', 
-                    'data-dialog' => '', 'data-dialogname' => 'manageaccess'));
+                               array('group_filter' => $this->range_id)),
+                          Icon::create('community', 'clickable'),
+                          array('id' => 'calendar-open-manageaccess',
+                                'data-dialog' => '', 'data-dialogname' => 'manageaccess'));
         $sidebar->addWidget($actions);
     }
 

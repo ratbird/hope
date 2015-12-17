@@ -18,18 +18,19 @@
                 <? if ($nav->isVisible(true)) : ?>
                     <?
                     $accesskey_attr = '';
-                    $image          = $nav->getImage();
+                    $image = $nav->getImage();
+                    $link_attributes = $nav->getLinkAttributes();
 
                     if ($accesskey_enabled) {
                         $accesskey      = ++$accesskey % 10;
                         $accesskey_attr = 'accesskey="' . $accesskey . '"';
-                        $image['title'] .= "  [ALT] + $accesskey";
+                        $link_attributes['title'] .= "  [ALT] + $accesskey";
                     }
 
                     ?>
                     <li id="nav_<?= $path ?>"<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
-                        <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?> data-badge="<?= (int)$nav->getBadgeNumber() ?>">
-                            <img class="headericon original" src="<?= $image['src'] ?>">
+                        <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $link_attributes['title'] ?>" <?= $accesskey_attr ?> data-badge="<?= (int)$nav->getBadgeNumber() ?>">
+                            <?= $image->asImg(['class' => 'headericon original']) ?>
                             <br>
                             <?= htmlReady($nav->getTitle()) ?>
                         </a>
@@ -109,7 +110,7 @@
                     ?>
                     <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
                     <input type="hidden" name="search_sem_qs_choose" value="title_lecturer_number">
-                    <?= Assets::input("icons/16/white/search.png", array('type' => "image", 'class' => "quicksearchbutton", 'name' => "search_sem_do_search", 'value' => "OK", 'title' => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)))) ?>
+                    <?= Icon::create('search', 'info_alt', ['title' => sprintf(_('Nach Veranstaltungen suchen (%s)'),htmlready($search_semester_name))])->asInput(["type" => "image", "class" => "quicksearchbutton", "name" => "search_sem_do_search", "value" => "OK"]) ?>
                 </form>
             </li>
         <? endif ?>

@@ -3,10 +3,10 @@
 <!-- set/unset favorite -->
 <? if (!$favorite) : ?>
     <a href="<?= PluginEngine::getLink('coreforum/index/set_favorite/'. $topic_id) ?>" onClick="STUDIP.Forum.setFavorite('<?= $topic_id ?>');return false;">
-        <?= Assets::img('icons/16/blue/exclaim.png', array('title' => _('Beitrag merken'))) ?>
+        <?= Icon::create('exclaim', 'clickable', ['title' => _('Beitrag merken')])->asImg() ?>
     </a>
 <? else : ?>
     <a href="<?= PluginEngine::getLink('coreforum/index/unset_favorite/'. $topic_id) ?>" onClick="STUDIP.Forum.unsetFavorite('<?= $topic_id ?>');return false;">
-        <?= Assets::img('icons/16/red/exclaim.png', array('title' => _('Beitrag nicht mehr merken'))) ?>
+        <?= Icon::create('exclaim', 'attention', ['title' => _('Beitrag nicht mehr merken')])->asImg() ?>
     </a>
 <? endif ?>

@@ -77,7 +77,7 @@ $data = array_filter($data);
                         <? if ($favorites_activated): ?>
                             <th class="actions">
                                 <abbr title="<?= _('Favorit') ?>">
-                                    <?= Assets::img('icons/16/black/star.png') ?>
+                                    <?= Icon::create('star', 'info')->asImg() ?>
                                 </abbr>
                             </th>
                         <? endif; ?>

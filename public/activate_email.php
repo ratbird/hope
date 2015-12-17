@@ -23,7 +23,7 @@ if($red)
     <tbody>
         <tr>
             <td class="table_header_bold<?=$class ?>" colspan=3 align="left">
-                <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
+                <?=Icon::create('mail', 'info_alt')->asImg(['class' => 'text-top']) ?>
                 <b>&nbsp;<?= $headline; ?></b>
             </td>
         </tr>

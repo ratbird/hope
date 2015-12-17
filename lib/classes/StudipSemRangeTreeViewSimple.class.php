@@ -72,7 +72,7 @@ class StudipSemRangeTreeViewSimple {
         echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
             echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
-            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zurück'))). "</a>";
+            Icon::create('arr_2left', 'clickable')->asImg(['class' => 'text-top', 'title' =>_('eine Ebene zurück')]). "</a>";
         } else {
             echo "&nbsp;";
         }
@@ -130,10 +130,10 @@ class StudipSemRangeTreeViewSimple {
             if ($this->tree->hasKids($item_id) && ($num_entries = $this->tree->getNumEntries($this->start_item_id,true))){
                 if ($this->show_entries != "sublevels"){
                     echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id={$this->start_item_id}_withkids")) ."\">";
-                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo Icon::create('arr_1right', 'clickable')->asImg();
                     echo '&nbsp;';
                 } else {
-                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo Icon::create('arr_1down', 'clickable')->asImg();
                     echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Einträge in allen Unterebenen vorhanden"), $num_entries);
@@ -145,10 +145,10 @@ class StudipSemRangeTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id=$item_id")) ."\">";
-                    echo Assets::img('icons/16/red/arr_1right.png');
+                    echo Icon::create('arr_1right', 'attention')->asImg();
                     echo '&nbsp;';
                 } else {
-                    echo Assets::img('icons/16/red/arr_1down.png');
+                    echo Icon::create('arr_1down', 'attention')->asImg();
                     echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Einträge auf dieser Ebene.&nbsp;"),$num_entries);
@@ -177,7 +177,7 @@ class StudipSemRangeTreeViewSimple {
 
         }
         $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . ">";
-        $ret .= Assets::img('icons/16/grey/info-circle.png');
+        $ret .= Icon::create('info-circle', 'inactive')->asImg();
         $ret .= "</a>";
         return $ret;
     }

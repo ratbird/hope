@@ -19,16 +19,16 @@
     <div class="row writer">
         <div class="context_selector select" title="<?= _("Kontext der Nachricht auswählen") ?>">
             <? $width = "50" ?>
-            <?= Assets::img("icons/".$width."/blue/blubber", array('class' => "select click")) ?>
+            <?= Icon::create("blubber", "clickable")->asImg($width, array('class' => "select click")) ?>
             <?= Assets::img($plugin->getPluginURL()."/assets/images/public_blue.svg", array('class' => "public click", 'height' => $width."px")) ?>
-            <?= Assets::img("icons/".$width."/blue/group3", array('class' => "private click")) ?>
-            <?= Assets::img("icons/".$width."/blue/seminar", array('class' => "seminar click")) ?>
+            <?= Icon::create("group3",  "clickable")->asImg($width, array('class' => "private click")) ?>
+            <?= Icon::create("seminar", "clickable")->asImg($width, array('class' => "seminar click")) ?>
         </div>
         <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady("#".$search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
         <label title="<?= _("Datei hochladen") ?>" class="uploader">
             <input type="file" style="display: none;" multiple>
             <?= Assets::img('ajax-indicator-black.svg', array('class' => "text-bottom uploading", 'width' => "16px", 'height' => "16px")) ?>
-            <?= Assets::img('icons/16/blue/upload', array('class' => "text-bottom upload")) ?>
+            <?= Icon::create('upload', 'clickable')->asImg(['class' => "text-bottom upload"]) ?>
         </label>
     </div>
     <div id="context_selector_title" style="display: none;"><?= _("Kontext auswählen") ?></div>
@@ -48,8 +48,8 @@
                         <?= _("Dein Beitrag wird allen angezeigt.") ?>
                     </td>
                     <td style="width: 15%">
-                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
-                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
+                        <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "text-bottom check"]) ?>
+                        <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "text-bottom uncheck"]) ?>
                     </td>
                 </tr>
                 <tr>
@@ -58,7 +58,7 @@
                 <tr onMousedown="$('#context_type').val('private'); $('#threadwriter .context_selector').removeAttr('class').addClass('private context_selector'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
-                            <?= Assets::img("icons/32/black/group3", array('class' => "text-bottom")) ?>
+                            <?= Icon::create('group3', 'info')->asImg(32, ['class' => "text-bottom"]) ?>
                             <br>
                             <?= _("Privat") ?>
                         </label>
@@ -80,8 +80,8 @@
                         <?= _("Fügen Sie einzelne Personen mittels @Nutzernamen im Text der Nachricht oder der Kommentare hinzu.") ?>
                     </td>
                     <td style="width: 15%">
-                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
-                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
+                        <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "text-bottom check"]) ?>
+                        <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "text-bottom uncheck"]) ?>
                     </td>
                 </tr>
                 <? $mycourses = BlubberPosting::getMyBlubberCourses() ?>
@@ -92,7 +92,7 @@
                 <tr onMousedown="$('#context_type').val('course'); $('#threadwriter .context_selector').removeAttr('class').addClass('seminar context_selector'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
-                            <?= Assets::img("icons/32/black/seminar", array('class' => "text-bottom")) ?>
+                            <?= Icon::create('seminar', 'info')->asImg(32, ['class' => "text-bottom"]) ?>
                             <br>
                             <?= _("Veranstaltung") ?>
                         </label>
@@ -109,8 +109,8 @@
                         </label>
                     </td>
                     <td style="width: 15%">
-                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
-                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
+                        <?= Icon::create('checkbox-checked', 'info')->asImg(['class' => "text-bottom check"]) ?>
+                        <?= Icon::create('checkbox-unchecked', 'info')->asImg(['class' => "text-bottom uncheck"]) ?>
                     </td>
                 </tr>
                 <? endif ?>
@@ -149,8 +149,8 @@ if ($streamAvatar->is_customized()) {
 }
 
 $actions = new ActionsWidget();
-$actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), "icons/16/blue/edit");
-$actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), "icons/16/blue/trash", array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
+$actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), Icon::create("edit", "clickable"));
+$actions->addLink(_("Diesen Stream löschen"), PluginEngine::getURL($plugin, array(), 'streams/delete/'.$stream->getId()), Icon::create("trash", "clickable"), array('onclick' => "return window.confirm('"._("Wirklich löschen?")."');"));
 $sidebar->addWidget($actions);
 
 $controller->addTagCloudWidgetToSidebar($tags, 'custom/' . $stream->getId());

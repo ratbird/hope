@@ -61,7 +61,7 @@ class MessagingNavigation extends Navigation
         }
 
 
-        $this->setImage('icons/lightblue/mail.svg', array('title' => $tip));
+        $this->setImage(Icon::create('mail', 'navigation', ["title" => $tip]));
     }
 
     /**

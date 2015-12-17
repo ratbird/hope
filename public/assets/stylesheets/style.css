@@ -820,7 +820,7 @@ table.default > caption .caption-actions {
   align-self: flex-end;
 }
 table.default > tbody.toggleable.toggled .toggle-switch {
-  background-image: url("../images/icons//blue/arr_1right.svg");
+  background-image: url("../images/icons/blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -835,7 +835,7 @@ table.default > tbody.toggleable .toggle-switch {
   text-shadow: none;
   background-color: transparent;
   border: 0;
-  background-image: url("../images/icons//blue/arr_1down.svg");
+  background-image: url("../images/icons/blue/arr_1down.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3757,8 +3757,7 @@ input.quicksearchbox {
   border: 0;
   width: 29px;
   height: 20px;
-  background-image: url("../images/icons/16/white/search.png");
-  background-image: none, url("../images/icons/white/search.svg");
+  background-image: url("../images/icons/white/search.svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;

@@ -275,8 +275,7 @@ class ModulesNotification extends Modules {
         if ($nav instanceof Navigation && $nav->isVisible(true)) {
             if ($nav->getBadgeNumber()) {
                 $url = 'seminar_main.php?again=yes&auswahl=' . $range_id . '&redirect_to=' . strtr($nav->getURL(), '?', '&');
-                $image = $nav->getImage();
-                $icon = $image['src'];
+                $icon = $nav->getImage();
                 $tab = array_pop($plugin->getTabNavigation());
                 if ($tab instanceof Navigation && $tab->isVisible()) {
                     $text = $tab->getTitle();
@@ -330,7 +329,7 @@ class ModulesNotification extends Modules {
                     } else {
                         $redirect = '&redirect_to=dispatch.php/course/members/index';
                     }
-                    $icon = "icons/16/blue/persons.png";
+                    $icon = Icon::create("persons", "clickable");
                 }
                 break;
             case 'documents' :
@@ -340,7 +339,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neues Dokument hochgeladen:");
                 }
                 $redirect = '&redirect_to=folder.php&cmd=all';
-                $icon = "icons/16/blue/files.png";
+                $icon = Icon::create("files", "clickable");
                 break;
             case 'schedule' :
                 if ($r_data['neuetermine'] > 1) {
@@ -349,7 +348,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neuer Termin angelegt:");
                 }
                 $redirect = '&redirect_to=dispatch.php/course/dates#a';
-                $icon = "icons/16/blue/date.png";
+                $icon = Icon::create("date", "clickable");
                 break;
             case 'literature' :
                 if ($r_data['neuelitlist'] > 1) {
@@ -358,7 +357,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neue Literaturliste angelegt");
                 }
                 $redirect = '&redirect_to=dispatch.php/course/literatur';
-                $icon = "icons/16/blue/literature.png";
+                $icon = Icon::create("literature", "clickable");
                 break;
             case 'elearning_interface' :
                 if (get_config('ELEARNING_INTERFACE_ENABLE')) {
@@ -368,7 +367,7 @@ class ModulesNotification extends Modules {
                         $text = _("1 neues Content-Modul angelegt");
                     }
                     $redirect = "&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
-                    $icon = "icons/16/blue/learnmodule.png";
+                    $icon = Icon::create("learnmodule", "clickable");
                 }
                 break;
             case 'wiki' :
@@ -378,14 +377,14 @@ class ModulesNotification extends Modules {
                     $text = _("1 Wikiseite wurde angelegt oder bearbeitet:");
                 }
                 $redirect = '&redirect_to=wiki.php&view=listnew';
-                $icon = "icons/16/blue/wiki.png";
+                $icon = Icon::create("wiki", "clickable");
                 break;
             case 'scm' :
                 if ($r_data['neuscmcontent']) {
                     $text = sprintf(_("Die Seite \"%s\" wurde neu angelegt oder bearbeitet:"), $r_data['scmtabname']);
                 }
                 $redirect = '&redirect_to=dispatch.php/course/scm';
-                $icon = "icons/16/blue/infopage.png";
+                $icon = Icon::create("infopage", "clickable");
                 break;
             case 'votes' :
                 if (get_config('VOTE_ENABLE')) {
@@ -396,7 +395,7 @@ class ModulesNotification extends Modules {
                     }
                 }
                 $redirect = '#votes';
-                $icon = "icons/16/blue/vote.png";
+                $icon = Icon::create("vote", "clickable");
                 break;
             case 'news' :
                 if ($r_data['neuenews'] > 1) {
@@ -405,14 +404,14 @@ class ModulesNotification extends Modules {
                     $text = _("Eine neue Ankündigung wurde angelegt:");
                 }
                 $redirect = '';
-                $icon = "icons/16/blue/news.png";
+                $icon = Icon::create("news", "clickable");
                 break;
             case 'basic_data' :
                 if ($r_data['chdate'] > $r_data['visitdate']) {
                     $text = _("Die Grunddaten wurden geändert:");
                 }
                 $redirect = '&redirect_to=dispatch.php/course/details/';
-                $icon = "icons/16/blue/home.png";
+                $icon = Icon::create("home", "clickable");
                 break;
             default :
                 $redirect = '';

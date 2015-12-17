@@ -367,36 +367,36 @@ if (!$have_config) {
                 ?>
                 <td <?= $css_switcher_2->getFullClass() ?> width="5%">
                     <a href="<?= URLHelper::getLink('?com=download_config&config_id='. $configuration['id'] .'&module='. $module_type["module"]) ?>">
-                        <?= Assets::img('icons/16/blue/download.png', array('alt' => _("Konfigurationsdatei herunterladen"), 'title' => _("Konfigurationsdatei herunterladen"))) ?>
+                        <?= Icon::create('download', 'clickable', ['title' => _("Konfigurationsdatei herunterladen")])->asImg(16, ["alt" => _("Konfigurationsdatei herunterladen")]) ?>
                     </a>
                 </td>
 
                 <td <?= $css_switcher_2->getFullClass() ?> width="5%">
                     <a href="<?= URLHelper::getLink('?com=upload_config&config_id='. $configuration['id']) ?>">
-                        <?= Assets::img('icons/16/blue/upload.png', array('alt' => _("Konfigurationsdatei hochladen"), 'title' => _("Konfigurationsdatei hochladen"))) ?>
+                        <?= Icon::create('upload', 'clickable', ['title' => _("Konfigurationsdatei hochladen")])->asImg(16, ["alt" => _("Konfigurationsdatei hochladen")]) ?>
                     </a>
                 </td>
                 <?
 
                 echo "<td" . $css_switcher_2->getFullClass() . " width=\"5%\">";
                 echo '<a href="' . URLHelper::getLink('?com=info&config_id=' . $configuration['id']) . '">';
-                echo Assets::img('icons/16/blue/infopage.png', array('class' => 'text-top', 'title' => _("weitere Informationen anzeigen")));
+                echo Icon::create('infopage', 'clickable')->asImg(['class' => 'text-top', 'title' => _("weitere Informationen anzeigen")]);
                 echo "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " width=\"5%\">";
 
                 // Switching for the is_default option. Read the comment above.
                 if ($configuration["is_default"]) {
                     echo '<a href="' . URLHelper::getLink('?com=unset_default&config_id=' . $configuration['id']) . '#anker">';
-                    echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' => _("Standard entziehen")));
+                    echo Icon::create('checkbox-checked', 'clickable')->asImg(['class' => 'text-top', 'title' => _("Standard entziehen")]);
                 } else {
                     echo '<a href="' . URLHelper::getLink('?com=set_default&config_id=' . $configuration['id']) . '#anker">';
-                    echo Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top', 'title' => _("Standard zuweisen")));
+                    echo Icon::create('checkbox-unchecked', 'clickable')->asImg(['class' => 'text-top', 'title' => _("Standard zuweisen")]);
                 }
 
                 echo "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " align=\"center\" width=\"5%\">\n";
                 echo '<a href="' . URLHelper::getLink('?com=delete_sec&config_id=' . $configuration['id']) . '#anker">';
-                echo  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Konfiguration löschen"))) . "</a>\n</td>\n";
+                echo  Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _("Konfiguration löschen")]) . "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " align=\"right\" width=\"20%\" ";
                 echo ">\n";
                 echo LinkButton::create(_("Konfiguration bearbeiten"), URLHelper::getURL('?com=edit&mod=' . $module_type['module'] . '&config_id=' . $configuration['id']));
@@ -442,22 +442,22 @@ if (sizeof($configurations)) {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "icons/16/black/info.png",
+                                                    array("icon" => Icon::create('info', 'clickable'),
                                                                 "text" => $info_max_configs
                                                     ),
-                                                    array("icon" => "icons/16/black/checkbox-checked.png",
+                                                    array("icon" => Icon::create('checkbox-checked', 'clickable'),
                                                                 "text" => $info_is_default
                                                     ),
-                                                    array("icon" => "icons/16/black/info.png",
+                                                    array("icon" => Icon::create('info', 'clickable'),
                                                                 "text" => $info_no_default
                                                     )
                                     )),
                                     array("kategorie" => "Aktion:",
                                             "eintrag" => array(
-                                                    array("icon" => "icons/16/black/infopage.png",
+                                                    array("icon" => Icon::create('infopage', 'clickable'),
                                                                 "text" => $info_further_info,
                                                     ),
-                                                    array("icon" => "icons/16/black/checkbox-unchecked.png",
+                                                    array("icon" => Icon::create('checkbox-unchecked', 'clickable'),
                                                                 "text" => $info_set_default
                                                     ))
                                     ));
@@ -465,7 +465,7 @@ if (sizeof($configurations)) {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "icons/16/black/info.png",
+                                                    array("icon" => Icon::create('info', 'clickable'),
                                                                 "text" => $info_max_configs
                                                     )
                                     )));

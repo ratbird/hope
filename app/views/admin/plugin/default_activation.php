@@ -42,7 +42,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'icons/16/black/schedule.png',
+                'icon' => Icon::create('schedule', 'clickable'),
                 'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
@@ -50,11 +50,11 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                "icon" => "icons/16/black/info.png",
+                "icon" => Icon::create('info', 'clickable'),
                 'text' => _('Wählen Sie die Einrichtungen, in deren Veranstaltungen das Plugin automatisch aktiviert sein soll.')
             ),
             array(
-                "icon" => "icons/16/black/info.png",
+                "icon" => Icon::create('info', 'clickable'),
                 'text' => _('Eine Mehrfachauswahl in der Liste der Einrichtungen ist durch Drücken der Strg-Taste möglich.')
             )
         )

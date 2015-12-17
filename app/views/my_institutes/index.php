@@ -46,7 +46,7 @@
                 <td style="width:1px"></td>
                 <td>
                     <?=
-                    (InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, tooltip2(htmlReady($values['name']))) != '' ? Assets::img('icons/20/blue/institute.png', tooltip2(htmlReady($values['name']))) :
+                    (InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, tooltip2(htmlReady($values['name']))) != '' ? Icon::create('institute', 'clickable', ['title' => htmlReady($values['name'])])->asImg(20) :
                         InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, tooltip2(htmlReady($values['name'])))) ?>
                 </td>
 
@@ -60,12 +60,11 @@
                     <? if (!empty($values['navigation'])) : ?>
                         <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
                             <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                                <? $image = $nav->getImage(); ?>
                                 <a href="<?=
                                 UrlHelper::getLink('dispatch.php/institute/overview',
                                     array('auswahl'     => $instid,
                                           'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                                    <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>
+                                    <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
                                 </a>
                             <? elseif (is_string($key)) : ?>
                                 <?= Assets::img('blank.gif', array('widtd' => 20, 'height' => 20)); ?>
@@ -77,7 +76,7 @@
                 <td style="text-align: left; white-space: nowrap">
                     <? if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $values['perms'] == 'user') : ?>
                         <a href="<?=$controller->url_for('my_institutes/decline_inst/'.$instid)?>">
-                            <?= Assets::img('icons/20/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
+                            <?= Icon::create('door-leave', 'inactive', ['title' => _("aus der Einrichtung austragen")])->asImg(20) ?>
                         </a>
                     <? else : ?>
                         <?= Assets::img('blank.gif', array('size' => '20')) ?>
@@ -98,20 +97,16 @@ $sidebar->setTitle(_('Meine Einrichtungen'));
 $links = new ActionsWidget();
 if ($reset) {
     $links->addLink(_('Alles als gelesen markieren'),
-                    $controller->url_for('my_institutes/tabularasa/' . time()),
-                    'icons/16/blue/accept.png');
+                    $controller->url_for('my_institutes/tabularasa/' . time()), Icon::create('accept', 'clickable'));
 }
 if ($GLOBALS['perm']->have_perm('dozent') && !empty($institutes)) {
     $links->addLink(_('Einrichtungsdaten bearbeiten'),
-                    URLHelper::getLink('dispatch.php/settings/statusgruppen'),
-                    'icons/16/blue/edit/institute.png' );
+                    URLHelper::getLink('dispatch.php/settings/statusgruppen'), Icon::create('institute+edit', 'clickable') );
 }
 if ($GLOBALS['perm']->have_perm('autor')) {
     $links->addLink(_('Einrichtungen suchen'),
-                    URLHelper::getLink('institut_browse.php'),
-                    'icons/16/blue/add/institute.png' );
+                    URLHelper::getLink('institut_browse.php'), Icon::create('institute+add', 'clickable') );
     $links->addLink(_('Studiendaten bearbeiten'),
-                    URLHelper::getLink('dispatch.php/settings/studies'),
-                    'icons/16/blue/person.png');
+                    URLHelper::getLink('dispatch.php/settings/studies'), Icon::create('person', 'clickable'));
 }
 $sidebar->addWidget($links);

@@ -348,9 +348,7 @@ class StudipStudyArea extends SimpleORMap
             $nav = $plugin->getModuleInfoNavigation($this->getID(), $semester_id);
             if ($nav->isVisible(true)) {
                 $ret = '<a class="module-info" href="' . URLHelper::getLink($nav->getURL()) . '">';
-                $ret .= '<img ';
-                foreach ($nav->getImage() as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
-                $ret .= '>';
+                $ret .= $nav->getImage()->asImg($nav->getLinkAttributes);
                 $ret .= '<span>' .htmlready($nav->getTitle()) . '</span>';
                 $ret .= '</a>';
             }

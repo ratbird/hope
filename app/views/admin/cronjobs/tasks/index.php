@@ -43,25 +43,25 @@
             <td style="text-align: center;">
             <? if ($tasks[$i]->active): ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/tasks/deactivate', $tasks[$i]->task_id, $page) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-checked', tooltip2(_('Aufgabe deaktivieren'))) ?>
+                    <?= Icon::create('checkbox-checked', 'clickable', ['title' => _('Aufgabe deaktivieren')])->asImg() ?>
                 </a>
             <? else: ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/tasks/activate', $tasks[$i]->task_id, $page) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-unchecked', tooltip2(_('Aufgabe aktivieren'))) ?>
+                    <?= Icon::create('checkbox-unchecked', 'clickable', ['title' => _('Aufgabe aktivieren')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>
             <td style="text-align: right">
             <? if ($tasks[$i]->valid): ?>
                 <a data-dialog href="<?= $controller->url_for('admin/cronjobs/tasks/execute', $tasks[$i]->task_id) ?>">
-                    <?= Assets::img('icons/16/blue/play', tooltip2(_('Aufgabe ausführen'))) ?>
+                    <?= Icon::create('play', 'clickable', ['title' => _('Aufgabe ausführen')])->asImg() ?>
                 </a>
             <? endif; ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/logs/task', $tasks[$i]->task_id) ?>">
-                    <?= Assets::img('icons/16/blue/log', tooltip2(_('Log anzeigen'))) ?>
+                    <?= Icon::create('log', 'clickable', ['title' => _('Log anzeigen')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/tasks/delete', $tasks[$i]->task_id, $page) ?>">
-                    <?= Assets::img('icons/16/blue/trash', tooltip2(_('Aufgabe löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Aufgabe löschen')])->asImg() ?>
                 </a>
             </td>
         </tr>

@@ -115,7 +115,7 @@ use Studip\Button, Studip\LinkButton;
             <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'autor', 'auto_sem' => $auto_sem,'domains'=>$userdomains)) ?>
             <td align="right">
                 <a href="<?=$controller->url_for('admin/autoinsert/delete')?>/<?= $auto_sem['seminar_id'] ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Veranstaltung entfernen'), 'class' => 'text-top')) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Veranstaltung entfernen'), 'class' => 'text-top'])->asImg() ?>
                 </a>
             </td>
         </tr>
@@ -128,5 +128,5 @@ use Studip\Button, Studip\LinkButton;
 $sidebar = Sidebar::Get();
 $sidebar->setTitle('Automatisiertes Eintragen');
 $links = new ActionsWidget();
-$links->addLink(_('Benutzergruppen manuell eintragen'), $controller->url_for('admin/autoinsert/manual'), 'icons/16/blue/visibility-visible.png');
+$links->addLink(_('Benutzergruppen manuell eintragen'), $controller->url_for('admin/autoinsert/manual'), Icon::create('visibility-visible', 'clickable'));
 $sidebar->addWidget($links);

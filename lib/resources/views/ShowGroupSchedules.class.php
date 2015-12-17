@@ -221,7 +221,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
                     <a href="<?= URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_day=1') ?>">
-                    <?= Assets::img("icons/16/blue/arr_2left.png", array('class' => "middle", 'alt' => "Vorherigen Tag anzeigen", 'title' => "Vorherigen Tag anzeigen")) ?>
+                    <?= Icon::create('arr_2left', 'clickable')->asImg(['class' => "middle", 'alt' => "Vorherigen Tag anzeigen", 'title' => "Vorherigen Tag anzeigen"]) ?>
                     </a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
@@ -235,7 +235,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
                     <a href="<?= URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_day=1') ?>">
-                    <?= Assets::img("icons/16/blue/arr_2right.png", array('class' => "middle", 'alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen"))) ?>
+                    <?= Icon::create('arr_2right', 'clickable')->asImg(['class' => "middle", 'alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen")]) ?>
                 </td>
             </tr>
             <tr>
@@ -244,7 +244,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     <a href="<?= URLHelper::getLink('', array('quick_view' => $this->used_view,
                                                               'quick_view_mode' => $view_mode,
                                                               'time_range' => $_SESSION['resources_data']['schedule_time_range'] ? 'FALSE' : -1)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_2up.png', array('class' => 'middle') + tooltip2(_('Frühere Belegungen anzeigen'))) ?>
+                           <?= Icon::create('arr_2up', 'clickable', ['title' => _('Frühere Belegungen anzeigen')])->asImg(['class' => 'middle']) ?>
                     </a>
                 <? endif; ?>
                 </td>
@@ -267,7 +267,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "single") ? "selected" : "");
                     printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "repeated") ? "selected" : "");
                     print "</select>";
-                    print "&nbsp;".Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'name' => "send_schedule_repeat_mode", 'title' => _('Ansicht umschalten')));
+                    print "&nbsp;".Icon::create('accept', 'accept', ['title' => _('Ansicht umschalten')])->asInput(["type" => "image", "class" => "middle", "name" => "send_schedule_repeat_mode"]);
                     ?>
                 </td>
             </tr>
@@ -286,7 +286,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     <a href="<?= URLHelper::getLink('', array('quick_view' => $this->used_view,
                                                               'quick_view_mode' => $view_mode,
                                                               'time_range' => $_SESSION['resources_data']['schedule_time_range'] ? 'FALSE' : 1)) ?>">
-                        <?= Assets::img('icons/16/blue/arr_2down.png', array('class' => 'middle') + tooltip2(_('Frühere Belegungen anzeigen'))) ?>
+                           <?= Icon::create('arr_2down', 'clickable', ['title' => _('Frühere Belegungen anzeigen')])->asImg(['class' => 'middle']) ?>
                     </a>
                 <? endif; ?>
                 </td>

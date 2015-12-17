@@ -30,7 +30,7 @@ $sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Webservices'));
 
 $actions = new ActionsWidget();
-$actions->addLink(_('Liste der Zugriffsregeln'),$controller->url_for('admin/webservice_access'),'icons/16/blue/add.png');
-$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'),'icons/16/blue/add.png');
+$actions->addLink(_('Liste der Zugriffsregeln'),$controller->url_for('admin/webservice_access'), Icon::create('add', 'clickable'));
+$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'), Icon::create('add', 'clickable'));
 
 $sidebar->addWidget($actions);

@@ -22,7 +22,7 @@ use Studip\Button, Studip\LinkButton;
     <input id="upload-input" name="avatar" type="file">
 
     <p class="quiet">
-        <?= Assets::img("icons/16/grey/info-circle.png", array('style' => 'vertical-align: middle;')) ?>
+        <?= Icon::create('info-circle', 'inactive')->asImg(16, ["style" => 'vertical-align: middle;']) ?>
         <? printf(_("Die Bilddatei darf max. %d KB groß sein, es sind nur Dateien mit den Endungen %s, %s oder %s erlaubt!"),
                   Avatar::MAX_FILE_SIZE / 1024,
                   '<b>.jpg</b>', '<b>.png</b>', '<b>.gif</b>') ?>
@@ -49,8 +49,7 @@ $sidebar->setImage('sidebar/admin-sidebar.png');
 if ($avatar->is_customized()) {
     $actions = new ActionsWidget();
     $actions->addLink(_('Bild löschen'),
-                      $controller->link_for('course/avatar/delete', $course_id),
-                      'icons/16/black/trash.png',
+                      $controller->link_for('course/avatar/delete', $course_id), Icon::create('trash', 'info'),
                       array('onclick' => sprintf('return confirm(\'%s\');', _('Wirklich löschen?'))))->asDialog(false);
     $sidebar->addWidget($actions);
 }
@@ -71,7 +70,7 @@ if ($adminList) {
         "eintrag"   =>
             array(
                 array(
-                      "icon" => "icons/16/black/link-intern.png",
+                      "icon" => Icon::create('link-intern', 'clickable'),
                       "text" => $adminList->render()
                 )
             )

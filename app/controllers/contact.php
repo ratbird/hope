@@ -216,10 +216,10 @@ class ContactController extends AuthenticatedController
 
         // Groups
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neue Gruppe anlegen'), $this->url_for('contact/editGroup'), 'icons/blue/16/add/group3.svg')->asDialog('size=auto');
-        $actions->addLink(_('Nachricht an alle'), $this->url_for('messages/write', array('rec_uname' => $this->allContacts->pluck('username'))), 'icons/blue/16/mail.svg')->asDialog();
-        $actions->addLink(_('E-Mail an alle'), URLHelper::getLink('mailto:' . join(',', $this->allContacts->pluck('email'))), 'icons/blue/16/mail.svg');
-        $actions->addLink(_('Alle vCards herunterladen'), $this->url_for('contact/vcard/' . $this->filter), 'icons/blue/16/vcard.svg');
+        $actions->addLink(_('Neue Gruppe anlegen'), $this->url_for('contact/editGroup'), Icon::create('group3+add', 'clickable'))->asDialog('size=auto');
+        $actions->addLink(_('Nachricht an alle'), $this->url_for('messages/write', array('rec_uname' => $this->allContacts->pluck('username'))), Icon::create('mail', 'clickable'))->asDialog();
+        $actions->addLink(_('E-Mail an alle'), URLHelper::getLink('mailto:' . join(',', $this->allContacts->pluck('email'))), Icon::create('mail', 'clickable'));
+        $actions->addLink(_('Alle vCards herunterladen'), $this->url_for('contact/vcard/' . $this->filter), Icon::create('vcard', 'clickable'));
         $sidebar->addWidget($actions);
 
         // Groups navigation

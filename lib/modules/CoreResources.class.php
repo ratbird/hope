@@ -13,7 +13,7 @@ class CoreResources implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Ressourcen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=wiki.php");
-        $navigation->setImage('icons/16/grey/resources.png');
+        $navigation->setImage(Icon::create('resources', 'inactive'));
 
         return $navigation;
     }
@@ -21,8 +21,8 @@ class CoreResources implements StudipModule {
     function getTabNavigation($course_id) {
         if (get_config('RESOURCES_ENABLE') && checkAvailableResources($course_id)) {
             $navigation = new Navigation(_('Ressourcen'), 'resources.php?view=openobject_main&view_mode=oobj');
-            $navigation->setImage('icons/16/white/resources.png');
-            $navigation->setActiveImage('icons/16/black/resources.png');
+            $navigation->setImage(Icon::create('resources', 'info_alt'));
+            $navigation->setActiveImage(Icon::create('resources', 'info'));
 
             $navigation->addSubNavigation('overview', new Navigation(_('Übersicht'), 'resources.php?view=openobject_main'));
             $navigation->addSubNavigation('group_schedule', new Navigation(_('Übersicht Belegung'), 'resources.php?view=openobject_group_schedule'));

@@ -14,8 +14,7 @@
                                     'course_id' => $course_id,
                                     'default_subject' => $subject))
                         ?>" data-dialog>
-                            <?= Assets::img('icons/16/blue/inbox.png',
-                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['tutor'])))?>
+                            <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'),$status_groups['tutor'])])->asImg(16)?>
                         </a>
             </span>
         <? endif ?>
@@ -100,7 +99,7 @@
                 <td style="text-align: right">
                     <? if ($is_tutor) : ?>
                         <a data-dialog title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $tutor['user_id']) ?>">
-                            <?= Assets::img('icons/16/blue/comment.png') ?>
+                            <?= Icon::create('comment', 'clickable')->asImg() ?>
                         </a>
                     <? endif ?>
                     <? if($user_id != $tutor['user_id']) : ?>
@@ -110,14 +109,12 @@
                                 'default_subject' => $subject))
                             ?>
                     " data-dialog>
-                        <?= Assets::img('icons/16/blue/mail.png',
-                              tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
+                        <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                     </a>
                     <? endif ?>
                     <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
                     <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s', $tutor['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/door-leave.png',
-                                tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
+                        <?= Icon::create('door-leave', 'clickable', ['title' => sprintf(_('%s austragen'),htmlReady($fullname))])->asImg(16) ?>
                     </a>
                     <? endif ?>
                 </td>

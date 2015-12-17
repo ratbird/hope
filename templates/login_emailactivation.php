@@ -5,7 +5,7 @@ use Studip\Button, Studip\LinkButton;
 <div align="center">
 <table width="70%" border=0 cellpadding=0 cellspacing=0>
 <tr><td class="table_header_bold" colspan=3 align="left">
- <?= Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
+ <?= Icon::create('mail', 'info_alt')->asImg(['class' => 'text-top']) ?>
  <b><?= _('E-Mail Aktivierung') ?></b>
 </td></tr>
 <tr><td style="background-color: #fff; padding: 1.5em;">
@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
 <div align="center">
 <table width="70%" border=0 cellpadding=0 cellspacing=0>
 <tr><td class="table_header_bold" colspan=3 align="left">
- <?= Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
+ <?= Icon::create('mail', 'info_alt')->asImg(['class' => 'text-top']) ?>
  <b><?= _('E-Mail Aktivierung neu senden') ?></b>
 </td></tr>
 <tr><td style="background-color: #fff; padding: 1.5em;">

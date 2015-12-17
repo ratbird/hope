@@ -10,15 +10,15 @@
             <div style="width:100px;text-align:right;white-space: nowrap;word-spacing:1em;">
             <? if ($one['request']) : ?>
                 <a class="load-in-new-row" href="<?= $controller->link_for('index_assi/-', array('request_id' => $key)) ?>">
-                    <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
+                    <?= Icon::create('info', 'clickable', ['title' => _('Weitere Informationen einblenden')])->asImg() ?>
                 </a>
             <? endif ?>
                 <a onClick="STUDIP.RoomRequestDialog.initialize('<?=URLHelper::getUrl('dispatch.php/course/room_requests/edit_dialog/-', array('new_room_request_type' => $key))?>');return false;" href="#">
-                    <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Diese Anfrage bearbeiten')])->asImg() ?>
                 </a>
             <? if ($one['request']) : ?>
                 <a onClick="jQuery('#assi_room_request_with_js').load('<?=URLHelper::getUrl('dispatch.php/course/room_requests/index_assi/-', array('delete_room_request_type' => $key))?>');return false;" href="#">
-                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diese Anfrage entfernen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Diese Anfrage entfernen')])->asImg() ?>
                 </a>
             <? else : ?>
                 <?= Assets::img('blank.gif', array('width' => '16'));?>

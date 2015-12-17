@@ -12,7 +12,7 @@
 }
 a.message-tag {
   white-space: nowrap;
-  .icon-before('blue/tag.png');
+  .icon('before', 'tag', 'clickable');
 }
 
 #message-move-handle {
@@ -21,7 +21,7 @@ a.message-tag {
     .border-radius(5px);
     border: thin solid #000;
 
-    .icon-before('blue/mail.png', 20, 2px);
+    .icon('before', 'mail', 'clickable', 20, 2px);
 }
 #messages-tags.dragging .sidebar-widget-content {
     background-color: @activity-color-20;

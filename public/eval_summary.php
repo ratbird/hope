@@ -379,11 +379,11 @@ function groups($parent_id)
                 if ($ausgabeformat==1 && !$freetype) {
                     if ($group_type === 'normal') {
                         echo '<a href="' . URLHelper::getLink('?eval_id=' . $eval_id . '&evalgroup_id=' . $group['evalgroup_id'] . '&group_type=table&cmd=change_group_type#anker') . '">';
-                        echo Assets::img('icons/16/blue/vote-stopped.png', tooltip2(sprintf(_('Zum Darstellungstyp %s wechseln'), _('Tabelle'))));
+                        echo Icon::create('vote-stopped', 'clickable', ['title' => sprintf(_('Zum Darstellungstyp %s wechseln'), _('Tabelle'))])->asImg();
                         echo '</a>';
                     } else {
                         echo '<a href="' . URLHelper::getLink('?eval_id=' . $eval_id . '&evalgroup_id=' . $group['evalgroup_id'] . '&group_type=normal&cmd=change_group_type#anker') . '">';
-                        echo Assets::img('icons/16/blue/vote.png', tooltip2(sprintf(_('Zum Darstellungstyp %s wechseln'), _('Normal'))));
+                        echo Icon::create('vote', 'clickable', ['title' => sprintf(_('Zum Darstellungstyp %s wechseln'), _('Normal'))])->asImg();
                     }
                 } else {
                     echo '&nbsp;';
@@ -554,9 +554,9 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
   // Evaluation existiert auch...
   echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
   echo "<tr><td class=\"table_header_bold\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">";
-  echo ($ausgabeformat==1 ? Assets::img('icons/16/white/test.png') : "" );
+  echo ($ausgabeformat==1 ? Icon::create('test', 'info_alt')->asImg() : "" );
   echo "<b>"._("Evaluations-Auswertung")."</b></font></td>\n";
-  echo "<td class=\"".($ausgabeformat==1 ? "table_header_bold" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".URLHelper::getLink('?eval_id='.$eval_id.'&ausgabeformat=2')."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\">" . Assets::img('icons/16/white/arr_2right.png', tooltip2(_('Auswertung konfigurieren'))) . "</a>" : "" ) ."&nbsp;</td>\n";
+  echo "<td class=\"".($ausgabeformat==1 ? "table_header_bold" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".URLHelper::getLink('?eval_id='.$eval_id.'&ausgabeformat=2')."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\">" . Icon::create('arr_2right', 'info_alt', ['title' => _('Auswertung konfigurieren')])->asImg() . "</a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($evaluation['title'])."</b></font></td>\n";

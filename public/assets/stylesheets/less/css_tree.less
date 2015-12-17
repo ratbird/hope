@@ -53,7 +53,7 @@
     input[type=checkbox] {
         display: none;
         + label {
-            .icon-before('blue/arr_1right.png');
+            .icon('before', 'arr_1right', 'clickable');
             cursor: pointer;
             vertical-align: text-top;
 
@@ -73,9 +73,9 @@
 
         &:checked {
             + label {
-                .icon-before('blue/arr_1down.png');
+                .icon('before', 'arr_1down', 'clickable');
                 .csstransforms & {
-                    .icon-before('blue/arr_1right.png');
+                    .icon('before', 'arr_1right', 'clickable');
                     &:before {
                         .rotate(90deg);
                     }

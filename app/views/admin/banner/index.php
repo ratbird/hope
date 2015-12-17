@@ -51,16 +51,16 @@
             <td><?= $banner['priority'] ?> (<?= $banner->getViewProbability() ?>)</td>
             <td style="text-align: right;">
                 <a class="load-in-new-row" href="<?= $controller->url_for('admin/banner/info',  $banner["ad_id"]) ?>?path=<?= urlencode($banner['banner_path']) ?>">
-                    <?= Assets::img('icons/16/blue/info', array('title' => _('Eigenschaften'))) ?>
+                    <?= Icon::create('info', 'clickable', ['title' => _('Eigenschaften')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/banner/edit', $banner["ad_id"]) ?>?path=<?= urlencode($banner['banner_path']) ?>">
-                    <?= Assets::img('icons/16/blue/edit', array('title' => _('Banner bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Banner bearbeiten')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/banner/reset', $banner['ad_id']) ?>">
-                    <?= Assets::img('icons/16/blue/refresh', array('title' => _('Klicks/Views zurücksetzen'))) ?>
+                    <?= Icon::create('refresh', 'clickable', ['title' => _('Klicks/Views zurücksetzen')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/banner/delete', $banner['ad_id']) ?>">
-                    <?= Assets::img('icons/16/blue/trash', array('title' => _('Banner löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Banner löschen')])->asImg() ?>
                 </a>
             </td>
         </tr>

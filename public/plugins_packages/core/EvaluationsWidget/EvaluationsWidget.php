@@ -30,7 +30,7 @@ class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
 
             if ($GLOBALS['perm']->have_perm('root')) {
                 $navigation = new Navigation('', 'admin_vote.php', array('page' => 'overview', 'showrangeID' => 'studip'));
-                $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Umfragen bearbeiten')));
+                $navigation->setImage(Icon::create('admin', 'clickable', ["title" => _('Umfragen bearbeiten')]));
                 $template->icons = array($navigation);
             }
 

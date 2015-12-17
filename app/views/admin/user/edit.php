@@ -204,7 +204,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td colspan="2">
             <input class="user_form" name="pass_2" type="password" id="pass_2" onkeyup="jQuery('#pw_success').toggle( jQuery('#pass_1').val()==$('#pass_2').val() )">
-            <?= Assets::img('icons/16/green/accept.png', array('id' => 'pw_success', 'style' => 'display: none')) ?>
+            <?= Icon::create('accept', 'accept')->asImg(16, ["id" => 'pw_success', "style" => 'display: none']) ?>
         </td>
     </tr>
     <? endif; ?>
@@ -338,7 +338,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td align="right">
             <a href="<?= $controller->url_for('admin/user/delete_studycourse/' . $user['user_id'] . '/' . $studiengang['fach_id'] . '/' . $studiengang['abschluss_id']) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diesen Studiengang löschen'))) ?>
+                <?= Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Diesen Studiengang löschen')]) ?>
             </a>
         </td>
     </tr>
@@ -375,7 +375,7 @@ use Studip\Button, Studip\LinkButton;
         <td align="right">
         <? if ($GLOBALS['perm']->have_studip_perm("admin", $institute['Institut_id'])) : ?>
             <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung löschen'))) ?>
+                <?= Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Diese Einrichtung löschen')]) ?>
             </a>
         <? endif; ?>
         </td>
@@ -428,10 +428,10 @@ use Studip\Button, Studip\LinkButton;
         <td class="actions">
             <? if ($GLOBALS['perm']->have_studip_perm("admin", $institute['Institut_id'])) : ?>
             <a class="load-in-new-row" href="<?= $controller->url_for('admin/user/edit_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
-                <?= Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung bearbeiten'))) ?>
+                <?= Icon::create('edit', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Diese Einrichtung bearbeiten')]) ?>
             </a>
             <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung löschen'))) ?>
+                <?= Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Diese Einrichtung löschen')]) ?>
             </a>
             <? endif; ?>
         </td>
@@ -467,7 +467,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td class="actions">
             <a href="<?= $controller->url_for('admin/user/delete_userdomain/' . $user['user_id'] . '?domain_id=' . $domain->getID()) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Aus dieser Nutzerdomäne austragen'))) ?>
+                <?= Icon::create('trash', 'clickable')->asImg(['class' => 'text-top', 'title' => _('Aus dieser Nutzerdomäne austragen')]) ?>
             </a>
         </td>
     </tr>

@@ -15,7 +15,7 @@
         };
     </script>
     <div style="text-align: center;">
-        <?= Assets::img("icons/20/blue/seminar", array('class' => "text-bottom")) ?>
+        <?= Icon::create('seminar', 'clickable')->asImg(20, ['class' => "text-bottom"]) ?>
         <?= QuickSearch::get("copy_from", $courseSearch)
             ->fireJSFunctionOnSelect("STUDIP.Topics.loadTopics")
             ->render() ?>

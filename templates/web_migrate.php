@@ -7,7 +7,7 @@ use Studip\Button, Studip\LinkButton;
   <table style="width: 80%;">
     <tr>
       <td class="table_header_bold">
-        <?= Assets::img('icons/16/white/info.png') ?>
+        <?= Icon::create('info', 'info_alt')->asImg() ?>
         <b>
           <?= _('Stud.IP Web-Migrator') ?>
         </b>

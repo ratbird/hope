@@ -395,9 +395,9 @@ if ($mcount > 3) {
         if ($kalender) {
             echo '<td class="blank">&nbsp;<a href="';
             echo URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' =>  $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
-            echo Assets::img('icons/16/blue/arr_2left.png', tooltip($mcount . ' ' . _('Monate zurück'))) . '</a>';
+            echo Icon::create('arr_2left', 'clickable', ['title' => $mcount.' '._('Monate zurück')])->asImg(16) . '</a>';
             echo '&nbsp;<a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcounth, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' => $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) .  $q . '">';
-            echo Assets::img('icons/16/blue/arr_1left.png', tooltip($mcounth . ' ' . _('Monate zurück'))) . '</a></td>', "\n";
+            echo Icon::create('arr_1left', 'clickable', ['title' => $mcounth.' '._('Monate zurück')])->asImg(16) . '</a></td>', "\n";
             if ($mcounth - 2 > 0) {
                 echo '<td class="blank" colspan="', ($mcounth - 2), '" align=center>';
                 if ($zeiten)
@@ -405,9 +405,9 @@ if ($mcount > 3) {
                 echo '&nbsp;</td>';
             }
             echo '<td class="blank" align="right"><a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] + $mcounth, 10, $atimex['year']), 'mcount' => $mcount, 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'element_switch' =>  $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
-            echo Assets::img('icons/16/blue/arr_1right.png', tooltip($mcounth . ' ' . _('Monate vor'))) . '</a>&nbsp;', "\n";
+            echo Icon::create('arr_1right', 'clickable', ['title' => $mcounth.' '._('Monate vor')])->asImg(16) . '</a>&nbsp;', "\n";
             echo '<a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] + $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' => $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
-            echo Assets::img('icons/16/blue/arr_2right.png', tooltip($mcount . ' ' . _('Monate vor'))) . '</a>&nbsp;</td>';
+            echo Icon::create('arr_2right', 'clickable', ['title' => $mcount.' '._('Monate vor')])->asImg(16) . '</a>&nbsp;</td>';
         } elseif ($zeiten) {
             echo '<td class="blank" colspan="', $mcounth, '" align="center">', $zeiten_buttons, "</td>\n";
         }

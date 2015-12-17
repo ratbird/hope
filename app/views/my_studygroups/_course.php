@@ -5,7 +5,7 @@
             <?=
             CourseAvatar::getAvatar($group['seminar_id'])->is_customized()
                 ? CourseAvatar::getAvatar($group['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2(htmlReady($group['name'])))
-                : Assets::img('icons/20/blue/studygroup.png', tooltip2(htmlReady($group['name']))) ?>
+                : Icon::create('studygroup', 'clickable', ['title' => htmlReady($group['name'])])->asImg(20) ?>
         </td>
         <td style="text-align: left">
             <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $group['seminar_id'])) ?>"
@@ -28,12 +28,11 @@
             <? if (!empty($group['navigation'])) : ?>
                 <? foreach (MyRealmModel::array_rtrim($group['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
-                        <? $image = $nav->getImage(); ?>
                         <a href="<?=
                         UrlHelper::getLink('seminar_main.php',
                             array('auswahl'     => $group['seminar_id'],
                                   'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                            <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>
+                            <?= $image->asImg(20, $nav->getLinkAttributes()) ?>
                         </a>
                     <? elseif (is_string($key)) : ?>
                         <?= Assets::img('blank.gif', array('width' => 20, 'height' => 20)); ?>
@@ -50,21 +49,18 @@
                 <? endif ?>
                 <? if ($adminnavigation) : ?>
                     <a href="<?= URLHelper::getLink($adminnavigation->getURL(), array('cid' => $group['seminar_id'])) ?>">
-                        <?
-                        $image = $adminnavigation->getImage();
-                        echo Assets::img($image['src'], array_map("htmlready", $image));
-                        ?>
+                        <?= $adminnavigation->getImage()->asImg(20, $adminnavigation->getLinkAttributes())?>
                     </a>
                 <? endif ?>
 
             <? elseif ($group["binding"]) : ?>
                 <a href="<?= URLHelper::getLink('', array('auswahl' => $group['seminar_id'], 'cmd' => 'no_kill')) ?>">
-                    <?= Assets::img('icons/20/grey/decline/door-leave.png', tooltip2(_("Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden."))) ?>
+                    <?= Icon::create('door-leave+decline', 'inactive', ['title' => _("Die Teilnahme ist bindend. Bitte wenden Sie sich an die Lehrenden.")])->asImg(20) ?>
                 </a>
             <?
             else : ?>
                 <a href="<?= URLHelper::getLink('', array('auswahl' => $group['seminar_id'], 'cmd' => 'suppose_to_kill')) ?>">
-                    <?= Assets::img('icons/20/grey/door-leave.png', tooltip2(_("aus der Studiengruppe abmelden"))) ?>
+                    <?= Icon::create('door-leave', 'inactive', ['title' => _("aus der Studiengruppe abmelden")])->asImg(20) ?>
                 </a>
             <? endif ?>
         </td>

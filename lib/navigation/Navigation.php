@@ -42,6 +42,7 @@ class Navigation implements IteratorAggregate
     protected $badgeTimestamp;
     protected $description;
     protected $image;
+    protected $link_attributes = [];
     protected $params;
     protected $subnav;
     protected $title;
@@ -175,11 +176,9 @@ class Navigation implements IteratorAggregate
     }
 
     /**
-     * Return the current image attributes associated with this
-     * navigation item. Attributes are returned as an array with
-     * at least the 'src' key set.
+     * Return the current image associated with this navigation item.
      *
-     * @return array   image attributes of item or NULL (no image)
+     * @return Icon  an instance of class Icon depicting this item or NULL
      */
     public function getImage()
     {
@@ -200,13 +199,8 @@ class Navigation implements IteratorAggregate
      */
     public function getImageTag()
     {
-        $image = $this->getImage();
-        if (is_array($image)) {
-            $attributes = array();
-            foreach ($image as $key => $value) {
-                $attributes[] = sprintf('%s="%s"', $key, htmlReady($value));
-            }
-            return '<img ' . implode(' ', $attributes) . '>';
+        if ($image = $this->getImage()) {
+            return $image->asImg($this->getLinkAttributes());
         } else {
             return '';
         }
@@ -325,7 +319,7 @@ class Navigation implements IteratorAggregate
      */
     public function isVisible($needs_image = false)
     {
-        if ($needs_image && !is_array($this->getImage())) {
+        if ($needs_image && !$this->getImage()) {
             return false;
         }
 
@@ -360,18 +354,20 @@ class Navigation implements IteratorAggregate
     /**
      * Set the image of this navigation item. Additional HTML
      * attributes can be passed using the $options parameter
-     * (like 'title', 'style' or 'onclick').
+     * (like 'style' or 'onclick').
      *
-     * @param string $image    path to image file
-     * @param array  $options  additional image attributes
+     * @param Icon   $image            an instance of class Icon depicting this item
+     * @param array  $link_attributes  additional link attributes
      */
-    public function setImage($image, $options = array())
+    public function setImage($image, $link_attributes = [])
     {
-        if (isset($image)) {
-            $options['src'] = Assets::image_path($image);
-            $this->image = $options;
-        } else {
-            $this->image = NULL;
+        $this->image = $image;
+        $this->setLinkAttributes($link_attributes);
+
+        // DEPRECATED
+        // TODO remove this case in v3.6
+        if (is_string($image)) {
+            $this->image = Icon::create2(Assets::image_path($image));
         }
     }
 
@@ -379,19 +375,43 @@ class Navigation implements IteratorAggregate
      * Set the image for the active state of this navigation item.
      * If no active image is set, the normal image is used for the
      * active state. Additional HTML attributes can be passed using
-     * the $options parameter (like 'title', 'style' or 'onclick').
+     * the $options parameter (like 'style' or 'onclick').
      *
-     * @param string $image    path to image file
-     * @param array  $options  additional image attributes
+     * @param Icon   $image            an instance of class Icon depicting this item
+     * @param array  $link_attributes  additional link attributes
      */
-    public function setActiveImage($image, $options = array())
+    public function setActiveImage($image, $link_attributes = [])
     {
-        if (isset($image)) {
-            $options['src'] = Assets::image_path($image);
-            $this->active_image = $options;
-        } else {
-            $this->active_image = NULL;
+        $this->active_image = $image;
+        $this->setLinkAttributes($link_attributes);
+
+        // DEPRECATED
+        // TODO remove this case in v3.6
+        if (is_string($image)) {
+            $this->active_image = Icon::create2(Assets::image_path($image));
         }
+    }
+
+    /**
+     * Set the attributes that should be used in the link element
+     * surrounding this item's icon image.
+     *
+     * @param array  $attributes  the attributes to pass to the surrounding link element
+     */
+    public function setLinkAttributes($attributes)
+    {
+        $this->link_attributes = $attributes;
+    }
+
+    /**
+     * Return the attributes that should be used in the link element
+     * surrounding this item's icon image.
+     *
+     * @return array the attributes to pass to the surrounding link element
+     */
+    public function getLinkAttributes()
+    {
+        return $this->link_attributes;
     }
 
     /**

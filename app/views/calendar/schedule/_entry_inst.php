@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
                 <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                 <td width="45%">
                     <a href="<?= URLHelper::getLink('dispatch.php/course/details/?sem_id='. $seminar->getId()) ?>">
-                        <?= Assets::img('icons/16/blue/link-intern.png') ?>
+                        <?= Icon::create('link-intern', 'clickable')->asImg() ?>
                         <?= htmlReady($seminar->getName()) ?>
                     </a>
                 </td>

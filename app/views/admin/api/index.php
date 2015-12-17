@@ -16,7 +16,7 @@
         <tr>
             <td id="<?= $consumer->id ?>">
                 <a href="<?= $controller->url_for('admin/api/toggle', $consumer->id, $consumer->active ? 'off' : 'on') ?>">
-                    <?= Assets::img('icons/16/blue/checkbox-' . ($consumer->active ? '' : 'un') . 'checked') ?>
+                    <?= Icon::create('checkbox-' . ($consumer->active ? '' : 'un') . 'checked', 'clickable')->asImg() ?>
                 </a>
             </td>
             <td>
@@ -34,22 +34,23 @@
                     <?= htmlReady($consumer->contact) ?>
                 </a>
             </td>
-            <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked') ?></td>
+
+            <td><?= Icon::create('checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked', 'clickable')->asImg() ?></td>
             <td class="actions">
                 <a href="<?= $controller->url_for('admin/api/keys', $consumer->id) ?>"
                    data-dialog="size=auto"
                    title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">
-                    <?= Assets::img('icons/16/blue/info-circle.png') ?>
+                    <?= Icon::create('info-circle', 'clickable')->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" title="<?= _('Applikation bearbeiten') ?>" data-dialog>
-                    <?= Assets::img('icons/16/blue/edit.png') ?>
+                    <?= Icon::create('edit', 'clickable')->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/api/permissions', $consumer->id) ?>" title="<?= _('Zugriffsberechtigungen verwalten') ?>">
-                    <?= Assets::img('icons/16/blue/admin.png') ?>
+                    <?= Icon::create('admin', 'clickable')->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/api/delete', $consumer->id) ?>"
                    title="<?= htmlReady(sprintf(_('Applikation "%s" entfernen'), $consumer->title)) ?>">
-                    <?= Assets::img('icons/16/blue/trash.png') ?>
+                    <?= Icon::create('trash', 'clickable')->asImg() ?>
                 </a>
             </td>
         </tr>

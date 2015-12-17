@@ -121,16 +121,14 @@
             <td><?= htmlReady($schedules[$i]->title ?: $schedules[$i]->task->name) ?></td>
             <td style="text-align: center;">
             <? if (!$schedules[$i]->task->active): ?>
-                <?= Assets::img('icons/16/grey/checkbox-unchecked',
-                                tooltip2(_('Cronjob kann nicht aktiviert werden, da die zugehörige ' .
-                                           'Aufgabe deaktiviert ist.'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'inactive', ['title' => _('Cronjob kann nicht aktiviert werden, da die zugehörige '.'Aufgabe deaktiviert ist.')])->asImg(16) ?>
             <? elseif ($schedules[$i]->active): ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/schedules/deactivate', $schedules[$i]->schedule_id, $page) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-checked', tooltip2(_('Cronjob deaktivieren'))) ?>
+                    <?= Icon::create('checkbox-checked', 'clickable', ['title' => _('Cronjob deaktivieren')])->asImg() ?>
                 </a>
             <? else: ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/schedules/activate', $schedules[$i]->schedule_id, $page) ?>" data-behaviour="ajax-toggle">
-                    <?= Assets::img('icons/16/blue/checkbox-unchecked', tooltip2(_('Cronjob aktivieren'))) ?>
+                    <?= Icon::create('checkbox-unchecked', 'clickable', ['title' => _('Cronjob aktivieren')])->asImg() ?>
                 </a>
             <? endif; ?>
             </td>
@@ -144,16 +142,16 @@
         <? endif; ?>
             <td style="text-align: right">
                 <a data-dialog href="<?= $controller->url_for('admin/cronjobs/schedules/display', $schedules[$i]->schedule_id) ?>">
-                    <?= Assets::img('icons/16/blue/admin', tooltip2(_('Cronjob anzeigen'))) ?>
+                    <?= Icon::create('admin', 'clickable', ['title' => _('Cronjob anzeigen')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/schedules/edit', $schedules[$i]->schedule_id, $page) ?>">
-                    <?= Assets::img('icons/16/blue/edit', tooltip2(_('Cronjob bearbeiten'))) ?>
+                    <?= Icon::create('edit', 'clickable', ['title' => _('Cronjob bearbeiten')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/logs/schedule', $schedules[$i]->schedule_id) ?>">
-                    <?= Assets::img('icons/16/blue/log', tooltip2(_('Log anzeigen'))) ?>
+                    <?= Icon::create('log', 'clickable', ['title' => _('Log anzeigen')])->asImg() ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/schedules/cancel', $schedules[$i]->schedule_id, $page) ?>">
-                    <?= Assets::img('icons/16/blue/trash', tooltip2(_('Cronjob löschen'))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => _('Cronjob löschen')])->asImg() ?>
                 </a>
             </td>
         </tr>

@@ -32,7 +32,7 @@ $max_columns = $em['max_cols'] ?: 1;
                 <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
                     <a href="<?= $controller->url_for('calendar/single/day', array('atime' => strtotime('-1 day', $atime))) ?>">
                         <span style="vertical-align: middle;" <?= tooltip(_('einen Tag zurück')) ?>>
-                            <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: text-top;')) ?>
+                            <?= Icon::create('arr_1left', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                             <?= strftime(_('%x'), strtotime('-1 day', $calendar->getStart())) ?>
                         </span>
                     </a>
@@ -45,7 +45,7 @@ $max_columns = $em['max_cols'] ?: 1;
                     <a href="<?= $controller->url_for('calendar/single/day', array('atime' => strtotime('+1 day', $atime))) ?>">
                         <span style="vertical-align: middle;" <?= tooltip(_('einen Tag vor')) ?>>
                             <?= strftime(_('%x'), strtotime('+1 day', $calendar->getStart())) ?>
-                            <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
+                            <?= Icon::create('arr_1right', 'clickable')->asImg(16, ["style" => 'vertical-align: text-top;']) ?>
                         </span>
                     </a>
                 </div>
@@ -55,7 +55,7 @@ $max_columns = $em['max_cols'] ?: 1;
         <tr>
             <td align="center"<?= $settings['step_day'] < 3600 ? ' colspan="2"' : '' ?>>
                 <a href="<?= $controller->url_for('calendar/single/day', array('atime' => ($atime - (date('G', $atime) * 3600 - $start + 3600)))) ?>">
-                    <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
+                    <?= Icon::create('arr_1up', 'clickable', ['title' => _('zeig davor')])->asImg() ?>
                 </a>
             </td>
             <td colspan="<?= $max_columns + 1 ?>">
@@ -71,7 +71,7 @@ $max_columns = $em['max_cols'] ?: 1;
         <tr>
             <td align="center"<?= $settings['step_day'] < 3600 ? ' colspan="2"' : '' ?>>
                 <a href="<?= $controller->url_for('calendar/single/day', array('atime' => ($atime + $end - date('G', $atime) * 3600 + 3600))) ?>">
-                    <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
+                    <?= Icon::create('arr_1down', 'clickable', ['title' => _('zeig danach')])->asImg() ?>
                 </a>
             </td>
             <td colspan="<?= $max_columns + 1 ?>">

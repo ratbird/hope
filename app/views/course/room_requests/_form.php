@@ -43,7 +43,7 @@ if ($request_resource_id = $request->getResourceId()) :
 
         <p><?= _("verantwortlich:") ?>
             <a href="<?= $resObject->getOwnerLink() ?>"><?= htmlReady($resObject->getOwnerName()) ?></a>
-            <?= Icon::create('trash', 'clickable', ['title' => _('den ausgewählten Raum löschen')])->asInput(, ["type" => "image", "style" => "vertical-align:middle", "name" => "reset_resource_id"]) ?>
+            <?= Icon::create('trash', 'clickable', ['title' => _('den ausgewählten Raum löschen')])->asInput(null, ["type" => "image", "style" => "vertical-align:middle", "name" => "reset_resource_id"]) ?>
             <?= tooltipIcon(_('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:') . " \n" . $resObject->getPlainProperties(true)) ?>
         </p>
         <input type="hidden" name="selected_room" value="<?= htmlready($request_resource_id) ?>">
@@ -76,7 +76,7 @@ if ($request_resource_id = $request->getResourceId()) :
                                                              'value' => _("Raumtyp auswählen"),
                                                              'title' => _('Raumtyp auswählen')
                 )) ?>
-                <?= Icon::create('refresh', 'clickable', ['title' => _('alle Angaben zurücksetzen')])->asInput(, ["type" => "image", "style" => "vertical-align:middle", "name" => "reset_room_type"]) ?>
+                <?= Icon::create('refresh', 'clickable', ['title' => _('alle Angaben zurücksetzen')])->asInput(null, ["type" => "image", "style" => "vertical-align:middle", "name" => "reset_room_type"]) ?>
             <? endif ?>
             <? $props = $request->getAvailableProperties() ?>
             <? if (!empty($props)) : ?>
@@ -200,7 +200,7 @@ if ($request_resource_id = $request->getResourceId()) :
                 </label>
 
                 <input id="search_exp_room" type="text" size="30" maxlength="255" name="search_exp_room">
-                <?= Icon::create('search', 'clickable', ['title' => _('Suche starten')])->asInput(, ["type" => "image", "class" => "middle", "name" => "search_room"]) ?>
+                <?= Icon::create('search', 'clickable', ['title' => _('Suche starten')])->asInput(null, ["type" => "image", "class" => "middle", "name" => "search_room"]) ?>
             </section>
         <? endif ?>
     </section>

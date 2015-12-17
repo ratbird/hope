@@ -762,7 +762,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 ->setNavigationItem('/course/members')
                 ->render();
 
-            $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+            $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
             $actions->addElement($element);
 
             $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),

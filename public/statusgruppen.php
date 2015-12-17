@@ -279,11 +279,11 @@ if ($rechte) {
         $widget = new ExportWidget();
 
         $tmp = export_link($SessSemName[1], 'person', _('Gruppenliste') . ' ' . $SessSemName[0], 'rtf', 'rtf-gruppen', 'status',  _('Gruppen exportieren als rtf Dokument'), 'passthrough');
-        $element = LinkElement::fromHTML($tmp, 'icons/16/blue/export/file-text.png');
+        $element = LinkElement::fromHTML($tmp, Icon::create('file-text+export', 'clickable'));
         $widget->addElement($element);
 
         $tmp = export_link($SessSemName[1], 'person', _('Gruppenliste') . ' ' . $SessSemName[0], 'csv', 'csv-gruppen', 'status',  _('Gruppen exportieren als csv Dokument'), 'passthrough');
-        $element = LinkElement::fromHTML($tmp, 'icons/16/blue/export/file-office.png');
+        $element = LinkElement::fromHTML($tmp, Icon::create('file-office+export', 'clickable'));
         $widget->addElement($element);
 
         $sidebar->addWidget($widget);

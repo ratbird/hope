@@ -1413,7 +1413,7 @@ class Course_MembersController extends AuthenticatedController
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['dozent']), $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+                    $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
                     $widget->addElement($element);
                 }
                 if (!$this->tutor_is_locked) {
@@ -1450,7 +1450,7 @@ class Course_MembersController extends AuthenticatedController
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['tutor']), $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+                    $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
                     $widget->addElement($element);
                 }
             }
@@ -1485,7 +1485,7 @@ class Course_MembersController extends AuthenticatedController
                     ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['autor']), $membersOfInstitute)
                     ->setNavigationItem('/course/members/view')
                     ->render();
-                $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+                $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
                 $widget->addElement($element);
 
                 // add "add person to waitlist" to sidebar
@@ -1509,7 +1509,7 @@ class Course_MembersController extends AuthenticatedController
                         ->addQuickfilter(_('Mitglieder der Einrichtung'), $membersOfInstitute)
                         ->setNavigationItem('/course/members/view')
                         ->render();
-                    $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
+                    $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
                     $widget->addElement($element);
                 }
             }

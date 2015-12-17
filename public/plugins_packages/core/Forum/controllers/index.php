@@ -721,9 +721,7 @@ class IndexController extends ForumController
         $this->flash['new_entry_title'] = $topic['name'];
 
         $author = $topic['anonymous'] ? _('Anonym') : $topic['author'];
-        $content = '[quote=' . $author . ']' . PHP_EOL
-            . $topic['content'] . PHP_EOL
-            . '[/quote]' . PHP_EOL;
+        $content = quotes_encode($topic['content'], $author);
 
         $this->flash['new_entry_content'] = $content;
 

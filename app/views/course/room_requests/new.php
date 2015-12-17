@@ -24,9 +24,9 @@
     <div data-dialog-button>
         <? if (count($options)) : ?>
             <?= Studip\Button::create(_('Erstellen')) ?>
-            <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('index/' . $course_id)) ?>
+            <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->link_for('index/' . $course_id)) ?>
         <? else : ?>
-            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'), $controller->url_for('index/' . $course_id), array('data-dialog' => 'size=big')) ?>
+            <?= Studip\LinkButton::create(_('Zurück zur Übersicht'), $controller->link_for('index/' . $course_id), array('data-dialog' => 'size=big')) ?>
         <? endif ?>
     </div>
 </form>

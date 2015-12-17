@@ -33,20 +33,28 @@ if ($GLOBALS['ZIP_USE_INTERNAL']) {
     include_once 'vendor/pclzip/pclzip.lib.php';
 }
 
-function readfile_chunked($filename) {
-   $chunksize = 1024 * 1024; // how many bytes per chunk
-   $bytes = 0;
-   $handle = fopen($filename, 'rb');
-   if ($handle === false) {
-       return false;
-   }
-   while (!feof($handle)) {
-       $buffer = fread($handle, $chunksize);
-       $bytes += strlen($buffer);
-       echo $buffer;
-   }
-   fclose($handle);
-   return $bytes; // return num. bytes delivered like readfile() does.
+function readfile_chunked($filename, $start = null, $end = null) {
+    if (isset($start) && $start < $end) {
+        $chunksize = 1024 * 1024; // how many bytes per chunk
+        $bytes = 0;
+        $handle = fopen($filename, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+        fseek($handle, $start);
+        while (!feof($handle) && ($p = ftell($handle)) <= $end) {
+            if ($p + $chunksize > $end) {
+                $chunksize = $end - $p + 1;
+            }
+            $buffer = fread($handle, $chunksize);
+            $bytes += strlen($buffer);
+            echo $buffer;
+        }
+        fclose($handle);
+        return $bytes; // return num. bytes delivered like readfile() does.
+    } else {
+        return readfile($filename);
+    }
 }
 
 function parse_header($header){

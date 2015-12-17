@@ -36,10 +36,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-
+ob_start();
 require '../lib/bootstrap.php';
 
-ob_start();
 page_open(array("sess" => "Seminar_Session",
                 "auth" => "Seminar_Default_Auth",
                 "perm" => "Seminar_Perm",
@@ -183,6 +182,46 @@ if ($type == 6) {
 }
 // close session, download will mostly be a parallel action
 page_close();
+ob_end_clean();
+
+$start = $end = null;
+if ($filesize && $type == 0 && !Request::int('zip')) {
+    header("Accept-Ranges: bytes");
+    $start = 0;
+    $end = $filesize - 1;
+    $length = $filesize;
+    if (isset($_SERVER['HTTP_RANGE'])) {
+        $c_start = $start;
+        $c_end   = $end;
+        list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+        if (strpos($range, ',') !== false) {
+            header('HTTP/1.1 416 Requested Range Not Satisfiable');
+            header("Content-Range: bytes $start-$end/$filesize");
+            exit;
+        }
+        if ($range == '-') {
+            $c_start = $filesize - substr($range, 1);
+        } else {
+            $range  = explode('-', $range);
+            $c_start = $range[0];
+            $c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $filesize;
+        }
+        $c_end = ($c_end > $end) ? $end : $c_end;
+        if ($c_start > $c_end || $c_start > $filesize - 1 || $c_end >= $filesize) {
+            header('HTTP/1.1 416 Requested Range Not Satisfiable');
+            header("Content-Range: bytes $start-$end/$filesize");
+            exit;
+        }
+        $start  = $c_start;
+        $end    = $c_end;
+        $length = $end - $start + 1;
+        header('HTTP/1.1 206 Partial Content');
+    }
+    header("Content-Range: bytes $start-$end/$filesize");
+    header("Content-Length: $length");
+} elseif ($filesize) {
+    header("Content-Length: $filesize");
+}
 
 header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
 header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
@@ -195,17 +234,14 @@ if ($_SERVER['HTTPS'] == "on"){
 }
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Content-Type: $content_type");
-header("Content-Description: File Transfer");
-header("Content-Transfer-Encoding: binary");
-if ($filesize != FALSE) header("Content-Length: $filesize");
 header("Content-Disposition: $content_disposition; filename=\"$file_name\"");
-ob_end_flush();
+
 
 Metrics::increment('core.file_download');
 
-if ($type != 5){
-    @readfile_chunked($path_file);
-    if(in_array($type, array(0,6))){
+if ($type != 5) {
+    @readfile_chunked($path_file, $start, $end);
+    if (in_array($type, array(0,6)) && !$start) {
         TrackAccess($file_id, 'dokument');
     }
 } else {
@@ -216,4 +252,3 @@ if ($type != 5){
 if (Request::int('zip') || $type == 4) {
     @unlink($path_file);
 }
-?>

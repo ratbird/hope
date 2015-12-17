@@ -81,7 +81,7 @@ class BasicDataWizardStep implements CourseWizardStep
                 $semesters[] = $s;
             }
         }
-        if (count($semesters) == 0) {
+        if (count($semesters) > 0) {
             $tpl->set_attribute('semesters', array_reverse($semesters));
             // If no semester is set, use current as selected default.
             if (!$values['start_time']) {
@@ -98,7 +98,7 @@ class BasicDataWizardStep implements CourseWizardStep
 
         // Get all allowed home institutes (my own).
         $institutes = Institute::getMyInstitutes();
-        if (count($institutes) == 0) {
+        if (count($institutes) > 0) {
             $tpl->set_attribute('institutes', $institutes);
             if (!$values['institute']) {
                 if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT && Request::isXhr()) {

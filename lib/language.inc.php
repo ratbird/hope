@@ -187,6 +187,7 @@ function setLocaleEnv($language, $language_domain = ''){
     if($language_domain){
         bindtextdomain($language_domain, $GLOBALS['STUDIP_BASE_PATH'] . "/locale");
         textdomain($language_domain);
+        bind_textdomain_codeset($language_domain, 'windows-1252');
     }
     return $ret;
 }

@@ -68,10 +68,7 @@
                 <? endwhile; ?>
             </select>
 
-            <?= Assets::img('icons/16/grey/room-clear.png', array('class'     => 'bookable_rooms_action',
-                                                                  'title'     => _("Nur buchbare Räume anzeigen"),
-                                                                  'data-name' => 'bulk_action'
-            )) ?>
+            <?= Icon::create('room-clear', 'inactive', ['title' => _("Nur buchbare Räume anzeigen")])->asImg(16, ["class" => 'bookable_rooms_action', "data-name" => 'bulk_action']) ?>
 
         </section>
 

@@ -65,7 +65,7 @@
         <a class="load-in-new-row"
            href="<?= $controller->url_for('course/timesrooms/cancel/'
                                           . $termin->termin_id . ($termin->metadate_id ? '/' . $termin->metadate_id : ''), $editParams) ?>">
-            <?= Assets::img('icons/grey/edit', tooltip2(_('Kommentar für diesen Termin bearbeiten'))) ?>
+            <?= Icon::create('edit', 'inactive', ['title' => _('Kommentar für diesen Termin bearbeiten')])->asImg() ?>
         </a>
 
         <? $warning = array() ?>
@@ -84,18 +84,18 @@
         <? endif ?>
         <a <?= Request::isXhr() ? 'data-dialog="size=big"' : '' ?> <? !empty($warning) ? 'data-confirm="' . implode("\n", $warning) . '"' : '' ?>
             href="<?= $controller->url_for('course/timesrooms/undeleteSingle/' . $termin->termin_id, $editParams) ?>">
-            <?= Assets::img('icons/grey/decline/trash', tooltip2(_('Diesen Termin wiederherstellen'))) ?>
+            <?= Icon::create('trash+decline', 'inactive', ['title' => _('Diesen Termin wiederherstellen')])->asImg() ?>
         </a>
 
     <? else: ?>
 
         <a class="load-in-new-row"
            href="<?= $controller->url_for('course/timesrooms/editDate/' . $termin->termin_id, $editParams) ?>">
-            <?= Assets::img('icons/blue/edit', tooltip2(_('Diesen Termin bearbeiten'))) ?>
+            <?= Icon::create('edit', 'clickable', ['title' => _('Diesen Termin bearbeiten')])->asImg() ?>
         </a>
         <a data-confirm="<?= _('Wollen Sie diesen Termin wirklich löschen / ausfallen lassen?') ?>" <?= Request::isXhr() ? 'data-dialog="size=big"' : '' ?>
             href="<?= $controller->url_for('course/timesrooms/deleteSingle/' . $termin->termin_id, array('cycle_id' => $termin->metadate_id)) ?>" <? !empty($warning) ? 'data-confirm="' . implode("\n", $warning) . '"' : '' ?>>
-            <?= Assets::img('icons/blue/trash', array('title' => _('Diesen Termin löschen / ausfallen lassen'))) ?>
+            <?= Icon::create('trash', 'clickable', ['title' => _('Diesen Termin löschen / ausfallen lassen')])->asImg() ?>
         </a>
 
     <? endif; ?>

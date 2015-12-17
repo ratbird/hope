@@ -50,7 +50,7 @@
                         <span>
                             <a href="<?= $controller->url_for('course/timesrooms/createCycle/' . $metadate_id) ?>"
                                data-dialog="size=big">
-                                <?= Assets::img('icons/blue/edit', tooltip2(_('Diesen Zeitraum bearbeiten'))) ?>
+                                <?= Icon::create('edit', 'clickable', ['title' => _('Diesen Zeitraum bearbeiten')])->asImg() ?>
                             </a>
                             <?= Assets::input('icons/blue/trash', tooltip2(_('Diesen Zeitraum löschen')) + array(
                                     'formaction'   => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id),

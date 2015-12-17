@@ -33,7 +33,7 @@ echo $flash['message'];
                 <td class="actions">
                     <a class="load-in-new-row"
                        href="<?= $controller->link_for('info/' . $rr->getId()) ?>">
-                        <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
+                        <?= Icon::create('info', 'clickable', ['title' => _('Weitere Informationen einblenden')])->asImg(16) ?>
                     </a>
                     <? $params = array('request_id' => $rr->getId()) ?>
                     <? if (Request::isXhr()) : ?>
@@ -41,17 +41,17 @@ echo $flash['message'];
                     <? endif ?>
                     <a data-dialog="size=big"
                        href="<?= $controller->link_for('edit/' . $course_id, $params) ?>">
-                        <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
+                        <?= Icon::create('edit', 'clickable', ['title' => _('Diese Anfrage bearbeiten')])->asImg(16) ?>
                     </a>
                     <? if (getGlobalPerms($GLOBALS['user']->id) == 'admin' || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $rr->getId())))) : ?>
                         <a href="<?= URLHelper::getLink('resources.php', array('view'           => 'edit_request',
                                                                                'single_request' => $rr->getId()
                         )) ?>">
-                            <?= Assets::img('icons/16/blue/admin.png', array('title' => _('Diese Anfrage selbst auflösen'))) ?>
+                            <?= Icon::create('admin', 'clickable', ['title' => _('Diese Anfrage selbst auflösen')])->asImg(16) ?>
                         </a>
                     <? endif ?>
                     <a href="<?= $controller->link_for('delete/' . $course_id, array('request_id' => $rr->getId())) ?>">
-                        <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diese Anfrage zurückziehen'))) ?>
+                        <?= Icon::create('trash', 'clickable', ['title' => _('Diese Anfrage zurückziehen')])->asImg(16) ?>
                     </a>
                 </td>
             </tr>

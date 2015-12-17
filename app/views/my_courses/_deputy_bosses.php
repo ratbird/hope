@@ -41,9 +41,7 @@
                         $boss['user_id'])?>" data-confirm="<?=sprintf(
                         _('Wollen Sie sich wirklich als Standardvertretung von %s austragen?'),
                         $boss['fullname']) ?>">
-                    <?= Assets::img('icons/blue/trash.svg',
-                        tooltip2(sprintf(_('Mich als Standardvertretung von %s austragen'),
-                        htmlReady($boss['fullname'])))) ?>
+                    <?= Icon::create('trash', 'clickable', ['title' => sprintf(_('Mich als Standardvertretung von %s austragen'),htmlReady($boss['fullname']))])->asImg() ?>
                 </a>
             </td>
         </tr>

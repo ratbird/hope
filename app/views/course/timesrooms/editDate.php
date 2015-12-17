@@ -79,7 +79,7 @@
                     <?= htmlReady(User::find($related_person)->getFullname()); ?>
 
                     <a href="javascript:" onClick="STUDIP.Raumzeit.removeLecturer('<?= $related_person ?>')">
-                        <?= Assets::img('icons/16/blue/trash.png') ?>
+                        <?= Icon::create('trash', 'clickable')->asImg(16) ?>
                     </a>
                 </li>
             <? endforeach ?>
@@ -101,7 +101,7 @@
             </select>
             <a href="javascript:" onClick="STUDIP.Raumzeit.addLecturer()"
                title="<?= _('Lehrenden hinzufügen') ?>">
-                <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
+                <?= Icon::create('arr_2up', 'sort')->asImg(16) ?>
             </a>
         </label>
     </fieldset>
@@ -120,7 +120,7 @@
                 <li data-groupid="<?= htmlReady($statusgruppe->getId()) ?>" <?= $related ? '' : 'style="display: none"' ?>>
                     <?= htmlReady($statusgruppe['name']) ?>
                     <a href="javascript:" onClick="STUDIP.Raumzeit.removeGroup('<?= $statusgruppe->getId() ?>')">
-                        <?= Assets::img('icons/blue/trash') ?>
+                        <?= Icon::create('trash', 'clickable')->asImg() ?>
                     </a>
                 </li>
             <? endforeach ?>
@@ -143,7 +143,7 @@
                 <? endforeach ?>
             </select>
             <a href="javascript:" onClick="STUDIP.Raumzeit.addGroup()" title="<?= _('Gruppe hinzufügen') ?>">
-                <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
+                <?= Icon::create('arr_2up', 'sort')->asImg(16) ?>
             </a>
 
         </label>

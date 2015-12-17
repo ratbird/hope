@@ -112,31 +112,31 @@
         <? if ($key === 'user'): ?>
             <td>
             <? if ($val->system): ?>
-                <?= Assets::img('icons/grey/checkbox-checked.svg', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('checkbox-checked', 'inactive', ['title' => _('Ja')])->asImg() ?>
             <? else: ?>
-                <?= Assets::img('icons/grey/checkbox-unchecked.svg', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'inactive', ['title' => _('Nein')])->asImg() ?>
             <? endif; ?>
             </td>
             <td>
             <? if ($val->is_userfilter): ?>
-                <?= Assets::img('icons/grey/checkbox-checked.svg', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('checkbox-checked', 'inactive', ['title' => _('Ja')])->asImg() ?>
             <? else: ?>
-                <?= Assets::img('icons/grey/checkbox-unchecked.svg', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'inactive', ['title' => _('Nein')])->asImg() ?>
             <? endif; ?>
             </td>
         <? elseif ($key === 'sem'): ?>
             <td>
             <? if ($val->is_required): ?>
-                <?= Assets::img('icons/grey/checkbox-checked.svg', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('checkbox-checked', 'inactive', ['title' => _('Ja')])->asImg() ?>
             <? else: ?>
-                <?= Assets::img('icons/grey/checkbox-unchecked.svg', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'inactive', ['title' => _('Nein')])->asImg() ?>
             <? endif; ?>
             </td>
             <td>
             <? if (trim($val->description)): ?>
-                <?= Assets::img('icons/grey/checkbox-checked.svg', tooltip2(_('Ja'))) ?>
+                <?= Icon::create('checkbox-checked', 'inactive', ['title' => _('Ja')])->asImg() ?>
             <? else: ?>
-                <?= Assets::img('icons/grey/checkbox-unchecked.svg', tooltip2(_('Nein'))) ?>
+                <?= Icon::create('checkbox-unchecked', 'inactive', ['title' => _('Nein')])->asImg() ?>
             <? endif; ?>
             </td>
         <? else: ?>

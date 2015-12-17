@@ -318,12 +318,12 @@ class ContentModule
     function getIcon()
     {
         if (!$this->icon_file) {
-            $this->icon_file = 'icons/16/grey/learnmodule.png';
+            $this->icon_file = 'learnmodule';
         }
         if (strpos('http', $this->icon_file) === 0) {
             return "<img src=\"" . $this->icon_file . "\">";
         } else {
-            return Assets::img($this->icon_file);
+            return Icon::create($this->icon_file, 'inactive')->asImg();
         }
     }
 

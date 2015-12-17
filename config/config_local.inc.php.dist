@@ -169,14 +169,14 @@ $ELEARNING_INTERFACE_MODULES = array(
                         "password" => "<password>",
                         "client" => "<ilias client id>"),
         "types" => array(
-                   "webr" => array("name" => "ILIAS-Link", "icon" => "icons/16/grey/learnmodule.png"),
-                   "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "icons/16/grey/learnmodule.png"),
-                   "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "icons/16/grey/learnmodule.png"),
-                   "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "icons/16/grey/learnmodule.png"),
-                   "glo" => array("name" => "ILIAS-Glossar", "icon" => "icons/16/grey/learnmodule.png"),
-                   "tst" => array("name" => "ILIAS-Test", "icon" => "icons/16/grey/learnmodule.png"),
-                   "svy" => array("name" => "ILIAS-Umfrage", "icon" => "icons/16/grey/learnmodule.png"),
-                   "exc" => array("name" => "ILIAS-Übung", "icon" => "icons/16/grey/learnmodule.png")
+                   "webr" => array("name" => "ILIAS-Link", "icon" => "learnmodule"),
+                   "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "learnmodule"),
+                   "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "learnmodule"),
+                   "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "learnmodule"),
+                   "glo" => array("name" => "ILIAS-Glossar", "icon" => "learnmodule"),
+                   "tst" => array("name" => "ILIAS-Test", "icon" => "learnmodule"),
+                   "svy" => array("name" => "ILIAS-Umfrage", "icon" => "learnmodule"),
+                   "exc" => array("name" => "ILIAS-Übung", "icon" => "learnmodule")
                    ),
         "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
         "roles" =>  array(

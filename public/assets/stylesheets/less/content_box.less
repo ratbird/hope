@@ -71,18 +71,6 @@ section.contentbox {
         border-width: 1px;
         margin: 10px;
 
-        > p, > section, > footer, > div {
-            max-height: 0px;
-            opacity: 0;
-            overflow: auto;
-            .transition(opacity 0.3s);
-        }
-
-
-        > p, > footer, > div {
-            padding: 0 10px 0 10px;
-        }
-
         div, p {
             margin: 0;
         }
@@ -170,6 +158,13 @@ section.contentbox {
                     color: @light-gray-color-40;
                 }
             }
+        }
+
+        &:not(.open) header ~ * {
+            max-height: 0px;
+            opacity: 0;
+            overflow: auto;
+            .transition(opacity 0.3s);
         }
 
         &.open {

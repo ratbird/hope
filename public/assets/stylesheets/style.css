@@ -3013,23 +3013,6 @@ section.contentbox article {
   border-width: 1px;
   margin: 10px;
 }
-section.contentbox article > p,
-section.contentbox article > section,
-section.contentbox article > footer,
-section.contentbox article > div {
-  max-height: 0px;
-  opacity: 0;
-  overflow: auto;
-  -webkit-transition: opacity 0.3s;
-  -moz-transition: opacity 0.3s;
-  -o-transition: opacity 0.3s;
-  transition: opacity 0.3s;
-}
-section.contentbox article > p,
-section.contentbox article > footer,
-section.contentbox article > div {
-  padding: 0 10px 0 10px;
-}
 section.contentbox article div,
 section.contentbox article p {
   margin: 0;
@@ -3120,6 +3103,15 @@ section.contentbox article footer article.comment time {
   float: right;
   font-size: 0.8em;
   color: #c5c7ca;
+}
+section.contentbox article:not(.open) header ~ * {
+  max-height: 0px;
+  opacity: 0;
+  overflow: auto;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  transition: opacity 0.3s;
 }
 section.contentbox article.open > p,
 section.contentbox article.open > section,

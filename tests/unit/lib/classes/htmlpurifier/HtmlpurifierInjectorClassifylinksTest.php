@@ -34,24 +34,6 @@ require_once 'lib/classes/htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
  */
 class HTMLPurifier_Injector_ClassifyLinksTest extends PHPUnit_Framework_TestCase
 {
-    // check for all errors in this test
-
-    private static $originalErrorReporting;
-
-    public static function setUpBeforeClass()
-    {
-        self::$originalErrorReporting = error_reporting();
-        // E_STRICT was not part of E_ALL in PHP < 5.4.0
-        error_reporting(E_ALL | E_STRICT);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        error_reporting(self::$originalErrorReporting);
-    }
-
-    // run tests
-
     /**
      * @dataProvider dataProvider
      */

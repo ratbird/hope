@@ -51,25 +51,6 @@ class Seminar_Session
  */
 class MarkupTest extends PHPUnit_Framework_TestCase
 {
-    # check for all errors in this test
-
-    private static $originalErrorReporting;
-
-    public function setUp()
-    {
-        MarkupTest::$originalErrorReporting = error_reporting();
-
-        // E_STRICT was not part of E_ALL in PHP < 5.4.0
-        error_reporting(E_ALL | E_STRICT);
-    }
-
-    public function tearDown()
-    {
-        error_reporting(MarkupTest::$originalErrorReporting);
-    }
-
-    # unit tests
-
     public function testRemoveHTML()
     {
         forEach (array(

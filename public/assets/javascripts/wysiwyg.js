@@ -80,6 +80,7 @@ jQuery(function ($) {
                     attributes: ['!href', 'target', 'rel'],
                     classes: 'link-extern'
                 },
+                blockquote: {},
                 br: {},
                 caption: {},
                 em: {},
@@ -156,7 +157,7 @@ jQuery(function ($) {
             width: textareaWidth,
             skin: 'studip,' + STUDIP.ASSETS_URL + 'stylesheets/ckeditor-skin/',
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
-            extraPlugins: 'codemirror,magicline,studip-floatbar,studip-settings,studip-wiki,confighelper'
+            extraPlugins: 'codemirror,confighelper,magicline,studip-floatbar,studip-quote,studip-settings,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,

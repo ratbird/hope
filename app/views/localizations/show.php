@@ -176,6 +176,9 @@ $translations = array(
     'Hervorhebung aufheben' => _('Hervorhebung aufheben'),
     'Thema hervorheben' => _('Thema hervorheben'),
 
+    // public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
+    'Zitat einfügen' => _('Zitat einfügen'),
+    '%s hat geschrieben:' => _('%s hat geschrieben:'),
 );
 
 // translations have to be UTF8 for #json_encode

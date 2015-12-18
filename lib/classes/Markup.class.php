@@ -227,6 +227,7 @@ class Markup
         //
         $config->set('HTML.Allowed', '
             a[class|href|target|rel]
+            blockquote
             br
             caption
             div[class|style]
@@ -261,6 +262,7 @@ class Markup
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
         $config->set('Attr.AllowedClasses', array(
+            'author',
             'content',
             'link-extern',
             'wiki-link',

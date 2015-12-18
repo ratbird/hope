@@ -429,12 +429,9 @@ function isURL($url) {
 
 function isLinkIntern($url) {
     $pum = @parse_url(TransformInternalLinks($url));
-    if (!isset($pum['port'])) {
-        $pum['port'] = '';
-    }
-    return ($pum['scheme'] === 'http' || $pum['scheme'] === 'https')
-        && ( $pum['host'] == $_SERVER['HTTP_HOST']
-            || $pum['host'] . ':' . $pum['port'] == $_SERVER['HTTP_HOST'] )
+    return in_array($pum['scheme'], array('https', 'http', NULL), true)
+        && in_array($pum['host'], array($_SERVER['SERVER_NAME'], NULL), true)
+        && in_array($pum['port'], array($_SERVER['SERVER_PORT'], NULL), true)
         && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0;
 }
 

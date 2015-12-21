@@ -271,6 +271,18 @@ class Course_WizardController extends AuthenticatedController
                 }
             }
         }
+        // Check if "documents" module is activated and create "General" folder.
+        $m = new Modules();
+        if ($m->getStatus('documents', $course->id)) {
+            $f = new DocumentFolder();
+            $f->name = _('Allgemeiner Dateiordner');
+            $f->description = _('Ablage für allgemeine Ordner und Dokumente der Einrichtung');
+            $f->range_id = $course->id;
+            $f->seminar_id = $course->id;
+            $f->user_id = $GLOBALS['user']->id;
+            $f->permission = 7;
+            $f->store();
+        }
         // Cleanup session data.
         unset($_SESSION['coursewizard'][$this->temp_id]);
         return $course;

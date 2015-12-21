@@ -341,6 +341,9 @@ class Admin_CoursesController extends AuthenticatedController
     }
 
 
+    /**
+     * Lock or unlock courses
+     */
     public function set_locked_action()
     {
         $admission_locked = Request::getArray('admission_locked');
@@ -405,7 +408,7 @@ class Admin_CoursesController extends AuthenticatedController
                     $errors[] = $course->name;
                 } else {
                     $result = true;
-                    log_event($visibility ? 'SEM_VISIBLE' : 'SEM_INVISIBLE', $course->id);
+                    StudipLog::log($visibility ? 'SEM_VISIBLE' : 'SEM_INVISIBLE', $course->id);
                 }
             }
 
@@ -533,7 +536,7 @@ class Admin_CoursesController extends AuthenticatedController
     }
 
     /**
-     * Return a specifically action oder all available actions
+     * Return a specifically action or all available actions
      * @param null $selected
      * @return array
      */

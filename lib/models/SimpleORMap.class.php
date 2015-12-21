@@ -1024,7 +1024,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $this->db_fields = self::$schemes[$this->db_table]['db_fields'];
             $this->pk = self::$schemes[$this->db_table]['pk'];
             foreach ($this->db_fields as $field => $meta) {
-                if (!isset($this->default_values[$field])) {
+                if (!isset($this->default_values[$field]) && !in_array($field, $this->pk)) {
                     $this->default_values[$field] = $meta['default'];
                 }
             }
@@ -1291,6 +1291,17 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * returns default value for column
+     *
+     * @param string $field name of column
+     * @return mixed the default value
+     */
+    function getDefaultValue($field)
+    {
+        return isset($this->default_values[$field]) ? $this->default_values[$field] : null;
+    }
+
+    /**
      * sets value of a column
      *
      * @throws InvalidArgumentException if column could not be found
@@ -1509,7 +1520,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         }
         if ($reset) {
-            $this->content_db = $this->content;
+            foreach (array_keys($this->db_fields) as $field) {
+                $this->content_db[$field] = $this->content[$field];
+            }
             $this->applyCallbacks('after_initialize');
         }
         return $count;
@@ -1644,17 +1657,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     }
                 }
                 if ($value === null && $meta['null'] == 'NO') {
-                    $default_value = $this->default_values[$field];
-                    if ($default_value === null) {
-                        throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
-                    }
-                    if ($default_value instanceof Closure) {
-                      $value = call_user_func_array($default_value, array($this, $field));
-                    } elseif (method_exists($this, $default_value)) {
-                        $value = call_user_func(array($this, $default_value), $field);
-                    } else {
-                        $value = $default_value;
-                    }
+                    throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
                 }
                 if (is_float($value)) {
                     $value = str_replace(',','.', $value);
@@ -1834,7 +1837,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * init internal content arrays with nulls
+     * init internal content arrays with nulls or defaults
      *
      * @throws UnexpectedValueException if there is an unmatched alias
      */
@@ -1842,7 +1845,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $this->content = array();
         foreach (array_keys($this->db_fields) as $field) {
-            $this->content[$field] = null;
+            $this->content[$field] = $this->getDefaultValue($field);
             $this->content_db[$field] = null;
         }
         foreach ($this->alias_fields as $alias => $field) {

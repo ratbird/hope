@@ -208,6 +208,9 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $a->user_id);
         $this->assertEquals(2, $a->id);
         $this->assertEquals(2, $a->getId());
+        $a->revertValue('id');
+        $this->assertNull($a->id);
+        $a->user_id = 2;
     }
 
     /**
@@ -229,7 +232,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $to_array['id']);
         $this->assertEquals(2, $to_array['user_id']);
         $this->assertEquals('test', $to_array['additional']);
-        $this->assertEquals('ok:', $to_array['perms']);
+        $this->assertEquals('ok:user', $to_array['perms']);
         $this->assertEquals(range(1,4), $to_array['csvdata']);
         $this->assertArrayHasKey('visible', $to_array);
         $this->assertCount(16, $to_array);
@@ -238,7 +241,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $to_array['id']);
         $this->assertEquals(2, $to_array['user_id']);
         $this->assertEquals('test', $to_array['additional']);
-        $this->assertEquals('ok:', $to_array['perms']);
+        $this->assertEquals('ok:user', $to_array['perms']);
         $this->assertArrayNotHasKey('visible', $to_array);
         $this->assertCount(4, $to_array);
     }

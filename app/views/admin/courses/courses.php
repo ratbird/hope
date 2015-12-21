@@ -61,7 +61,7 @@
     <tr class="sortable">
     <? if (Config::get()->ADMIN_COURSES_SHOW_COMPLETE): ?>
         <th <? if ($sortby === 'completion') printf('class="sort%s"', strtolower($sortFlag)) ?>>
-            <a href="<?= URLHelper::getLink('', array('sortby' => 'completion', 'sortFlag' => strtolower($sortFlag))) ?>" class="course-completion">
+            <a href="<?= URLHelper::getLink('', array('sortby' => 'completion', 'sortFlag' => strtolower($sortFlag))) ?>" class="course-completion" title="<?= _('Bearbeitungsstatus') ?>">
                 <?= _('Bearbeitungsstatus') ?>
             </a>
         </th>
@@ -157,7 +157,8 @@
             <td>
             <? if (Config::get()->ADMIN_COURSES_SHOW_COMPLETE): ?>
                 <a href="<?= $controller->url_for('admin/courses/toggle_complete/' . $semid) ?>"
-                   class="course-completion <? if ($values['is_complete']) echo 'course-complete'; ?>">
+                   class="course-completion <? if ($values['is_complete']) echo 'course-complete'; ?>"
+                   title="<?= _('Bearbeitungsstatus ändern') ?>">
                        <?= _('Bearbeitungsstatus ändern') ?>
                 </a>
             <? else: ?>

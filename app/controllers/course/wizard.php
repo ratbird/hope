@@ -276,7 +276,7 @@ class Course_WizardController extends AuthenticatedController
         if ($m->getStatus('documents', $course->id)) {
             $f = new DocumentFolder();
             $f->name = _('Allgemeiner Dateiordner');
-            $f->description = _('Ablage für allgemeine Ordner und Dokumente der Einrichtung');
+            $f->description = _('Ablage für allgemeine Ordner und Dokumente der Veranstaltung');
             $f->range_id = $course->id;
             $f->seminar_id = $course->id;
             $f->user_id = $GLOBALS['user']->id;

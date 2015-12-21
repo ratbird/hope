@@ -1,7 +1,5 @@
 <?php
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
 /*
  * Request.php - class representing a HTTP request in Stud.IP
  *
@@ -26,7 +24,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * Initialize a new Request instance.
      */
-    private function __construct ()
+    private function __construct()
     {
         $params = array_merge($_GET, $_POST);
 
@@ -38,7 +36,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * Return the Request singleton instance.
      */
-    public static function getInstance ()
+    public static function getInstance()
     {
         static $instance;
 
@@ -52,7 +50,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * ArrayAccess: Check whether the given offset exists.
      */
-    public function offsetExists ($offset)
+    public function offsetExists($offset)
     {
         return isset($this->params[$offset]);
     }
@@ -60,7 +58,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * ArrayAccess: Get the value at the given offset.
      */
-    public function offsetGet ($offset)
+    public function offsetGet($offset)
     {
         return $this->params[$offset];
     }
@@ -68,7 +66,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * ArrayAccess: Set the value at the given offset.
      */
-    public function offsetSet ($offset, $value)
+    public function offsetSet($offset, $value)
     {
         $this->params[$offset] = $value;
     }
@@ -76,7 +74,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * ArrayAccess: Delete the value at the given offset.
      */
-    public function offsetUnset ($offset)
+    public function offsetUnset($offset)
     {
         unset($this->params[$offset]);
     }
@@ -84,7 +82,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * IteratorAggregate: Create interator for request parameters.
      */
-    public function getIterator ()
+    public function getIterator()
     {
         return new ArrayIterator((array)$this->params);
     }
@@ -92,30 +90,32 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * Return the current URL, including query parameters.
      */
-    public static function url ()
+    public static function url()
     {
-        return self::protocol().'://'.self::server().self::path();
+        return self::protocol() . '://' . self::server() . self::path();
     }
 
     /**
      * Return the current protocol ('http' or 'https').
      */
-    public static function protocol ()
+    public static function protocol()
     {
-        return $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+            ? 'https'
+            : 'http';
     }
 
     /**
      * Return the current server name and port (host:port).
      */
-    public static function server ()
+    public static function server()
     {
         $host = $_SERVER['SERVER_NAME'];
         $port = $_SERVER['SERVER_PORT'];
         $ssl  = $_SERVER['HTTPS'] == 'on';
 
         if ($ssl && $port != 443 || !$ssl && $port != 80) {
-            $host .= ':'.$port;
+            $host .= ':' . $port;
         }
 
         return $host;
@@ -124,7 +124,7 @@ class Request implements ArrayAccess, IteratorAggregate
     /**
      * Return the current request path, relative to the server root.
      */
-    public static function path ()
+    public static function path()
     {
         return $_SERVER['REQUEST_URI'];
     }
@@ -135,7 +135,7 @@ class Request implements ArrayAccess, IteratorAggregate
      * @param string $param    parameter name
      * @param mixed  $value    parameter value (string or array)
      */
-    public static function set ($param, $value)
+    public static function set($param, $value)
     {
         $request = self::getInstance();
 
@@ -150,16 +150,13 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return string  parameter value as string (if set), else NULL
      */
-    public static function get ($param, $default = NULL)
+    public static function get($param, $default = NULL)
     {
         $request = self::getInstance();
-        $value = $request->params[$param];
 
-        if (!isset($value) || !is_string($value)) {
-            $value = $default;
-        }
-
-        return $value;
+        return (isset($request[$param]) && is_string($request[$param]))
+             ? $request[$param]
+             : $default;
     }
 
     /**
@@ -171,7 +168,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return string  parameter value as string (if set), else NULL
      */
-    public static function quoted ($param, $default = NULL)
+    public static function quoted($param, $default = NULL)
     {
         $value = self::get($param, $default);
 
@@ -191,7 +188,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return string  parameter value as string (if set), else NULL
      */
-    public static function option ($param, $default = NULL)
+    public static function option($param, $default = NULL)
     {
         $value = self::get($param, $default);
 
@@ -210,7 +207,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return int     parameter value as integer (if set), else NULL
      */
-    public static function int ($param, $default = NULL)
+    public static function int($param, $default = NULL)
     {
         $value = self::get($param, $default);
 
@@ -229,7 +226,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return float   parameter value as float (if set), else NULL
      */
-    public static function float ($param, $default = NULL)
+    public static function float($param, $default = NULL)
     {
         $value = self::get($param, $default);
 
@@ -249,7 +246,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return string   parameter value (if set), else NULL
      */
-    public static function username ($param, $default = NULL)
+    public static function username($param, $default = NULL)
     {
         $value = self::get($param, $default);
 
@@ -267,16 +264,13 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function getArray ($param)
+    public static function getArray($param)
     {
         $request = self::getInstance();
-        $array = $request->params[$param];
 
-        if (!isset($array) || !is_array($array)) {
-            $array = array();
-        }
-
-        return $array;
+        return (isset($request[$param]) && is_array($request[$param]))
+            ? $request[$param]
+            : array();
     }
 
     /**
@@ -287,7 +281,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function quotedArray ($param)
+    public static function quotedArray($param)
     {
         $array = self::getArray($param);
 
@@ -303,7 +297,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function optionArray ($param)
+    public static function optionArray($param)
     {
         $array = self::getArray($param);
 
@@ -323,7 +317,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function intArray ($param)
+    public static function intArray($param)
     {
         $array = self::getArray($param);
 
@@ -341,7 +335,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function floatArray ($param)
+    public static function floatArray($param)
     {
         $array = self::getArray($param);
 
@@ -360,7 +354,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return array  parameter value as array (if set), else an empty array
      */
-    public static function usernameArray ($param)
+    public static function usernameArray($param)
     {
         $array = self::getArray($param);
 
@@ -380,13 +374,12 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @returns boolean  true if the button has been submitted, else false
      */
-    public static function submitted ($param)
+    public static function submitted($param)
     {
         $request = self::getInstance();
-        $value   = $request->params[$param];
-        $value_x = $request->params[$param.'_x'];
 
-        return isset($value) || isset($value_x);
+        return isset($request[$param])
+            || isset($request[$param . '_x']);
     }
 
     /**
@@ -398,7 +391,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @returns boolean  true if any button has been submitted, else false
      */
-    public static function submittedSome ($param/*, ... */)
+    public static function submittedSome($param/*, ... */)
     {
         foreach(func_get_args() as $button) {
             if (self::submitted($button)) {
@@ -416,7 +409,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return mixed  quoted string or array
      */
-    public static function addslashes ($value)
+    public static function addslashes($value)
     {
         if (is_array($value)) {
             foreach ($value as $key => $val) {
@@ -438,7 +431,7 @@ class Request implements ArrayAccess, IteratorAggregate
      *
      * @return mixed  unquoted string or array
      */
-    public static function removeMagicQuotes ($value)
+    public static function removeMagicQuotes($value)
     {
         if (get_magic_quotes_gpc()) {
             if (is_array($value)) {
@@ -501,7 +494,7 @@ class Request implements ArrayAccess, IteratorAggregate
      */
     public static function isXhr()
     {
-        return $_SERVER['HTTP_X_REQUESTED_WITH'] &&
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
             strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') === 0;
     }
 

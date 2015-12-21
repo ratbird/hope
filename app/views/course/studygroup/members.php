@@ -6,31 +6,31 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
         "approvalLink"    => $controller->url_for('course/studygroup/edit_members/'
                                                   . $sem_id . '/remove_approved/todo/' . get_ticket()
                                                   . '?user=' . $flash['candidate']),
-        "disapprovalLink" => $controller->url_for('course/studygroup/members/' . $sem_id . '/' . $page)
+        "disapprovalLink" => $controller->url_for('course/studygroup/members/' . $sem_id . '/' . $page),
     ));
 }
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback", compact('anzahl', 'page', 'sem_id')) ?>
 
-<? if($view == 'list') : ?>
+<? if ($view == 'list') : ?>
     <? if (!empty($moderators)) : ?>
         <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' =>  _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true))?>
+            array('title' => _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true)) ?>
     <? endif ?>
 
     <? if (!empty($tutors)) : ?>
         <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' =>  _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors))?>
+            array('title' => _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors)) ?>
     <? endif ?>
 
     <? if (!empty($cmembers)) : ?>
         <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' =>  _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers))?>
+            array('title' => _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers)) ?>
     <? endif ?>
 <? else : ?>
-    <?= $this->render_partial('course/studygroup/gallery.php')?>
-<? endif?>
+    <?= $this->render_partial('course/studygroup/gallery.php') ?>
+<? endif ?>
 
 
 <? if ($rechte && $view == 'list') : ?>
@@ -42,39 +42,43 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <col>
                 <col width="80">
             </colgroup>
-            <tr>
-                <th data-sort="false"></th>
-                <th data-sort="text">
-                    <?= _('Name') ?>
-                </th>
-                <th data-sort="false">
-                    <?= _('Aktionen') ?>
-                </th>
-            </tr>
-
-            <? foreach ($accepted as $p) : ?>
+            <thead>
                 <tr>
-                    <td>
-                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
-                            <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
-                            <?= htmlReady($p['fullname']) ?>
-                        </a>
-                    </td>
-                    <td class="actions">
-                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user=' . $p['username']) ?>">
-                            <?= Icon::create('accept', 'clickable', ['title' => _('Eintragen')])->asImg() ?>
-                        </a>
-
-                        <a data-confirm="<?=_('Wollen Sie die Mitgliedschaft wirklich ablehnen?')?>" href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p['username']) ?>">
-                            <?= Icon::create('decline', 'clickable', ['title' => _('Wollen Sie die Mitgliedschaft wirklich ablehnen?')])->asImg() ?>
-                        </a>
-                    </td>
+                    <th data-sort="false"></th>
+                    <th data-sort="text">
+                        <?= _('Name') ?>
+                    </th>
+                    <th data-sort="false">
+                        <?= _('Aktionen') ?>
+                    </th>
                 </tr>
-            <? endforeach ?>
+            </thead>
+            <tbody>
+                <? foreach ($accepted as $p) : ?>
+                    <tr>
+                        <td>
+                            <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p->username) ?>">
+                                <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p->username) ?>">
+                                <?= htmlReady($p->user->getFullname('no_title_rev')) ?>
+                            </a>
+                        </td>
+                        <td class="actions">
+                            <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user=' . $p->username) ?>">
+                                <?= Icon::create('accept', 'clickable', ['title' => _('Eintragen')])->asImg() ?>
+                            </a>
+
+                            <a data-confirm="<?= _('Wollen Sie die Mitgliedschaft wirklich ablehnen?') ?>"
+                               href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user=' . $p->username) ?>">
+                                <?= Icon::create('decline', 'clickable', ['title' => _('Wollen Sie die Mitgliedschaft wirklich ablehnen?')])->asImg() ?>
+                            </a>
+                        </td>
+                    </tr>
+                <? endforeach ?>
+            </tbody>
         </table>
     <? endif; ?>
 
@@ -86,35 +90,38 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
                 <col>
                 <col width="80">
             </colgroup>
-            <tr>
-                <th data-sort="false"></th>
-                <th data-sort="text">
-                    <?= _('Name') ?>
-                </th>
-                <th data-sort="false">
-                    <?= _('Aktionen') ?>
-                </th>
-            </tr>
-
-            <? foreach ($invitedMembers as $p) : ?>
+            <thead>
                 <tr>
-                    <td>
-                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
-                            <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
-                            <?= htmlReady($p['fullname']) ?>
-                        </a>
-                    </td>
-                    <td class="actions">
-                        <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user=' . $p['username']) ?>">
-                            <?= Icon::create('decline', 'clickable', ['title' => _('Verschickte Einladungen löschen')])->asImg() ?>
-                        </a>
-                    </td>
+                    <th data-sort="false"></th>
+                    <th data-sort="text">
+                        <?= _('Name') ?>
+                    </th>
+                    <th data-sort="false">
+                        <?= _('Aktionen') ?>
+                    </th>
                 </tr>
-            <? endforeach ?>
+            </thead>
+            <tbody>
+                <? foreach ($invitedMembers as $p) : ?>
+                    <tr>
+                        <td>
+                            <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
+                                <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
+                                <?= htmlReady($p['fullname']) ?>
+                            </a>
+                        </td>
+                        <td class="actions">
+                            <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user=' . $p['username']) ?>">
+                                <?= Icon::create('decline', 'clickable', ['title' => _('Verschickte Einladungen löschen')])->asImg() ?>
+                            </a>
+                        </td>
+                    </tr>
+                <? endforeach ?>
+            </tbody>
         </table>
     <? endif; ?>
 <? endif; ?>

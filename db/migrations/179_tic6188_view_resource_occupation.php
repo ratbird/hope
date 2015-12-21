@@ -10,11 +10,18 @@
  */
 class Tic6188ViewResourceOccupation extends Migration
 {
-    function description()
+    /**
+     * Describe migration: add config switch.
+     * @return string
+     */
+    public function description()
     {
         return 'Creates a config switch for restricting who may view resource occupation schedules';
     }
 
+    /**
+     * Adds a config switch for configuring resource occupation access.
+     */
     public function up()
     {
         // Add config entry.
@@ -33,6 +40,9 @@ class Tic6188ViewResourceOccupation extends Migration
         ));
     }
 
+    /**
+     * Removes config switch for resource occupation access.
+     */
     public function down()
     {
         DBManager::get()->exec("DELETE FROM `config` WHERE `field`='RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION'");

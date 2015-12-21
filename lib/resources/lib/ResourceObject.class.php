@@ -792,7 +792,7 @@ class ResourceObject {
     /**
      * Checks if the resource occupation may be seen by current user.
      */
-    static function isScheduleViewAllowed($object_id) {
+    public static function isScheduleViewAllowed($object_id) {
         // Check if room occupation may be seen.
         $allowed = false;
 

@@ -1116,6 +1116,10 @@ function getResourcesCategories()
     return DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 }
 
+/**
+ * Checks if current user has global access to resource occupation plans.
+ * @return bool
+ */
 function hasGlobalOccupationAccess()
 {
     return (Config::get()-> RESOURCES_ALLOW_VIEW_RESOURCE_OCCUPATION ||

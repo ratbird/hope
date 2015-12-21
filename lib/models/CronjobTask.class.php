@@ -198,7 +198,7 @@ class CronjobTask extends SimpleORMap
                                      $priority = CronjobSchedule::PRIORITY_NORMAL,
                                      $parameters = array())
     {
-        return CronjobScheduler::schedulePeriodic($minute, $hour, $day, $month,
+        return CronjobScheduler::schedulePeriodic($this->id, $minute, $hour, $day, $month,
                                                   $day_of_week, $priority, $parameters);
     }
 }

@@ -7,12 +7,12 @@
         <caption>
             <?= $waitingTitle ?>
             <span class="actions">
-                <?=$controller->getEmailLinkByStatus($waiting_type, $awaiting)?>
                     <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                             array('filter' => $waiting_type,
+                                'emailrequest' => 1,
                                 'course_id' => $course_id,
                                 'default_subject' => $subject))?>" data-dialog>
-                        <?= Icon::create('inbox', 'clickable', ['title' =>  _('Nachricht an alle Wartenden versenden')])->asImg()?>
+                        <?= Icon::create('inbox', 'clickable', ['title' =>  _('Nachricht mit Mailweiterleitung an alle Wartenden versenden')])->asImg()?>
                     </a>
             </span>
         </caption>
@@ -84,12 +84,13 @@
                 <td style="text-align: right">
                     <? if($user_id != $waiting['user_id']) : ?>
                         <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
-                                    array('filter' => 'send_sms_to_all',
+                                array('filter' => 'send_sms_to_all',
+                                    'emailrequest' => 1,
                                     'rec_uname' => $waiting['username'],
                                     'default_subject' => $subject))
                                 ?>
                         " data-dialog>
-                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
+                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                         </a>
                     <? endif?>
                     <? if (!$is_locked) : ?>

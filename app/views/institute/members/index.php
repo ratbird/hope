@@ -62,8 +62,7 @@ if ($admin_view) {
 
     if (!empty($mail_list)) {
         $actions = new ActionsWidget();
-        $actions->addLink(_('Mitarbeiter/-innen-Rundmail'), "mailto:" . join(",", $mail_list) . "?subject=" . urlencode(_("Rundmail")), Icon::create('mail+move_right', 'clickable'));
-        $actions->addLink(_('Stud.IP Nachricht'), $controller->url_for('messages/write', array('inst_id' => $inst_id)), Icon::create('mail', 'clickable'), array('data-dialog' => 'size=50%'));
+        $actions->addLink(_('Stud.IP Rundmail'), $controller->url_for('messages/write', array('inst_id' => $inst_id, 'emailrequest' => 1)), Icon::create('mail', 'clickable'), array('data-dialog' => 'size=50%'));
         $sidebar->addWidget($actions);
     }
 }

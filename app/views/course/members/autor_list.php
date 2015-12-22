@@ -8,14 +8,14 @@
         <caption>
         <? if ($is_tutor) : ?>
             <span class="actions">
-                <?=$controller->getEmailLinkByStatus('autor', $autoren)?>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                     array('filter' => 'send_sms_to_all',
+                        'emailrequest' => 1,
                         'who' => 'autor',
                         'course_id' => $course_id,
                         'default_subject' => $subject))
                 ?>" data-dialog>
-                    <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'),htmlReady($status_groups['autor']))])->asImg(16) ?>
+                    <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an alle %s versenden'),htmlReady($status_groups['autor']))])->asImg(16) ?>
                 </a>
            </span>
        <? endif ?>
@@ -114,11 +114,12 @@
                     <? if($user_id != $autor['user_id']) : ?>
                         <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                                     array('filter' => 'send_sms_to_all',
+                                    'emailrequest' => 1,
                                     'rec_uname' => $autor['username'],
                                     'default_subject' => $subject))
                                 ?>
                         " data-dialog>
-                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
+                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                         </a>
                     <? endif ?>
                     <? if ($is_tutor && !$is_locked) : ?>

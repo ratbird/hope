@@ -1051,7 +1051,7 @@ class Course_StudygroupController extends AuthenticatedController
         else
             $subject = sprintf(_("[Studiengruppe: %s]"), $sem->getFullname());
 
-        $this->redirect($this->url_for('messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all')));
+        $this->redirect($this->url_for('messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all', 'emailrequest' => 1)));
     }
 
 

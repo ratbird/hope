@@ -7,13 +7,13 @@
     <table class="default collapsable">
         <caption>
             <span class="actions">
-                <?=$controller->getEmailLinkByStatus('accepted', $accepted)?>
                     <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                             array('filter' => 'prelim',
+                                'emailrequest' => 1,
                                 'course_id' => $course_id,
                                 'default_subject' => $subject))
                     ?>" data-dialog>
-                        <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'),'vorläufig akzeptierten Nutzer/-innen')])->asImg(16)?>
+                        <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an alle %s versenden'),'vorläufig akzeptierten Nutzer/-innen')])->asImg(16)?>
                     </a>
             </span>
             <?= _('Vorläufig akzeptierte Teilnehmende') ?>
@@ -92,12 +92,13 @@
                     </a>
                     <? if($user_id != $accept['user_id']) : ?>
                         <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
-                                    array('filter' => 'send_sms_to_all',
+                                array('filter' => 'send_sms_to_all',
+                                    'emailrequest' => 1,
                                     'rec_uname' => $accept['username'],
                                     'default_subject' => $subject))
                                 ?>
                         "  data-dialog>
-                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
+                            <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                         </a>
                     <? endif?>
                     <? if (!$is_locked) : ?>

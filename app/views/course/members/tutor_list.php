@@ -7,15 +7,15 @@
         <caption>
         <? if($is_tutor) : ?>
             <span class="actions">
-                    <?=$controller->getEmailLinkByStatus('tutor', $tutoren)?>
-                        <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
-                                array('filter' => 'send_sms_to_all',
-                                    'who' => 'tutor',
-                                    'course_id' => $course_id,
-                                    'default_subject' => $subject))
-                        ?>" data-dialog>
-                            <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'),$status_groups['tutor'])])->asImg(16)?>
-                        </a>
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
+                        array('filter' => 'send_sms_to_all',
+                            'who' => 'tutor',
+                            'emailrequest' => 1,
+                            'course_id' => $course_id,
+                            'default_subject' => $subject))
+                ?>" data-dialog>
+                    <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an alle %s versenden'),$status_groups['tutor'])])->asImg(16)?>
+                </a>
             </span>
         <? endif ?>
             <?= $status_groups['tutor'] ?>
@@ -104,12 +104,13 @@
                     <? endif ?>
                     <? if($user_id != $tutor['user_id']) : ?>
                     <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
-                                array('filter' => 'send_sms_to_all',
+                            array('filter' => 'send_sms_to_all',
+                                'emailrequest' => 1,
                                 'rec_uname' => $tutor['username'],
                                 'default_subject' => $subject))
                             ?>
                     " data-dialog>
-                        <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
+                        <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                     </a>
                     <? endif ?>
                     <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>

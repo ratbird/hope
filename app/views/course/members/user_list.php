@@ -20,14 +20,14 @@
             <?= $status_groups['user'] ?>
             <? if($is_tutor) :?>
             <span class="actions">
-                <?= $controller->getEmailLinkByStatus('user', $users) ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array(
-                                'filter' => 'send_sms_to_all',
-                                'who' => 'user',
-                                'course_id' => $course_id,
-                                'default_subject' => $subject)
+                    'filter' => 'send_sms_to_all',
+                    'emailrequest' => 1,
+                    'who' => 'user',
+                    'course_id' => $course_id,
+                    'default_subject' => $subject)
                 ) ?>" data-dialog>
-                       <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht an alle %s versenden'), $status_groups['user'])])->asImg() ?>
+                       <?= Icon::create('inbox', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an alle %s versenden'), $status_groups['user'])])->asImg() ?>
                 </a>
             </span>
             <? endif ?>
@@ -91,12 +91,13 @@
                 <td style="text-align: right">
                     <? if($user_id != $leser['user_id']) : ?>
                     <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
-                                array('filter' => 'send_sms_to_all',
+                            array('filter' => 'send_sms_to_all',
+                                'emailrequest' => 1,
                                 'rec_uname' => $leser['username'],
                                 'default_subject' => $subject))
                             ?>
                     " data-dialog>
-                        <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht an %s senden'),htmlReady($fullname))])->asImg(16) ?>
+                        <?= Icon::create('mail', 'clickable', ['title' => sprintf(_('Nachricht mit Mailweiterleitung an %s senden'),htmlReady($fullname))])->asImg(16) ?>
                     </a>
                     <? endif ?>
 

@@ -6,6 +6,29 @@
  * ------------------------------------------------------------------------ */
 
 STUDIP.News = {
+    /**
+     * (Re-)initialise news-page, f.e. to stay in dialog
+     *
+     * @param {type} id
+     *
+     * @returns void
+     */
+    init: function(id) {
+        // prevent forms within dialog from reloading whole page, and reload dialog instead
+        jQuery('#' + id + ' form').on('click', function (event) {
+            jQuery(this).data('clicked', $(event.target));
+        });
+
+        jQuery('#' + id + ' form').on('submit', function (event) {
+            event.preventDefault();
+            var button = jQuery(this).data('clicked').attr('name');
+            var form_route = jQuery(this).attr('action');
+            var form_data = jQuery(this).serialize() + '&' + button + '=1';
+            jQuery(this).find('input[name=' + button + ']').showAjaxNotification('left');
+            STUDIP.News.update_dialog(id, form_route, form_data);
+        });
+    },
+
     get_dialog: function (id, route, from_x, from_y) {
         // initialize dialog
         jQuery('body').append('<div id="' + id + '"></div>');
@@ -45,6 +68,7 @@ STUDIP.News = {
             duration: 400,
             easing: 'swing'
         });
+
         // load actual dialog content
         jQuery.ajax({
             'url': route,
@@ -69,18 +93,7 @@ STUDIP.News = {
                 });
                 jQuery('.ui-dialog-content').css({'padding-right' : '1px'});
 
-                // prevent forms within dialog from reloading whole page, and reload dialog instead
-                jQuery('#' + id + ' form').on('click', function (event) {
-                    jQuery(this).data('clicked', $(event.target));
-                });
-                jQuery('#' + id + ' form').on('submit', function (event) {
-                    event.preventDefault();
-                    var button = jQuery(this).data('clicked').attr('name');
-                    var form_route = jQuery(this).attr('action');
-                    var form_data = jQuery(this).serialize() + '&' + button + '=1';
-                    jQuery(this).find('input[name=' + button + ']').showAjaxNotification('left');
-                    STUDIP.News.update_dialog(id, form_route, form_data);
-                });
+                STUDIP.News.init(id);
 
                 // fix added elements (as in application.js)
                 // autofocus for all browsers
@@ -106,7 +119,8 @@ STUDIP.News = {
 
     update_dialog: function (id, route, form_data) {
         if (!STUDIP.News.pending_ajax_request) {
-        	STUDIP.News.pending_ajax_request = true;
+            STUDIP.News.pending_ajax_request = true;
+
             jQuery.ajax({
                 'url': route,
                 'type': 'POST',
@@ -150,9 +164,11 @@ STUDIP.News = {
                             zIndex: 1
                         });
                     }
+
+                    STUDIP.News.init(id);
                 },
                 'fail': function () {
-                	STUDIP.News.pending_ajax_request = false;
+                    STUDIP.News.pending_ajax_request = false;
                     alert("Fehler beim Aufruf des News-Controllers".toLocaleString());
                 }
             });

@@ -61,7 +61,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 include ('lib/include/deprecated_tabs_layout.php');
 
 ?>
-<table width ="100%" border="0" cellspacing="0" cellpadding="0">
+<table width ="100%" border="0" cellspacing="0" cellpadding="5">
 <tr>
     <td class="table_header_bold"><b>&nbsp;<?=_("Herzlich Willkommen")?></b>
     </td>

@@ -97,8 +97,26 @@ class StartController extends AuthenticatedController
         }
         if ($GLOBALS['perm']->get_perm() == 'user') {
             PageLayout::postMessage(MessageBox::info(_('Sie haben noch nicht auf Ihre Bestätigungsmail geantwortet.'),
-                array(_('Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.'),
-                sprintf(_('Bei Problemen wenden Sie sich an: %s'), '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>'))));
+                array(
+                    _('Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.'),
+                    sprintf(_('Bei Problemen wenden Sie sich an: %s'), '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>')
+                )
+            ));
+
+            PageLayout::postMessage(MessageBox::info(
+                    sprintf(_('Haben Sie die Bestätigungsmail an Ihre Adresse "%s" nicht erhalten?'), htmlReady($GLOBALS['user']->Email)),
+                    array(
+                        Studip\LinkButton::create(_('Bestätigungsmail erneut verschicken'),
+                            $this->url_for('start/resend_validation_mail')
+                        ) . ' '
+                        . Studip\LinkButton::create(_('Email-Adresse ändern'),
+                            $this->url_for('start/edit_mail_address'), array(
+                                'data-dialog' => "size=auto",
+                                'title'       => _('Email-Adresse')
+                            )
+                        ),
+                    )
+            ));
         }
     }
 
@@ -229,5 +247,61 @@ class StartController extends AuthenticatedController
     {
         WidgetHelper::storeNewPositions(Request::get('widget'), Request::get('position'), Request::get('column'));
         $this->render_nothing();
+    }
+
+    /**
+     * Resend the validation mail for the current user
+     *
+     * @return void
+     */
+    function resend_validation_mail_action()
+    {
+        if ($GLOBALS['perm']->get_perm() == 'user') {
+            Seminar_Register_Auth::sendValidationMail($GLOBALS['user']);
+            PageLayout::postMessage(MessageBox::success(
+                _('Die Bestätigungsmail wurde erneut verschickt.')
+            ));
+        }
+
+        $this->redirect('start');
+    }
+
+    /**
+     * Show form to change the mail-address for the validation mail
+     *
+     * @return void
+     */
+    function edit_mail_address_action()
+    {
+        // only allow editing of mail-address here if user has not yet validated
+        if ($GLOBALS['perm']->get_perm() != 'user') {
+            $this->redirect('start');
+            return;
+        }
+
+        $this->email = $GLOBALS['user']->Email;
+    }
+
+    /**
+     * Change the mail-address and resend validation mail
+     *
+     * @return void
+     */
+    function change_mail_address_action()
+    {
+        if ($GLOBALS['perm']->get_perm() == 'user') {
+            $user = new User($GLOBALS['user']->id);
+            $user->Email = Request::get('email');
+            $user->store();
+
+            $GLOBALS['user']->Email = $user->Email;
+
+            Seminar_Register_Auth::sendValidationMail($user);
+            PageLayout::postMessage(MessageBox::success(
+                _('Ihre Mailadresse wurde geändert und die Bestätigungsmail erneut verschickt.')
+            ));
+        }
+
+        $this->redirect('start');
     }
 }

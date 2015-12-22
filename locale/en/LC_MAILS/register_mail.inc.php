@@ -21,7 +21,7 @@
         ."so that the re-confirmation can work.\n\n"
         ."If you have not registered as user \"$username\",\n"
         ."or have no idea what is being talked about here,\n"
-        ."then someone has been abusing your E-mail address!\n\n"
+        ."then someone has been using your mail address by mistake!\n\n"
         ."In this case, please contact $abuse,\n"
         ."so that the entry can be deleted from the database.\n";
 ?>

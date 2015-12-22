@@ -56,7 +56,7 @@ if ($auth->is_authenticated() && $user->id != "nobody") {
     $auth->logout();
 ?>
 
-<table width="100%" align="center" border=0 cellpadding=0 cellspacing=0>
+<table width="100%" align="center" border=0 cellpadding=5 cellspacing=0>
 <tr><td class="table_header_bold"><?= Icon::create('door-enter', 'info_alt')->asImg() ?><b>&nbsp;<?=_("Nutzungsbedingungen")?></b></td></tr>
 <tr><td class="blank">
 <br><br>

@@ -20,7 +20,7 @@
     ."\"Location\" oder \"URL\" kopieren.\n\n"
     ."Falls Sie sich nicht als Benutzer \"{$username}\" angemeldet haben\n"
     ."oder überhaupt nicht wissen, wovon hier die Rede ist,\n"
-    ."dann hat jemand Ihre E-Mail-Adresse missbraucht!\n"
+    ."dann hat jemand Ihre E-Mail-Adresse fälschlicherweise verwendet!\n"
     ."Ignorieren Sie in diesem Fall diese E-Mail. Es werden dann keine Änderungen an\n"
     ."Ihren Zugangsdaten vorgenommen.\n\n";
 ?>

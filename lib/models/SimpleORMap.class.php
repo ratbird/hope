@@ -215,6 +215,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                                                             'name' => $rs['Field'],
                                                             'null' => $rs['Null'],
                                                             'default' => $rs['Default'],
+                                                            'type' => $rs['Type'],
                                                             'extra' => $rs['Extra']
                                                             );
                 if ($rs['Key'] == 'PRI'){
@@ -1023,11 +1024,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if(self::TableScheme($this->db_table)) {
             $this->db_fields = self::$schemes[$this->db_table]['db_fields'];
             $this->pk = self::$schemes[$this->db_table]['pk'];
-            foreach ($this->db_fields as $field => $meta) {
-                if (!isset($this->default_values[$field]) && !in_array($field, $this->pk)) {
-                    $this->default_values[$field] = $meta['default'];
-                }
-            }
         }
     }
 
@@ -1296,10 +1292,28 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param string $field name of column
      * @return mixed the default value
      */
-    function getDefaultValue($field)
-    {
-        return isset($this->default_values[$field]) ? $this->default_values[$field] : null;
-    }
+     function getDefaultValue($field)
+     {
+         $default_value = null;
+         if (!isset($this->default_values[$field])) {
+             if (!in_array($field, $this->pk)) {
+                 $meta = $this->db_fields[$field];
+                 if (isset($meta['default'])) {
+                     $default_value = $meta['default'];
+                 } elseif ($meta['null'] == 'NO') {
+                     if (strpos($meta['type'], 'text') !== false || strpos($meta['type'], 'char') !== false) {
+                         $default_value = '';
+                     }
+                     if (strpos($meta['type'], 'int') !== false) {
+                         $default_value = 0;
+                     }
+                 }
+             }
+         } else {
+             $default_value = $this->default_values[$field];
+         }
+         return $default_value;
+     }
 
     /**
      * sets value of a column

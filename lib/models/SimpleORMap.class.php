@@ -1423,14 +1423,19 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     function __isset($field)
     {
         $field = strtolower($field);
-        return isset($this->content[$field]);
+        if (in_array($field, $this->known_slots)) {
+            $value = $this->getValue($field);
+            return $value instanceOf SimpleORMapCollection ? count($value) : !is_null($value);
+        } else {
+            return false;
+    }
     }
     /**
      * ArrayAccess: Check whether the given offset exists.
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->content);
+        return in_array(strtolower($offset), $this->known_slots);
     }
 
     /**
@@ -1962,11 +1967,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $p = (array)$params($this);
                 $records = call_user_func_array($to_call, count($p) ? $p : array(null));
                 $result = is_array($records) ? $records[0] : $records;
-                if (!$result && $options['type'] === 'has_one') {
-                    $result = new $options['class_name'];
-                    $foreign_key_value = call_user_func($options['assoc_func_params_func'], $this);
-                    call_user_func($options['assoc_foreign_key_setter'], $result, $foreign_key_value);
-                }
                 $this->relations[$relation] = $result;
             }
         }

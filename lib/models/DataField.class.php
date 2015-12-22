@@ -30,7 +30,7 @@
  * @property string description database column
  * @property SimpleORMapCollection entries has_many DatafieldEntryModel
  */
-class DataField extends SimpleORMap implements Countable
+class DataField extends SimpleORMap
 {
     protected static $permission_masks = array(
         'user'   => 1,
@@ -52,12 +52,16 @@ class DataField extends SimpleORMap implements Countable
         $config['db_table'] = 'datafields';
         $config['has_many']['entries'] = array(
             'class_name' => 'DatafieldEntryModel',
-            'on_delete'  => 'delete',
+            'on_delete'  => function ($df) {
+                return DatafieldEntryModel::deleteBySQL("datafield_id = ?", array($df->id));
+            },
         );
         $config['has_many']['visibility_settings'] = array(
             'class_name'        => 'User_Visibility_Settings',
             'assoc_foreign_key' => 'identifier',
-            'on_delete'         => 'delete',
+            'on_delete'         => function ($df) {
+                return User_Visibility_Settings::deleteBySQL("identifier = ?", array($df->id));
+            },
         );
         parent::configure($config);
     }

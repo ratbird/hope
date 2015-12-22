@@ -168,7 +168,7 @@ class Admin_DatafieldsController extends AuthenticatedController
     {
         $datafield = DataField::find($datafield_id);
         $type = $datafield->object_type;
-        $name = $datafield->$name;
+        $name = $datafield->name;
         if (Request::int('delete') == 1) {
             $datafield->delete();
 

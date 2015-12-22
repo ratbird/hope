@@ -135,7 +135,7 @@ abstract class DataFieldEntry
 
             $entries = array();
             while ($data = $rs->fetch(PDO::FETCH_ASSOC)) {
-                $datafield = DataField::find($data['datafield_id']);
+                $datafield = DataField::buildExisting($data);
                 $entries[$data['datafield_id']] = DataFieldEntry::createDataFieldEntry($datafield, $range_id, $data['content']);
             }
         }

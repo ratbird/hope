@@ -36,9 +36,6 @@ class Semester extends SimpleORMap
     {
         $config['db_table'] = 'semester_data';
 
-        $config['default_values']['description']    = '';
-        $config['default_values']['semester_token'] = '';
-
         $config['additional_fields']['first_sem_week'] = true;
         $config['additional_fields']['last_sem_week'] = true;
         $config['additional_fields']['current'] = true;
@@ -229,7 +226,7 @@ class Semester extends SimpleORMap
         } elseif ($duration == -1) {
             $end_semester = end(self::getAll());
         } else {
-            $end_semester = self::findByTimestamp($this->beginn + $duration); 
+            $end_semester = self::findByTimestamp($this->beginn + $duration);
         }
 
         $timestamp = $this->getCorrectedVorlesBegin();

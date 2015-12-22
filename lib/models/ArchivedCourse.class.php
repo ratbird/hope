@@ -50,13 +50,6 @@ class ArchivedCourse extends SimpleORMap
             'class_name' => 'Institute',
             'foreign_key' => 'heimat_inst_id',
         );
-        $config['default_values']['beschreibung'] = '';
-        $config['default_values']['institute'] = '';
-        $config['default_values']['dozenten'] = '';
-        $config['default_values']['dump'] = '';
-        $config['default_values']['forumdump'] = '';
-        $config['default_values']['studienbereiche'] = '';
-
         parent::configure($config);
     }
 }

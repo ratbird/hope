@@ -31,7 +31,6 @@ class SemesterHoliday extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'semester_holiday';
-        $config['default_values']['description'] = '';
         $config['additional_fields']['current'] = true;
         parent::configure($config);
     }

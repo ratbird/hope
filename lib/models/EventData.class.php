@@ -15,11 +15,11 @@
 
 class EventData extends SimpleORMap
 {
-    
+
     protected static function configure($config = array())
     {
         $config['db_table'] = 'event_data';
-        
+
         $config['belongs_to']['author'] = array(
             'class_name' => 'User',
             'foreign_key' => 'author_id',
@@ -32,25 +32,20 @@ class EventData extends SimpleORMap
             'class_name' => 'CalendarEvent',
             'foreign_key' => 'event_id'
         );
-        
-        $time = time();
-        $config['default_values']['start'] = $time;
-        $config['default_values']['end'] = $time + 3600;
-        $config['default_values']['category_intern'] = 0;
-        $config['default_values']['class'] = 'PRIVATE';
-        $config['default_values']['rtype'] = 'SINGLE';
+
         $config['default_values']['linterval'] = 0;
         $config['default_values']['sinterval'] = 0;
-        $config['default_values']['ts'] = mktime(12, 0, 0, date('n', $time),
-                date('j', $time), date('Y', $time));
-        $config['default_values']['uid'] = function($event) {
-            return 'Stud.IP-' . $event->event_id . '@' . $_SERVER['SERVER_NAME'];
-        };
         
         parent::configure($config);
-        
+
     }
-    
+
+    function __construct($id = null)
+    {
+        parent::__construct($id);
+        $this->registerCallback('before_create', 'cbDefaultValues');
+    }
+
     public function delete()
     {
         // do not delete until one calendar is left
@@ -65,12 +60,33 @@ class EventData extends SimpleORMap
         }
         return $ret;
     }
-    
+
     public static function garbageCollect()
     {
         DBManager::get()->query('DELETE event_data '
                 . 'FROM calendar_event LEFT JOIN event_data USING(event_id)'
                 . 'WHERE range_id IS NULL');
     }
-    
+
+    public function getDefaultValue($field)
+    {
+        if ($field == 'start') {
+            return time();
+        }
+        if ($field == 'end' && $this->content['start']) {
+            return $this->content['start'] + 3600;
+        }
+        if ($field == 'ts' && $this->content['start']) {
+            return mktime(12, 0, 0, date('n', $this->content['start']),
+                date('j', $this->content['start']), date('Y', $this->content['start']));
+        }
+        return parent::getDefaultValue($field);
+    }
+
+    protected function cbDefaultValues()
+    {
+        if (empty($this->content['uid'])) {
+            $this->content['uid'] = 'Stud.IP-' . $this->event_id . '@' . $_SERVER['SERVER_NAME'];
+        }
+    }
 }

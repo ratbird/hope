@@ -37,7 +37,6 @@ class OpenGraphURL extends SimpleORMap
     {
         $config['db_table'] = 'opengraphdata';
         $config['serialized_fields']['data'] = 'JSONArrayObject';
-        $config['default_values']['data'] = '';
         parent::configure($config);
     }
 

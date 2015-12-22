@@ -73,7 +73,7 @@ class CourseTopic extends SimpleORMap {
             'class_name'  => 'User',
             'foreign_key' => 'author_id'
         );
-        $config['default_values']['priority'] = function($topic) {return CourseTopic::getMaxPriority($topic->seminar_id) + 1;};
+
         $config['additional_fields']['forum_thread_url']['get'] = 'getForumThreadURL';
 
         parent::configure($config);
@@ -82,6 +82,7 @@ class CourseTopic extends SimpleORMap {
     function __construct($id = null)
     {
         parent::__construct($id);
+        $this->registerCallback('before_create', 'cbDefaultValues');
         $this->registerCallback('after_store', 'cbUpdateConnectedContentModules');
     }
 
@@ -155,6 +156,13 @@ class CourseTopic extends SimpleORMap {
             if ($this->forum_thread_url) {
                 $this->connectWithForumThread();
             }
+        }
+    }
+
+    protected function cbDefaultValues()
+    {
+        if (empty($this->content['priority'])) {
+            $this->content['priority'] = self::getMaxPriority($this->seminar_id) + 1;
         }
     }
 }

@@ -39,7 +39,6 @@ class AuthUserMd5 extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'auth_user_md5';
-        $config['default_values']['validation_key'] = '';
         parent::configure($config);
     }
 }

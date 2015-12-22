@@ -191,11 +191,9 @@ class Course extends SimpleORMap
             'on_delete'         => 'delete',
         );
 
-        $config['default_values']['beschreibung'] = '';
         $config['default_values']['lesezugriff'] = 1;
         $config['default_values']['schreibzugriff'] = 1;
         $config['default_values']['duration_time'] = 0;
-        $config['default_values']['admission_endtime'] = -1;
 
         $config['additional_fields']['end_time'] = true;
 

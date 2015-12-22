@@ -45,7 +45,6 @@ class PersonalNotifications extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'personal_notifications';
-        $config['default_values']['text'] = '';
         $config['additional_fields']['more_unseen'] = array(
             'get' => false,
             'set' => false,

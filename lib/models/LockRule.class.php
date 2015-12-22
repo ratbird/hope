@@ -92,7 +92,6 @@ class LockRule extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'lock_rules';
-        $config['default_values']['description'] = '';
         $config['serialized_fields']['attributes'] = 'JSONArrayObject';
         parent::configure($config);
     }

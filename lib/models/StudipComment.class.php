@@ -84,7 +84,6 @@ class StudipComment extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'comments';
-        $config['default_values']['content'] = '';
         $config['belongs_to']['news'] = array(
             'class_name' => 'StudipNews',
             'foreign_key' => 'object_id',

@@ -36,7 +36,7 @@ class StudipStudyArea extends SimpleORMap
      * This constant represents the key of the root area.
      */
     const ROOT = 'root';
-    
+
     /**
      * This is required, if the nodes are added backwards
      */
@@ -45,9 +45,6 @@ class StudipStudyArea extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'sem_tree';
-        $config['default_values']['info'] = '';
-        $config['default_values']['type'] = 0;
-
         $config['has_many']['_children'] = array(
             'class_name' => 'StudipStudyArea',
             'assoc_foreign_key' => 'parent_id',
@@ -406,7 +403,7 @@ class StudipStudyArea extends SimpleORMap
 
     /**
      * Takes an array of StudyArea objects and produces the tree to the root node
-     * 
+     *
      * @param array $nodes All required nodes in the tree
      * @return StudipStudyArea the root node
      */

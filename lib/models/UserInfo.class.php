@@ -51,8 +51,6 @@ class UserInfo extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'user_info';
-        $config['default_values']['publi'] = '';
-        $config['default_values']['schwerp'] = '';
         parent::configure($config);
     }
 }

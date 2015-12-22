@@ -108,6 +108,19 @@ if( ! $referer ) {
     $referer .= "&showrangeID=".$showrangeID;
 }
 
+$prefix = $ABSOLUTE_URI_STUDIP;
+if (substr($referer, 0, strlen($prefix)) == $prefix) {
+    $referer = substr($referer, strlen($prefix));
+} else if (preg_match('#^[A-Za-z_0-9]+\.php#', $referer)) {
+    // Braver Referer
+    $referer = $referer;
+} else {
+    // Referer beginnt nicht mit StudIP-URI 
+    // oder einem dazu relativen Pfad
+    // dann standardmaessig auf die Vote-seite umbiegen
+    $referer = 'admin_vote.php';
+}
+
 $voteID = Request::option('voteID');
 $rangeID = Request::username('rangeID');
 $type = Request::option('type');
@@ -251,6 +264,7 @@ if( $pageMode != MODE_RESTRICTED ) {
 /**** Command: SAVE VOTE ****/
 /* -------------------------------------------------------- */
 if(Request::submitted('saveButton')) {
+    CSRFProtection::verifyUnsafeRequest();
     $vote->errorArray = array();
 
     // special case: creator wants to modify things in a running vote,
@@ -367,6 +381,7 @@ if(Request::submitted('saveButton')) {
 
 /**** Command: cancel ****/
 elseif(Request::submitted('cancelButton')) {
+    CSRFProtection::verifyUnsafeRequest();
 
     // clear outbut buffer, as we are leaving the edit page.
     ob_end_clean();

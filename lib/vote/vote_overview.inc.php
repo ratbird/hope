@@ -95,7 +95,7 @@ elseif ($voteaction != "search"){
     $showrangeID = get_username ($userID);
     }
 
-if (($referer) && ($referer == "1")){
+if (($referer == '') || ($referer == "1")) {
         $referer = $_SERVER['HTTP_REFERER'];
         $referer = removeArgFromURL( $referer, "voteaction" );
         $referer = removeArgFromURL( $referer, "voteID" );
@@ -160,7 +160,7 @@ if ($voteaction && $voteaction != "search") $safeguard .= callSafeguard($voteact
 //print "<table><tr>$safeguard</tr></table>";
 // Displays the Options to create a new Vote or Test
 // and the selection of displayed votes/tests
-printSelections($range,$searchRange,$safeguard);
+printSelections($range,$searchRange,$safeguard, $referer);
 
 // starting waiting votes
 $voteDB = new VoteDB();

@@ -128,7 +128,7 @@ class CoreScm implements StudipModule {
                                     'Oft wird die Seite für die Angabe von Literatur genutzt als Alternative zur Funktion '.
                                     'Literatur. Sie kann aber auch für andere beliebige Zusatzinformationen (Links, Protokolle '.
                                     'etc.) verwendet werden.'),
-            'icon' => 'icons/16/black/infopage.png',
+            'icon' => Icon::create('infopage', 'info'),
             'screenshots' => array(
                 'path' => 'plus/screenshots/Freie_Informationsseite',
                 'pictures' => array(

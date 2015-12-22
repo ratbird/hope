@@ -1679,7 +1679,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     if ($change == $datei["dokument_id"]) {
         print "<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: bold\"><a href=\"".URLHelper::getLink("?close=".$datei["dokument_id"]."#anker")."\" class=\"tree\"";
         print ' name="anker"></a>';
-        print GetFileIcon(getFileExtension($datei['filename']), true);
+        print GetFileIcon(getFileExtension($datei['filename']))->asImg();
         print "<input style=\"font-size: 8pt; width: 50%;\" type=\"text\" size=\"20\" maxlength=\"255\" name=\"change_name\" aria-label=\"Ordnername eingeben\" value=\"".htmlReady($datei["name"])."\"></b>";
     } else {
         if (($move == $datei["dokument_id"]) ||  ($upload == $datei["dokument_id"]) || ($anchor_id == $datei["dokument_id"])) {
@@ -1688,7 +1688,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $type = ($datei['url'] != '')? 6 : 0;
         // LUH Spezerei:
         if (check_protected_download($datei["dokument_id"])) {
-            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "normal")."\" class=\"extern\">".GetFileIcon(getFileExtension($datei['filename']), true)."</a>";
+            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "normal")."\" class=\"extern\">".GetFileIcon(getFileExtension($datei['filename']))->asImg()."</a>";
         } else {
             print Icon::create('info-circle', 'inactive')->asImg();
         }
@@ -2263,15 +2263,14 @@ function getLinkPath($file_id)
     return $statement->fetchColumn() ?: false;
 }
 
-function GetFileIcon($ext, $with_img_tag = false){
-    $extension = strtolower($ext);
+function GetFileIcon($ext){
     //Icon auswaehlen
-    switch ($extension){
+    switch (strtolower($ext)){
         case 'rtf':
         case 'doc':
         case 'docx':
         case 'odt':
-            $icon = 'icons/16/blue/file-text.png';
+            $icon = 'file-text';
         break;
         case 'xls':
         case 'xlsx':
@@ -2280,16 +2279,16 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'ppt':
         case 'pptx':
         case 'odp':
-            $icon = 'icons/16/blue/file-office.png';
+            $icon = 'file-office';
         break;
         case 'zip':
         case 'tgz':
         case 'gz':
         case 'bz2':
-            $icon = 'icons/16/blue/file-archive.png';
+            $icon = 'file-archive';
         break;
         case 'pdf':
-            $icon = 'icons/16/blue/file-pdf.png';
+            $icon = 'file-pdf';
         break;
         case 'gif':
         case 'jpg':
@@ -2297,13 +2296,13 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'jpeg':
         case 'png':
         case 'bmp':
-            $icon = 'icons/16/blue/file-pic.png';
+            $icon = 'file-pic';
         break;
         default:
-            $icon = 'icons/16/blue/file-generic.png';
+            $icon = 'file-generic';
         break;
     }
-    return ($with_img_tag ? (string)Assets::img($icon) : $icon);
+    return Icon::create($icon, 'clickable');
 }
 
 /**

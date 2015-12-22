@@ -30,13 +30,13 @@ $output_formats = array(
 );
 
 // Icons für die Ausgabeformate
-$export_icon["xml"] = "icons/16/blue/file-generic.png";
-$export_icon["xslt"] = "icons/16/blue/file-office.png";
-$export_icon["xsl"] = "icons/16/blue/file-office.png";
-$export_icon["rtf"] = "icons/16/blue/file-text.png";
-$export_icon["fo"] = "icons/16/blue/file-pdf.png";
-$export_icon["pdf"] = "icons/16/blue/file-pdf.png";
-$export_icon["html"] = "icons/16/blue/file-text.png";
-$export_icon["htm"] = "icons/16/blue/file-text.png";
-$export_icon["txt"] = "icons/16/blue/file-text.png";
-$export_icon["csv"] = "icons/16/blue/file-office.png";
+$export_icon["xml"]  = "file-generic";
+$export_icon["xslt"] = "file-office";
+$export_icon["xsl"]  = "file-office";
+$export_icon["rtf"]  = "file-text";
+$export_icon["fo"]   = "file-pdf";
+$export_icon["pdf"]  = "file-pdf";
+$export_icon["html"] = "file-text";
+$export_icon["htm"]  = "file-text";
+$export_icon["txt"]  = "file-text";
+$export_icon["csv"]  = "file-office";

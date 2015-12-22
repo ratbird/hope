@@ -615,10 +615,12 @@ class StudipLitListViewAdmin extends TreeView
             }
             if ($item_id != "root"){
                 $head .= " <a href=\"" . URLHelper::getLink($this->getSelf("cmd=ToggleVisibility&item_id={$item_id}")) . "\">";
-                $head .= Assets::img($this->tree->tree_data[$item_id]['visibility']
-                                     ? 'icons/16/blue/visibility-visible.png'
-                                     : 'icons/16/blue/visibility-invisible.png',
-                                     tooltip2(_('Sichtbarkeit ändern')));
+                $head .= Icon::create($this->tree->tree_data[$item_id]['visibility']
+                                        ? 'visibility-visible'
+                                        : 'visibility-invisible',
+                                      'clickable',
+                                      ['title' => _('Sichtbarkeit ändern')])
+                      ->asImg();
                 $head . "</a>";
             }
         } else {
@@ -674,9 +676,12 @@ class StudipLitListViewAdmin extends TreeView
         $content = "";
         if ($this->msg[$item_id]){
             $msg = explode("§",$this->msg[$item_id]);
-            $pics = array('error' => 'icons/16/red/decline.png', 'info' => 'icons/16/black/info.png', 'msg' => 'icons/16/green/accept.png');
+            $pics = array(
+                'error' => Icon::create('decline', 'attention'),
+                'info'  => Icon::create('info', 'info'),
+                'msg'   => Icon::create('accept', 'accept'));
             $content = "\n<tr><td colspan=\"{$colspan}\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" style=\"font-size:10pt\">
-                        <tr><td align=\"center\" width=\"25\">" . Assets::img($pics[$msg[0]]) . "</td>
+                        <tr><td align=\"center\" width=\"25\">" . $pics[$msg[0]]->asImg() . "</td>
                         <td align=\"left\">" . $msg[1] . "</td></tr>
                         </table></td></tr><tr>";
         }

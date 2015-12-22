@@ -52,7 +52,7 @@ if ($section == 'index') {
             $close = new LinkElement(
                 _('Thema schließen'), 
                 $close_url, 
-                'icons/16/blue/lock-locked.png',
+                Icon::create('lock-locked', 'clickable'),
                 array(
                     'onclick' => 'STUDIP.Forum.closeThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -66,7 +66,7 @@ if ($section == 'index') {
             $open = new LinkElement(
                 _('Thema öffnen'),
                 $open_url,
-                'icons/16/blue/lock-unlocked.png',
+                Icon::create('lock-unlocked', 'clickable'),
                 array(
                     'onclick' => 'STUDIP.Forum.openThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                                 . ForumHelpers::getPage() . '); return false;',
@@ -84,7 +84,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Thema hervorheben'),
                 $emphasize_url,
-                'icons/16/blue/staple.png',
+                Icon::create('staple', 'clickable'),
                 array(
                     'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -98,7 +98,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Hervorhebung aufheben'),
                 $unemphasize_url,
-                'icons/16/blue/staple.png',
+                Icon::create('staple', 'clickable'),
                 array(
                     'onclick' => 'STUDIP.Forum.makeThreadUnstickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',

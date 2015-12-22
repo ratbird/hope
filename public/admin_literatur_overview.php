@@ -373,17 +373,17 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 if ($_SESSION['_check_plugin'] && isset($_SESSION['_lit_data'][$cid]['check_accession'][$_SESSION['_check_plugin']])){
                     $check = $_SESSION['_lit_data'][$cid]['check_accession'][$_SESSION['_check_plugin']];
                     if ($check['found']){
-                        $ampel_pic = 'icons/16/green/accept.png';
+                        $ampel_pic = Icon::create('accept', 'accept');
                         $tt = _("gefunden");
                     } else if (count($check['error'])){
-                        $ampel_pic = 'icons/16/black/exclaim.png';
+                        $ampel_pic = Icon::create('exclaim', 'info');
                         $tt = _("keine automatische Suche möglich");
                     } else {
-                        $ampel_pic = 'icons/16/red/decline.png';
+                        $ampel_pic = Icon::create('decline', 'attention');
                         $tt =_("nicht gefunden");
                     }
                     $ampel  = '<span ' . tooltip($tt,false) . '>';
-                    $ampel .= Assets::img($ampel_pic, array('class' => 'middle'));
+                    $ampel .= $ampel_pic->asImg(['class' => 'middle']);
                     $ampel .= ' (' . $_SESSION['_check_plugin'] . ')</span>&nbsp;&nbsp;';
                 }
                 $addon = $ampel . '<input type="checkbox" style="vertical-align:middle;" name="_check_list[]" value="' . $element->getValue('catalog_id') . '" '

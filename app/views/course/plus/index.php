@@ -142,7 +142,12 @@ foreach ($available_modules as $category => $pluginlist) {
 
                         <!-- icon -->
                         <? if (isset($info['icon'])) : ?>
-                            <img class="plugin_icon text-bottom" alt="" src="<?= $URL . "/" . $info['icon'] ?> ">
+                            <? /* TODO: Plugins should use class "Icon"  */ ?>
+                            <? if (is_string($info['icon'])) : ?>
+                                <img class="plugin_icon text-bottom" alt="" src="<?= $URL . "/" . $info['icon'] ?> ">
+                            <? else: ?>
+                                <?= $info['icon']->asImg(['class' => 'plugin_icon text-bottom', 'alt' => '']) ?>
+                            <? endif ?>
                         <? endif ?>
 
                         <!-- shortdesc -->

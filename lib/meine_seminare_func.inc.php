@@ -397,7 +397,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
             if ($db2->f('count')) {
                 if ($db2->f('neue')) {
-                    $image = 'icons/20/red/new/infopage.png';
+                    $image = Icon::create('infopage+new', 'new');
 
                     $nav->setBadgeNumber($db2->f('neue'));
 
@@ -407,7 +407,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                         $title = sprintf(_('%s Einträge, %s neue'), $db2->f('count') ,$db2->f('neue'));
                     }
                 } else {
-                    $image = 'icons/20/grey/infopage.png';
+                    $image = Icon::create('infopage', 'inactive');
 
                     if ($db2->f('count') == 1) {
                         $title = $db2->f('tab_name');

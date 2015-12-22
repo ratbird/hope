@@ -83,13 +83,13 @@ class CoreAdmin implements StudipModule {
                     if ((get_config('ALLOW_DOZENT_VISIBILITY') || $GLOBALS['perm']->have_perm('admin')) && !LockRules::Check($course_id, 'seminar_visibility')) {
                         $is_visible = Course::findCurrent()->visible;
                         $item = new Navigation(_('Sichtbarkeit ändern') . ' (' .  ($is_visible ? _('sichtbar') : _('unsichtbar')) . ')', 'dispatch.php/course/management/change_visibility');
-                        $item->setImage('icons/blue/visibility-' . ($is_visible ? 'visible' : 'invisible' ));
+                        $item->setImage(Icon::create('visibility-' . ($is_visible ? 'visible' : 'invisible'), 'clickable'));
                         $main->addSubNavigation('visibility', $item);
                     }
                     if ($GLOBALS['perm']->have_perm('admin')) {
                         $is_locked = Course::findCurrent()->lock_rule;
                         $item = new Navigation(_('Sperrebene ändern') . ' (' .  ($is_locked ? _('gesperrt') : _('nicht gesperrt')) . ')', 'dispatch.php/course/management/lock');
-                        $item->setImage(sprintf('icons/blue/lock-%s.svg',  $is_locked  ? 'locked' : 'unlocked'), array('data-dialog'=> 'size=auto'));
+                        $item->setImage(Icon::create('lock-' . ($is_locked  ? 'locked' : 'unlocked'), 'clickable'), ['data-dialog'=> 'size=auto']);
                         $main->addSubNavigation('lock', $item);
                     }
 

@@ -63,7 +63,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->request_id = Request::option('request_id');
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Neue Raumanfrage erstellen'), $this->url_for('course/room_requests/new/' . $this->course_id), Assets::image_path("icons/16/blue/add"));
+        $actions->addLink(_('Neue Raumanfrage erstellen'), $this->url_for('course/room_requests/new/' . $this->course_id), Icon::create('add', 'clickable'));
         Sidebar::get()->addWidget($actions);
 
         if ($GLOBALS['perm']->have_perm("admin")) {
@@ -173,12 +173,14 @@ class Course_RoomRequestsController extends AuthenticatedController
 
 
         $actions = new ActionsWidget();
-        $actions->addLink(_('Bearbeitung abbrechen'), $this->link_for('index/' . $this->course_id), 'icons/blue/decline');
+        $actions->addLink(_('Bearbeitung abbrechen'), $this->link_for('index/' . $this->course_id), Icon::create('decline', 'clickable'));
 
         if (getGlobalPerms($GLOBALS['user']->id) == 'admin' || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $request->getId())))) {
-            $actions->addLink(_('Raumnafrage auflösen'), URLHelper::getLink('resources.php', array('view'           => 'edit_request',
-                                                                                                   'single_request' => $request->getId()
-            )), 'icons/blue/admin');
+            $actions->addLink(_('Raumanfrage auflösen'),
+                              URLHelper::getLink('resources.php', array('view'           => 'edit_request',
+                                                                        'single_request' => $request->getId()
+                                                 )),
+                              Icon::create('admin', 'clickable'));
         }
 
         if (Request::isXhr()) {

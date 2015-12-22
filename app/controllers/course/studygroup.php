@@ -89,7 +89,7 @@ class Course_StudygroupController extends AuthenticatedController
                 $send_from_search_page = Request::get('send_from_search_page');
             }
 
-            $icon = 'icons/16/black/schedule.png';
+            $icon = Icon::create('schedule', 'info');
             if ($GLOBALS['perm']->have_studip_perm('autor', $studygroup->getId()) || $membership_requested) {
                 $action = _("Persönlicher Status:");
                 if ($membership_requested) {
@@ -101,7 +101,7 @@ class Course_StudygroupController extends AuthenticatedController
             } else if ($GLOBALS['perm']->have_perm('admin')) {
                 $action   = _("Hinweis:");
                 $infotext = _('Sie sind Admin und können sich daher nicht für Studiengruppen anmelden.');
-                $icon     = 'icons/16/red/decline.png';
+                $icon     = Icon::create('decline', 'attention');
             } else {
                 $action           = _("Aktionen:");
                 $infolink         = URLHelper::getScriptURL('dispatch.php/course/enrolment/apply/' . $studygroup->getId());

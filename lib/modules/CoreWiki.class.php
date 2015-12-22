@@ -145,7 +145,7 @@ class CoreWiki implements StudipModule {
                                     'gelöscht werden (nur Lehrende). Eine Druckansicht und eine Exportmöglichkeit als '.
                                     'PDF-Datei ist integriert.'),
             'category' => _('Kommunikation und Zusammenarbeit'),
-            'icon' => 'icons/16/black/wiki.png',
+            'icon' => Icon::create('wiki', 'info'),
             'screenshots' => array(
                 'path' => 'plus/screenshots/Wiki-Web',
                 'pictures' => array(

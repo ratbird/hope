@@ -71,7 +71,7 @@ class CoreLiterature implements StudipModule {
                                     '(z. B. Citavi und Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
                                     'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann im tatsächlichen '.
                                     'Buchbestand der Hochschule recherchiert werden.'),
-            'icon' => 'icons/16/black/literature.png',
+            'icon' => Icon::create('literature', 'info'),
             'screenshots' => array(
                 'path' => 'plus/screenshots/Literatur',
                 'pictures' => array(

@@ -70,12 +70,11 @@ if ($request_resource_id = $request->getResourceId()) :
                         ) ?>
                     <? endforeach ?>
                 </select>
-                <?= Assets::input("icons/blue/accept", array('type'  => "image",
-                                                             'style' => "vertical-align:middle",
-                                                             'name'  => "send_room_type",
-                                                             'value' => _("Raumtyp auswählen"),
-                                                             'title' => _('Raumtyp auswählen')
-                )) ?>
+                <?= Icon::create("accept", "clickable", ['title' => _('Raumtyp auswählen')])
+                        ->asInput(['type'  => "image",
+                                   'style' => "vertical-align:middle",
+                                   'name'  => "send_room_type",
+                                   'value' => _("Raumtyp auswählen")]) ?>
                 <?= Icon::create('refresh', 'clickable', ['title' => _('alle Angaben zurücksetzen')])->asInput(["type" => "image", "style" => "vertical-align:middle", "name" => "reset_room_type"]) ?>
             <? endif ?>
             <? $props = $request->getAvailableProperties() ?>
@@ -138,12 +137,11 @@ if ($request_resource_id = $request->getResourceId()) :
                     <option value="<?= $rc["category_id"] ?>"><?= htmlReady($rc["name"]) ?></option>
                 <? endforeach ?>
             </select>
-            <?= Assets::input("icons/blue/accept", array('type'  => "image",
-                                                         'style' => "vertical-align:middle",
-                                                         'name'  => "send_room_type",
-                                                         'value' => _("Raumtyp auswählen"),
-                                                         'title' => _('Raumtyp auswählen')
-            )) ?>
+            <?= Icon::create("accept", "clickable", ['title' => _('Raumtyp auswählen')])
+                    ->asInput(['type'  => "image",
+                               'style' => "vertical-align:middle",
+                               'name'  => "send_room_type",
+                               'value' => _("Raumtyp auswählen")]) ?>
         <? endif ?>
 
         <? if ($request->category_id) : ?>
@@ -151,12 +149,11 @@ if ($request_resource_id = $request->getResourceId()) :
                 <label class="horizontal" for="search_rooms">
                     <?= _('passende Räume suchen') ?>
                 </label>
-                <?= Assets::input("icons/yellow/arr_2right", array('type'  => "image",
-                                                                   'class' => "middle",
-                                                                   'search_rooms',
-                                                                   'name'  => "search_properties",
-                                                                   'title' => _('passende Räume suchen')
-                )) ?>
+                <?= Icon::create("arr_2right", "status-yellow", ['title' => _('passende Räume suchen')])
+                        ->asInput(['type'  => "image",
+                                   'class' => "middle",
+                                   'id'    => 'search_rooms',
+                                   'name'  => "search_properties"]) ?>
 
             </section>
         <? endif ?>
@@ -177,7 +174,7 @@ if ($request_resource_id = $request->getResourceId()) :
                         <div>
                             <input type="radio" name="select_room" value="<?= $key ?>">
                             <label class="horizontal">
-                                <?= Assets::img('icons/16/' . $val['overlap_status'] . '/radiobutton-checked'); ?>
+                                <?= Icon::create('radiobutton-checked', $val['overlap_status']) ?>
                                 <?= htmlReady(my_substr($val['name'], 0, 50)); ?>
                             </label>
                         </div>

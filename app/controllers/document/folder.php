@@ -104,7 +104,7 @@ class Document_FolderController extends DocumentController
             return;
         }
 
-        $this->setDialogLayout('icons/100/lightblue/folder-' . ($folder->file->isEmpty() ? 'empty' : 'full') . '.png');
+        $this->setDialogLayout(Icon::create('folder-' . ($folder->file->isEmpty() ? 'empty' : 'full'), 'navigation'));
 
         $this->folder = $folder;
     }

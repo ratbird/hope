@@ -1,7 +1,7 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 
 <?
-    function module_icon($area, $color = 'black')
+    function module_icon($area)
     {
         $mapping = array(
             'documents'           => 'files',
@@ -12,7 +12,7 @@
             'participants'        => 'persons',
             'plugins'             => 'plugin'
         );
-        return sprintf('icons/16/%s/%s.png', $color, $mapping[$area] ?: $area);
+        return $mapping[$area] ?: $area;
     }
 ?>
 
@@ -33,7 +33,8 @@
                 <th colspan="2"><?= _('Veranstaltung') ?></th>
             <? foreach ($modules as $name => $data): ?>
                 <th>
-                    <?= Assets::img(module_icon($name), array('class' => 'middle', 'title' => $data['name'])) ?>
+                    <?= Icon::create(module_icon($name), 'info', ['title' => $data['name']])
+                            ->asImg(['class' => 'middle']) ?>
                 </th>
             <? endforeach; ?>
                 <th><?= _('Alle') ?></th>

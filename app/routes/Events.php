@@ -104,11 +104,6 @@ class Events extends \RESTAPI\RouteMap
         $dates = getAllSortedSingleDates($seminar);
         $total = sizeof($dates);
 
-        // HACK: prevent holiday names in room text
-        global $showSpecialDays;
-        $old_value = $showSpecialDays;
-        $showSpecialDays = false;
-
         $events = array();
         foreach (array_slice($dates, $this->offset, $this->limit) as $date) {
 
@@ -121,25 +116,66 @@ class Events extends \RESTAPI\RouteMap
                 }
             }
 
-            $template_data = getTemplateDataForSingleDate($date);
+            $room = self::getRoomForSingleDate($date);
             $events[] = array(
                 'event_id'    => $date->getSingleDateID(),
                 'start'       => $date->getStartTime(),
                 'end'         => $date->getEndTime(),
-                'title'       => $template_data['date'],
+                'title'       => $date->toString(),
                 'description' => implode(', ', $issue_titles),
-                'categories'  => $template_data['art'] ?: '',
-                'room'        => html_entity_decode(strip_tags($template_data['room'] ?: '')),
-                'deleted'     => $template_data['deleted'],
+                'categories'  => $data->getTypeName() ?: '',
+                'room'        => $room ?: '',
+                'deleted'     => $data->isExTermin(),
                 'canceled'    => $date->isHoliday() ?: false,
             );
         }
-
-        // END OF HACK
-        $showSpecialDays = $old_value;
 
         $this->etag(md5(serialize($events)));
 
         return $this->paginated($events, $total, compact('course_id'));
     }
+
+    private static function getRoomForSingleDate($val) {
+
+        /* css-Klasse auswählen, sowie Template-Feld für den Raum mit Text füllen */
+        if (\Config::get()->RESOURCES_ENABLE) {
+
+            if ($val->getResourceID()) {
+                $resObj = \ResourceObject::Factory($val->getResourceID());
+                $room = _("Raum: ");
+                $room .= $resObj->getFormattedLink(TRUE, TRUE, TRUE, 'view_schedule', 'no_nav', $val->getStartTime());
+            }
+
+            else {
+
+                if (\Config::get()->RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT) {
+                    $room = '('._("kein gebuchter Raum").')';
+                } else {
+                    $room = _("keine Raumangabe");
+                }
+
+                if ($val->isExTermin()) {
+                    if ($name = $val->isHoliday()) {
+                        $room = '('.$name.')';
+                    } else {
+                        $room = '('._('fällt aus').')';
+                    }
+                }
+
+                else {
+                    if ($val->getFreeRoomText()) {
+                        $room = '('.htmlReady($val->getFreeRoomText()).')';
+                    }
+                }
+            }
+        } else {
+            $room = '';
+            if ($val->getFreeRoomText()) {
+                $room = '('.htmlReady($val->getFreeRoomText()).')';
+            }
+        }
+
+        return html_entity_decode(strip_tags($room));
+    }
+
 }

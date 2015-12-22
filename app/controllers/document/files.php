@@ -276,7 +276,7 @@ class Document_FilesController extends DocumentController
             return;
         }
 
-        $this->setDialogLayout('icons/100/lightblue/' . get_icon_for_mimetype($entry->file->mime_type) . '.png');
+        $this->setDialogLayout(Icon::create(get_icon_for_mimetype($entry->file->mime_type), 'navigation'));
 
         $this->entry = $entry;
     }

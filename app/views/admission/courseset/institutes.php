@@ -9,7 +9,7 @@
         <span class="hover_box">
             <?= htmlReady($data['Name']) ?>
             <span class="action_icons">
-                <?= Icon::create('trash', 'clickable', ['title' => _('Einrichtung entfernen')])->asImg(16, ["alt" => _('Einrichtung entfernen'), "onclick" => "STUDIP.Admission.updateInstitutes('".$institute."', '".$controller->url_for('admission/courseset/institutes',$institute)."', '".$controller->url_for('admission/courseset/instcourses',$institute)."', 'delete')"]); ?>
+                <?= Icon::create('trash', 'clickable', ['title' => _('Einrichtung entfernen')])->asImg(16, ["onclick" => "STUDIP.Admission.updateInstitutes('".$institute."', '".$controller->url_for('admission/courseset/institutes',$institute)."', '".$controller->url_for('admission/courseset/instcourses',$institute)."', 'delete')"]); ?>
             </span>
         </span>
     </li>

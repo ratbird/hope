@@ -72,7 +72,7 @@ class CoreElearningInterface implements StudipModule {
             'keywords' => _('Einbindung z. B. von ILIAS-Lerneinheiten;
                             Zugang zu externen Lernplattformen;
                             Aufgaben- und Test-Erstellung'),
-            'icon' => 'icons/16/black/learnmodule.png',
+            'icon' => Icon::create('learnmodule', 'info'),
             'descriptionshort' => _('Zugang zu extern erstellten Lernmodulen'),
             'descriptionlong' => _('Über diese Schnittstelle ist es möglich, Selbstlerneinheiten, '.
                                     'die in externen Programmen erstellt werden, in Stud.IP zur Verfügung '.

@@ -99,7 +99,7 @@ class AdminModules extends ModulesNotification {
                                 Das Recht "Schreiben" (w): Studierende können Dateien hochladen;
                                 Das Recht "Sichtbarkeit" (x): Ordner wird angezeigt;
                                 Das Recht "Ordner erstellen" (f): Studierende können Unterordner anlegen'),
-                'icon' => 'icons/16/black/files.png',
+                'icon' => Icon::create('files', 'info'),
                 'screenshots' => array(
                     'path' => 'plus/screenshots/Dateiordnerberechtigung', 
                     'pictures' => array( 

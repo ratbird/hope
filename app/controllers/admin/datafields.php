@@ -224,7 +224,7 @@ class Admin_DatafieldsController extends AuthenticatedController
         $actions = new ActionsWidget();
         $actions->addLink(_('Neues Datenfeld anlegen'),
                           $this->url_for('admin/datafields/new/' . $this->class_filter),
-                          'icons/blue/add.svg')
+                          Icon::create('add', 'clickable'))
                 ->asDialog();
         $sidebar->addWidget($actions);
 

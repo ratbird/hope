@@ -52,10 +52,9 @@
                                data-dialog="size=big">
                                 <?= Icon::create('edit', 'clickable', ['title' => _('Diesen Zeitraum bearbeiten')])->asImg() ?>
                             </a>
-                            <?= Assets::input('icons/blue/trash', tooltip2(_('Diesen Zeitraum löschen')) + array(
-                                    'formaction'   => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id),
-                                    'data-confirm' => _('Soll dieser Zeitraum wirklich gelöscht werden?')
-                                ) + $linkAttributes) ?>
+                            <?= Icon::create('trash', 'clickable', ['title' => _('Diesen Zeitraum löschen')])
+                                    ->asInput(['formaction' => $controller->url_for('course/timesrooms/deleteCycle/' . $metadate_id),
+                                               'data-confirm' => _('Soll dieser Zeitraum wirklich gelöscht werden?')] + $linkAttributes) ?>
                         </span>
                     </nav>
                 </header>

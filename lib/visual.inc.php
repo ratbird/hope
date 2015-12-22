@@ -103,17 +103,17 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = 'icons/16/green/accept.png';
+            $icon = Icon::create('accept', 'accept');
             break;
         case 1 :
-            $color = 'icons/16/black/exclaim.png';
+            $icon = Icon::create('exclaim', 'info');
             break;
         case 2 :
-            $color = 'icons/16/red/decline.png';
+            $icon = Icon::create('decline', 'attention');
             break;
     }
 
-    $ampel_status = Assets::img($color) . ' ' . $ampel_state["text"];
+    $ampel_status = $icon->asImg() . ' ' . $ampel_state["text"];
 
     if ($print == TRUE) {
         echo $ampel_status;
@@ -191,17 +191,17 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = 'icons/16/green/accept.png';
+            $icon = Icon::create('accept', 'accept');
             break;
         case 1 :
-            $color = 'icons/16/black/exclaim.png';
+            $icon = Icon::create('exclaim', 'info');
             break;
         case 2 :
-            $color = 'icons/16/red/decline.png';
+            $icon = Icon::create('decline', 'attention');
             break;
     }
 
-    $ampel_status = Assets::img($color) . " ". $ampel_state["text"];
+    $ampel_status = $icon->asImg() . ' ' . $ampel_state["text"];
 
     if ($print == TRUE) {
         echo $ampel_status;
@@ -701,17 +701,17 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
     $infobox = array    (
     array  ("kategorie"  => "Information:",
             "eintrag" => array  (
-                            array    (  "icon" => "icons/16/black/search.png",
+                            array    (  "icon" => Icon::create('search', 'info'),
                                     "text"  => "Um weitere Veranstaltungen bitte Blabla"
                                     ),
-                            array    (  "icon" => "icons/16/black/info.png",
+                            array    (  "icon" => Icon::create('search', 'info'),
                                     "text"  => "um Verwaltung  Veranstaltungen bitte Blabla"
                                     )
             )
         ),
     array  ("kategorie" => "Aktionen:",
                "eintrag" => array   (
-                            array ( "icon" => "icons/16/black/info.png",
+                            array ( "icon" => Icon::create('search', 'info'),
                                     "text"  => "es sind noch 19 Veranstaltungen vorhanden."
                                     )
             )

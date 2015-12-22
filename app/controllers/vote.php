@@ -39,7 +39,7 @@ class VoteController extends AuthenticatedController {
             }
         }
 
-        // Check if we ned administration icons
+        // Check if we need administration icons
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
 

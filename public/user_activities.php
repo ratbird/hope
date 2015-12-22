@@ -76,8 +76,8 @@ function show_documents($documents, $open = null)
 
         // Create icon
         $icon   = sprintf('<a href="%s">%s</a>',
-                        GetDownloadLink($document['dokument_id'], $document['filename'], $type),
-                        GetFileIcon($extension, true));
+                          GetDownloadLink($document['dokument_id'], $document['filename'], $type),
+                          GetFileIcon($extension, true)->asImg());
 
         // Create open/close link
         $link    = $is_open === 'open'

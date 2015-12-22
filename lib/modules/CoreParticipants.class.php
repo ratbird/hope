@@ -99,7 +99,7 @@ class CoreParticipants implements StudipModule {
                                    'es die Möglichkeiten für Lehrende, allen eine Rundmail zukommen zu lassen '.
                                    'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehr- und Lernorganisation'),
-            'icon' => 'icons/16/black/persons.png',
+            'icon' => Icon::create('persons', 'info'),
             'screenshots' => array(
                 'path' => 'plus/screenshots/TeilnehmerInnen',
                 'pictures' => array(

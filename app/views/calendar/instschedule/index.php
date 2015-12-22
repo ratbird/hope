@@ -40,15 +40,15 @@ $infobox['content'][1]['eintrag'][] = array (
 // Infobox-entries for viewport size
 $infobox['content'][2]['eintrag'] = array (
     array (
-        'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
+        'icon' => Icon::create('schedule', $zoom == 0 ? 'new' : 'info'),
         'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
     ),
     array (
-        'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
+        'icon' => Icon::create('schedule', $zoom == 2 ? 'new' : 'info'),
         'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
     ),
     array (
-        'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
+        'icon' => Icon::create('schedule', $zoom == 4 ? 'new' : 'info'),
         'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
     )
 );

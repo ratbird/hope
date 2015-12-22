@@ -115,6 +115,9 @@ class TreeView {
     {
         $this->tree_class_name = $tree_class_name;
         $this->tree            = TreeAbstract::GetInstance($tree_class_name, $args);
+        // TODO Die Logik hinter forumgrau2 und forumgraurunt2 muss
+        // komplett erneuert werden; dann können auch Instanzen der
+        // Klasse "Icon" verwendet werden.
         $this->pic_open        = $this->use_aging
                                ? 'forumgraurunt2.png'
                                : 'icons/16/blue/arr_1down.png';

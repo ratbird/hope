@@ -279,8 +279,6 @@ class ExternEditGeneric extends ExternEdit {
             $out .= "$error_sign</td></tr>\n";
         }
 
-    //  $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-    //  $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $out .= "</table>\n</td></tr>\n";
         $this->css->switchClass();
 

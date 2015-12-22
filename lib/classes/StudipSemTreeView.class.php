@@ -120,9 +120,7 @@ class StudipSemTreeView extends TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= Assets::img($this->open_items[$item_id]
-                            ? 'icons/16/blue/arr_1down.png'
-                            : 'icons/16/blue/arr_1right.png');
+        $head .= Icon::create($this->open_items[$item_id] ? 'arr_1down' : 'arr_1right', 'clickable');
         $head .= (!$this->open_items[$item_id]) ? Assets::img('forumleer.gif', array('size' => '5')) : "";
         $head .= "</a>";
         if ($this->tree->hasKids($item_id)){

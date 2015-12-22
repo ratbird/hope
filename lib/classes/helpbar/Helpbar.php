@@ -30,7 +30,7 @@ class Helpbar extends WidgetContainer
         foreach ($help_content as $row) {
             $this->addPlainText($row['label'] ?: '',
                                 $this->interpolate($row['content'], $this->variables),
-                                $row['icon'] ? sprintf('icons/16/white/%s.png', $row['icon']) : null,
+                                $row['icon'] ? Icon::create($row['icon'], 'info_alt') : null,
                                 URLHelper::getURL('dispatch.php/help_content/edit/'.$row['content_id']),
                                 URLHelper::getURL('dispatch.php/help_content/delete/'.$row['content_id']));
         }  
@@ -84,7 +84,7 @@ class Helpbar extends WidgetContainer
         
         foreach ($json as $row) {
             if (!empty($row['icon'])) {
-                $icon = sprintf('icons/16/white/%s.png', $row['icon']);
+                $icon = Icon::create($row['icon'], 'info_alt');
             }
             $this->addPlainText($row['label'] ?: '',
                                 $this->interpolate($row['text'], $variables),

@@ -1176,24 +1176,6 @@ class Seminar
         return $return;
     }
 
-    public function getRequestStatus($cycle_id) {
-        $request = RoomRequest::findByCycle($cycle_id);
-        $result = array();
-        if($request) {
-            $result['ausruf'] =  _('Für diese Zeit existiert eine Raumanfrage:');
-            $result['ausruf'] .= sprintf(' %s', htmlReady($request->getInfo()));
-            if ($request->getStatus() == 'declined') {
-                $result['symbol'] = 'icons/red/exclaim';
-            } elseif ($request->getStatus() == 'closed') {
-                $result['symbol'] = 'icons/grey/accept.png';
-            } else {
-                $result['symbol'] = 'icons/grey/pause/date';
-            }
-        }
-
-        return $result;
-    }
-
     public function getRequestsInfo($cycle_id)
     {
         $zahl =  SeminarDB::countRequestsForSingleDates($cycle_id, $this->id, $this->filterStart, $this->filterEnd);

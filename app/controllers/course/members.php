@@ -1549,12 +1549,12 @@ class Course_MembersController extends AuthenticatedController
             // Visibility preferences
             if (!$this->my_visibility['iam_visible']) {
                 $text = _('Sie sind für andere Teilnehmenden auf der Teilnehmendenliste nicht sichtbar.');
-                $icon = 'icons/16/blue/visibility-visible.png';
+                $icon = Icon::create('visibility-visible', 'clickable');
                 $modus = 'make_visible';
                 $link_text = _('Klicken Sie hier, um sichtbar zu werden.');
             } else {
                 $text = _('Sie sind für andere Teilnehmenden auf der Teilnehmendenliste sichtbar.');
-                $icon = 'icons/16/blue/visibility-invisible.png';
+                $icon = Icon::create('visibility-invisible', 'clickable');
                 $modus = 'make_invisible';
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');
             }

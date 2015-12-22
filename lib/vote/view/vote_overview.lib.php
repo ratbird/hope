@@ -764,20 +764,21 @@ function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
     global $label, $showrangeID;
 
     switch ($mode){
-     case "new":
-            $icon = "icons/16/yellow/arr_1";
+    case "new":
+        $icon_role = "status-yellow";
         break;
-     case "active":
-            $icon = "icons/16/green/arr_1";
+    case "active":
+        $icon_role = "status-green";
         break;
-     case "stopped":
-            $icon = "icons/16/red/arr_1";
+    case "stopped":
+        $icon_role = "status-red";
         break;
     }
+
     if ($open == "open") {
-        $icon .= "down.png";
+        $icon = "arr_1down";
     } else {
-        $icon .= "right.png";
+        $icon = "arr_1right";
     }
 
     $html = "    <td class=\"".$displayclass."\" nowrap width=\"10\">\n";
@@ -790,7 +791,7 @@ function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
         $html.= "         <a href=\"".URLHelper::getLink($oclink)."\" title=\"".$label["arrow_closethis"]."\">\n";
 
 
-    $html.= Assets::img($icon, array('class' => 'middle'));
+    $html.= Icon::create($icon, $icon_role)->asImg(['class' => 'middle']);
     $html.= "</a>\n"
          .  "    </td>\n";
     return $html;

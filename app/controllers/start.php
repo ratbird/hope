@@ -89,7 +89,7 @@ class StartController extends AuthenticatedController
                 $settings->addElement(new LinkElement(
                     ucfirst($permission),
                     $this->url_for('start/edit_defaults/' . $permission),
-                    'icons/16/blue/link-intern.png', array('data-dialog' => '')
+                    Icon::create('link-intern', 'clickable'), array('data-dialog' => '')
                 ));
             }
 

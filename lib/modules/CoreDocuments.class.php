@@ -116,7 +116,7 @@ class CoreDocuments implements StudipModule {
                                     'sofort angezeigt bzw. abspielbar dargestellt. Über das PlugIn "Dateiordnerberechtigungen" '.
                                     'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. das '.
                                     'Leserecht (r), festgelegt werden.'),
-            'icon' => 'icons/16/black/files.png',
+            'icon' => Icon::create('files', 'info'),
             'screenshots' => array(
                 'path' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung',
                 'pictures' => array(

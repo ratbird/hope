@@ -217,7 +217,7 @@ $ELEARNING_INTERFACE_MODULES["pmwiki-farm"] =   array(
               "api-key" => "<api-key for wiki webservices>",
             ),
                         "types" =>  array(
-              "wiki" => array("name" => "PmWiki-Lernmodul", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+              "wiki" => array("name" => "PmWiki-Lernmodul", "icon" => "learnmodule"),
             )
 );
 

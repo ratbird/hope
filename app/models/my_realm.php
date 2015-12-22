@@ -195,7 +195,7 @@ class MyRealmModel
 
                 if ($result['count']) {
                     if ($result['neue']) {
-                        $image = 'icons/20/red/new/infopage.png';
+                        $image = Icon::create('infopage+new', 'new');
                         $nav->setBadgeNumber($result['neue']);
                         if ($result['count'] == 1) {
                             $title = $result['tab_name'] . _(' (geändert)');
@@ -203,7 +203,7 @@ class MyRealmModel
                             $title = sprintf('%s %s %s ' . _('neue'), $result['count'], $result['neue'], _('Einträge'));
                         }
                     } else {
-                        $image = 'icons/20/grey/infopage.png';
+                        $image = Icon::create('infopage', 'inactive');
                         if ($result['count'] == 1) {
                             $title = $result['tab_name'] . _(' (geändert)');
                         } else {

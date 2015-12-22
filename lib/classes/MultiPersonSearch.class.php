@@ -527,7 +527,7 @@ class MultiPersonSearch {
     private function setDefaultValues() {
         $this->title = _('Personen hinzufügen');
         $this->description = _('Bitte wählen Sie aus, wen Sie hinzufügen möchten.');
-        $this->linkIconPath = "icons/16/blue/add/community.png";
+        $this->linkIconPath = Icon::create("community+add", "clickable", ['title' => _('Personen hinzufügen')]);
     }
     
     /**

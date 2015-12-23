@@ -1213,7 +1213,7 @@ function execCommandUpdateItem ( $no_delete = false ){
     $title = Request::get('title');
     if ($title == "" && $mode != QUESTION_BLOCK)
         $title = _("Kein Titel angegeben.");
-    $text = trim(Request::get('text'));
+    $text = Studip\Markup::purifyHtml(trim(Request::get('text')));
 
     switch ($mode){
      case ROOT_BLOCK:

@@ -9,8 +9,6 @@
  * the License, or (at your option) any later version.
  */
 
-use \Studip\Markup;
-
 class IndexController extends ForumController
 {
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -390,7 +388,7 @@ class IndexController extends ForumController
             'seminar_id'  => $this->getId(),
             'user_id'     => $GLOBALS['user']->id,
             'name'        => Request::get('name') ?: '',
-            'content'     => Request::get('content'),
+            'content'     => Studip\Markup::purifyHtml(Request::get('content')),
             'author'      => $fullname,
             'author_host' => getenv('REMOTE_ADDR'),
             'anonymous'   => Config::get()->FORUM_ANONYMOUS_POSTINGS ? Request::get('anonymous') ? : 0 : 0
@@ -452,10 +450,10 @@ class IndexController extends ForumController
     {
         if (Request::isXhr()) {
             $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
-            $content = studip_utf8decode(Request::get('content', _('Keine Beschreibung')));
+            $content = Studip\Markup::purifyHtml(studip_utf8decode(Request::get('content', _('Keine Beschreibung'))));
         } else {
             $name    = Request::get('name', _('Kein Titel'));
-            $content = Request::get('content', _('Keine Beschreibung'));
+            $content = Studip\Markup::purifyHtml(Request::get('content', _('Keine Beschreibung')));
         }
 
         ForumPerm::check('add_entry', $this->getId(), $topic_id);

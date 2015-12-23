@@ -120,6 +120,10 @@ class Settings_DetailsController extends Settings_SettingsController
 
         foreach ($mapping as $key => $column) {
             $value = Request::get($key);
+            if (in_array($key, array('hobby', 'lebenslauf', 'schwerp', 'publi'))) {
+                // purify HTML input for these fields if wysiwyg is used
+                $value = Studip\Markup::purifyHtml($value);
+            }
             if ($this->user->$column != $value && $this->shallChange('user_info.' . $column, $column, $value)) {
                 $this->user->$column = $value;
                 Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $vis_mapping[$key], 'privatedata', 1, $this->user->user_id);

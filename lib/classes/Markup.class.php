@@ -183,6 +183,23 @@ class Markup
     }
 
     /**
+     * Call HTMLPurifier to filter the HTML code (if the source is detected
+     * to contain HTML, returns the argument unchanged otherwise). The HTML
+     * marker is restored afterwards, if it was present.
+     *
+     * @param   string  $dirty_html  Unsafe or 'uncleaned' HTML code.
+     * @return  string              Clean and safe HTML code.
+     */
+    public static function purifyHtml($html)
+    {
+        if (self::isHtml($html)) {
+            $html = self::markAsHtml(self::purify($html));
+        }
+
+        return $html;
+    }
+
+    /**
      * Create HTML purifier instance with Stud.IP-specific configuration.
      * @return HTMLPurifier A new instance of the HTML purifier.
      */

@@ -154,7 +154,7 @@ class Course_ScmController extends StudipController
             $scm = new StudipScmEntry($id);
 
             $scm->tab_name = Request::get('tab_name_template') ?: Request::get('tab_name');
-            $scm->content  = Request::get('content');
+            $scm->content  = Studip\Markup::purifyHtml(Request::get('content'));
             $scm->user_id  = $GLOBALS['user']->id;
             $scm->range_id = $GLOBALS['SessSemName'][1];
 

@@ -148,7 +148,7 @@ $vote->finalize(); // reset ErrorHandler
 
 $answers           =  Request::getArray('answers');
 $title             = Request::get('title') != TITLE_HELPTEXT ? Request::get('title') : NULL;
-$question          = Request::get('question') != QUESTION_HELPTEXT ? Request::get('question') : NULL;
+$question          = Request::get('question') != QUESTION_HELPTEXT ? Studip\Markup::purifyHtml(Request::get('question')) : NULL;
 $startMode         = Request::get('startMode');
 //Change to use the Datepicker
 $startEvent        = Request::get('startEvent');

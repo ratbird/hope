@@ -2167,3 +2167,15 @@ function strtosnakecase($string) {
     $string = strtolower($string);
     return $string;
 }
+
+/**
+ * fetch number of rows for a table
+ * for innodb this is not exact, but much faster than count(*)
+ *
+ * @param string $table  name of database table
+ * @return int number of rows
+ */
+function count_table_rows($table) {
+    $stat = DbManager::get()->fetchOne("SHOW TABLE STATUS LIKE ?", array($table));
+    return (int)$stat['Rows'];
+}

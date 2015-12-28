@@ -351,6 +351,10 @@ class SiteinfoMarkupEngine {
     }
 
     function toplist($item) {
+        $cache = StudipCacheFactory::getCache();
+        if ($found_in_cache = $cache->read(__METHOD__ . $item)) {
+            return $found_in_cache;
+        }
         $template = $this->template_factory->open('toplist');
         switch ($item) {
             case "mostparticipants":
@@ -407,7 +411,7 @@ class SiteinfoMarkupEngine {
                         }
                     }
                 }
-                
+
                 // sort the seminars by the number of combined postings
                 usort($seminars, function($a, $b) {
                     if ($a['count'] == $b['count']) {
@@ -415,12 +419,11 @@ class SiteinfoMarkupEngine {
                     }
                     return ($a['count'] > $b['count']) ? -1 : 1;
                 });
-  
+
                 // fill the template and returned the rendered code
                 $template->lines = $seminars;
                 $template->type = "seminar";
 
-                return $template->render();
                 break;
             case "mostvisitedhomepages":
                 $template->heading = _("die beliebtesten Profile (Besucher)");
@@ -437,25 +440,27 @@ class SiteinfoMarkupEngine {
                 $template->type = "user";
                 break;
         }
-        if($sql) {
+        if ($sql) {
             $result = $this->db->query($sql);
             if  ($result->rowCount() > 0) {
                 $template->lines = $result->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                return "";
             }
-        } else {
-            return "";
         }
-        return $template->render();
+        $ret = $template->render();
+        $cache->write(__METHOD__ . $item, $ret);
+        return $ret;
     }
 
     function indicator($key) {
+        $cache = StudipCacheFactory::getCache();
+        if ($found_in_cache = $cache->read(__METHOD__ . $key)) {
+            return $found_in_cache;
+        }
         $template = $this->template_factory->open('indicator');
-        $indicator['seminar_all'] = array("query" => "SELECT COUNT(*) FROM seminare",
+        $indicator['seminar_all'] = array("count" => array('count_table_rows','seminare'),
                                           "title" => _("Aktive Veranstaltungen"),
                                           "detail" => _("alle Veranstaltungen, die nicht archiviert wurden"));
-        $indicator['seminar_archived'] = array("query" => "SELECT COUNT(*) FROM archiv",
+        $indicator['seminar_archived'] = array("count" => array('count_table_rows','archiv'),
                                                "title" => _("Archivierte Veranstaltungen"),
                                                "detail" => _("alle Veranstaltungen, die archiviert wurden"));
         $indicator['institute_secondlevel_all'] = array("query" => "SELECT COUNT(*) FROM Institute WHERE Institut_id != fakultaets_id",
@@ -482,13 +487,14 @@ class SiteinfoMarkupEngine {
         $indicator['link'] = array("query" => "SELECT COUNT(*) FROM dokumente WHERE url != ''",
                                    "title" => _("verlinkte Dateien"),
                                    "detail" => "");
-        $indicator['litlist'] = array("query" => "SELECT COUNT(*) FROM lit_list",
+        $indicator['litlist'] = array("count" => array('count_table_rows','lit_list'),
                                       "title" => _("Literaturlisten"),
-                                      "detail" => "");
-        $indicator['termin'] = array("query" => "SELECT COUNT(*) FROM termine",
+                                      "detail" => "",
+                                      "constraint" => get_config('LITERATURE_ENABLE'));
+        $indicator['termin'] = array("count" => array('count_table_rows','termine'),
                                      "title" => _("Termine"),
                                      "detail" => "");
-        $indicator['news'] = array("query" => "SELECT COUNT(*) FROM news",
+        $indicator['news'] = array("count" => array('count_table_rows','news'),
                                    "title" => _("Ankündigungen"),
                                    "detail" => "");
         $indicator['vote'] = array("query" => "SELECT COUNT(*) FROM vote WHERE type='vote'",
@@ -499,7 +505,7 @@ class SiteinfoMarkupEngine {
                                    "title" => _("Tests"),
                                    "detail" => "",
                                    "constraint" => get_config('VOTE_ENABLE'));
-        $indicator['evaluation'] = array("query" => "SELECT COUNT(*) FROM eval",
+        $indicator['evaluation'] = array("count" => array('count_table_rows','eval'),
                                          "title" => _("Evaluationen"),
                                          "detail" => "",
                                          "constraint" => get_config('VOTE_ENABLE'));
@@ -507,19 +513,19 @@ class SiteinfoMarkupEngine {
                                          "title" => _("Wiki-Seiten"),
                                          "detail" => "",
                                          "constraint" => get_config('WIKI_ENABLE'));
-        $indicator['resource'] = array("query" => "SELECT COUNT(*) FROM resources_objects",
+        $indicator['resource'] = array("count" => array('count_table_rows','resources_objects'),
                                        "title" => _("Ressourcen-Objekte"),
                                        "detail" => _("von Stud.IP verwaltete Ressourcen wie Räume oder Geräte"),
                                        "constraint" => Config::get()->RESOURCES_ENABLE);
-        
+
         if ($key == 'posting') {
             $count = 0;
 
             // sum up number of postings for all availabe ForumModules
             foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
                 $count += $plugin->getNumberOfPostings();
-            }        
-            
+            }
+
             $template->title  = _('Forenbeiträge');
             $template->detail = _('Anzahl Beiträge aller verwendeten Foren');
             $template->count = $count;
@@ -527,13 +533,17 @@ class SiteinfoMarkupEngine {
             // iterate over the other indicators
             if (in_array($key,array_keys($indicator))) {
                 if (!isset($indicator[$key]['constraint']) || $indicator[$key]['constraint']) {
-                    $result = $this->db->query($indicator[$key]['query']);
-                    $rows = $result->fetch(PDO::FETCH_NUM);
+                    if ($indicator[$key]['query']) {
+                        $result = $this->db->query($indicator[$key]['query']);
+                        $rows = $result->fetch(PDO::FETCH_NUM);
+                        $template->count = $rows[0];
+                    } else {
+                        $template->count = call_user_func($indicator[$key]['count'][0], $indicator[$key]['count'][1]);
+                    }
                     $template->title = $indicator[$key]['title'];
                     if ($indicator[$key]['detail']) {
                         $template->detail = $indicator[$key]['detail'];
                     }
-                    $template->count = $rows[0];
                 } else {
                     return "";
                 }
@@ -541,17 +551,19 @@ class SiteinfoMarkupEngine {
                 return "";
             }
         }
-        return $template->render();
+        $ret = $template->render();
+        $cache->write(__METHOD__ . $key, $ret);
+        return $ret;
     }
 
     function history() {
         return formatReady(file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'history.txt'));
     }
-    
+
     function termsOfUse() {
         return @file_get_contents($GLOBALS['STUDIP_BASE_PATH'] . '/locale/' . ($GLOBALS['_language_path'] ?: 'de') . '/LC_HELP/pages/nutzung.html');
     }
-    
+
     function style($style, $styled) {
         $style = str_replace('\"', '"', $style);
         $styled = str_replace('\"', '"', $styled);

@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginAbstract.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -29,15 +29,15 @@ require_once 'StudipLitSearchPluginAbstract.class.php';
 /**
 *
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
 class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
-    
-    
+
+
     function StudipLitSearchPluginStudip(){
         parent::StudipLitSearchPluginAbstract();
         $this->dbv = DbView::getView('literatur');
@@ -45,7 +45,7 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
         $rs->next_record();
         $this->description = sprintf(_("Stud.IP Literaturkatalog. Inhalt des Kataloges: %s Einträge."), $rs->f(0));
     }
-    
+
     function doSearch($search_values){
         $this->search_values = $search_values;
         if ( !($sql = $this->parseSearchValues()) ){
@@ -59,7 +59,7 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
         }
         return $rs->num_rows();
     }
-    
+
     function parseSearchValues(){
         $sql = '1';
         $search_values = $this->search_values;
@@ -68,21 +68,26 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
                 $term = mysql_escape_string($search_values[$i]['search_term']);
                 if (strlen($term)){
                     if ($search_values[$i]['search_truncate'] == "left"){
-                        $term = $term . "";
+                        $term = '%' . $term;
                     } else if ($search_values[$i]['search_truncate'] == "right"){
-                        $term = $term . '*';
+                        $term = $term . '%';
                     } else {
                         $term = $term;
                     }
-                    $field = $search_values[$i]['search_field'];
+                    $fields = explode(',', $search_values[$i]['search_field']);
                     $operator = 'AND';
                     if ($i > 0){
                         $operator = $search_values[$i]['search_operator'];
                         if ($operator == "NOT"){
                             $operator = "AND NOT";
                         }
-                    } 
-                    $sql .= " $operator MATCH(" . $field . ") AGAINST ('" . $term . "' IN BOOLEAN MODE)  ";
+                    }
+                    $sql .= " $operator (";
+                    foreach ($fields as $k => $field) {
+                        $sql .= " $field LIKE '$term' ";
+                        if ($k < count($fields) -1) $sql .= ' OR ';
+                    }
+                    $sql .= ')';
                 } else if ($i == 0) {
                     $this->addError("error", _("Der erste Suchbegriff fehlt."));
                     return false;
@@ -91,7 +96,7 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
         }
         return $sql;
     }
-    
+
     function getSearchFields(){
         return array(array('name' => _("Titel,Autor,Schlagwort"), 'value' => "dc_title,dc_creator,dc_contributor,dc_subject"),
                     array('name' => _("Titel"), 'value' => "dc_title"),
@@ -101,9 +106,9 @@ class StudipLitSearchPluginStudip extends StudipLitSearchPluginAbstract{
                     array('name' => _("Verlagsort, Verlag"), 'value' => "dc_publisher"),
                     array('name' => _("Identifikation"), 'value' => "dc_identifier")
                 );
-        
+
     }
-    
+
     function getSearchResult($num_hit){
         if (!isset($this->search_result[$num_hit-1])){
             $this->addError("error",_("Suchergebnis existiert nicht."));

@@ -3,6 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 <?=$this->render_partial('header');?>
+<?=$message?>
 <div align="center">
   <table style="width: 80%;">
     <tr>
@@ -66,7 +67,7 @@ use Studip\Button, Studip\LinkButton;
                                  array(sprintf(_('Sollte während der Migration ein Fehler aufgetreten sein, so können Sie ' .
                                                  'diese Sperre durch den unten stehenden Link oder das Löschen der Datei ' .
                                                  '<em>%s</em> auflösen.'), $lock->getFilename()))) ?>
-            <?= Studip\LinkButton::create(_('Sperre aufheben'), URLHelper::getLink('?release_lock=1&target=' . @$target)) ?>
+            <?= Studip\LinkButton::create(_('Sperre aufheben'), URLHelper::getURL('?release_lock=1&target=' . @$target)) ?>
           <? else: ?>
             <form method="POST">
               <?= CSRFProtection::tokenTag() ?>

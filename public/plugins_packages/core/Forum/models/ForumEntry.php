@@ -1201,7 +1201,7 @@ class ForumEntry {
      */
     static function countAllEntries()
     {
-        return DBManager::get()->query("SELECT COUNT(*) FROM forum_entries")->fetchColumn();
+        return count_table_rows('forum_entries');
     }
 
     /**

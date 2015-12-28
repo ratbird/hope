@@ -72,8 +72,8 @@ include 'lib/include/header.php';
 $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
 
 $index_nobody_template->set_attributes(array(
-    'num_active_courses'   => DBManager::get()->query("SELECT COUNT(*) FROM seminare")->fetchColumn(),
-    'num_registered_users' => DBManager::get()->query("SELECT COUNT(*) FROM auth_user_md5")->fetchColumn(),
+    'num_active_courses'   => count_table_rows('seminare'),
+    'num_registered_users' => count_table_rows('auth_user_md5'),
     'num_online_users'     => get_users_online_count(10) // Should be the same value as in lib/navigation/CommunityNavigation.php
 ));
 

@@ -35,7 +35,7 @@ $_language_path = init_i18n($_SESSION['_language']);
 include 'lib/include/html_head.inc.php';
 
 $path = $GLOBALS['STUDIP_BASE_PATH'].'/db/migrations';
-$verbose = false;
+$verbose = true;
 $target = NULL;
 
 FileLock::setDirectory($GLOBALS['TMP_PATH']);
@@ -52,10 +52,13 @@ $version = new DBSchemaVersion('studip');
 $migrator = new Migrator($path, $version, $verbose);
 
 if (Request::submitted('start')) {
+    ob_start();
     set_time_limit(0);
     $lock->lock(array('timestamp' => time(), 'user_id' => $GLOBALS['user']->id));
     $migrator->migrate_to($target);
     $lock->release();
+    $announcements = ob_get_clean();
+    $message = MessageBox::Success(_("Die Datenbank wurde erfolgreich migriert."), explode("\n", $announcements));
 }
 
 $current = $version->get();
@@ -67,6 +70,7 @@ $template->set_attribute('current', $current);
 $template->set_attribute('target', $target);
 $template->set_attribute('migrations', $migrations);
 $template->set_attribute('lock', $lock);
+$template->set_attribute('message', $message);
 echo $template->render();
 
 include 'lib/include/html_end.inc.php';

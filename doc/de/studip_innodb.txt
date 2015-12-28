@@ -30,9 +30,8 @@ entsprechenden Variablen nachziehen. Bereits konvertierte Datenbanktabellen blei
 
 2. FULLTEXT-Index
 =================
-Die Tabelle lit_catalog in der Stud.IP-Datenbank verwendet FULLTEXT-Indizes, um eine Suche zu ermöglichen. Diese werden
-für InnoDB aber erst ab MySQL 5.6 unterstützt. Bei der Migration der Stud.IP-Tabellen wird daher für alle älteren
-MySQL-Versionen diese Tabelle im MyISAM-Format belassen. Bei einem späteren Upgrade des Datenbankservers können Sie die
+FULLTEXT-Indizes werden für InnoDB aber erst ab MySQL 5.6 unterstützt. Bei der Migration der Stud.IP-Tabellen werden daher für alle älteren
+MySQL-Versionen Tabelle, die einen solchen Index benutzen im MyISAM-Format belassen. Bei einem späteren Upgrade des Datenbankservers können Sie die
 Tabelle z.B. über das mitgelieferte Kommandozeilenskript cli/myisam_to_innodb.php nachträglich konvertieren.
 
 3. Tuning von InnoDB

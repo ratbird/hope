@@ -124,7 +124,7 @@ class Admin_CoursesController extends AuthenticatedController
             'typeFilter'  => $config_my_course_type_filter
         ));
 
-        if (in_array('Inhalt', $this->view_filter)) {
+        if (in_array('contents', $this->view_filter)) {
             $this->nav_elements = MyRealmModel::calc_nav_elements(array($this->courses));
         }
         // get all available teacher for infobox-filter
@@ -212,7 +212,7 @@ class Admin_CoursesController extends AuthenticatedController
 
         $data = array();
         foreach ($courses as $course_id => $course) {
-            $sem = new Seminar($course_id);
+            $sem = new Seminar(Course::buildExisting($course));
             $row = array();
 
             if (in_array('number', $filter_config)) {
@@ -225,8 +225,8 @@ class Admin_CoursesController extends AuthenticatedController
 
             if (in_array('type', $filter_config)) {
                 $row['type'] = sprintf('%s: %s',
-                                       $course['sem_class_name'],
-                                       $GLOBALS['SEM_TYPE'][$course['status']]['name']);
+                                       $sem->getSemClass()['name'],
+                                       $sem->getSemType()['name']);
             }
 
             if (in_array('room_time', $filter_config)) {
@@ -238,12 +238,7 @@ class Admin_CoursesController extends AuthenticatedController
             }
 
             if (in_array('teachers', $filter_config)) {
-                $dozenten = array();
-                array_walk($course['dozenten'], function ($a) use (&$dozenten) {
-                    $user = User::findByUsername($a['username']);
-                    $dozenten[] = $user->getFullName();
-                });
-                $row['teachers'] = implode(', ', $dozenten);
+                $row['teachers'] = implode(', ', array_map(function ($d) {return $d['fullname'];}, $course['dozenten']));
             }
 
             if (in_array('members', $filter_config)) {
@@ -766,16 +761,17 @@ class Admin_CoursesController extends AuthenticatedController
                     $seminars[$seminar_id]['modules'] = $modules->getLocalModules($seminar_id, 'sem', $seminar['modules'], $seminar['status']);
                     $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations($seminar_id, $seminars[$seminar_id], $seminars[$seminar_id]['sem_class'], $GLOBALS['user']->id);
                 }
-
-                $seminars[$seminar_id]['admission_locked'] = false;
-                if($seminar['course_set']) {
-                    $set = new CourseSet($seminar['course_set']);
-                    if(!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
-                        $seminars[$seminar_id]['admission_locked'] = 'locked';
-                    } else {
-                        $seminars[$seminar_id]['admission_locked'] = 'disable';
+                if ($this->selected_action == 17) {
+                    $seminars[$seminar_id]['admission_locked'] = false;
+                    if($seminar['course_set']) {
+                        $set = new CourseSet($seminar['course_set']);
+                        if(!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
+                            $seminars[$seminar_id]['admission_locked'] = 'locked';
+                        } else {
+                            $seminars[$seminar_id]['admission_locked'] = 'disable';
+                        }
+                        unset($set);
                     }
-                    unset($set);
                 }
             }
         }
@@ -792,7 +788,7 @@ class Admin_CoursesController extends AuthenticatedController
     private function getTeacher($course_id)
     {
         $teachers   = CourseMember::findByCourseAndStatus($course_id, 'dozent');
-        $collection = SimpleORMapCollection::createFromArray($teachers);
+        $collection = SimpleCollection::createFromArray($teachers);
         return $collection->map(function (CourseMember $teacher) {
             return array(
                 'user_id'  => $teacher->user_id,

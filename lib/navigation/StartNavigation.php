@@ -36,16 +36,20 @@ class StartNavigation extends Navigation
             }
 
             if (Config::get()->VOTE_ENABLE && WidgetHelper::hasWidget($GLOBALS['user']->id, 'Evaluations')) {
-                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, :threshold) AND a.author_id != :user_id AND a.state != 'stopvis', vote_id, NULL))
-                          FROM vote a
-                          LEFT JOIN object_user_visits b ON (b.object_id = vote_id AND b.user_id = :user_id AND b.type = 'vote')
-                          WHERE a.range_id = 'studip' AND a.state IN ('active', 'stopvis')
-                          GROUP BY a.range_id";
-                $statement = DBManager::get()->prepare($query);
-                $statement->bindValue(':user_id', $GLOBALS['user']->id);
-                $statement->bindValue(':threshold', ($threshold = Config::get()->NEW_INDICATOR_THRESHOLD) ? strtotime("-{$threshold} days 0:00:00") : 0);
-                $statement->execute();
-                $vote = (int)$statement->fetchColumn();
+                $threshold = Config::get()->NEW_INDICATOR_THRESHOLD ? strtotime("-{".Config::get()->NEW_INDICATOR_THRESHOLD."} days 0:00:00") : 0;
+                $statement = DBManager::get()->prepare("
+                    SELECT COUNT(*)
+                    FROM questionnaire_assignments
+                        INNER JOIN questionnaires ON (questionnaires.questionnaire_id = questionnaire_assignments.questionnaire_id)
+                    WHERE questionnaire_assignments.range_id = 'start'
+                        AND questionnaires.visible = 1
+                        AND questionnaires.startdate IS NOT NULL
+                        AND questionnaires.startdate > UNIX_TIMESTAMP()
+                        AND questionnaires.startdate > :threshold
+                        AND (questionnaires.stopdate IS NULL OR questionnaires.stopdate <= UNIX_TIMESTAMP())
+                ");
+                $statement->execute(array('threshold' => $threshold));
+                $vote = (int) $statement->fetchColumn();
 
                 $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, :threshold) AND d.author_id != :user_id, a.eval_id, NULL))
                           FROM eval_range a
@@ -69,7 +73,7 @@ class StartNavigation extends Navigation
         }
         if ($vote) {
             $homeinfo .= ' - ';
-            $homeinfo .= sprintf(ngettext('%u neue Umfrage', '%u neue Umfragen', $vote), $vote);
+            $homeinfo .= sprintf(ngettext('%u neuer Fragebogen', '%u neue Fragebögen', $vote), $vote);
         }
         $this->setBadgeNumber($vote + $news);
 

@@ -201,9 +201,10 @@ class Step291Questionnaires extends Migration
 
         //and finally clean up:
 
-        //DBManager::get()->exec("DROP TABLE IF EXISTS `vote`");
-        //DBManager::get()->exec("DROP TABLE IF EXISTS `voteanswers`");
-        //DBManager::get()->exec("DROP TABLE IF EXISTS `voteanswers_user`");
+        DBManager::get()->exec("DROP TABLE IF EXISTS `vote`");
+        DBManager::get()->exec("DROP TABLE IF EXISTS `voteanswers`");
+        DBManager::get()->exec("DROP TABLE IF EXISTS `voteanswers_user`");
+        DBManager::get()->exec("DROP TABLE IF EXISTS `vote_user`");
     }
 
     function down()

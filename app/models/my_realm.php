@@ -468,10 +468,10 @@ class MyRealmModel
         if ($neue || $count > 0) {
             $nav = new Navigation('vote', '#vote');
             if ($neue) {
-                $nav->setImage(Icon::create('vote+new', 'attention', ["title" => sprintf('%s %s, %s %s',$count,_('Umfrage(n)'),$neue,_('neue'))]));
+                $nav->setImage(Icon::create('vote+new', 'attention', ["title" => sprintf('%s %s, %s %s',$count,_('Fragebögen'),$neue,_('neue'))]));
                 $nav->setBadgeNumber($neue);
             } else if ($count) {
-                $nav->setImage(Icon::create('vote', 'inactive', ["title" => sprintf('%s %s',$count,_('Umfrag(en)'))]));
+                $nav->setImage(Icon::create('vote', 'inactive', ["title" => sprintf('%s %s',$count,_('Fragebögen'))]));
             }
             return $nav;
         }

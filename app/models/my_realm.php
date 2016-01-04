@@ -398,19 +398,24 @@ class MyRealmModel
     {
         $count = 0;
         $neue  = 0;
-        $sql   = "SELECT  COUNT(vote.vote_id) as count,
-              COUNT(IF((chdate > IFNULL(ouv.visitdate, :threshold) AND vote.author_id !=:user_id AND vote.state != 'stopvis'), vote_id, NULL)) AS neue,
-              MAX(IF((chdate > IFNULL(ouv.visitdate, :threshold) AND vote.author_id !=:user_id AND vote.state != 'stopvis'), chdate, 0)) AS last_modified
-            FROM vote
-            LEFT JOIN object_user_visits ouv ON(ouv.object_id = vote.vote_id AND ouv.user_id = :user_id AND ouv.type = 'vote')
-            WHERE vote.range_id = :course_id AND vote.state IN('active','stopvis')
-            GROUP BY vote.range_id";
 
-        $statement = DBManager::get()->prepare($sql);
-        $statement->bindValue(':user_id', $user_id);
-        $statement->bindValue(':course_id', $object_id);
-        $statement->bindValue(':threshold', ($threshold = Config::get()->NEW_INDICATOR_THRESHOLD) ? strtotime("-{$threshold} days 0:00:00") : 0);
-        $statement->execute();
+        $threshold = Config::get()->NEW_INDICATOR_THRESHOLD ? strtotime("-{".Config::get()->NEW_INDICATOR_THRESHOLD."} days 0:00:00") : 0;
+        $statement = DBManager::get()->prepare("
+            SELECT COUNT(DISTINCT questionnaires.questionnaire_id) AS count,
+                COUNT(IF((questionnaires.chdate > IFNULL(object_user_visits.visitdate, :threshold) AND questionnaires.user_id !=:user_id AND questionnaires.visible = '1'), questionnaires.questionnaire_id, NULL)) AS new,
+                MAX(IF((questionnaires.chdate > IFNULL(object_user_visits.visitdate, :threshold) AND questionnaires.user_id !=:user_id AND questionnaires.visible = '1'), questionnaires.chdate, 0)) AS last_modified
+            FROM questionnaire_assignments
+                INNER JOIN questionnaires ON (questionnaires.questionnaire_id = questionnaire_assignments.questionnaire_id)
+                LEFT JOIN object_user_visits ON(object_user_visits.object_id = questionnaires.questionnaire_id AND object_user_visits.user_id = :user_id AND object_user_visits.type = 'vote')
+            WHERE questionnaire_assignments.range_id = :course_id
+                AND questionnaire_assignments.range_type = 'course'
+            GROUP BY questionnaire_assignments.range_id
+        ");
+        $statement->execute(array(
+            'threshold' => $threshold,
+            'user_id' => $user_id,
+            'course_id' => $object_id
+        ));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if (!empty($result)) {

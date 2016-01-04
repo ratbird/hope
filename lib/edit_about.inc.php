@@ -26,7 +26,6 @@
 
 require_once('lib/messaging.inc.php');
 require_once('lib/log_events.inc.php');
-require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
 
 function edit_email($user, $email, $force=False) {
@@ -554,9 +553,9 @@ class about extends messaging
         }
         // Votes
         if (Config::get()->VOTE_ENABLE) {
-            $voteDB = new VoteDB();
-            $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
-            $stoppedVotes = $voteDB->getStoppedVisibleVotes($this->auth_user['user_id']);
+            //$voteDB = new VoteDB();
+            $activeVotes  = Questionnaire::countBySQL("user_id = ? AND visible = '1'", array($this->auth_user['user_id']));
+            $stoppedVotes = Questionnaire::countBySQL("user_id = ? AND visible = '0'", array($this->auth_user['user_id']));
         }
         // Evaluations
         $evalDB = new EvaluationDB();
@@ -600,7 +599,7 @@ class about extends messaging
         if (Config::get()->CALENDAR_ENABLE && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
             $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         if (Config::get()->VOTE_ENABLE && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
-            $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
+            $homepage_elements["votes"] = array("name" => _("Fragebögen"), "visibility" => $homepage_visibility["votes"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
         
         $query = "SELECT 1
                   FROM user_inst

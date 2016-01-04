@@ -49,8 +49,8 @@ class ToolsNavigation extends Navigation
 
         // votes and tests, evaluations
         if (get_config('VOTE_ENABLE')) {
-            $navigation = new Navigation(_('Umfragen und Tests'), 'admin_vote.php', array('page' => 'overview', 'showrangeID' => $username));
-            $this->addSubNavigation('vote', $navigation);
+            $navigation = new Navigation(_('Fragebögen'), URLHelper::getURL("dispatch.php/questionnaire/overview"));
+            $this->addSubNavigation('questionnaire', $navigation);
 
             $navigation = new Navigation(_('Evaluationen'), 'admin_evaluation.php', array('rangeID' => $username));
             $this->addSubNavigation('evaluation', $navigation);

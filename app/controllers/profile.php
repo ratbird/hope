@@ -158,7 +158,7 @@ class ProfileController extends AuthenticatedController
 
         // include and show votes and tests
         if (get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes')) {
-            $response = $this->relay('vote/display/' . $this->current_user->user_id);
+            $response = $this->relay('questionnaire/widget/' . $this->current_user->user_id . "/user");
             $this->votes = $response->body;
         }
 

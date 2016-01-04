@@ -189,10 +189,12 @@ class PublicCoursesController extends AuthenticatedController
 
         // Votes
         if (Config::get()->VOTE_ENABLE) {
-            $query = "SELECT range_id, COUNT(vote_id) AS count
-                      FROM vote
-                      WHERE state IN ('active','stopvis') AND range_id IN (?)
-                      GROUP BY range_id";
+            $query = "SELECT questionnaire_assignments.range_id, COUNT(DISTINCT questionnaire_id) AS count
+                      FROM questionnaire
+                          INNER JOIN questionnaire_assignments ON (questionnaire_assignments.questionnaire_id = questionnaire.questionnaire_id)
+                      WHERE questionnaire.visible = '1'
+                          AND questionnaire_assignments.range_id IN (?)
+                      GROUP BY questionnaire_assignments.range_id ";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($seminar_ids));
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

@@ -70,7 +70,7 @@ class Course_OverviewController extends AuthenticatedController
 
         // Fetch  votes
         if (get_config('VOTE_ENABLE')) {
-            $response = $this->relay('vote/display/' . $this->course_id);
+            $response = $this->relay('questionnaire/widget/' . $this->course_id);
             $this->votes = $response->body;
         }
 

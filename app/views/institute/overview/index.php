@@ -39,7 +39,7 @@
 
 <?= $news ?>
 <?= $dates ?>
-<?= $votes ?>
+<?= $questionnaires ?>
 
 <?
 // display plugins

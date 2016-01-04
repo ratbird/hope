@@ -133,6 +133,19 @@ class JsupdaterController extends AuthenticatedController
                         ->render(compact("message") + array('controller' => $this));
             }
         }
+        if (count($page_info['Questionnaire']['questionnaire_ids']) > 0) {
+            foreach ($page_info['Questionnaire']['questionnaire_ids'] as $questionnaire_id) {
+                $questionnaire = new Questionnaire($questionnaire_id);
+                if ($questionnaire->latestAnswerTimestamp() > $page_info['Questionnaire']['last_update']) {
+                    $template = $this->get_template_factory()->open("questionnaire/evaluate");
+                    $template->set_layout(null);
+                    $template->set_attribute("questionnaire", $questionnaire);
+                    $data['Questionnaire.updateQuestionnaireResults'][$questionnaire->getId()] = array(
+                        'html' => $template->render()
+                    );
+                }
+            }
+        }
         return $data;
     }
 

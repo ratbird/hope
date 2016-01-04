@@ -57,6 +57,7 @@ javascripts:
 
     - javascripts/vendor/lodash.underscore-3.10.1.js
     - javascripts/l10n.js
+    - javascripts/vendor/chartist.min.js
     - javascripts/init.js
 
     - javascripts/studip-ui.js
@@ -97,7 +98,7 @@ javascripts:
     - javascripts/register.js
     - javascripts/contentbox.js
     - javascripts/dates.js
-    - javascripts/tour.js
+    - javascripts/questionnaire.js
     - javascripts/tables.js
     - javascripts/start.js
     - javascripts/responsive.js
@@ -151,6 +152,7 @@ css:
     # filename : media
     studip-jquery-ui.css: screen, print
     jshighlight_tomorrow.css: screen, print
+    chartist.min.css: screen, print
     style.css:  screen
     print.css:  print
 

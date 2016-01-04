@@ -9,31 +9,31 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/vote.php';
+require_once 'app/controllers/questionnaire.php';
 
 class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
 {
     public function getPluginName()
     {
-        return _('Umfragen');
+        return _('Fragebögen');
     }
 
     public function getPortalTemplate()
     {
         // include and show votes and tests
         if (get_config('VOTE_ENABLE')) {
-            $dispatcher = new StudipDispatcher();
-            $controller = new VoteController($dispatcher);
-            $response = $controller->relay('vote/display/studip');
+            $controller = new PluginController(new StudipDispatcher());
+            $response = $controller->relay('questionnaire/widget/start')->body;
+
+
             $template = $GLOBALS['template_factory']->open('shared/string');
-            $template->content = $response->body;
+            $template->content = $response;
 
             if ($GLOBALS['perm']->have_perm('root')) {
                 $navigation = new Navigation('', 'admin_vote.php', array('page' => 'overview', 'showrangeID' => 'studip'));
                 $navigation->setImage(Icon::create('admin', 'clickable', ["title" => _('Umfragen bearbeiten')]));
                 $template->icons = array($navigation);
             }
-
             return $template;
         }
     }

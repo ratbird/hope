@@ -145,6 +145,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         if (jQuery("#folder_" + md5_id + "_body").is(':visible')) {
             jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
             jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
+            jQuery("#folder_" + md5_id + "_arrow_img").attr('title', "Objekt aufklappen".toLocaleString());
             jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead2')
                 .removeClass('printhead3');
             jQuery("#folder_" + md5_id + "_body").slideUp(400);
@@ -154,6 +155,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
                 jQuery("#folder_" + md5_id + "_body").load(adress, {getfolderbody: md5_id}, function () {
                     jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
                     jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+                    jQuery("#folder_" + md5_id + "_arrow_img").attr('title', "Objekt zuklappen".toLocaleString());                    
                     jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
                         .removeClass('printhead2');
                     STUDIP.Filesystem.unsetarrows();
@@ -164,6 +166,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
             } else {
                 jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
                 jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+                jQuery("#folder_" + md5_id + "_arrow_img").attr('title', "Objekt zuklappen".toLocaleString());
                 jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
                     .removeClass('printhead2');
                 STUDIP.Filesystem.unsetarrows();
@@ -192,12 +195,14 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
             jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead2')
                 .removeClass('printhead3');
             jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
+            jQuery("#file_" + md5_id + "_arrow_img").attr('title', "Objekt aufklappen".toLocaleString());
         } else {
             if (jQuery("#file_" + md5_id + "_body").html() === "") {
                 var adress = STUDIP.Filesystem.getURL(jQuery("#file_" + md5_id + "_arrow_img").parent()[0].href);
                 jQuery("#file_" + md5_id + "_body").load(adress, {getfilebody: md5_id}, function () {
                     jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
                     jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+                    jQuery("#file_" + md5_id + "_arrow_img").attr('title', "Objekt zuklappen".toLocaleString());
                     jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
                         .removeClass('printhead2');
                     jQuery("#file_" + md5_id + "_body").slideDown(400);
@@ -209,6 +214,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
                 jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
                     .removeClass('printhead2');
                 jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+                jQuery("#file_" + md5_id + "_arrow_img").attr('title', "Objekt zuklappen".toLocaleString());
                 jQuery("#file_" + md5_id + "_body").slideDown(400);
             }
         }

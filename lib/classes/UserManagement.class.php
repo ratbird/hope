@@ -1080,7 +1080,7 @@ class UserManagement
 
         //delete connected users
         if (get_config('ELEARNING_INTERFACE_ENABLE')){
-            if(ElearningUtils::initElearningInterfaces()){
+            if(ELearningUtils::initElearningInterfaces()){
                 foreach($GLOBALS['connected_cms'] as $cms){
                     if ($cms->auth_necessary && ($cms->user instanceOf ConnectedUser)) {
                         $user_auto_create = $cms->USER_AUTO_CREATE;

@@ -49,7 +49,7 @@
             new Chartist.Bar('#questionnaire_<?= $vote->getId() ?>_chart', data, { onlyInteger: true, axisY: { onlyInteger: true } });
         <? else : ?>
             data.series = data.series[0];
-            new Chartist.Pie('#questionnaire_<?= $vote->getId() ?>_chart', data);
+            new Chartist.Pie('#questionnaire_<?= $vote->getId() ?>_chart', data, { labelPosition: 'outside' });
         <? endif ?>
     });
     </script>
@@ -69,7 +69,6 @@
                 <? if (!$vote->questionnaire['anonymous'] && $results[$key]) : ?>
                 <? foreach ($results_users[$key] as $index => $user_id) : ?>
                     <? if ($user_id && $user_id !== "nobody") : ?>
-                        <?= $index > 0 ? "," : ""?>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => get_username($user_id))) ?>">
                             <?= Avatar::getAvatar($user_id, get_username($user_id))->getImageTag(Avatar::SMALL, array('title' => htmlReady(get_fullname($user_id)))) ?>
                             <? if (count($results_users[$key]) < 4) : ?>

@@ -121,7 +121,7 @@ class Questionnaire extends SimpleORMap
 
     public function isEditable()
     {
-        if (($this['user_id'] === $GLOBALS['user']->id) || $GLOBALS['perm']->have_perm("root")) {
+        if ($this->isNew() || ($this['user_id'] === $GLOBALS['user']->id) || $GLOBALS['perm']->have_perm("root")) {
             return true;
         } else {
             foreach ($this->assignments as $assignment) {

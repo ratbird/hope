@@ -59,7 +59,7 @@
     <tbody>
     <? foreach ($vote['questiondata']['options'] as $key => $option) : ?>
         <tr>
-            <td style="text-align: right;" width="50%">
+            <td style="text-align: right; background-size: <?= $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
                 <strong><?= formatReady($option) ?></strong>
             </td>
             <td style="white-space: nowrap;">

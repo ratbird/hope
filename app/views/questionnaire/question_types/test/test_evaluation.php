@@ -62,7 +62,7 @@ $data = $vote['questiondata']->getArrayCopy();
     <tbody>
     <? foreach ($vote['questiondata']['options'] as $key => $option) : ?>
         <tr class="<?= $data['correctanswer'] ? "correct" : "incorrect" ?>">
-            <td style="text-align: right;" width="50%">
+            <td style="text-align: right; background-size: <?= $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
                 <strong><?= formatReady($option) ?></strong>
                 <? if (in_array($key + 1, $data['correctanswer'])) : ?>
                     <?= Assets::img("icons/16/green/checkbox-checked", array('class' => "text-bottom", 'title' =>  _("Diese Antwort ist richtig"))) ?>

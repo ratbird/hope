@@ -984,7 +984,10 @@ class CourseSet
     {
         global $perm;
 
-        if ($this->getUserId() != '' && ($perm->have_perm('root', $user_id) || $this->getUserId() == $user_id)) {
+        if ($this->getUserId() == '') {
+            return false;
+        }
+        if ($perm->have_perm('root', $user_id) || $this->getUserId() == $user_id) {
             return true;
         }
         if (count($this->institutes) == 0 && count($this->courses) == 1 && $perm->have_studip_perm('tutor', current($this->getCourses()), $user_id)) {

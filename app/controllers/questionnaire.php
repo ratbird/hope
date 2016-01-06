@@ -37,6 +37,11 @@ class QuestionnaireController extends AuthenticatedController
         }
     }
 
+    public function thank_you_action()
+    {
+
+    }
+
     public function edit_action($questionnaire_id = null)
     {
         if (!$GLOBALS['perm']->have_perm("autor")) {
@@ -253,7 +258,7 @@ class QuestionnaireController extends AuthenticatedController
                 PersonalNotifications::add(
                     $this->questionnaire['user_id'],
                     $url,
-                    sprintf(_("%s hat an der Befragung '%s' teilgenommen"), get_fullname(), $this->questionnaire['title']),
+                    sprintf(_("%s hat an der Befragung '%s' teilgenommen."), get_fullname(), $this->questionnaire['title']),
                     "questionnaire_".$this->questionnaire->getId(),
                     Assets::image_path("icons/blue/vote.svg")
                 );
@@ -274,7 +279,11 @@ class QuestionnaireController extends AuthenticatedController
                 $this->redirect("start");
             } else {
                 PageLayout::postMessage(MessageBox::success(_("Danke für die Teilnahme!")));
-                $this->redirect("questionnaire/overview");
+                if ($GLOBALS['perm']->have_perm("autor")) {
+                    $this->redirect("questionnaire/overview");
+                } else {
+                    $this->redirect("questionnaire/thank_you");
+                }
             }
         }
         $this->range_type = Request::get("range_type");

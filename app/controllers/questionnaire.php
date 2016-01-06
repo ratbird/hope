@@ -155,6 +155,9 @@ class QuestionnaireController extends AuthenticatedController
 
     public function copy_action($from)
     {
+        if (!$GLOBALS['perm']->have_perm("autor")) {
+            throw new AccessDeniedException("Only for logged in users.");
+        }
         $this->old_questionnaire = new Questionnaire($from);
         $this->questionnaire = new Questionnaire();
         $this->questionnaire->setData($this->old_questionnaire->toArray());
@@ -189,6 +192,9 @@ class QuestionnaireController extends AuthenticatedController
 
     public function add_question_action()
     {
+        if (!$GLOBALS['perm']->have_perm("autor")) {
+            throw new AccessDeniedException("Only for logged in users.");
+        }
         $class = Request::get("questiontype");
         $this->question = new $class();
         $this->question['questiontype'] = $class;

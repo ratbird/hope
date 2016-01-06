@@ -168,6 +168,9 @@ class Questionnaire extends SimpleORMap
 
     public function resultsVisible()
     {
+        if (!$this->isViewable()) {
+            return false;
+        }
         return $this['resultvisibility'] === "always"
             || $this->isEditable()
             || ($this['resultvisibility'] === "afterending" && $this->isStopped());

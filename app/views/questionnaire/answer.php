@@ -37,15 +37,18 @@
     </div>
 
     <div data-dialog-button style="text-align: center;">
-        <?= \Studip\Button::create(_("Speichern"), 'questionnaire_answer', array('onClick' => "return STUDIP.Questionnaire.beforeAnswer.call(this);")) ?>
-
+        <? if ($questionnaire->isAnswerable()) : ?>
+            <?= \Studip\Button::create(_("Speichern"), 'questionnaire_answer', array('onClick' => "return STUDIP.Questionnaire.beforeAnswer.call(this);")) ?>
+        <? endif ?>
         <? if ($questionnaire->resultsVisible()) : ?>
             <?= \Studip\LinkButton::create(_("Ergebnisse anzeigen"), URLHelper::getURL("dispatch.php/questionnaire/evaluate/".$questionnaire->getId()), array('data-dialog' => "1")) ?>
         <? endif ?>
         <? if ($questionnaire->isEditable() && (!$questionnaire->isStarted() || !$questionnaire->countAnswers())) : ?>
             <?= \Studip\LinkButton::create(_("Bearbeiten"), URLHelper::getURL("dispatch.php/questionnaire/edit/".$questionnaire->getId()), array('data-dialog' => "1")) ?>
         <? endif ?>
-        <?= \Studip\LinkButton::create(_("Kopieren"), URLHelper::getURL("dispatch.php/questionnaire/copy/".$questionnaire->getId()), array('data-dialog' => "1")) ?>
+        <? if ($GLOBALS['perm']->have_perm('autor')) : ?>
+            <?= \Studip\LinkButton::create(_("Kopieren"), URLHelper::getURL("dispatch.php/questionnaire/copy/".$questionnaire->getId()), array('data-dialog' => "1")) ?>
+        <? endif ?>
         <? if ($questionnaire->isEditable() && (!$questionnaire->isStarted())) : ?>
             <?= \Studip\LinkButton::create(_("Starten"), URLHelper::getURL("dispatch.php/questionnaire/start/".$questionnaire->getId())) ?>
         <? endif ?>

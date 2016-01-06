@@ -58,7 +58,7 @@ function lastActivity ($sem_id)
 
         // Votes
         if (get_config('VOTE_ENABLE')) {
-            $queries[] = "SELECT MAX(questionnaire.chdate) AS chdate FROM questionnaire INNER JOIN questionnaire_assignments ON (questionnaire_assignments.questionnaire_id = questionnaire.questionnaire_id) WHERE questionnaire_assignments.range_id = :id";
+            $queries[] = "SELECT MAX(questionnaires.chdate) AS chdate FROM questionnaires INNER JOIN questionnaire_assignments ON (questionnaire_assignments.questionnaire_id = questionnaires.questionnaire_id) WHERE questionnaire_assignments.range_id = :id";
         }
 
         // Wiki

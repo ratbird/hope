@@ -497,7 +497,7 @@ class SiteinfoMarkupEngine {
         $indicator['news'] = array("count" => array('count_table_rows','news'),
                                    "title" => _("Ankündigungen"),
                                    "detail" => "");
-        $indicator['vote'] = array("query" => "SELECT COUNT(*) FROM questionnaire ",
+        $indicator['vote'] = array("query" => array('count_table_rows', 'questionnaires'),
                                    "title" => _("Fragebögen"),
                                    "detail" => "",
                                    "constraint" => get_config('VOTE_ENABLE'));

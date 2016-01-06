@@ -189,7 +189,7 @@ class PublicCoursesController extends AuthenticatedController
 
         // Votes
         if (Config::get()->VOTE_ENABLE) {
-            $query = "SELECT questionnaire_assignments.range_id, COUNT(DISTINCT questionnaire_id) AS count
+            $query = "SELECT questionnaire_assignments.range_id, COUNT(DISTINCT questionnaires.questionnaire_id) AS count
                       FROM questionnaires
                           INNER JOIN questionnaire_assignments ON (questionnaire_assignments.questionnaire_id = questionnaires.questionnaire_id)
                       WHERE questionnaires.visible = '1'

@@ -33,7 +33,7 @@ class CoreOverview implements StudipModule {
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$course_id));
             $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?cid='.$course_id));
 
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && $GLOBALS['perm']->have_perm('admin')) {
+            if ($GLOBALS['perm']->have_studip_perm('admin', $course_id)) {
                 $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'dispatch.php/institute/basicdata/index?new_inst=TRUE'));
             }
         } else {
@@ -42,7 +42,7 @@ class CoreOverview implements StudipModule {
                 $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/details/'));
             }
 
-            if (!$course->admission_binding && !$GLOBALS['perm']->have_studip_perm('tutor', $course_id) ) {
+            if (!$course->admission_binding && in_array($GLOBALS['perm']->get_studip_perm($course_id), array('user','autor')) ) {
                 $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'dispatch.php/my_courses/decline/'.$course_id.'?cmd=suppose_to_kill'));
             }
         }

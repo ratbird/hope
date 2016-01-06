@@ -15,7 +15,7 @@
             $results[] = 0;
             $results_users[] = array();
         }
-        foreach ($vote->answers as $answer) {
+        foreach ($answers as $answer) {
             if ($data['multiplechoice']) {
                 foreach ($answer['answerdata']['answers'] as $a) {
                     $results[(int) $a - 1]++;
@@ -63,7 +63,9 @@
                 <strong><?= htmlReady($option) ?></strong>
             </td>
             <td style="white-space: nowrap;">
-            (<?= count($vote->answers) ? round((int) $results[$key] / count($vote->answers) * 100) : 0 ?>% | <?= (int) $results[$key] ?>/<?= count($vote->answers) ?>)
+                <? $countAnswers = $vote->questionnaire->countAnswers() ?>
+                (<?= $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>%
+                | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
             </td>
             <td width="50%">
                 <? if (!$vote->questionnaire['anonymous'] && $results[$key]) : ?>

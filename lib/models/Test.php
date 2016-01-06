@@ -56,9 +56,18 @@ class Test extends QuestionnaireQuestion implements QuestionType
 
     public function getResultTemplate($only_user_ids = null)
     {
+        $answers = $this->answers;
+        if ($only_user_ids !== null) {
+            foreach ($answers as $key => $answer) {
+                if (!in_array($answer['user_id'], $only_user_ids)) {
+                    unset($answers[$key]);
+                }
+            }
+        }
         $tf = new Flexi_TemplateFactory(realpath(__DIR__."/../../app/views"));
         $template = $tf->open("questionnaire/question_types/test/test_evaluation.php");
         $template->set_attribute('vote', $this);
+        $template->set_attribute('answers', $answers);
         return $template;
     }
 

@@ -138,14 +138,16 @@ class StudipKing {
 
     private static function votes_kings()
     {
-        return self::select_kings("SELECT author_id AS id, COUNT(*) AS num FROM vote ".
-            "LEFT JOIN vote_user ON (vote.vote_id = vote_user.vote_id) ".
-            "GROUP BY author_id");
+        return self::select_kings("SELECT questionnaires.user_id AS id, COUNT(*) AS num
+            FROM questionnaires
+                LEFT JOIN questionnaire_questions ON (questionnaires.questionnaire_id = questionnaire_questions.questionnaire_id)
+                LEFT JOIN questionnaire_answers ON (questionnaire_questions.question_id = questionnaire_answers.question_id)
+            GROUP BY questionnaires.user_id");
     }
 
     private static function voter_kings()
     {
-        return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM vote_user GROUP BY user_id");
+        return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM questionnaire_answers GROUP BY user_id");
     }
 
     private static function news_kings()

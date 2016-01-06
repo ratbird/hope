@@ -62,10 +62,11 @@ class Score
 
         // Votes
         if (get_config('VOTE_ENABLE')){
-            $query = "SELECT range_id as user_id, COUNT(*) AS votecount
-                      FROM vote
-                      WHERE range_id IN (?)
-                      GROUP BY range_id
+            $query = "SELECT questionnaire_assignments.range_id as user_id, COUNT(*) AS votecount
+                      FROM questionnaire_assignments
+                      WHERE questionnaire_assignments.range_id IN (?)
+                          AND questionnaire_assignments.range_type = 'user'
+                      GROUP BY questionnaire_assignments.range_id
                       ORDER BY NULL";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user_ids));
@@ -206,16 +207,14 @@ class Score
             'user_id_column' => "autor_id"
         );
         $tables[] = array(
-            'table' => "vote",
-            'user_id_column' => "range_id"
+            'table' => "questionnaires"
         );
         $tables[] = array(
-            'table' => "voteanswers_user",
-            'date_column' => "votedate"
+            'table' => "questionnaire_answers",
+            'date_column' => "chdate"
         );
         $tables[] = array(
-            'table' => "vote_user",
-            'date_column' => "votedate"
+            'table' => "questionnaire_anonymous_answers"
         );
         $tables[] = array(
             'table' => "wiki",

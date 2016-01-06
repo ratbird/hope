@@ -120,7 +120,7 @@
                     <li <? if ($nav->isActive()) echo 'class="active"'; ?>>
                         <a
                             <? if (is_internal_url($url = $nav->getURL())) : ?>
-                                href="<?= URLHelper::getLink($url, $link_params) ?>"
+                                href="<?= URLHelper::getLink($url) ?>"
                             <? else: ?>
                                 href="<?= htmlReady($url) ?>" target="_blank"
                             <? endif; ?>

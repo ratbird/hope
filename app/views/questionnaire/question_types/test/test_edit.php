@@ -1,16 +1,18 @@
 <label>
     <?= _("Frage") ?>
-    <textarea name="questions[<?= $vote->getId() ?>][questiondata][question]" class="size-l"><?= htmlReady($vote['questiondata']['question']) ?></textarea>
+    <textarea name="questions[<?= $vote->getId() ?>][questiondata][question]" class="size-l"><?=
+        isset($vote['questiondata']['question']) ? htmlReady($vote['questiondata']['question']) : ""
+        ?></textarea>
 </label>
 
 
 <ol class="clean options" data-optiontemplate="<?= htmlReady($this->render_partial("questionnaire/question_types/test/_option.php", array('vote' => $vote, 'option' => ""))) ?>"><?
-    if ($vote['questiondata']['options']) {
+    if (isset($vote['questiondata']['options'])) {
         foreach ($vote['questiondata']['options'] as $index => $option) {
             echo $this->render_partial("questionnaire/question_types/test/_option.php", array('vote' => $vote, 'option' => $option, 'index' => $index));
         }
     }
-    echo $this->render_partial("questionnaire/question_types/test/_option.php", array('vote' => $vote, 'option' => "", 'index' => $index + 1, 'forcecorrect' => count((array) $vote['questiondata']['options']) === 0));
+    echo $this->render_partial("questionnaire/question_types/test/_option.php", array('vote' => $vote, 'option' => "", 'index' => $index + 1, 'forcecorrect' => (!isset($vote['questiondata']['options']) || (count($vote['questiondata']['options']) === 0))));
 ?></ol>
 
 <div style="padding-left: 13px; margin-bottom: 20px;">
@@ -23,7 +25,7 @@
 </label>
 
 <label>
-    <input type="checkbox" name="questions[<?= $vote->getId() ?>][questiondata][randomize]" value="1"<?= $vote->isNew() || $vote['questiondata']['randomize'] ? " checked" : "" ?>>
+    <input type="checkbox" name="questions[<?= $vote->getId() ?>][questiondata][randomize]" value="1"<?= !isset($vote['questiondata']['randomize']) || $vote['questiondata']['randomize'] ? " checked" : "" ?>>
     <?= _("Antworten den Teilnehmenden zufällig präsentieren.") ?>
 </label>
 

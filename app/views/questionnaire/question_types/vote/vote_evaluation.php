@@ -60,7 +60,7 @@
     <? foreach ($vote['questiondata']['options'] as $key => $option) : ?>
         <tr>
             <td style="text-align: right;" width="50%">
-                <strong><?= htmlReady($option) ?></strong>
+                <strong><?= formatReady($option) ?></strong>
             </td>
             <td style="white-space: nowrap;">
                 <? $countAnswers = $vote->questionnaire->countAnswers() ?>

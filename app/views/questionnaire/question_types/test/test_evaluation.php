@@ -63,7 +63,7 @@ $data = $vote['questiondata']->getArrayCopy();
     <? foreach ($vote['questiondata']['options'] as $key => $option) : ?>
         <tr class="<?= $data['correctanswer'] ? "correct" : "incorrect" ?>">
             <td style="text-align: right;" width="50%">
-                <strong><?= htmlReady($option) ?></strong>
+                <strong><?= formatReady($option) ?></strong>
                 <? if (in_array($key + 1, $data['correctanswer'])) : ?>
                     <?= Assets::img("icons/16/green/checkbox-checked", array('class' => "text-bottom", 'title' =>  _("Diese Antwort ist richtig"))) ?>
                 <? else : ?>

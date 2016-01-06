@@ -18,7 +18,7 @@
         </nav>
     </header>
     <section>
-        <? if ($questionnaire->isAnswered()) : ?>
+        <? if ($questionnaire->isAnswered() || $questionnaire->isStopped()) : ?>
             <?= $this->render_partial('questionnaire/evaluate.php', array('questionnaire' => $questionnaire, 'range_type' => $range_type, 'range_id' => $range_id)); ?>
         <? else : ?>
             <?= $this->render_partial('questionnaire/answer.php', array('questionnaire' => $questionnaire, 'range_type' => $range_type, 'range_id' => $range_id)); ?>

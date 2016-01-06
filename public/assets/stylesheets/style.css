@@ -3007,16 +3007,16 @@ section.contentbox table.default {
 section.contentbox table.default tbody tr:last-child td {
   border-bottom: none;
 }
-section.contentbox article {
+section.contentbox > article {
   border-color: #d0d7e3;
   border-style: solid;
   border-width: 1px;
   margin: 10px;
 }
-section.contentbox article > p,
-section.contentbox article > section,
-section.contentbox article > footer,
-section.contentbox article > div {
+section.contentbox > article > p,
+section.contentbox > article > section,
+section.contentbox > article > footer,
+section.contentbox > article > div {
   max-height: 0px;
   opacity: 0;
   overflow: auto;
@@ -3025,43 +3025,43 @@ section.contentbox article > div {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
-section.contentbox article > p,
-section.contentbox article > footer,
-section.contentbox article > div {
+section.contentbox > article > p,
+section.contentbox > article > footer,
+section.contentbox > article > div {
   padding: 0 10px 0 10px;
 }
-section.contentbox article div,
-section.contentbox article p {
+section.contentbox > article div,
+section.contentbox > article p {
   margin: 0;
 }
-section.contentbox article section {
+section.contentbox > article section {
   border-width: 0;
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
 }
-section.contentbox article section article {
+section.contentbox > article section article {
   border: none;
 }
-section.contentbox article section header {
+section.contentbox > article section header {
   background: transparent;
 }
-section.contentbox article section header h1 {
+section.contentbox > article section header h1 {
   text-align: center;
   font-size: small;
   width: 100%;
   font-weight: bold;
   color: black;
 }
-section.contentbox article section > article {
+section.contentbox > article section > article {
   padding: 5px;
 }
-section.contentbox article section article time {
+section.contentbox > article section article time {
   float: right;
   font-size: smaller;
   margin: 2px;
 }
-section.contentbox article header h1 a::before {
+section.contentbox > article header h1 a::before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -3075,40 +3075,40 @@ section.contentbox article header h1 a::before {
   vertical-align: text-top;
   width: 16px;
 }
-section.contentbox article header h1 a:before {
+section.contentbox > article header h1 a:before {
   -webkit-transition: all 200ms ease 0s;
   -moz-transition: all 200ms ease 0s;
   -o-transition: all 200ms ease 0s;
   transition: all 200ms ease 0s;
   margin-top: 2px;
 }
-section.contentbox article header nav * {
+section.contentbox > article header nav * {
   display: inline-block;
   vertical-align: middle;
 }
-section.contentbox article header nav span {
+section.contentbox > article header nav span {
   display: inline-block;
   border-right: 1px solid #899bba;
   padding: 0px 5px;
 }
-section.contentbox article header nav span:last-child {
+section.contentbox > article header nav span:last-child {
   border-right: none;
   padding-right: 0px;
 }
-section.contentbox article footer {
+section.contentbox > article footer {
   text-align: center;
   border-color: #d0d7e3;
   border-top-style: none;
   border-width: 1px;
   background-color: white;
 }
-section.contentbox article footer h1 {
+section.contentbox > article footer h1 {
   font-size: 1em;
   font-weight: bold;
   border: none;
   padding: 0;
 }
-section.contentbox article footer article.comment {
+section.contentbox > article footer article.comment {
   border: 0;
   border-top: 1px solid #c5c7ca;
   max-width: 1260px;
@@ -3116,15 +3116,15 @@ section.contentbox article footer article.comment {
   margin-bottom: 4px;
   text-align: left;
 }
-section.contentbox article footer article.comment h1 {
+section.contentbox > article footer article.comment h1 {
   margin-bottom: 0px;
 }
-section.contentbox article footer article.comment time {
+section.contentbox > article footer article.comment time {
   float: right;
   font-size: 0.8em;
   color: #c5c7ca;
 }
-section.contentbox article:not(.open) header ~ * {
+section.contentbox > article:not(.open) header ~ * {
   max-height: 0px;
   opacity: 0;
   overflow: auto;
@@ -3133,10 +3133,10 @@ section.contentbox article:not(.open) header ~ * {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
-section.contentbox article.open > p,
-section.contentbox article.open > section,
-section.contentbox article.open > footer,
-section.contentbox article.open > div {
+section.contentbox > article.open > p,
+section.contentbox > article.open > section,
+section.contentbox > article.open > footer,
+section.contentbox > article.open > div {
   max-height: none;
   opacity: 1;
   -webkit-transition: opacity 0.3s;
@@ -3144,17 +3144,17 @@ section.contentbox article.open > div {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
-section.contentbox article.open footer {
+section.contentbox > article.open footer {
   border-top-style: solid;
 }
-section.contentbox article.open header h1 a::before {
+section.contentbox > article.open header h1 a::before {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-section.contentbox article.new header h1 a::before {
+section.contentbox > article.new header h1 a::before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -6879,6 +6879,9 @@ div#studyareas {
   clear: left;
   float: left;
   padding-right: 0.5em;
+}
+.smiley-statistics dt::after {
+  content: ':';
 }
 .smiley-statistics dd {
   font-weight: 700;

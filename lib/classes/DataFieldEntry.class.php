@@ -177,7 +177,7 @@ abstract class DataFieldEntry
 
         $where = implode(' AND ', $conditions);
 
-        return DataFieldEntryModel::deleteBySQL($where, $parameters);
+        return DatafieldEntryModel::deleteBySQL($where, $parameters);
     }
 
     public $value;

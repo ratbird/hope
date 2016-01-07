@@ -5,12 +5,11 @@ $data = $vote['questiondata']->getArrayCopy();
     <?= Assets::img("icons/20/black/test", array('class' => "text-bottom")) ?>
     <?= formatReady($vote['questiondata']['question']) ?>
 </h3>
-<? if (count($vote->answers) > 0) : ?>
+<? if (count($vote->answers) > 0 && count($data['options']) > 0) : ?>
     <div style="max-height: none; opacity: 1;" id="questionnaire_<?= $vote->getId() ?>_chart" class="ct-chart"></div>
     <script>
     <?= Request::isAjax() ? 'jQuery(document).one("dialog-open", function () {' : 'jQuery(function () {' ?>
         <?
-
         $results = array();
         $results_users = array();
         $users = array();

@@ -1,20 +1,4 @@
 <?php
-# Lifter010: TODO
-/*
- * studygroup.php - contains Course_StudygroupController
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      André Klaßen <andre.klassen@elan-ev.de>
- * @copyright   2009-2010 ELAN e.V.
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @package     studygroup
- * @since       1.10
- */
 
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
@@ -49,7 +33,6 @@ class Course_StudygroupController extends AuthenticatedController
         }
 
         Sidebar::get()->setImage('sidebar/studygroup-sidebar.png');
-        $this->set_layout('course/studygroup/layout');
     }
 
     /**
@@ -686,9 +669,10 @@ class Course_StudygroupController extends AuthenticatedController
      * @return void
      *
      */
-    function members_action($id, $page = 1)
+    function members_action()
     {
-        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _("Teilnehmende"));
+        $id = $_SESSION['SessionSeminar'];
+        PageLayout::setTitle(getHeaderLine($_SESSION['SessionSeminar']) . ' - ' . _("Teilnehmende"));
         Navigation::activateItem('/course/members');
         PageLayout::setHelpKeyword('Basis.StudiengruppenBenutzer');
 
@@ -696,17 +680,10 @@ class Course_StudygroupController extends AuthenticatedController
 
         object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($id, 'participants');
-        $this->view           = Request::get('view', 'gallery');
         $sem                  = Course::find($id);
-        $this->page           = $page;
         $this->anzahl         = StudygroupModel::countMembers($id);
 
-        if ($this->page < 1 || $this->page > ceil($this->anzahl / Config::get()->ENTRIES_PER_PAGE)) {
-            $this->page = 1;
-        }
-        $this->lower_bound = ($this->page - 1) * Config::get()->ENTRIES_PER_PAGE;
-
-        $cmembers       = StudygroupModel::getMembers($id, $this->lower_bound, $this->view == 'list' ? 'all' : Config::get()->ENTRIES_PER_PAGE);
+        $cmembers       = StudygroupModel::getMembers($id, 0, 'all');
         $this->cmembers = $cmembers;
         uasort($this->cmembers, 'StudygroupModel::compare_status');
 
@@ -716,10 +693,8 @@ class Course_StudygroupController extends AuthenticatedController
         $this->moderators       = $sem->getMembersWithStatus('dozent');
         $this->tutors           = $sem->getMembersWithStatus('tutor');
         $this->accepted         = $sem->admission_applicants->findBy('status', 'accepted');
-        if ($this->view == 'list') {
-            $this->cmembers = array_diff_key($cmembers, $this->moderators);
-            $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
-        }
+        $this->cmembers = array_diff_key($cmembers, $this->moderators);
+        $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
 
         $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
                                          . "FROM auth_user_md5 "
@@ -734,13 +709,6 @@ class Course_StudygroupController extends AuthenticatedController
                                          . "ORDER BY fullname ASC",
             _("Nutzer suchen"), "user_id");
         $this->rechte    = $GLOBALS['perm']->have_studip_perm("tutor", $id);
-
-        $views = new ViewsWidget();
-        $views->addLink(_('Galerie'), $this->url_for('course/studygroup/members/' . $id, array('view' => 'gallery')))->setActive($this->view == 'gallery');
-        $views->addLink(_('Liste'), $this->url_for('course/studygroup/members/' . $id, array('view' => 'list')))->setActive($this->view == 'list');
-
-        Sidebar::get()->addWidget($views);
-
 
         if ($this->rechte) {
             $actions = new ActionsWidget();

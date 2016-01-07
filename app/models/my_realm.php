@@ -409,6 +409,7 @@ class MyRealmModel
                 LEFT JOIN object_user_visits ON(object_user_visits.object_id = questionnaires.questionnaire_id AND object_user_visits.user_id = :user_id AND object_user_visits.type = 'vote')
             WHERE questionnaire_assignments.range_id = :course_id
                 AND questionnaire_assignments.range_type = 'course'
+                AND questionnaires.visible = '1'
             GROUP BY questionnaire_assignments.range_id
         ");
         $statement->execute(array(

@@ -57,14 +57,15 @@
 
 <table class="default nohover">
     <tbody>
+    <? $countAnswers = $vote->questionnaire->countAnswers() ?>
     <? foreach ($vote['questiondata']['options'] as $key => $option) : ?>
         <tr>
-            <td style="text-align: right; background-size: <?= $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
+            <? $percentage = $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>
+            <td style="text-align: right; background-size: <?= $percentage ?>% 100%; background-position: right center; background-image: url('<?= Assets::image_path("vote_lightgrey.png") ?>'); background-repeat: no-repeat;" width="50%">
                 <strong><?= formatReady($option) ?></strong>
             </td>
             <td style="white-space: nowrap;">
-                <? $countAnswers = $vote->questionnaire->countAnswers() ?>
-                (<?= $countAnswers ? round((int) $results[$key] / $countAnswers * 100) : 0 ?>%
+                (<?= $percentage ?>%
                 | <?= (int) $results[$key] ?>/<?= $countAnswers ?>)
             </td>
             <td width="50%">

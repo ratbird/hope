@@ -1,5 +1,28 @@
 <?
 $data = $vote['questiondata']->getArrayCopy();
+$results = array();
+$results_users = array();
+$users = array();
+foreach ($data['options'] as $option) {
+    $results[] = 0;
+    $results_users[] = array();
+}
+if (count($data['options']) > 0) {
+    foreach ($answers as $answer) {
+        if ($data['multiplechoice']) {
+            foreach ($answer['answerdata']['answers'] as $a) {
+                $results[(int)$a - 1]++;
+                $results_users[(int)$a - 1][] = $answer['user_id'];
+                $users[] = $answer['user_id'];
+            }
+        } else {
+            $results[(int)$answer['answerdata']['answers'] - 1]++;
+            $results_users[(int)$answer['answerdata']['answers'] - 1][] = $answer['user_id'];
+            $users[] = $answer['user_id'];
+        }
+    }
+}
+$users = array_unique($users);
 ?>
 <h3>
     <?= Assets::img("icons/20/black/test", array('class' => "text-bottom")) ?>
@@ -9,29 +32,7 @@ $data = $vote['questiondata']->getArrayCopy();
     <div style="max-height: none; opacity: 1;" id="questionnaire_<?= $vote->getId() ?>_chart" class="ct-chart"></div>
     <script>
     <?= Request::isAjax() ? 'jQuery(document).one("dialog-open", function () {' : 'jQuery(function () {' ?>
-        <?
-        $results = array();
-        $results_users = array();
-        $users = array();
-        foreach ($data['options'] as $option) {
-            $results[] = 0;
-            $results_users[] = array();
-        }
-        foreach ($answers as $answer) {
-            if ($data['multiplechoice']) {
-                foreach ((array) $answer['answerdata']['answers'] as $a) {
-                    $results[(int) $a - 1]++;
-                    $results_users[(int) $a - 1][] = $answer['user_id'];
-                    $users[] = $answer['user_id'];
-                }
-            } else {
-                $results[(int) $answer['answerdata']['answers'] - 1]++;
-                $results_users[(int) $answer['answerdata']['answers'] - 1][] = $answer['user_id'];
-                $users[] = $answer['user_id'];
-            }
-        }
-        $users = array_unique($users);
-        ?>
+
         var data = {
             labels: <?= json_encode(studip_utf8encode($data['options'])) ?>,
             series: [<?= json_encode(studip_utf8encode($results)) ?>]

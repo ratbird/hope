@@ -1,3 +1,38 @@
+<?
+$data = $vote['questiondata']->getArrayCopy();
+$results = array();
+$results_users = array();
+foreach ($data['options'] as $option) {
+    $results[] = 0;
+    $results_users[] = array();
+}
+if (count($data['options']) > 0) {
+    foreach ($answers as $answer) {
+        if ($data['multiplechoice']) {
+            foreach ($answer['answerdata']['answers'] as $a) {
+                $results[(int) $a - 1]++;
+                $results_users[(int) $a - 1][] = $answer['user_id'];
+            }
+        } else {
+            $results[(int) $answer['answerdata']['answers'] - 1]++;
+            $results_users[(int) $answer['answerdata']['answers'] - 1][] = $answer['user_id'];
+        }
+    }
+}
+
+$ordered_results = $results;
+arsort($ordered_results);
+$ordered_options = array();
+$ordered_users = array();
+foreach ($ordered_results as $index => $value) {
+    if ($value > 0) {
+        $ordered_options[] = $data['options'][$index];
+    } else {
+        unset($ordered_results[$index]);
+    }
+}
+rsort($ordered_results);
+?>
 <h3>
     <?= Assets::img("icons/20/black/vote", array('class' => "text-bottom")) ?>
     <?= formatReady($vote['questiondata']['question']) ?>
@@ -7,40 +42,6 @@
     <div style="max-height: none; opacity: 1;" id="questionnaire_<?= $vote->getId() ?>_chart" class="ct-chart"></div>
     <script>
     <?= Request::isAjax() ? 'jQuery(document).add(".questionnaire_results").one("dialog-open", function () {' : 'jQuery(function () {' ?>
-        <?
-        $data = $vote['questiondata']->getArrayCopy();
-        $results = array();
-        $results_users = array();
-        foreach ($data['options'] as $option) {
-            $results[] = 0;
-            $results_users[] = array();
-        }
-        foreach ($answers as $answer) {
-            if ($data['multiplechoice']) {
-                foreach ((array) $answer['answerdata']['answers'] as $a) {
-                    $results[(int) $a - 1]++;
-                    $results_users[(int) $a - 1][] = $answer['user_id'];
-                }
-            } else {
-                $results[(int) $answer['answerdata']['answers'] - 1]++;
-                $results_users[(int) $answer['answerdata']['answers'] - 1][] = $answer['user_id'];
-            }
-        }
-
-        $ordered_results = $results;
-        arsort($ordered_results);
-        $ordered_options = array();
-        $ordered_users = array();
-        foreach ($ordered_results as $index => $value) {
-            if ($value > 0) {
-                $ordered_options[] = $data['options'][$index];
-            } else {
-                unset($ordered_results[$index]);
-            }
-        }
-        rsort($ordered_results);
-
-        ?>
         var data = {
             labels: <?= json_encode(studip_utf8encode($ordered_options)) ?>,
             series: [<?= json_encode(studip_utf8encode($ordered_results)) ?>]

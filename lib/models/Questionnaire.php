@@ -114,9 +114,9 @@ class Questionnaire extends SimpleORMap
         if ($this->isEditable()) {
             return true;
         }
-        $answerable = true;
+        $this->answerable = true;
         NotificationCenter::postNotification("QuestionnaireWillAllowToAnswer", $this);
-        return $answerable;
+        return $this->answerable;
     }
 
     public function isEditable()

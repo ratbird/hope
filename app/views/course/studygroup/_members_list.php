@@ -3,7 +3,7 @@
         <col width="40">
         <col>
         <? if (!$moderator_list) : ?>
-            <col width="30">
+            <col width="80">
         <? endif ?>
     </colgroup>
     <caption>
@@ -41,7 +41,7 @@
                     <td class="actions">
                         <a href="<?= $controller->url_for('messages/write', array('rec_uname' => $m['username'])) ?>"
                            data-dialog="size=50%">
-                            <?= Icon::create('mail', 'clickable', ['title' => _('Nachricht schreiben')])->asImg() ?>
+                            <?= Icon::create('mail', 'clickable', ['title' => _('Nachricht schreiben')])->asImg(20) ?>
                         </a>
                         <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent') || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
                             <?= $this->render_partial('course/studygroup/_members_options.php', compact('m')) ?>

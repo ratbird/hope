@@ -9,6 +9,7 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
         "disapprovalLink" => $controller->url_for('course/studygroup/members/' . $sem_id . '/' . $page),
     ));
 }
+$view = count($moderators) + count($tutors) + count($cmembers) >= 50 ? "list" : "gallery";
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback", compact('anzahl', 'page', 'sem_id')) ?>

@@ -123,8 +123,12 @@ class StEP00294InnoDB extends Migration
 
             // Now convert the found tables.
             foreach ($tables as $t) {
-                $stmt->bindParam(':table', $t, StudipPDO::PARAM_COLUMN);
-                $stmt->execute();
+                try {
+                    $stmt->bindParam(':table', $t, StudipPDO::PARAM_COLUMN);
+                    $stmt->execute();
+                } catch (Exception $e) {
+                    throw new Exception('Error while migrating table "' . $t . '", error: ' . $e->getMessage());
+                }
             }
 
 

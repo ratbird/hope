@@ -17,7 +17,7 @@
         }
         foreach ($answers as $answer) {
             if ($data['multiplechoice']) {
-                foreach ($answer['answerdata']['answers'] as $a) {
+                foreach ((array) $answer['answerdata']['answers'] as $a) {
                     $results[(int) $a - 1]++;
                     $results_users[(int) $a - 1][] = $answer['user_id'];
                 }

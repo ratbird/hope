@@ -19,7 +19,7 @@
                    data-dialog="size=50%">
                     <?= Icon::create('mail', 'clickable', ['title' => _('Nachricht schreiben')])->asImg(20) ?>
                 </a>
-                <? if (($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['status'] != 'dozent') || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && count($members) > 1) : ?>
                     <?= $this->render_partial('course/studygroup/_members_options.php', compact('m')) ?>
                 <? endif ?>
             </div>

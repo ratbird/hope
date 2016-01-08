@@ -43,7 +43,7 @@ $view = count($moderators) + count($tutors) + count($autors) >= 50 ? "list" : "g
 
 
 
-<? if ($rechte && $view == 'list') : ?>
+<? if ($rechte) : ?>
     <? if (count($accepted) > 0) : ?>
         <table class="default sortable-table">
             <caption><?= _('Offene Mitgliedsanträge') ?></caption>

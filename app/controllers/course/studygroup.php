@@ -770,10 +770,13 @@ class Course_StudygroupController extends AuthenticatedController
                     } elseif ($action == 'remove') {
                         $this->flash['question']  = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
                         $this->flash['candidate'] = $user;
-
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
                         StudygroupModel::remove_user($user, $id);
                         $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user, 'full', true));
+                    } elseif ($action === "downgrade" && $perm->have_studip_perm('dozent', $id)) {
+                        $status = $perm->have_studip_perm('dozent', $id, get_userid($user)) ? "tutor" : "autor";
+                        StudygroupModel::promote_user($user, $id, $status);
+                        $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     }
                 } else {
                     $this->flash['messages'] = array(

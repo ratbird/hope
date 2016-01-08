@@ -10,7 +10,7 @@
         <li>
             <div>
                 <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
-                    <?= Avatar::getAvatar($user_id)->getImageTag(Avatar::MEDIUM, $options) ?>
+                    <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, $options) ?>
                 </a>
             </div>
 

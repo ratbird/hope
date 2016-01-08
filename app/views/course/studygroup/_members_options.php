@@ -4,8 +4,8 @@
     </a>
 <? endif ?>
 
-<? if($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && !array_key_exists($m['user_id'], $moderators)) : ?>
-    <a href="<?=$controller->url_for('course/studygroup/edit_members/'.$sem_id.'/promote/tutor?user='.$m['username'])?>">
+<? if($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && !$GLOBALS['perm']->have_studip_perm('dozent', $sem_id, $m['user_id'])) : ?>
+    <a href="<?=$controller->url_for('course/studygroup/edit_members/'.$sem_id.'/promote?user='.$m['username'])?>">
         <?= Icon::create('arr_2up', 'clickable', ['title' => _('Hochstufen')])->asImg(20)?>
     </a>
 <? endif ?>

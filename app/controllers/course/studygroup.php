@@ -760,11 +760,13 @@ class Course_StudygroupController extends AuthenticatedController
                 StudygroupModel::cancelInvitation($user, $id);
                 $this->flash['success'] = sprintf(_("Die Einladung des Nutzers %s wurde gelöscht."), get_fullname_from_uname($user, 'full', true));
             } elseif ($perm->have_studip_perm('tutor', $id)) {
-                if (!$perm->have_studip_perm('dozent', $id, get_userid($user))) {
-                    if ($action == 'promote' && $status != 'dozent' && $perm->have_studip_perm('dozent', $id)) {
+                if (!$perm->have_studip_perm('dozent', $id, get_userid($user)) || count(Course::find($id)->getMembersWithStatus('dozent')) > 1) {
+                    if ($action == 'promote' && $perm->have_studip_perm('dozent', $id)) {
+                        $status = $perm->have_studip_perm('tutor', $id, get_userid($user)) ? "dozent" : "tutor";
                         StudygroupModel::promote_user($user, $id, $status);
                         $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
-                    } elseif ($action == 'promote' && $status == 'autor' && $perm->have_studip_perm('tutor', $id) && $GLOBALS['auth']->auth['uname'] == $user) {
+                    } elseif ($action === "downgrade" && $perm->have_studip_perm('dozent', $id)) {
+                        $status = $perm->have_studip_perm('dozent', $id, get_userid($user)) ? "tutor" : "autor";
                         StudygroupModel::promote_user($user, $id, $status);
                         $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     } elseif ($action == 'remove') {
@@ -773,10 +775,6 @@ class Course_StudygroupController extends AuthenticatedController
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
                         StudygroupModel::remove_user($user, $id);
                         $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user, 'full', true));
-                    } elseif ($action === "downgrade" && $perm->have_studip_perm('dozent', $id)) {
-                        $status = $perm->have_studip_perm('dozent', $id, get_userid($user)) ? "tutor" : "autor";
-                        StudygroupModel::promote_user($user, $id, $status);
-                        $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     }
                 } else {
                     $this->flash['messages'] = array(

@@ -9,29 +9,38 @@ if (isset($flash['question']) && isset($flash['candidate'])) {
         "disapprovalLink" => $controller->url_for('course/studygroup/members/' . $sem_id . '/' . $page),
     ));
 }
-$view = count($moderators) + count($tutors) + count($cmembers) >= 50 ? "list" : "gallery";
+$view = count($moderators) + count($tutors) + count($autors) >= 50 ? "list" : "gallery";
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback", compact('anzahl', 'page', 'sem_id')) ?>
 
-<? if ($view == 'list') : ?>
-    <? if (!empty($moderators)) : ?>
-        <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' => _('GruppengründerIn'), 'sem_id' => $sem_id, 'members' => $moderators, 'moderator_list' => true)) ?>
-    <? endif ?>
+<? $partial = $view == 'list' ? 'course/studygroup/_members_list.php' : 'course/studygroup/gallery.php' ?>
 
-    <? if (!empty($tutors)) : ?>
-        <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' => _('ModeratorIn'), 'sem_id' => $sem_id, 'members' => $tutors)) ?>
-    <? endif ?>
-
-    <? if (!empty($cmembers)) : ?>
-        <?= $this->render_partial('course/studygroup/_members_list.php',
-            array('title' => _('Mitglieder'), 'sem_id' => $sem_id, 'members' => $cmembers)) ?>
-    <? endif ?>
-<? else : ?>
-    <?= $this->render_partial('course/studygroup/gallery.php') ?>
+<? if (!empty($moderators)) : ?>
+    <?= $this->render_partial($partial, array(
+        'title' => $sem_class['title_dozent_plural'] ?: _("Gruppengründer/-innen"),
+        'sem_id' => $sem_id,
+        'members' => $moderators,
+        'moderator_list' => true
+    )) ?>
 <? endif ?>
+
+<? if (!empty($tutors)) : ?>
+    <?= $this->render_partial($partial, array(
+        'title' => $sem_class['title_tutor_plural'] ?: _("Moderator/-innen"),
+        'sem_id' => $sem_id,
+        'members' => $tutors
+    )) ?>
+<? endif ?>
+
+<? if (!empty($autors)) : ?>
+    <?= $this->render_partial($partial, array(
+        'title' => $sem_class['title_autor_plural'] ?: _("Mitglieder"),
+        'sem_id' => $sem_id,
+        'members' => $autors
+    )) ?>
+<? endif ?>
+
 
 
 <? if ($rechte && $view == 'list') : ?>

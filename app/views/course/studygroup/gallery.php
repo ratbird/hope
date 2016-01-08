@@ -1,12 +1,12 @@
-<h1><?= _('Mitglieder') ?></h1>
+<h3><?= htmlReady($title) ?></h3>
 
 <ul class="studygroup-gallery">
-    <? foreach ($cmembers as $user_id => $m) : ?>
+    <? foreach ($members as $user_id => $m) : ?>
+        <? $fullname = $m instanceof CourseMember ? $m->user->getFullname('no_title_rev') : $m['fullname']?>
         <? ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
             ? $options = array('style' => 'border: 3px solid rgb(255, 100, 100);'
                 . 'border: 1px solid rgba(255, 0, 0, 0.5)')
             : $options = array() ?>
-        <? $this->m = $m ?>
         <li>
             <div>
                 <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
@@ -26,12 +26,7 @@
 
             <div style="font-size: 0.8em;">
                 <a href="<?= $controller->url_for('profile', array('username' => $m['username'])) ?>">
-                    <?= htmlReady($m['fullname']) ?>
-                    <? if (isset($moderators[$user_id])) : ?>
-                        <p><em><?= _("GruppengründerIn") ?></em></p>
-                    <? elseif (isset($tutors[$user_id])) : ?>
-                        <p><em><?= _("ModeratorIn") ?></em></p>
-                    <? endif ?>
+                    <?= $fullname ? htmlReady($fullname) : _("unbekannt") ?>
                 </a>
             </div>
         </li>

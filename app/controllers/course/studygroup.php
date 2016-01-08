@@ -683,18 +683,14 @@ class Course_StudygroupController extends AuthenticatedController
         $sem                  = Course::find($id);
         $this->anzahl         = StudygroupModel::countMembers($id);
 
-        $cmembers       = StudygroupModel::getMembers($id, 0, 'all');
-        $this->cmembers = $cmembers;
-        uasort($this->cmembers, 'StudygroupModel::compare_status');
-
         $this->groupname        = $sem->getFullname();
         $this->sem_id           = $id;
         $this->groupdescription = $sem->beschreibung;
         $this->moderators       = $sem->getMembersWithStatus('dozent');
         $this->tutors           = $sem->getMembersWithStatus('tutor');
+        $this->autors           = $sem->getMembersWithStatus('autor');
         $this->accepted         = $sem->admission_applicants->findBy('status', 'accepted');
-        $this->cmembers = array_diff_key($cmembers, $this->moderators);
-        $this->cmembers = array_diff_key($this->cmembers, $this->tutors);
+        $this->sem_class        = Course::findCurrent()->getSemClass();
 
         $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
                                          . "FROM auth_user_md5 "
@@ -713,10 +709,9 @@ class Course_StudygroupController extends AuthenticatedController
         if ($this->rechte) {
             $actions = new ActionsWidget();
             $mp      = MultiPersonSearch::get('studygroup_invite_' . $id)
-                                        ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
-                                        ->setDefaultSelectedUser(array_keys($this->cmembers))
+                                        ->setLinkText(_('Neue Gruppenmitglieder-/innen einladen'))
                                         ->setLinkIconPath("")
-                                        ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
+                                        ->setTitle(_('Neue Gruppenmitglieder/-innen einladen'))
                                         ->setExecuteURL($this->url_for('course/studygroup/execute_invite/' . $id, array('view' => Request::get('view'))))
                                         ->setSearchObject($inviting_search)
                                         ->addQuickfilter(_('Adressbuch'), User::findCurrent()->contacts->pluck('user_id'))

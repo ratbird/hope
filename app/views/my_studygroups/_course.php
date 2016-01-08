@@ -32,7 +32,7 @@
                         UrlHelper::getLink('seminar_main.php',
                             array('auswahl'     => $group['seminar_id'],
                                   'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
-                            <?= $image->asImg(20, $nav->getLinkAttributes()) ?>
+                            <?= $nav->getImage()->asImg(20, $nav->getLinkAttributes()) ?>
                         </a>
                     <? elseif (is_string($key)) : ?>
                         <?= Assets::img('blank.gif', array('width' => 20, 'height' => 20)); ?>

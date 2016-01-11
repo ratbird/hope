@@ -5379,22 +5379,6 @@ div.news_dialog_buttons {
   margin-right: 15px;
   border-top: 1px solid #d1d1d1;
 }
-section.contentbox header nav span.news-comments-count {
-  position: absolute;
-  color: white;
-  background-color: #536d96;
-  border-radius: 10px;
-  font-size: 10px;
-  text-align: center;
-  margin-top: -7px;
-  margin-left: -2px;
-  padding: 0px 4px;
-  line-height: 15px;
-  min-width: 7px;
-}
-section.contentbox header nav span.news-comments-count.news-comments-unread {
-  background-color: #d60000;
-}
 /* --- ablaufplan / dates --------------------------------------------------- */
 .dates_items th,
 .dates_items td {

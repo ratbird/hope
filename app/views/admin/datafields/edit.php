@@ -57,7 +57,7 @@ use Studip\Button, Studip\LinkButton;
         <? else: ?>
             <?= _('Nutzerstatus') ?>:
 
-            <select multiple size="<?= count($controller->user_status) ?>" name="object_class[]" id="object_class">
+            <select multiple size="<?= count($controller->user_status) ?>" name="object_class[]" id="object_class" required>
                 <option value="0" <? if ($item->object_class === null) echo 'selected'; ?>>
                     <?= _('alle') ?>
                 </option>

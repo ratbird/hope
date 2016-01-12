@@ -54,8 +54,8 @@ use Studip\Button, Studip\LinkButton;
                 </option>
             <? endforeach; ?>
         <? else: ?>
-             <select multiple size="7" name="object_class[]">
-                <option value="NULL"><?= _('alle') ?></option>
+             <select multiple size="7" name="object_class[]" required>
+                <option value="NULL" selected><?= _('alle') ?></option>
             <? foreach ($controller->user_status as $perm => $value): ?>
                 <option value="<?= $value ?>"><?= $perm ?></option>
             <? endforeach; ?>

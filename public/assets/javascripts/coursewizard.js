@@ -375,7 +375,7 @@ STUDIP.CourseWizard = {
                 }
             } else {
                 if ($('#assigned li.sem-tree-assigned-' + values.id).length > 0) {
-                    assignLink.css('display', 'none');
+                    assign.css('display', 'none');
                 }
                 item.html(item.html() + values.name);
                 item.addClass('tree-node');

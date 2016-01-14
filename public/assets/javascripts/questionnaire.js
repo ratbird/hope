@@ -103,7 +103,7 @@ STUDIP.Questionnaire = {
             },
             "dataType": "json",
             "success": function (output) {
-                jQuery(output.html).hide().insertBefore(".questionnaire_edit .questionnaire_metadata").show("fade");
+                jQuery(output.html).hide().insertBefore(".questionnaire_edit .add_questions").show("fade");
             }
         });
     }

@@ -22,7 +22,7 @@ class Icon
     const DEFAULT_COLOR = 'blue';
     const DEFAULT_ROLE = 'clickable';
 
-    protected $icon;
+    protected $shape;
     protected $role;
     protected $attributes = array();
 
@@ -110,7 +110,7 @@ class Icon
      *                           this icon regardless of its later
      *                           rendering in a view
      */
-    public function __construct($icon, $role = Icon::DEFAULT_ROLE, $attributes = array())
+    public function __construct($shape, $role = Icon::DEFAULT_ROLE, array $attributes = array())
     {
 
         // only defined roles
@@ -128,14 +128,36 @@ class Icon
             # throw new \InvalidArgumentException('Creating an Icon with non-semantic attributes:' . json_encode($non_semantic));
         }
 
-        $this->icon       = $icon;
+        $this->shape      = $shape;
         $this->role       = $role;
         $this->attributes = $attributes;
+    }
 
-        if (!$this->isStatic()) {
-            $this->icon = preg_replace('/\.(?:png|svg)$/', '', $icon);
-            $this->icon = join('/', array_reverse(explode('+', $this->icon)));
-        }
+    /**
+     * Returns the `shape` -- the string describing the shape of this instance.
+     * @return String  the shape of this Icon
+     */
+    public function getShape()
+    {
+        return $this->shape;
+    }
+
+    /**
+     * Returns the `role` -- the string describing the role of this instance.
+     * @return String  the role of this Icon
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * Returns the semantic `attributes` of this instance, e.g. the title of this Icon
+     * @return Array  the semantic attribiutes of the Icon
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 
     /**
@@ -195,7 +217,7 @@ class Icon
     {
         if ($this->isStatic()) {
             return sprintf('background-image:url(%1$s);background-size:%2$upx %2$upx;',
-                           $this->icon,
+                           $this->shapeToPath($this->shape),
                            $this->get_size($size));
         }
 
@@ -217,6 +239,26 @@ class Icon
     }
 
     /**
+     * Returns a new Icon that contains the mapping of `$key` to `$val`.
+     * @param string  $key  Name of the property, either "shape", "role" or "attributes"
+     * @param mixed   $val  New value of that property
+     * @return Icon  A new Icon containing the mapping of `$key` to `$val`
+     */
+    public function assoc($key, $val)
+    {
+        if (!in_array($key, ['shape', 'role', 'attributes'])) {
+            throw new \BadMethodCallException(
+                sprintf('Unknown key. Method was called with "%s" '.
+                        'but expected either "shape", "role" or "attributes".', $key));
+        }
+
+        extract(get_object_vars($this));
+        $$key = $val;
+
+        return new self($shape, $role, (array) $attributes);
+    }
+
+    /**
      * Prepares the html attributes for use assembling HTML attributes
      * from given shape, role, size, semantic and view attributes
      *
@@ -232,10 +274,20 @@ class Icon
             $dimensions = ['width'  => $size, 'height' => $size];
         }
 
-        return array_merge($this->attributes, $attributes, $dimensions, [
-            'src' => $this->isStatic() ? $this->icon : $this->get_asset_svg(),
-            'alt' => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->icon)
+        $result = array_merge($this->attributes, $attributes, $dimensions, [
+            'src' => $this->isStatic() ? $this->shape : $this->get_asset_svg(),
+            'alt' => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->shape)
         ]);
+
+        $classNames = 'icon-role-' . $this->role;
+
+        if (!$this->isStatic()) {
+            $classNames .= ' icon-shape-' . $this->shape;
+        }
+
+        $result['class'] = isset($result['class']) ? $result['class'] . ' ' . $classNames : $classNames;
+
+        return $result;
     }
 
     /**
@@ -245,7 +297,7 @@ class Icon
      */
     protected function get_asset_svg()
     {
-        return Assets::url('images/icons/' . self::roleToColor($this->role) . '/' . $this->icon . '.svg');
+        return Assets::url('images/icons/' . self::roleToColor($this->role) . '/' . $this->shapeToPath($this->shape) . '.svg');
     }
 
 
@@ -264,7 +316,7 @@ class Icon
             $size *= 2;
         }
 
-        return Assets::url('images/icons/' . $size . '/' . $color . '/' . $this->icon . '.png');
+        return Assets::url('images/icons/' . $size . '/' . $color . '/' . $this->shapeToPath($this->shape) . '.png');
     }
 
     /**
@@ -306,7 +358,15 @@ class Icon
     // an icon is static if it starts with 'http'
     private function isStatic()
     {
-        return strpos($this->icon, 'http') === 0;
+        return strpos($this->shape, 'http') === 0;
+    }
+
+    // transforms a shape w/ possible additions (`shape+addition`) to a path `(addition/)?shape`
+    private function shapeToPath()
+    {
+        return $this->isStatic()
+            ? $this->shape :
+            join('/', array_reverse(explode('+', preg_replace('/\.(?:png|svg)$/', '', $this->shape))));
     }
 }
 

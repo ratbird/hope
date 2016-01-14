@@ -28,7 +28,7 @@
                     <label>
                         <input type="checkbox" name="remove_sem[]" value="<?= htmlReady($assignment['range_id']) ?>" style="display: none;">
                         <span><?= htmlReady(Course::find($assignment['range_id'])->name) ?></span>
-                        <?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom", 'title' => _("Zuweisung zur Veranstaltung aufheben."))) ?>
+                        <?= Icon::create("trash", "clickable")->asimg("20px", array('class' => "text-bottom", 'title' => _("Zuweisung zur Veranstaltung aufheben."))) ?>
                     </label>
                 </li>
             <? endif ?>

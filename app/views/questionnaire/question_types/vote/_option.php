@@ -4,6 +4,6 @@
            name="questions[<?= $vote->getId() ?>][questiondata][options][]"
            value="<?= htmlReady($option) ?>" placeholder="<?= _("Antwort ...") ?>"
            aria-label="<?= _("Geben Sie eine Antwortmöglichkeit zu der von Ihnen gestellten Frage ein.") ?>">
-    <?= Assets::img("icons/20/blue/trash", array('title' => _("Antwort löschen"), 'class' => "delete")) ?>
-    <?= Assets::img("icons/20/blue/add", array('title' => _("Antwort hinzufügen"), 'class' => "add")) ?>
+    <?= Icon::create("trash", "clickable")->asimg("20px", array('class' => "text-bottom delete", 'title' => _("Antwort löschen"))) ?>
+    <?= Icon::create("add", "clickable")->asimg("20px", array('class' => "text-bottom add", 'title' => _("Antwort hinzufügen"))) ?>
 </li>

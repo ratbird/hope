@@ -22,7 +22,7 @@
         <? foreach (get_declared_classes() as $class) :
             if (in_array('QuestionType', class_implements($class))) : ?>
                 <a href="" onClick="STUDIP.Questionnaire.addQuestion('<?= htmlReady($class) ?>'); return false;">
-                    <?= Assets::img($class::getIcon(true, true), array('class' => "text-bottom")) ?>
+                    <?= $class::getIcon(true, true)->asimg("20px", array('class' => "text-bottom")) ?>
                     <?= htmlReady($class::getName()) ?>
                     <?= _("hinzufügen") ?>
                 </a>

@@ -1,5 +1,5 @@
 <h3>
-    <?= Assets::img("icons/20/black/".(is_a($vote, "Test") ? "test" : "vote"), array('class' => "text-bottom")) ?>
+    <?= Icon::create((is_a($vote, "Test") ? "test" : "vote"), "info")->asimg("20px", array('class' => "text-bottom")) ?>
     <?= formatReady($vote['questiondata']['question']) ?>
 </h3>
 

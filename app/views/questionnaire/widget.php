@@ -2,16 +2,16 @@
 <section class="contentbox questionnaire_widget" id="questionnaire_area">
     <header>
         <h1>
-            <?= Assets::img('icons/16/black/evaluation.png'); ?>
+            <?= Icon::create("evaluation", "info")->asimg("16px", array('class' => "text-bottom")) ?>
             <?= _('Fragebögen') ?>
         </h1>
         <nav>
             <? if ($allowed_to_add) : ?>
                 <a href="<?= URLHelper::getLink("dispatch.php/questionnaire/edit", array('range_id' => $range_id, 'range_type' => $range_type)) ?>" data-dialog title="<?= _('Fragebogen hinzufügen') ?>">
-                    <?= Assets::img("icons/16/blue/add") ?>
+                    <?= Icon::create("add", "clickable")->asimg("16px", array('class' => "text-bottom")) ?>
                 </a>
                 <a href="<?= URLHelper::getLink("dispatch.php/questionnaire/overview") ?>" title="<?= _('Fragebögen verwalten') ?>">
-                    <?= Assets::img("icons/16/blue/admin") ?>
+                    <?= Icon::create("admin", "clickable")->asimg("16px", array('class' => "text-bottom")) ?>
                 </a>
             <? endif ?>
         </nav>

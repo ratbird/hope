@@ -34,7 +34,7 @@ foreach ($ordered_results as $index => $value) {
 rsort($ordered_results);
 ?>
 <h3>
-    <?= Assets::img("icons/20/black/vote", array('class' => "text-bottom")) ?>
+    <?= Icon::create("vote", "clickable")->asimg("20px", array('class' => "text-bottom")) ?>
     <?= formatReady($vote['questiondata']['question']) ?>
 </h3>
 

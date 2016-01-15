@@ -706,8 +706,8 @@ class Course_StudygroupController extends AuthenticatedController
             _("Nutzer suchen"), "user_id");
         $this->rechte    = $GLOBALS['perm']->have_studip_perm("tutor", $id);
 
+        $actions = new ActionsWidget();
         if ($this->rechte) {
-            $actions = new ActionsWidget();
             $mp      = MultiPersonSearch::get('studygroup_invite_' . $id)
                                         ->setLinkText(_('Neue Gruppenmitglieder-/innen einladen'))
                                         ->setLinkIconPath("")
@@ -720,10 +720,17 @@ class Course_StudygroupController extends AuthenticatedController
 
             $element = LinkElement::fromHTML($mp, Icon::create('community+add', 'clickable'));
             $actions->addElement($element);
+        }
 
-            $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),
-                $this->url_for('course/studygroup/message/' . $id), Icon::create('mail', 'clickable'));
-
+        if ($this->rechte || $sem->getSemClass()['studygroup_mode']) {
+            $actions->addLink(
+                _('Nachricht an alle Gruppenmitglieder verschicken'),
+                $this->url_for('course/studygroup/message/' . $id),
+                Icon::create('mail', 'clickable'),
+                array('data-dialog' => 1)
+            );
+        }
+        if ($actions->hasElements()) {
             Sidebar::get()->addWidget($actions);
         }
 
@@ -1010,10 +1017,11 @@ class Course_StudygroupController extends AuthenticatedController
     function message_action($id)
     {
         $sem = Course::find($id);
-        if (studip_strlen($sem->getFullname()) > 32) //cut subject if to long
+        if (studip_strlen($sem->getFullname()) > 32) {//cut subject if to long
             $subject = sprintf(_("[Studiengruppe: %s...]"), studip_substr($sem->getFullname(), 0, 30));
-        else
+        } else {
             $subject = sprintf(_("[Studiengruppe: %s]"), $sem->getFullname());
+        }
 
         $this->redirect($this->url_for('messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all', 'emailrequest' => 1)));
     }

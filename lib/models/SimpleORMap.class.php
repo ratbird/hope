@@ -1554,7 +1554,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     function haveData()
     {
         foreach ($this->content as $c) {
-            if ($c !== null) return true;
+            // Not new objects must have at least their primary key fields set.
+            if (($this->isNew() || in_array($c, $this->pk)) && $c !== null) return true;
         }
         return false;
     }
@@ -1648,64 +1649,68 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function store()
     {
-        if ($this->applyCallbacks('before_store') === false) {
-            return false;
-        }
-        if ($this->isDirty() || $this->isNew()) {
-            if ($this->isNew()) {
-                if ($this->applyCallbacks('before_create') === false) {
-                    return false;
-                }
-            } else {
-                if ($this->applyCallbacks('before_update') === false) {
-                    return false;
-                }
+        if (!$this->isDeleted()) {
+            if ($this->applyCallbacks('before_store') === false) {
+                return false;
             }
-            foreach ($this->db_fields as $field => $meta) {
-                $value = $this->content[$field];
-                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
-                    $value = time();
-                }
-                if ($field == 'mkdate') {
-                    if ($this->isNew()) {
-                        if (!$this->isFieldDirty($field)) {
-                            $value = time();
-                        }
-                    } else {
-                        continue;
+            if ($this->isDirty() || $this->isNew()) {
+                if ($this->isNew()) {
+                    if ($this->applyCallbacks('before_create') === false) {
+                        return false;
+                    }
+                } else {
+                    if ($this->applyCallbacks('before_update') === false) {
+                        return false;
                     }
                 }
-                if ($value === null && $meta['null'] == 'NO') {
-                    throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
+                foreach ($this->db_fields as $field => $meta) {
+                    $value = $this->content[$field];
+                    if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
+                        $value = time();
+                    }
+                    if ($field == 'mkdate') {
+                        if ($this->isNew()) {
+                            if (!$this->isFieldDirty($field)) {
+                                $value = time();
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
+                    if ($value === null && $meta['null'] == 'NO') {
+                        throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
+                    }
+                    if (is_float($value)) {
+                        $value = str_replace(',', '.', $value);
+                    }
+                    $this->content[$field] = $value;
+                    $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
                 }
-                if (is_float($value)) {
-                    $value = str_replace(',','.', $value);
+                if (!$this->isNew()) {
+                    $where_query = $this->getWhereQuery();
+                    $query = "UPDATE `{$this->db_table}` SET "
+                        . implode(',', $query_part);
+                    $query .= " WHERE " . join(" AND ", $where_query);
+                } else {
+                    $query = "INSERT INTO `{$this->db_table}` SET "
+                        . implode(',', $query_part);
                 }
-                $this->content[$field] = $value;
-                $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
+                $ret = DBManager::get()->exec($query);
+                if ($this->isNew()) {
+                    $this->applyCallbacks('after_create');
+                } else {
+                    $this->applyCallbacks('after_update');
+                }
             }
-            if (!$this->isNew()) {
-                $where_query = $this->getWhereQuery();
-                $query = "UPDATE `{$this->db_table}` SET "
-                . implode(',', $query_part);
-                $query .= " WHERE ". join(" AND ", $where_query);
-            } else {
-                $query = "INSERT INTO `{$this->db_table}` SET "
-                . implode(',', $query_part);
+            $rel_ret = $this->storeRelations();
+            $this->applyCallbacks('after_store');
+            if ($ret || $rel_ret) {
+                $this->restore();
             }
-            $ret = DBManager::get()->exec($query);
-            if ($this->isNew()) {
-                $this->applyCallbacks('after_create');
-            } else {
-                $this->applyCallbacks('after_update');
-            }
+            return $ret + $rel_ret;
+        } else {
+            return false;
         }
-        $rel_ret = $this->storeRelations();
-        $this->applyCallbacks('after_store');
-        if ($ret || $rel_ret) {
-            $this->restore();
-        }
-        return $ret + $rel_ret;
     }
 
     /**

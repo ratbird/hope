@@ -257,6 +257,8 @@ class Course_AdmissionController extends AuthenticatedController
                 }
             }
             if (Request::submitted('change_admission_turnout_yes') || !$question) {
+                $this->course->admission_disable_waitlist = Request::int('admission_disable_waitlist') ? 0 : 1;
+                $this->course->admission_disable_waitlist_move = Request::int('admission_disable_waitlist_move') ? 0 : 1;
                 if ($this->course->admission_disable_waitlist && $this->course->getNumWaiting()) {
                     $removed_applicants = $this->course->admission_applicants->findBy('status', 'awaiting');
                 }

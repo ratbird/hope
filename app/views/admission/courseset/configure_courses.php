@@ -15,7 +15,7 @@
         </thead>
     <tbody>
     <? foreach ($courses as $course) : ?>
-    <? $editable = !$GLOBALS['perm']->have_studip_perm('admin', $course->id) ? 'disabled' : '' ?>
+    <? $editable = (!$GLOBALS['perm']->have_studip_perm('admin', $course->id) && (!Config::get()->ALLOW_DOZENT_COURSESET_ADMIN && !$GLOBALS['perm']->have_perm('dozent'))) ? 'disabled' : '' ?>
         <tr>
             <td><?= htmlReady(($course->veranstaltungsnummer ? $course->veranstaltungsnummer .'|' : '')
                     . $course->name

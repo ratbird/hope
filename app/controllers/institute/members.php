@@ -737,6 +737,11 @@ class Institute_MembersController extends AuthenticatedController
                     $statement->execute();
 
                     $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                    array_walk($institut_members, function(&$member, $key) {
+                        $member['Email'] = get_visible_email($member['user_id']);
+                    });
+
                     $institut_members = array_filter($institut_members, function ($member) {
                         return $GLOBALS['perm']->have_perm('admin') || $member['visible'];
                     });
@@ -799,6 +804,11 @@ class Institute_MembersController extends AuthenticatedController
             $statement->execute();
 
             $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            array_walk($institut_members, function(&$member, $key) {
+                $member['Email'] = get_visible_email($member['user_id']);
+            });
+
             $institut_members = array_filter($institut_members, function ($member) {
                 return $GLOBALS['perm']->have_perm('admin') || $member['visible'];
             });

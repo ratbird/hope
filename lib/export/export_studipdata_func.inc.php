@@ -797,6 +797,9 @@ function export_pers($inst_id)
             if ($val == '') {
                 $val = $key;
             }
+            if (strtolower($key) == 'email') {
+                $row[$key] = get_visible_email($row['user_id']);
+            }
             if ($row[$key] != '') {
                 $data_object .= xml_tag($val, $row[$key]);
             }

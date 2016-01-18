@@ -1553,9 +1553,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function haveData()
     {
-        foreach ($this->content as $c) {
+        foreach ($this->content as $key => $content) {
             // Not new objects must have at least their primary key fields set.
-            if (($this->isNew() || in_array($c, $this->pk)) && $c !== null) return true;
+            if (($this->isNew() || in_array($key, $this->pk)) && $content !== null) return true;
         }
         return false;
     }

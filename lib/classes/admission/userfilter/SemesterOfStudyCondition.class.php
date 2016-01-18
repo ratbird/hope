@@ -45,8 +45,8 @@ class SemesterOfStudyCondition extends UserFilterField
         $this->validCompareOperators = array(
             '>=' => _('mindestens'),
             '<=' => _('höchstens'),
-            '=' => _('gleich'),
-            '!=' => _('ungleich')
+            '=' => _('ist'),
+            '!=' => _('ist nicht')
         );
         // Initialize to some value in case there are no semester numbers.
         $maxsem = 15;

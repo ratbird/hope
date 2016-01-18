@@ -81,8 +81,8 @@ class UserFilterField
      */
     public function __construct($fieldId='') {
         $this->validCompareOperators = array(
-            '=' => _('gleich'),
-            '!=' => _('ungleich')
+            '=' => _('ist'),
+            '!=' => _('ist nicht')
         );
         // Get all available values from database.
         $stmt = DBManager::get()->query(

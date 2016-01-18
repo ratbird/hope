@@ -18,7 +18,7 @@ $view = count($moderators) + count($tutors) + count($autors) >= 50 ? "list" : "g
 
 <? if (!empty($moderators)) : ?>
     <?= $this->render_partial($partial, array(
-        'title' => $sem_class['title_dozent_plural'] ?: _("Gruppengründer/-innen"),
+        'title' => $sem_class['title_dozent_plural'] ?: _("Gruppenadministrator/-innen"),
         'sem_id' => $sem_id,
         'members' => $moderators,
         'moderator_list' => true

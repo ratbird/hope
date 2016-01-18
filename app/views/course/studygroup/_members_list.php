@@ -1,9 +1,9 @@
-<table class="default sortable-table">
+<table class="studygroupmemberlist default sortable-table">
     <colgroup>
         <col width="40">
         <col>
         <? if (!$moderator_list) : ?>
-            <col width="80">
+            <col>
         <? endif ?>
     </colgroup>
     <caption>
@@ -14,7 +14,7 @@
             <th data-sort="false"></th>
             <th data-sort="text"><?= _('Name') ?></th>
             <? if (!$moderator_list) : ?>
-                <th data-sort="false"><?= _('Aktionen') ?></th>
+                <th data-sort="false" class="actions"><?= _('Aktionen') ?></th>
             <? endif ?>
         </tr>
     </thead>

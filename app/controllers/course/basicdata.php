@@ -695,13 +695,27 @@ class Course_BasicdataController extends AuthenticatedController
         $course = Seminar::getInstance($course_id);
         switch($newstatus) {
             case 'dozent':
-                if ($course->addMember($GLOBALS['user']->id, 'dozent')) {
+                $dozent = new CourseMember();
+                $dozent->seminar_id = $course_id;
+                $dozent->user_id = $GLOBALS['user']->id;
+                $dozent->status = 'dozent';
+                $dozent->comment = '';
+                if ($dozent->store()) {
                     deleteDeputy($GLOBALS['user']->id, $course_id);
+                    PageLayout::postSuccess(sprintf(_('Sie wurden als %s eingetragen.'),
+                        get_title_for_status('dozent', 1)));
+                } else {
+                    PageLayout::postError(sprintf(_('Sie konnten nicht als %s eingetragen werden.'),
+                        get_title_for_status('dozent', 1)));
                 }
                 break;
             case 'deputy':
+                $dozent = Course::find($course_id)->members->findOneBy('user_id', $GLOBALS['user']->id);
                 if (addDeputy($GLOBALS['user']->id, $course_id)) {
-                    $course->deleteMember($GLOBALS['user']->id);
+                    $dozent->delete();
+                    PageLayout::postSuccess(_('Sie wurden als Vertretung eingetragen.'));
+                } else {
+                    PageLayout::postError(_('Sie konnten nicht als Vertretung eingetragen werden.'));
                 }
                 break;
         }

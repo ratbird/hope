@@ -228,14 +228,14 @@ class CourseSet
         if ($this->algorithm) {
             // Call pre-distribution hooks on all assigned rules.
             foreach ($this->admissionRules as &$rule) {
-                $rule->beforeSeatDistribution();
+                $rule->beforeSeatDistribution($this);
             }
             $this->algorithm->run($this);
             // Mark as "seats distributed".
             $this->setAlgorithmRun(true);
             // Call post-distribution hooks on all assigned rules.
             foreach ($this->admissionRules as &$rule) {
-                $rule->afterSeatDistribution();
+                $rule->afterSeatDistribution($this);
             }
             AdmissionPriority::unsetAllPriorities($this->getId());
         }
